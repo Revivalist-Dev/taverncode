@@ -38,6 +38,20 @@ target
 .scripts
 .direnv/
 packages/kilo-jetbrains/build-tasks/.gradle/
+packages/tavern-jetbrains/build-tasks/.gradle/
+
+# JetBrains/Kotlin build output. Generated during gradle builds; never tracked.
+# Without these, `git add -A` during upstream merges sweeps in deep .class
+# paths that also exceed the Windows path limit. See FORK-MERGE.md §5.
+**/backend/build/
+**/frontend/build/
+**/shared/build/
+**/build/classes/
+**/build/kotlin/
+**/build/libs/
+**/build/reports/
+**/build/test-results/
+**/build/tmp/
 
 # Local dev files
 opencode-dev
