@@ -73,11 +73,11 @@ export class ConfigService extends Context.Service<ConfigService, Config>()("@op
 export const defaultConfigLayer = Layer.sync(ConfigService, () =>
   ConfigService.of({
     provider:
-      process.env.KILO_WEBSEARCH_PROVIDER === "exa" || process.env.KILO_WEBSEARCH_PROVIDER === "parallel"
-        ? process.env.KILO_WEBSEARCH_PROVIDER
+      process.env.TAVERN_WEBSEARCH_PROVIDER === "exa" || process.env.TAVERN_WEBSEARCH_PROVIDER === "parallel"
+        ? process.env.TAVERN_WEBSEARCH_PROVIDER
         : undefined,
-    enableExa: truthy("KILO_EXPERIMENTAL") || truthy("KILO_ENABLE_EXA") || truthy("KILO_EXPERIMENTAL_EXA"),
-    enableParallel: truthy("KILO_ENABLE_PARALLEL") || truthy("KILO_EXPERIMENTAL_PARALLEL"),
+    enableExa: truthy("TAVERN_EXPERIMENTAL") || truthy("TAVERN_ENABLE_EXA") || truthy("TAVERN_EXPERIMENTAL_EXA"),
+    enableParallel: truthy("TAVERN_ENABLE_PARALLEL") || truthy("TAVERN_EXPERIMENTAL_PARALLEL"),
     exaApiKey: process.env.EXA_API_KEY,
     parallelApiKey: process.env.PARALLEL_API_KEY,
   }),

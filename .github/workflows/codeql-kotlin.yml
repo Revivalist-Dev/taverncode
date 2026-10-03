@@ -1,16 +1,16 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: "CodeQL Kotlin"
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "packages/kilo-jetbrains/**"
+      - "packages/tavern-jetbrains/**"
       - ".github/workflows/codeql-kotlin.yml"
   pull_request:
     branches: ["main"]
     paths:
-      - "packages/kilo-jetbrains/**"
+      - "packages/tavern-jetbrains/**"
       - ".github/workflows/codeql-kotlin.yml"
   schedule:
     - cron: "29 10 * * 5"
@@ -62,7 +62,7 @@ jobs:
       - name: Build Java/Kotlin
         shell: bash
         run: ./gradlew typecheck --rerun-tasks --no-build-cache
-        working-directory: packages/kilo-jetbrains
+        working-directory: packages/tavern-jetbrains
         env:
           GITHUB_TOKEN: ${{ github.token }}
 

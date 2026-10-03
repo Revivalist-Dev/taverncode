@@ -1,8 +1,8 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Learns general rules of thumb from maintainer corrections to the docs-sync
- * bot's rolling pull request, and writes them into packages/kilo-docs/LEARNINGS.md
+ * bot's rolling pull request, and writes them into packages/tavern-docs/LEARNINGS.md
  * so the triage and edit passes follow them on every subsequent run.
  *
  * Two modes:
@@ -29,7 +29,7 @@ import { fileURLToPath, pathToFileURL } from "node:url"
 
 import { isSurfaceBranch } from "./surfaces.mjs"
 
-const LEARNINGS_FILE = "packages/kilo-docs/LEARNINGS.md"
+const LEARNINGS_FILE = "packages/tavern-docs/LEARNINGS.md"
 const OUT_DIR = "docs-sync-out"
 const ATTEMPTS = 2
 const LEARNINGS_BUDGET_MINUTES = Number(process.env.LEARNINGS_BUDGET_MINUTES) || 10
@@ -145,7 +145,7 @@ export function patchMarkerIntoBody(body, marker) {
 /**
  * Extract { add, remove } from raw model stdout.
  * Mirrors parseTriageEntries at extract-json.mjs:14-38, adapted for an object.
- * `kilo run` prints the assistant message twice; the last copy wins.
+ * `tavern run` prints the assistant message twice; the last copy wins.
  * Walk "{" positions from right to left; return the first that parses to an object
  * holding an array `add` or an array `remove`.
  */
@@ -278,7 +278,7 @@ export function validateDelta(delta, { existing, candidateSources, deletedInWind
     }
 
     // Names a PR, URL, person, or docs page. The URL clause keeps docs-check-links.yml green.
-    if (String(a.rule).match(/#\d{2,}|https?:\/\/|@[A-Za-z0-9-]|packages\/kilo-docs|\.md\b/)) {
+    if (String(a.rule).match(/#\d{2,}|https?:\/\/|@[A-Za-z0-9-]|packages\/tavern-docs|\.md\b/)) {
       reason = "rule names a PR, URL, person, or docs page"
       rejected.push({ entry: a, reason })
       continue
@@ -431,7 +431,7 @@ async function extract() {
     appendSummary,
     backoffMsForAttempt,
     REASONING_VARIANT,
-    runKilo,
+    runTavern,
     sleepSync,
   } = await import("./lib.mjs")
 
@@ -632,7 +632,7 @@ async function extract() {
       let docDiff = ""
       try {
         message = git(["show", "--format=%B", "--no-patch", sha]).trim()
-        docDiff = git(["show", "--format=", sha, "--", "packages/kilo-docs"])
+        docDiff = git(["show", "--format=", sha, "--", "packages/tavern-docs"])
         // Cap diff sizes.
         if (docDiff.length > 20000) docDiff = docDiff.slice(0, 20000) + "\n[truncated]"
       } catch {
@@ -803,7 +803,7 @@ async function extract() {
       break
     }
 
-    const result = runKilo({
+    const result = runTavern({
       args: ["run", prompt, "-m", model, "--variant", REASONING_VARIANT, "--dir", process.cwd(), "-f", inputFile],
       timeoutMs: Math.min(EXTRACTION_TIMEOUT_MS, left),
       streamStdout: false,

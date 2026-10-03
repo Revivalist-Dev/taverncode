@@ -1,15 +1,15 @@
 #!/usr/bin/env bun
 /**
- * Transform extension files (Zed, etc.) with Kilo branding
+ * Transform extension files (Zed, etc.) with Tavern branding
  *
  * This script handles extension configuration files by transforming
- * OpenCode references to Kilo.
+ * OpenCode references to Tavern.
  */
 
 import { $ } from "bun"
 import { info, success, warn, debug } from "../utils/logger"
 import { defaultConfig } from "../utils/config"
-import { oursHasKilocodeChanges } from "../utils/git"
+import { oursHasTaverncodeChanges } from "../utils/git"
 
 export interface ExtensionTransformResult {
   file: string
@@ -35,19 +35,19 @@ const EXTENSION_REPLACEMENTS: ExtensionReplacement[] = [
   // TOML files (Zed extension)
   {
     pattern: /name\s*=\s*"opencode"/g,
-    replacement: 'name = "kilo"',
+    replacement: 'name = "tavern"',
     description: "Extension name",
     fileTypes: [".toml"],
   },
   {
     pattern: /id\s*=\s*"opencode"/g,
-    replacement: 'id = "kilo"',
+    replacement: 'id = "tavern"',
     description: "Extension ID",
     fileTypes: [".toml"],
   },
   {
     pattern: /description\s*=\s*"OpenCode[^"]*"/g,
-    replacement: 'description = "Kilo - AI coding assistant"',
+    replacement: 'description = "Tavern - AI coding assistant"',
     description: "Extension description",
     fileTypes: [".toml"],
   },
@@ -73,27 +73,27 @@ const EXTENSION_REPLACEMENTS: ExtensionReplacement[] = [
   // Binary/command references
   {
     pattern: /command\s*=\s*"opencode"/g,
-    replacement: 'command = "kilo"',
+    replacement: 'command = "tavern"',
     description: "Command name",
     fileTypes: [".toml"],
   },
 
-  // Generic OpenCode -> Kilo in strings
+  // Generic OpenCode -> Tavern in strings
   {
     pattern: /"OpenCode"/g,
-    replacement: '"Kilo"',
+    replacement: '"Tavern"',
     description: "Product name",
   },
 
   // Environment variables
   {
     pattern: /_EXTENSION_OPENCODE_/g,
-    replacement: "_EXTENSION_KILO_",
+    replacement: "_EXTENSION_TAVERN_",
     description: "Extension env var",
   },
   {
     pattern: /OpenCode\s+language\s+server/gi,
-    replacement: "Kilo language server",
+    replacement: "Tavern language server",
     description: "Language server name",
   },
 ]
@@ -165,9 +165,9 @@ export async function transformExtensionFile(
     return { file, action: "transformed", replacements: 0, dryRun: true }
   }
 
-  // If our version has kilocode_change markers, flag for manual resolution
-  if (await oursHasKilocodeChanges(file)) {
-    warn(`${file} has kilocode_change markers — skipping auto-transform, needs manual resolution`)
+  // If our version has taverncode_change markers, flag for manual resolution
+  if (await oursHasTaverncodeChanges(file)) {
+    warn(`${file} has taverncode_change markers — skipping auto-transform, needs manual resolution`)
     return { file, action: "flagged", replacements: 0, dryRun: false }
   }
 

@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: prepare-jetbrains-release
 
 on:
@@ -46,8 +46,8 @@ jobs:
         id: committer
         uses: ./.github/actions/setup-git-committer
         with:
-          kilo-maintainer-app-id: ${{ secrets.KILO_MAINTAINER_APP_ID }}
-          kilo-maintainer-app-secret: ${{ secrets.KILO_MAINTAINER_APP_SECRET }}
+          tavern-maintainer-app-id: ${{ secrets.TAVERN_MAINTAINER_APP_ID }}
+          tavern-maintainer-app-secret: ${{ secrets.TAVERN_MAINTAINER_APP_SECRET }}
 
       - name: Create release tag and PR
         run: |

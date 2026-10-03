@@ -1,8 +1,8 @@
-import { createKiloClient, createKiloServer } from "@kilocode/sdk"
+import { createTavernClient, createTavernServer } from "@taverncode/sdk"
 import { pathToFileURL } from "bun"
 
-const server = await createKiloServer()
-const client = createKiloClient({ baseUrl: server.url })
+const server = await createTavernServer()
+const client = createTavernClient({ baseUrl: server.url })
 
 const input = await Array.fromAsync(new Bun.Glob("packages/core/*.ts").scan())
 

@@ -1,5 +1,5 @@
-# kilocode_change - new file
-name: kilo-auto-close
+# taverncode_change - new file
+name: tavern-auto-close
 
 on:
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
       - name: Close inactive PRs and issues
         uses: actions/github-script@v8
         env:
-          KILO_AUTO_CLOSE_ENABLED: ${{ vars.KILO_AUTO_CLOSE_ENABLED }}
+          TAVERN_AUTO_CLOSE_ENABLED: ${{ vars.TAVERN_AUTO_CLOSE_ENABLED }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -44,7 +44,7 @@ jobs:
             const issueCutoff = new Date(Date.now() - ISSUE_DAYS_INACTIVE * 24 * 60 * 60 * 1000)
             const { owner, repo } = context.repo
             const dryRunInput = context.payload.inputs?.dryRun
-            const enabled = process.env.KILO_AUTO_CLOSE_ENABLED === "true"
+            const enabled = process.env.TAVERN_AUTO_CLOSE_ENABLED === "true"
             const dryRun = dryRunInput === undefined
               ? !enabled
               : dryRunInput !== "false"

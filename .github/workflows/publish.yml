@@ -22,42 +22,42 @@ on:
         description: "Override version (optional)"
         required: false
         type: string
-      # kilocode_change start
+      # taverncode_change start
       pre_release:
         description: "Publish as pre-release (VS Code marketplace + npm rc channel)"
         required: false
         type: boolean
         default: true
-      # kilocode_change end
+      # taverncode_change end
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.version || inputs.bump }}
 
 permissions:
   id-token: write
   contents: write
-  issues: write # kilocode_change - label automated JetBrains CLI pin bump PRs
+  issues: write # taverncode_change - label automated JetBrains CLI pin bump PRs
   packages: write
-  pull-requests: write # kilocode_change - create automated JetBrains CLI pin bump PRs
+  pull-requests: write # taverncode_change - create automated JetBrains CLI pin bump PRs
 
 jobs:
   version:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'Kilo-Org/kilocode'
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
+      - uses: actions/checkout@v6 # taverncode_change
         with:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup-bun
 
-      # kilocode_change start - install deps for version script workspace resolution
+      # taverncode_change start - install deps for version script workspace resolution
       - name: Install dependencies
         run: bun install
 
-      - name: Install Kilo
+      - name: Install Tavern
         if: inputs.bump || inputs.version
-        run: bun i -g @kilocode/cli
-      # kilocode_change end
+        run: bun i -g @taverncode/cli
+      # taverncode_change end
 
       - id: version
         run: |
@@ -65,11 +65,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          KILO_BUMP: ${{ inputs.bump }}
-          KILO_VERSION: ${{ inputs.version }}
-          KILO_PRE_RELEASE: ${{ inputs.pre_release }}
-          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
-          KILO_ORG_ID: ${{ secrets.KILO_ORG_ID }}
+          TAVERN_BUMP: ${{ inputs.bump }}
+          TAVERN_VERSION: ${{ inputs.version }}
+          TAVERN_PRE_RELEASE: ${{ inputs.pre_release }}
+          TAVERN_API_KEY: ${{ secrets.TAVERN_API_KEY }}
+          TAVERN_ORG_ID: ${{ secrets.TAVERN_ORG_ID }}
     outputs:
       version: ${{ steps.version.outputs.version }}
       release: ${{ steps.version.outputs.release }}
@@ -80,15 +80,15 @@ jobs:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'Kilo-Org/kilocode'
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
+      - uses: actions/checkout@v6 # taverncode_change
         with:
           fetch-tags: true
 
       - uses: ./.github/actions/setup-bun
 
-      - uses: ./.github/actions/setup-sbom # kilocode_change
+      - uses: ./.github/actions/setup-sbom # taverncode_change
 
-      # kilocode_change start
+      # taverncode_change start
       - name: Setup Zig for Linux sandbox helpers
         run: |
           curl --fail --location --retry 3 \
@@ -97,28 +97,28 @@ jobs:
           echo "473ec26806133cf4d1918caf1a410f8403a13d979726a9045b421b685031a982  $RUNNER_TEMP/zig.tar.xz" | sha256sum --check --status
           tar -xJf "$RUNNER_TEMP/zig.tar.xz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/zig-linux-x86_64-0.14.0" >> "$GITHUB_PATH"
-      # kilocode_change end
+      # taverncode_change end
       - name: Build
         id: build
         run: |
           ./packages/opencode/script/build.ts
         env:
-          KILO_VERSION: ${{ needs.version.outputs.version }}
-          KILO_RELEASE: ${{ needs.version.outputs.release }}
-          KILO_PRE_RELEASE: ${{ inputs.pre_release }}
+          TAVERN_VERSION: ${{ needs.version.outputs.version }}
+          TAVERN_RELEASE: ${{ needs.version.outputs.release }}
+          TAVERN_PRE_RELEASE: ${{ inputs.pre_release }}
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # kilocode_change
+          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # taverncode_change
 
-      # kilocode_change start - CRA evidence. The build already generated and
+      # taverncode_change start - CRA evidence. The build already generated and
       # uploaded a sidecar per archive; this re-checks the published set and
       # exports the attestation subjects so signing never guesses a digest.
       - name: Verify CLI SBOM evidence
         id: sbom
         if: needs.version.outputs.release != ''
         run: |
-          bun run script/kilocode/sbom.ts verify --manifest "$MANIFEST" --dir packages/opencode/dist
-          bun run script/kilocode/sbom.ts matrix --manifest "$MANIFEST" --output subjects
+          bun run script/taverncode/sbom.ts verify --manifest "$MANIFEST" --dir packages/opencode/dist
+          bun run script/taverncode/sbom.ts matrix --manifest "$MANIFEST" --output subjects
         env:
           MANIFEST: packages/opencode/dist/cli-sbom-evidence.json
           SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }}
@@ -127,39 +127,39 @@ jobs:
         if: needs.version.outputs.release != ''
         uses: actions/upload-artifact@v7
         with:
-          name: kilo-cli-sboms
+          name: tavern-cli-sboms
           path: |
             packages/opencode/dist/*.cdx.json
             packages/opencode/dist/cli-sbom-evidence.json
-            packages/opencode/dist/kilo-cli-SHA256SUMS
+            packages/opencode/dist/tavern-cli-SHA256SUMS
           if-no-files-found: error
-      # kilocode_change end
+      # taverncode_change end
 
-      # kilocode_change start - pack dist tree into a single zstd-compressed tar before upload.
+      # taverncode_change start - pack dist tree into a single zstd-compressed tar before upload.
       # download-artifact@v4's streaming unzip is CPU-bound and processes entries one by one;
       # collapsing ~480 files into one tar cuts build-vscode download from >30m to seconds.
       # zstd compresses the wasms (~4x) and leaves the already-compact binaries alone, for
       # ~1 GB artifact. upload-artifact@v7's `archive: false` skips the zip wrapper entirely
       # so the tarball travels as-is (download-artifact@v8 auto-detects via Content-Type).
       # With `archive: false` the `name:` input is ignored; the artifact is named after the
-      # file (kilo-cli.tar.zst). zstd + GNU tar are preinstalled on both github-hosted and
+      # file (tavern-cli.tar.zst). zstd + GNU tar are preinstalled on both github-hosted and
       # blacksmith ubuntu-2404. See actions/upload-artifact#36, actions/toolkit#1533.
       - name: Pack CLI dist into tar.zst
         run: |
           find packages/opencode/dist -name '*.map' -delete
-          tar --zstd -cf /tmp/kilo-cli.tar.zst -C packages/opencode/dist .
+          tar --zstd -cf /tmp/tavern-cli.tar.zst -C packages/opencode/dist .
 
       - uses: actions/upload-artifact@v7
         with:
-          path: /tmp/kilo-cli.tar.zst
+          path: /tmp/tavern-cli.tar.zst
           archive: false
-      # kilocode_change end
+      # taverncode_change end
 
     outputs:
       version: ${{ needs.version.outputs.version }}
-      sbom-subjects: ${{ steps.sbom.outputs.subjects }} # kilocode_change
+      sbom-subjects: ${{ steps.sbom.outputs.subjects }} # taverncode_change
 
-  # kilocode_change start - bind each published CLI archive to its SBOM with a
+  # taverncode_change start - bind each published CLI archive to its SBOM with a
   # signed attestation. Runs off the small sidecar artifact rather than the ~1 GB
   # CLI build artifact, since attestation needs the digest, not the bytes.
   attest-cli:
@@ -179,7 +179,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli-sboms
+          name: tavern-cli-sboms
           path: sboms
 
       - uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
@@ -187,9 +187,9 @@ jobs:
           subject-name: ${{ matrix.artifact }}
           subject-digest: ${{ matrix.digest }}
           sbom-path: sboms/${{ matrix.sbom }}
-  # kilocode_change end
+  # taverncode_change end
 
-  # kilocode_change start - execute supported Unix CLI binaries before packaging VSIX artifacts
+  # taverncode_change start - execute supported Unix CLI binaries before packaging VSIX artifacts
   validate-cli-unix:
     name: Validate CLI (${{ matrix.target }})
     needs: pack-signed-cli
@@ -202,46 +202,46 @@ jobs:
           - target: darwin-arm64
             runner: macos-15
             uname: arm64
-            package: "@kilocode/cli-darwin-arm64"
+            package: "@taverncode/cli-darwin-arm64"
             mode: host
           - target: darwin-x64
             runner: macos-15-intel
             uname: x86_64
-            package: "@kilocode/cli-darwin-x64"
+            package: "@taverncode/cli-darwin-x64"
             mode: host
           - target: linux-arm64
             runner: ubuntu-24.04-arm
             uname: aarch64
-            package: "@kilocode/cli-linux-arm64"
+            package: "@taverncode/cli-linux-arm64"
             mode: host
           - target: linux-x64
             runner: ubuntu-24.04
             uname: x86_64
-            package: "@kilocode/cli-linux-x64"
+            package: "@taverncode/cli-linux-x64"
             mode: host
           - target: alpine-arm64
             runner: ubuntu-24.04-arm
             uname: aarch64
-            package: "@kilocode/cli-linux-arm64-musl"
+            package: "@taverncode/cli-linux-arm64-musl"
             mode: alpine
             platform: linux/arm64
           - target: alpine-x64
             runner: ubuntu-24.04
             uname: x86_64
-            package: "@kilocode/cli-linux-x64-musl"
+            package: "@taverncode/cli-linux-x64-musl"
             mode: alpine
             platform: linux/amd64
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli-signed.tar.zst
+          name: tavern-cli-signed.tar.zst
           path: /tmp
           skip-decompress: true
 
       - name: Unpack CLI dist
         run: |
           mkdir -p dist
-          tar --zstd -xf /tmp/kilo-cli-signed.tar.zst -C dist
+          tar --zstd -xf /tmp/tavern-cli-signed.tar.zst -C dist
 
       - name: Run CLI smoke test
         run: |
@@ -265,23 +265,23 @@ jobs:
             root="$(mktemp -d)"
             trap 'rm -rf "$root"' RETURN
             (
-              unset KILO_MODELS_PATH KILO_MODELS_URL KILO_CONFIG KILO_CONFIG_DIR
+              unset TAVERN_MODELS_PATH TAVERN_MODELS_URL TAVERN_CONFIG TAVERN_CONFIG_DIR
               export XDG_DATA_HOME="$root/data"
               export XDG_CACHE_HOME="$root/cache"
               export XDG_CONFIG_HOME="$root/config"
               export XDG_STATE_HOME="$root/state"
-              export KILO_PTY_SMOKE=1 # kilocode_change
-              export KILO_DISABLE_MODELS_FETCH=1
-              export KILO_DISABLE_PROJECT_CONFIG=1
-              export KILO_CONFIG_CONTENT='{"enabled_providers":["anthropic"]}'
+              export TAVERN_PTY_SMOKE=1 # taverncode_change
+              export TAVERN_DISABLE_MODELS_FETCH=1
+              export TAVERN_DISABLE_PROJECT_CONFIG=1
+              export TAVERN_CONFIG_CONTENT='{"enabled_providers":["anthropic"]}'
               export ANTHROPIC_API_KEY=dummy
-              "$binary" --pure __pty-smoke # kilocode_change
+              "$binary" --pure __pty-smoke # taverncode_change
               "$binary" --pure models anthropic | grep -q '^anthropic/'
             )
           }
 
           if [ "${{ matrix.mode }}" = "host" ]; then
-            smoke_host "./dist/${{ matrix.package }}/bin/kilo"
+            smoke_host "./dist/${{ matrix.package }}/bin/tavern"
             exit 0
           fi
 
@@ -292,48 +292,48 @@ jobs:
             alpine:3.22 \
             sh -c '
               set -eu
-              # kilocode_change start - Bun musl binaries link against libstdc++ and libgcc_s
+              # taverncode_change start - Bun musl binaries link against libstdc++ and libgcc_s
               # (GCC C++ runtime). Alpine does not ship these by default; they are available
               # as optional packages and must be installed for any Bun-compiled musl binary to run.
               apk add --no-cache libstdc++ libgcc
-              # kilocode_change end
-              binary="/dist/$PACKAGE/bin/kilo" # kilocode_change
-              "$binary" --version # kilocode_change
-              "/dist/$PACKAGE/bin/bwrap" --version # kilocode_change
-              grep -q '\''^SPDX-License-Identifier: LGPL-2.0-or-later$'\'' "/dist/$PACKAGE/bin/licenses/bubblewrap/NOTICE" # kilocode_change
+              # taverncode_change end
+              binary="/dist/$PACKAGE/bin/tavern" # taverncode_change
+              "$binary" --version # taverncode_change
+              "/dist/$PACKAGE/bin/bwrap" --version # taverncode_change
+              grep -q '\''^SPDX-License-Identifier: LGPL-2.0-or-later$'\'' "/dist/$PACKAGE/bin/licenses/bubblewrap/NOTICE" # taverncode_change
               root="$(mktemp -d)"
               trap '\''rm -rf "$root"'\'' EXIT
-              unset KILO_MODELS_PATH KILO_MODELS_URL KILO_CONFIG KILO_CONFIG_DIR
+              unset TAVERN_MODELS_PATH TAVERN_MODELS_URL TAVERN_CONFIG TAVERN_CONFIG_DIR
               export XDG_DATA_HOME="$root/data"
               export XDG_CACHE_HOME="$root/cache"
               export XDG_CONFIG_HOME="$root/config"
               export XDG_STATE_HOME="$root/state"
-              export KILO_DISABLE_MODELS_FETCH=1
-              export KILO_DISABLE_PROJECT_CONFIG=1
-              export KILO_CONFIG_CONTENT='\''{"enabled_providers":["anthropic"]}'\''
+              export TAVERN_DISABLE_MODELS_FETCH=1
+              export TAVERN_DISABLE_PROJECT_CONFIG=1
+              export TAVERN_CONFIG_CONTENT='\''{"enabled_providers":["anthropic"]}'\''
               export ANTHROPIC_API_KEY=dummy
               "$binary" --pure models anthropic | grep -q "^anthropic/"
             '
 
   validate-cli-windows:
     name: Validate CLI (windows-${{ matrix.arch }})
-    needs: pack-signed-cli # kilocode_change
+    needs: pack-signed-cli # taverncode_change
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20 # kilocode_change
+    timeout-minutes: 20 # taverncode_change
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: arm64
             runner: windows-11-arm
-            package: "@kilocode/cli-windows-arm64"
+            package: "@taverncode/cli-windows-arm64"
           - arch: x64
             runner: windows-2025
-            package: "@kilocode/cli-windows-x64"
+            package: "@taverncode/cli-windows-x64"
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli-signed.tar.zst # kilocode_change
+          name: tavern-cli-signed.tar.zst # taverncode_change
           path: ${{ runner.temp }}
           skip-decompress: true
 
@@ -348,32 +348,32 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          zstd -d --stdout "$env:RUNNER_TEMP\kilo-cli-signed.tar.zst" | tar -xf - -C dist # kilocode_change
+          zstd -d --stdout "$env:RUNNER_TEMP\tavern-cli-signed.tar.zst" | tar -xf - -C dist # taverncode_change
 
       - name: Run CLI smoke test
         shell: pwsh
         run: |
           $package = "${{ matrix.package }}".Replace("/", "\")
-          $binary = ".\dist\$package\bin\kilo.exe"
+          $binary = ".\dist\$package\bin\tavern.exe"
           & $binary --version
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
           $root = Join-Path $env:RUNNER_TEMP ([guid]::NewGuid().ToString())
           New-Item -ItemType Directory -Force -Path $root | Out-Null
           try {
-            foreach ($name in "KILO_MODELS_PATH", "KILO_MODELS_URL", "KILO_CONFIG", "KILO_CONFIG_DIR") {
+            foreach ($name in "TAVERN_MODELS_PATH", "TAVERN_MODELS_URL", "TAVERN_CONFIG", "TAVERN_CONFIG_DIR") {
               Remove-Item "Env:$name" -ErrorAction SilentlyContinue
             }
             $env:XDG_DATA_HOME = Join-Path $root "data"
             $env:XDG_CACHE_HOME = Join-Path $root "cache"
             $env:XDG_CONFIG_HOME = Join-Path $root "config"
             $env:XDG_STATE_HOME = Join-Path $root "state"
-            $env:KILO_DISABLE_MODELS_FETCH = "1"
-            $env:KILO_DISABLE_PROJECT_CONFIG = "1"
-            $env:KILO_CONFIG_CONTENT = '{"enabled_providers":["anthropic"]}'
+            $env:TAVERN_DISABLE_MODELS_FETCH = "1"
+            $env:TAVERN_DISABLE_PROJECT_CONFIG = "1"
+            $env:TAVERN_CONFIG_CONTENT = '{"enabled_providers":["anthropic"]}'
             $env:ANTHROPIC_API_KEY = "dummy"
             if ("${{ matrix.arch }}" -eq "x64") {
-              $env:KILO_PTY_SMOKE = "1"
+              $env:TAVERN_PTY_SMOKE = "1"
               & $binary --pure __pty-smoke
               if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             }
@@ -385,12 +385,12 @@ jobs:
           } finally {
             Remove-Item -Recurse -Force $root -ErrorAction SilentlyContinue
           }
-  # kilocode_change end
-  # kilocode_change start - EV-sign Windows binaries via Azure Key Vault.
+  # taverncode_change end
+  # taverncode_change start - EV-sign Windows binaries via Azure Key Vault.
   # AzureSignTool is Windows-only, so signing runs on a Windows runner between
   # build-cli and its consumers. Artifacts are immutable, so pack-signed-cli
   # merges the signed exes into the build-cli dist and re-uploads it as
-  # kilo-cli-signed.tar.zst; all downstream jobs use that.
+  # tavern-cli-signed.tar.zst; all downstream jobs use that.
   sign-cli-windows:
     name: Sign CLI (Windows EV)
     needs: build-cli
@@ -400,7 +400,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli.tar.zst
+          name: tavern-cli.tar.zst
           path: ${{ runner.temp }}
           skip-decompress: true
 
@@ -415,7 +415,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-          zstd -d --stdout "$env:RUNNER_TEMP\kilo-cli.tar.zst" | tar -xf - -C dist
+          zstd -d --stdout "$env:RUNNER_TEMP\tavern-cli.tar.zst" | tar -xf - -C dist
 
       - name: Az login
         uses: azure/login@v2
@@ -433,13 +433,13 @@ jobs:
           # DefaultAzureCredential fallback). Mint a Key Vault token from the azure/login
           # OIDC session and pass it via -kva.
           token="$(az account get-access-token --resource https://vault.azure.net --query accessToken -o tsv)"
-          for exe in dist/@kilocode/cli-windows-*/bin/kilo.exe; do
+          for exe in dist/@taverncode/cli-windows-*/bin/tavern.exe; do
             AzureSignTool sign -v \
               -kvu "${{ secrets.AZURE_KEY_VAULT_URI }}" \
               -kvc "${{ secrets.AZURE_CERT_NAME }}" \
               -kva "$token" \
               -tr http://timestamp.digicert.com \
-              -d "Kilo CLI" \
+              -d "Tavern CLI" \
               "$exe"
           done
 
@@ -448,7 +448,7 @@ jobs:
         run: |
           $kit = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory | Where-Object { $_.Name -match '^\d+\.' } | Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1
           $signtool = Join-Path $kit.FullName "x64\signtool.exe"
-          foreach ($exe in Get-ChildItem "dist\@kilocode\cli-windows-*\bin\kilo.exe") {
+          foreach ($exe in Get-ChildItem "dist\@taverncode\cli-windows-*\bin\tavern.exe") {
             & $signtool verify /pa $exe.FullName
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
@@ -463,11 +463,11 @@ jobs:
           cd dist
           # --force-local: git-bash tar reads $RUNNER_TEMP's "D:\..." colon as an
           # rmt remote-tape "host:path" and dies with "Cannot connect to D".
-          tar --zstd --force-local -cf "$RUNNER_TEMP/kilo-windows-signed.tar.zst" ./@kilocode/cli-windows-*/bin/kilo.exe
+          tar --zstd --force-local -cf "$RUNNER_TEMP/tavern-windows-signed.tar.zst" ./@taverncode/cli-windows-*/bin/tavern.exe
 
       - uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/kilo-windows-signed.tar.zst
+          path: ${{ runner.temp }}/tavern-windows-signed.tar.zst
           archive: false
 
       # build-cli already uploaded unsigned Windows zips to the draft release;
@@ -476,8 +476,8 @@ jobs:
         shell: pwsh
         run: |
           $archives = @()
-          foreach ($dir in Get-ChildItem "dist\@kilocode\cli-windows-*" -Directory) {
-            $archive = "kilo-" + $dir.Name.Replace("cli-", "") + ".zip"
+          foreach ($dir in Get-ChildItem "dist\@taverncode\cli-windows-*" -Directory) {
+            $archive = "tavern-" + $dir.Name.Replace("cli-", "") + ".zip"
             Compress-Archive -Path (Join-Path $dir.FullName "bin\*") -DestinationPath $archive -Force
             $archives += $archive
           }
@@ -487,7 +487,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
 
   # Overlay the signed Windows exes onto the original Linux-produced dist
-  # tarball so POSIX mode bits on the Unix binaries (kilo, bwrap) stay intact.
+  # tarball so POSIX mode bits on the Unix binaries (tavern, bwrap) stay intact.
   pack-signed-cli:
     name: Pack signed CLI dist
     needs:
@@ -499,45 +499,45 @@ jobs:
     steps:
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli.tar.zst
+          name: tavern-cli.tar.zst
           path: /tmp
           skip-decompress: true
 
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-windows-signed.tar.zst
+          name: tavern-windows-signed.tar.zst
           path: /tmp
           skip-decompress: true
 
       - name: Merge signed binaries and repack
         run: |
           mkdir -p dist
-          tar --zstd -xf /tmp/kilo-cli.tar.zst -C dist
-          tar --zstd -xf /tmp/kilo-windows-signed.tar.zst -C dist
-          tar --zstd -cf "$RUNNER_TEMP/kilo-cli-signed.tar.zst" -C dist .
+          tar --zstd -xf /tmp/tavern-cli.tar.zst -C dist
+          tar --zstd -xf /tmp/tavern-windows-signed.tar.zst -C dist
+          tar --zstd -cf "$RUNNER_TEMP/tavern-cli-signed.tar.zst" -C dist .
 
       - uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/kilo-cli-signed.tar.zst
+          path: ${{ runner.temp }}/tavern-cli-signed.tar.zst
           archive: false
-  # kilocode_change end
+  # taverncode_change end
 
   build-vscode:
     needs:
       - build-cli
-      - pack-signed-cli # kilocode_change
+      - pack-signed-cli # taverncode_change
       - validate-cli-unix
       - validate-cli-windows
     runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'Kilo-Org/kilocode'
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
+      - uses: actions/checkout@v6 # taverncode_change
 
       - uses: ./.github/actions/setup-bun
 
-      - uses: ./.github/actions/setup-sbom # kilocode_change - VSIX sidecars scan the packaged archive
+      - uses: ./.github/actions/setup-sbom # taverncode_change - VSIX sidecars scan the packaged archive
 
-      - uses: actions/setup-node@v6 # kilocode_change
+      - uses: actions/setup-node@v6 # taverncode_change
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
@@ -545,41 +545,41 @@ jobs:
       - name: Install @vscode/vsce
         run: bun install -g @vscode/vsce
 
-      # kilocode_change start - download into /tmp and extract the tar.zst packed by build-cli,
+      # taverncode_change start - download into /tmp and extract the tar.zst packed by build-cli,
       # then apply changesets so the packaged VSIX ships the current changelog
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli-signed.tar.zst
+          name: tavern-cli-signed.tar.zst
           path: /tmp
           skip-decompress: true
 
       - name: Unpack CLI dist
         run: |
           mkdir -p packages/opencode/dist
-          tar --zstd -xf /tmp/kilo-cli-signed.tar.zst -C packages/opencode/dist
+          tar --zstd -xf /tmp/tavern-cli-signed.tar.zst -C packages/opencode/dist
 
       - name: Apply changesets to changelog
-        run: bun script/kilocode/changeset-version.ts
+        run: bun script/taverncode/changeset-version.ts
         env:
-          KILO_VERSION: ${{ needs.build-cli.outputs.version }}
+          TAVERN_VERSION: ${{ needs.build-cli.outputs.version }}
           GITHUB_TOKEN: ${{ github.token }}
-      # kilocode_change end
+      # taverncode_change end
       - name: Build VSIX packages
         run: bun script/build.ts
-        working-directory: ./packages/kilo-vscode
+        working-directory: ./packages/tavern-vscode
         env:
           CLI_DIST_DIR: ../../packages/opencode/dist
-          KILO_VERSION: ${{ needs.build-cli.outputs.version }}
-          KILO_PRE_RELEASE: ${{ inputs.pre_release }}
+          TAVERN_VERSION: ${{ needs.build-cli.outputs.version }}
+          TAVERN_PRE_RELEASE: ${{ inputs.pre_release }}
           GH_REPO: ${{ github.repository }}
-          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # kilocode_change
+          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # taverncode_change
 
-      - uses: actions/upload-artifact@v7 # kilocode_change
+      - uses: actions/upload-artifact@v7 # taverncode_change
         with:
-          name: kilo-vscode
-          path: packages/kilo-vscode/out
+          name: tavern-vscode
+          path: packages/tavern-vscode/out
 
-  # kilocode_change start
+  # taverncode_change start
   # Run smoke tests against CLI assets uploaded to the draft GitHub release
   # before publishing the release and package artifacts.
   smoke-test:
@@ -593,28 +593,28 @@ jobs:
     with:
       cli_version: ${{ needs.version.outputs.version }}
     secrets: inherit
-  # kilocode_change end
+  # taverncode_change end
 
   publish:
     needs:
       - version
       - build-cli
       - build-vscode
-      - pack-signed-cli # kilocode_change
-      - validate-cli-unix # kilocode_change
-      - validate-cli-windows # kilocode_change
+      - pack-signed-cli # taverncode_change
+      - validate-cli-unix # taverncode_change
+      - validate-cli-windows # taverncode_change
       - smoke-test
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
-        # kilocode_change start
+      - uses: actions/checkout@v6 # taverncode_change
+        # taverncode_change start
         with:
           persist-credentials: false
-        # kilocode_change end
+        # taverncode_change end
 
       - uses: ./.github/actions/setup-bun
 
-      - uses: ./.github/actions/setup-sbom # kilocode_change - npm and OCI sidecars scan the published bytes
+      - uses: ./.github/actions/setup-sbom # taverncode_change - npm and OCI sidecars scan the published bytes
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -629,11 +629,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - uses: actions/setup-node@v6 # kilocode_change
+      - uses: actions/setup-node@v6 # taverncode_change
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
-          package-manager-cache: false # kilocode_change
+          package-manager-cache: false # taverncode_change
 
       - name: Install @vscode/vsce
         run: bun install -g @vscode/vsce
@@ -642,30 +642,30 @@ jobs:
         id: committer
         uses: ./.github/actions/setup-git-committer
         with:
-          # kilocode_change start
-          kilo-maintainer-app-id: ${{ secrets.KILO_MAINTAINER_APP_ID }}
-          kilo-maintainer-app-secret: ${{ secrets.KILO_MAINTAINER_APP_SECRET }}
-          # kilocode_change end
+          # taverncode_change start
+          tavern-maintainer-app-id: ${{ secrets.TAVERN_MAINTAINER_APP_ID }}
+          tavern-maintainer-app-secret: ${{ secrets.TAVERN_MAINTAINER_APP_SECRET }}
+          # taverncode_change end
 
-      # kilocode_change start - download into /tmp and extract the tar.zst packed by build-cli
+      # taverncode_change start - download into /tmp and extract the tar.zst packed by build-cli
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-cli-signed.tar.zst
+          name: tavern-cli-signed.tar.zst
           path: /tmp
           skip-decompress: true
 
       - name: Unpack CLI dist
         run: |
           mkdir -p packages/opencode/dist
-          tar --zstd -xf /tmp/kilo-cli-signed.tar.zst -C packages/opencode/dist
-      # kilocode_change end
+          tar --zstd -xf /tmp/tavern-cli-signed.tar.zst -C packages/opencode/dist
+      # taverncode_change end
       - uses: actions/download-artifact@v8
         with:
-          name: kilo-vscode
-          path: packages/kilo-vscode/out
+          name: tavern-vscode
+          path: packages/tavern-vscode/out
 
       - name: Cache apt packages (AUR)
-        uses: actions/cache@v5 # kilocode_change
+        uses: actions/cache@v5 # taverncode_change
         with:
           path: /var/cache/apt/archives
           key: ${{ runner.os }}-apt-aur-${{ hashFiles('.github/workflows/publish.yml') }}
@@ -679,19 +679,19 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AUR_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          git config --global user.email "kilo-maintainer[bot]@users.noreply.github.com"
-          git config --global user.name "kilo-maintainer[bot]"
+          git config --global user.email "tavern-maintainer[bot]@users.noreply.github.com"
+          git config --global user.name "tavern-maintainer[bot]"
           ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts || true
 
       - run: ./script/publish.ts
         env:
-          KILO_VERSION: ${{ needs.version.outputs.version }}
-          KILO_RELEASE: ${{ needs.version.outputs.release }}
-          KILO_PRE_RELEASE: ${{ inputs.pre_release }}
+          TAVERN_VERSION: ${{ needs.version.outputs.version }}
+          TAVERN_RELEASE: ${{ needs.version.outputs.release }}
+          TAVERN_PRE_RELEASE: ${{ inputs.pre_release }}
           GH_REPO: ${{ github.repository }}
           AUR_KEY: ${{ secrets.AUR_KEY }}
           GITHUB_TOKEN: ${{ steps.committer.outputs.token }}
           NPM_CONFIG_PROVENANCE: true
           VSCE_PAT: ${{ secrets.VSCE_TOKEN }}
           OPENVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
-          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # kilocode_change
+          SBOM_ENFORCE: ${{ vars.SBOM_ENFORCE }} # taverncode_change

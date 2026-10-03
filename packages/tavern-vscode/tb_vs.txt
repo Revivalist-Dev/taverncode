@@ -1,0 +1,35 @@
+bun test v1.3.14 (0d9b296a)
+
+tests\unit\server-manager-utils.test.ts:
+111 | describe("cli tree-sitter resources", () => {
+112 |   it("resolves resources next to the VS Code bundled CLI", () => {
+113 |     const root = "/Users/test/.vscode/extensions/taverncode.tavern-code-7.2.50-darwin-arm64"
+114 |     const bin = `${root}/bin/tavern`
+115 | 
+116 |     expect(treeSitterDirForBinary(bin)).toBe(`${root}/bin/tree-sitter`)
+                                              ^
+error: expect(received).toBe(expected)
+
+Expected: "/Users/test/.vscode/extensions/taverncode.tavern-code-7.2.50-darwin-arm64/bin/tree-sitter"
+Received: "\Users\test\.vscode\extensions\taverncode.tavern-code-7.2.50-darwin-arm64\bin\tree-sitter"
+
+      at <anonymous> (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\tavern-vscode\tests\unit\server-manager-utils.test.ts:116:41)
+(fail) cli tree-sitter resources > resolves resources next to the VS Code bundled CLI [0.47ms]
+199 | 
+200 |       await copySandboxResources(source, target)
+201 | 
+202 |       const copied = path.join(path.dirname(target), "bwrap")
+203 |       expect(await fs.readFile(copied, "utf8")).toBe("helper")
+204 |       expect((await fs.stat(copied)).mode & 0o111).not.toBe(0)
+                                                             ^
+error: expect(received).not.toBe(expected)
+
+Expected: not 0
+
+      at <anonymous> (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\tavern-vscode\tests\unit\server-manager-utils.test.ts:204:56)
+(fail) cli tree-sitter resources > copies the Linux sandbox helper and license resources [17.84ms]
+
+ 38 pass
+ 2 fail
+ 62 expect() calls
+Ran 40 tests across 1 file. [130.00ms]

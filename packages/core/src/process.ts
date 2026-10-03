@@ -33,6 +33,10 @@ export interface RunStreamOptions {
   readonly includeStderr?: boolean
   readonly okExitCodes?: ReadonlyArray<number>
   readonly maxErrorBytes?: number
+  // taverncode_change start - bounded streaming needs its own timeout; run() already had one
+  readonly timeout?: Duration.Input
+  readonly forceKillAfter?: Duration.Input
+  // taverncode_change end
 }
 
 export interface RunResult {
@@ -52,6 +56,15 @@ export type Interface = ChildProcessSpawner["Service"] & {
     command: ChildProcess.Command,
     options?: RunStreamOptions,
   ) => Stream.Stream<string, AppProcessError>
+  // taverncode_change start - streaming with a settlement result. runStream discards the
+  // exit code on success, so tools that need both live output and a final exit status
+  // cannot use it. This streams each line through `onLine` and resolves the exit code.
+  readonly runStreaming: (
+    command: ChildProcess.Command,
+    onLine: (line: string) => Effect.Effect<void>,
+    options?: RunStreamOptions,
+  ) => Effect.Effect<{ readonly exitCode: number }, AppProcessError>
+  // taverncode_change end
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/AppProcess") {}
@@ -211,6 +224,62 @@ const layer = Layer.effect(
       return yield* runCommand(next, options)
     })
 
+    // taverncode_change start - streaming execution that also reports the exit code.
+    // runStream discards the exit code on success (its tail returns Stream.empty), so a
+    // tool that needs live output AND a final status cannot use it.
+    const runStreaming = (
+      command: ChildProcess.Command,
+      onLine: (line: string) => Effect.Effect<void>,
+      options?: RunStreamOptions,
+    ): Effect.Effect<{ readonly exitCode: number }, AppProcessError> => {
+      const description = describeCommand(command)
+      return Effect.scoped(
+        Effect.gen(function* () {
+          const handle = yield* spawner.spawn(command)
+          let timedOut = false
+          if (options?.timeout !== undefined) {
+            yield* Effect.forkScoped(
+              Effect.sleep(options.timeout).pipe(
+                Effect.andThen(Effect.sync(() => (timedOut = true))),
+                Effect.andThen(
+                  handle.kill({ forceKillAfter: options.forceKillAfter ?? "3 seconds" }).pipe(Effect.orDie),
+                ),
+              ),
+            )
+          }
+          const source = options?.includeStderr === true ? handle.all : handle.stdout
+          const drain = Effect.all(
+            [
+              source.pipe(
+                Stream.decodeText,
+                Stream.splitLines,
+                Stream.filter((line) => line.length > 0),
+                Stream.runForEach((line) => onLine(line)),
+              ),
+              Stream.runDrain(handle.stderr),
+              handle.exitCode,
+            ],
+            { concurrency: "unbounded" },
+          ).pipe(Effect.map(([, , code]) => code))
+          const code = options?.signal
+            ? yield* drain.pipe(
+                Effect.raceFirst(
+                  waitForAbort(options.signal).pipe(Effect.mapError((cause) => wrapError(description, cause))),
+                ),
+              )
+            : yield* drain
+          if (timedOut) {
+            return yield* new AppProcessError({ command: description, cause: new Error("Timed out") })
+          }
+          if (options?.okExitCodes && options.okExitCodes.length > 0 && !options.okExitCodes.includes(code)) {
+            return yield* new AppProcessError({ command: description, exitCode: code })
+          }
+          return { exitCode: code }
+        }),
+      ).pipe(Effect.catch((cause) => Effect.fail(wrapError(description, cause))))
+    }
+    // taverncode_change end
+
     const runStream = (
       command: ChildProcess.Command,
       options?: RunStreamOptions,
@@ -220,6 +289,21 @@ const layer = Layer.effect(
       const built: Stream.Stream<string, AppProcessError | PlatformError> = Stream.unwrap(
         Effect.gen(function* () {
           const handle = yield* spawner.spawn(command)
+          // taverncode_change start - enforce a bounded streaming timeout by killing the
+          // handle. `timedOut` lets the tail distinguish an expiry from a genuine non-zero
+          // exit, matching run()'s "Timed out" cause so callers share one timeout check.
+          let timedOut = false
+          if (options?.timeout !== undefined) {
+            yield* Effect.forkScoped(
+              Effect.sleep(options.timeout).pipe(
+                Effect.andThen(Effect.sync(() => (timedOut = true))),
+                Effect.andThen(
+                  handle.kill({ forceKillAfter: options.forceKillAfter ?? "3 seconds" }).pipe(Effect.orDie),
+                ),
+              ),
+            )
+          }
+          // taverncode_change end
           const stderrFiber = yield* Effect.forkScoped(
             collectStream(handle.stderr, options?.maxErrorBytes).pipe(Effect.map((x) => x.buffer.toString("utf8"))),
           )
@@ -232,6 +316,12 @@ const layer = Layer.effect(
           const tail = Stream.unwrap(
             Effect.gen(function* () {
               const code = yield* handle.exitCode
+              // taverncode_change start - report expiry before the generic exit-code failure
+              if (timedOut) {
+                yield* Fiber.join(stderrFiber)
+                return Stream.fail(new AppProcessError({ command: description, cause: new Error("Timed out") }))
+              }
+              // taverncode_change end
               if (okExitCodes && okExitCodes.length > 0 && !okExitCodes.includes(code)) {
                 const stderr = yield* Fiber.join(stderrFiber)
                 return Stream.fail(new AppProcessError({ command: description, exitCode: code, stderr }))
@@ -252,7 +342,9 @@ const layer = Layer.effect(
       )
     }
 
-    return Service.of({ ...spawner, run, runStream })
+    // taverncode_change start - expose the streaming runner on the service
+    return Service.of({ ...spawner, run, runStream, runStreaming })
+    // taverncode_change end
   }),
 )
 

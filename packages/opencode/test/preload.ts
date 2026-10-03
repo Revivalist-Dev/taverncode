@@ -5,7 +5,7 @@ import path from "path"
 import fs from "fs/promises"
 import { setTimeout as sleep } from "node:timers/promises"
 import { afterAll } from "bun:test"
-import { remove as cleanup } from "./kilocode/cleanup" // kilocode_change
+import { remove as cleanup } from "./taverncode/cleanup" // taverncode_change
 
 // Set XDG env vars FIRST, before any src/ imports
 const dir = path.join(os.tmpdir(), "opencode-test-data-" + process.pid)
@@ -30,31 +30,31 @@ afterAll(async () => {
   // Windows can keep SQLite WAL handles alive until GC finalizers run, so we
   // force GC and retry teardown to avoid flaky EBUSY in test cleanup.
   await rm(30)
-  await cleanup(dir) // kilocode_change
+  await cleanup(dir) // taverncode_change
 })
 
 process.env["XDG_DATA_HOME"] = path.join(dir, "share")
 process.env["XDG_CACHE_HOME"] = path.join(dir, "cache")
 process.env["XDG_CONFIG_HOME"] = path.join(dir, "config")
 process.env["XDG_STATE_HOME"] = path.join(dir, "state")
-process.env["KILO_MODELS_PATH"] = path.join(import.meta.dir, "tool", "fixtures", "models-api.json")
-process.env["KILO_EXPERIMENTAL_EVENT_SYSTEM"] = "true"
-process.env["KILO_EXPERIMENTAL_WORKSPACES"] = "true"
-process.env["KILO_EXPERIMENTAL_DISABLE_FILEWATCHER"] ??= "true" // kilocode_change - see test.yml: per-instance watchers are too heavy/racy for unit tests; watcher tests opt back in
-process.env["KILO_SNAPSHOT_MATERIALIZE_IDLE_MS"] ??= "0" // kilocode_change - snapshot tests wait for materialization; the idle deferral test opts back in
+process.env["TAVERN_MODELS_PATH"] = path.join(import.meta.dir, "tool", "fixtures", "models-api.json")
+process.env["TAVERN_EXPERIMENTAL_EVENT_SYSTEM"] = "true"
+process.env["TAVERN_EXPERIMENTAL_WORKSPACES"] = "true"
+process.env["TAVERN_EXPERIMENTAL_DISABLE_FILEWATCHER"] ??= "true" // taverncode_change - see test.yml: per-instance watchers are too heavy/racy for unit tests; watcher tests opt back in
+process.env["TAVERN_SNAPSHOT_MATERIALIZE_IDLE_MS"] ??= "0" // taverncode_change - snapshot tests wait for materialization; the idle deferral test opts back in
 
 // Set test home directory to isolate tests from user's actual home directory
 // This prevents tests from picking up real user configs/skills from ~/.claude/skills
 const testHome = path.join(dir, "home")
 await fs.mkdir(testHome, { recursive: true })
-process.env["KILO_TEST_HOME"] = testHome
+process.env["TAVERN_TEST_HOME"] = testHome
 
 // Set test managed config directory to isolate tests from system managed settings
 const testManagedConfigDir = path.join(dir, "managed")
-process.env["KILO_TEST_MANAGED_CONFIG_DIR"] = testManagedConfigDir
+process.env["TAVERN_TEST_MANAGED_CONFIG_DIR"] = testManagedConfigDir
 
 // Write the cache version file to prevent global/index.ts from clearing the cache
-const cacheDir = path.join(dir, "cache", "kilo")
+const cacheDir = path.join(dir, "cache", "tavern")
 await fs.mkdir(cacheDir, { recursive: true })
 await fs.writeFile(path.join(cacheDir, "version"), "21")
 
@@ -79,34 +79,34 @@ delete process.env["DEEPSEEK_API_KEY"]
 delete process.env["FIREWORKS_API_KEY"]
 delete process.env["CEREBRAS_API_KEY"]
 delete process.env["SAMBANOVA_API_KEY"]
-delete process.env["KILO_SERVER_PASSWORD"]
-delete process.env["KILO_SERVER_USERNAME"]
-delete process.env["KILO_EXPERIMENTAL"]
-delete process.env["KILO_ENABLE_EXPERIMENTAL_MODELS"]
+delete process.env["TAVERN_SERVER_PASSWORD"]
+delete process.env["TAVERN_SERVER_USERNAME"]
+delete process.env["TAVERN_EXPERIMENTAL"]
+delete process.env["TAVERN_ENABLE_EXPERIMENTAL_MODELS"]
 delete process.env["OTEL_EXPORTER_OTLP_ENDPOINT"]
 delete process.env["OTEL_EXPORTER_OTLP_HEADERS"]
 delete process.env["OTEL_RESOURCE_ATTRIBUTES"]
 
 // Use in-memory sqlite
-process.env["KILO_DB"] = ":memory:"
+process.env["TAVERN_DB"] = ":memory:"
 
 // Now safe to import from src/
 const { initProjectors } = await import("../src/server/projectors")
-// kilocode_change: bind the package memory effect layer to opencode for tests (paths/instance/log/events)
-const { installMemoryRuntime } = await import("../src/kilocode/memory/runtime") // kilocode_change
+// taverncode_change: bind the package memory effect layer to opencode for tests (paths/instance/log/events)
+const { installMemoryRuntime } = await import("../src/taverncode/memory/runtime") // taverncode_change
 
 initProjectors()
-installMemoryRuntime() // kilocode_change
+installMemoryRuntime() // taverncode_change
 
-// kilocode_change start - fail closed: unit tests must never open a disk database. Both DB
-// path resolvers (core Database.path and the v1 client in src/storage/db.ts) honor KILO_DB
+// taverncode_change start - fail closed: unit tests must never open a disk database. Both DB
+// path resolvers (core Database.path and the v1 client in src/storage/db.ts) honor TAVERN_DB
 // verbatim when it is ":memory:", so asserting the resolved core path after all preload
 // imports catches env mutations, import-order regressions, and channel/absolute fallbacks
-// that would silently point tests at the real database under ~/.local/share/kilo.
+// that would silently point tests at the real database under ~/.local/share/tavern.
 // (Do not name the database file here: database-reset-safety.test.ts scans test sources
 // for the file name next to removal calls, and this file legitimately contains fs.rm.)
-if (process.env["KILO_DB"] !== ":memory:") {
-  throw new Error(`unit test preload: KILO_DB must be ":memory:", got "${process.env["KILO_DB"]}"`)
+if (process.env["TAVERN_DB"] !== ":memory:") {
+  throw new Error(`unit test preload: TAVERN_DB must be ":memory:", got "${process.env["TAVERN_DB"]}"`)
 }
 {
   const { Database } = await import("@opencode-ai/core/database/database")
@@ -115,4 +115,4 @@ if (process.env["KILO_DB"] !== ":memory:") {
     throw new Error(`unit test preload: database path must resolve to ":memory:", got "${resolved}"`)
   }
 }
-// kilocode_change end
+// taverncode_change end

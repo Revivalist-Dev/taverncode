@@ -3,21 +3,21 @@
 import { Script } from "@opencode-ai/script"
 import { $ } from "bun"
 import { fileURLToPath } from "url"
-import { apply } from "./kilocode/changeset-version" // kilocode_change
+import { apply } from "./taverncode/changeset-version" // taverncode_change
 
 console.log("=== publishing ===\n")
 
-// kilocode_change start - keep JetBrains CLI pin reviewable outside CLI release commits
-const jetbrainsPkg = fileURLToPath(new URL("../packages/kilo-jetbrains/package.json", import.meta.url))
+// taverncode_change start - keep JetBrains CLI pin reviewable outside CLI release commits
+const jetbrainsPkg = fileURLToPath(new URL("../packages/tavern-jetbrains/package.json", import.meta.url))
 const jetbrainsPin = await Bun.file(jetbrainsPkg).text()
-// kilocode_change end
+// taverncode_change end
 
-// kilocode_change start - consume changesets on the publish runner so changelog
+// taverncode_change start - consume changesets on the publish runner so changelog
 // changes are included in the release commit. The same step runs in the
 // build-vscode job so the packaged VSIX ships the current changelog.
 await $`bun install`
 await apply(Script.version)
-// kilocode_change end
+// taverncode_change end
 
 const pkgjsons = await Array.fromAsync(
   new Bun.Glob("**/package.json").scan({
@@ -26,13 +26,13 @@ const pkgjsons = await Array.fromAsync(
 ).then((arr) => arr.filter((x) => !x.includes("node_modules") && !x.includes("dist")))
 
 for (const file of pkgjsons) {
-  // kilocode_change start - create a follow-up PR for JetBrains CLI pin bumps
+  // taverncode_change start - create a follow-up PR for JetBrains CLI pin bumps
   if (file === jetbrainsPkg) {
     console.log("preserved JetBrains CLI pin:", file)
     await Bun.file(file).write(jetbrainsPin)
     continue
   }
-  // kilocode_change end
+  // taverncode_change end
   let pkg = await Bun.file(file).text()
   pkg = pkg.replaceAll(/"version": "[^"]+"/g, `"version": "${Script.version}"`)
   console.log("updated:", file)
@@ -50,7 +50,7 @@ await $`bun install`
 await import(`../packages/sdk/js/script/build.ts`)
 
 if (Script.release) {
-  // kilocode_change start - commit, tag, and push with rebase + retry to handle
+  // taverncode_change start - commit, tag, and push with rebase + retry to handle
   // concurrent merges to main. Rebase (instead of cherry-pick) handles
   // overlapping file changes cleanly, and the retry loop covers the narrow
   // window between fetch and push where another commit could land.
@@ -77,23 +77,23 @@ if (Script.release) {
     if (i === retries) throw new Error("failed to push release commit after " + retries + " attempts")
     await new Promise((r) => setTimeout(r, 3_000))
   }
-  // kilocode_change end
+  // taverncode_change end
 
-  // kilocode_change start - publish channel-aware GitHub release notes
-  const { publishNotes } = await import("./kilocode/release-notes")
+  // taverncode_change start - publish channel-aware GitHub release notes
+  const { publishNotes } = await import("./taverncode/release-notes")
   await publishNotes({
     version: Script.version,
     prerelease: Script.preview,
     repo: process.env.GH_REPO,
     temp: process.env.RUNNER_TEMP,
   })
-  // kilocode_change end
+  // taverncode_change end
 }
 
 console.log("\n=== cli ===\n")
 await import(`../packages/opencode/script/publish.ts`)
 
-// kilocode_change - Kilo does not ship the upstream preview CLI package
+// taverncode_change - Tavern does not ship the upstream preview CLI package
 
 console.log("\n=== sdk ===\n")
 await import(`../packages/sdk/js/script/publish.ts`)
@@ -101,28 +101,28 @@ await import(`../packages/sdk/js/script/publish.ts`)
 console.log("\n=== plugin ===\n")
 await import(`../packages/plugin/script/publish.ts`)
 
-// kilocode_change - Kilo does not publish the upstream-owned @opencode-ai/ui package
+// taverncode_change - Tavern does not publish the upstream-owned @opencode-ai/ui package
 
-// kilocode_change start
+// taverncode_change start
 console.log("\n=== vscode ===\n")
-await import(`../packages/kilo-vscode/script/publish.ts`)
-// kilocode_change end
+await import(`../packages/tavern-vscode/script/publish.ts`)
+// taverncode_change end
 
-// kilocode_change start - Kilo does not ship the opencode desktop app
+// taverncode_change start - Tavern does not ship the opencode desktop app
 // if (Script.release) {
 //   await $`bun ./packages/desktop/scripts/finalize-latest-json.ts`
 //   await $`bun ./packages/desktop/scripts/finalize-latest-yml.ts`
 // }
-// kilocode_change end
+// taverncode_change end
 
 const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)
 
-// kilocode_change start - non-blocking JetBrains CLI pin bump PR after CLI release
+// taverncode_change start - non-blocking JetBrains CLI pin bump PR after CLI release
 await createJetbrainsPinPr()
-// kilocode_change end
+// taverncode_change end
 
-// kilocode_change start
+// taverncode_change start
 async function createJetbrainsPinPr() {
   console.log("\n=== jetbrains cli pin bump pr ===\n")
   if (!Script.release) {
@@ -131,7 +131,7 @@ async function createJetbrainsPinPr() {
   }
   const args = ["--version", Script.version, "--pr"]
   if (Script.preview) args.push("--pre-release")
-  const result = await $`bun .kilo/skills/release-jetbrains/script/set-pin.ts ${args}`.nothrow()
+  const result = await $`bun .tavern/skills/release-jetbrains/script/set-pin.ts ${args}`.nothrow()
   const out = result.stdout.toString().trim()
   const err = result.stderr.toString().trim()
   if (result.exitCode === 0) {
@@ -147,4 +147,4 @@ async function createJetbrainsPinPr() {
     "::warning title=JetBrains CLI pin bump PR failed::Release completed, but the JetBrains CLI pin bump PR was not created. Check the logs above and create it manually if needed.",
   )
 }
-// kilocode_change end
+// taverncode_change end

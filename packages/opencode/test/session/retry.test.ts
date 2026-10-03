@@ -335,7 +335,7 @@ describe("session.retry.retryable", () => {
     expect(retryable).toEqual({ message: "Response decompression failed" })
   })
 
-  // kilocode_change start - Kilo does not support OpenCode Go upsells
+  // taverncode_change start - Tavern does not support OpenCode Go upsells
   test("does not retry free usage limits", () => {
     const error = Schema.decodeUnknownSync(SessionV1.APIError.Schema)(
       new SessionV1.APIError({
@@ -349,9 +349,9 @@ describe("session.retry.retryable", () => {
       }).toObject(),
     )
 
-    expect(SessionRetry.retryable(error, "kilo")).toBeUndefined()
+    expect(SessionRetry.retryable(error, "tavern")).toBeUndefined()
   })
-  // kilocode_change end
+  // taverncode_change end
 })
 
 describe("session.message-v2.fromError", () => {
@@ -406,7 +406,7 @@ describe("session.message-v2.fromError", () => {
     expect(retryable).toEqual({ message: "Connection reset by server" })
   })
 
-  // kilocode_change start
+  // taverncode_change start
   test("ECONNREFUSED socket error is retryable", () => {
     const result = MessageV2.fromError(
       {
@@ -421,7 +421,7 @@ describe("session.message-v2.fromError", () => {
     expect(result.data.message).toBe("Connection refused")
     expect(result.data.metadata?.code).toBe("ECONNREFUSED")
   })
-  // kilocode_change end
+  // taverncode_change end
 
   test("marks OpenAI 404 status codes as retryable", () => {
     const error = new APICallError({

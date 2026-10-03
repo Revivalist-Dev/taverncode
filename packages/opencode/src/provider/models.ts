@@ -1,14 +1,14 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { Config } from "@/config/config"
 import { Auth } from "@/auth"
 import { ModelCache } from "./model-cache"
 import * as Core from "@opencode-ai/core/models-dev"
 import { Context, Effect, Layer } from "effect"
-import { AI_SDK_PROVIDERS, KILO_OPENROUTER_BASE, PROMPTS } from "@kilocode/kilo-gateway"
-import { overlay } from "@/kilocode/anaconda-desktop/provider"
-import { compatible, organization, token } from "@/kilocode/provider/catalog"
+import { AI_SDK_PROVIDERS, TAVERN_OPENROUTER_BASE, PROMPTS } from "@taverncode/tavern-gateway"
+import { overlay } from "@/taverncode/anaconda-desktop/provider"
+import { compatible, organization, token } from "@/taverncode/provider/catalog"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // kilocode_change
+import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // taverncode_change
 
 export const Model = Core.Model
 export type Model = Core.Model
@@ -45,13 +45,13 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
 
       const get = Effect.fn("ModelsDev.get")(function* () {
         const providers = overlay(yield* core.get())
-        const fallback = providers.kilo
-        delete providers.kilo
+        const fallback = providers.tavern
+        delete providers.tavern
 
         const cfg = yield* config.get()
         const disabled = new Set(cfg.disabled_providers ?? [])
         const enabled = cfg.enabled_providers ? new Set(cfg.enabled_providers) : undefined
-        const allowed = (!enabled || enabled.has("kilo")) && !disabled.has("kilo")
+        const allowed = (!enabled || enabled.has("tavern")) && !disabled.has("tavern")
         const apt = cfg.provider?.apertis?.options
         const aptURL = apt?.baseURL ?? "https://api.apertis.ai/v1"
         const aptOpts = apt?.baseURL ? { baseURL: apt.baseURL } : {}
@@ -76,27 +76,27 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
           return providers
         }
 
-        const opts = cfg.provider?.kilo?.options
-        const info = yield* auth.get("kilo").pipe(Effect.catch(() => Effect.succeed(undefined)))
+        const opts = cfg.provider?.tavern?.options
+        const info = yield* auth.get("tavern").pipe(Effect.catch(() => Effect.succeed(undefined)))
         const org = organization(opts, info)
         const url = baseURL(opts?.baseURL, org)
         const fetch = {
           ...(url ? { baseURL: url } : {}),
-          ...(org ? { kilocodeOrganizationId: org } : {}),
+          ...(org ? { taverncodeOrganizationId: org } : {}),
         }
-        const valid = compatible({ ...fetch, kilocodeToken: token(opts, info) })
-        const fetched = valid ? yield* cache.fetch("kilo", fetch).pipe(Effect.catch(() => Effect.succeed({}))) : {}
+        const valid = compatible({ ...fetch, taverncodeToken: token(opts, info) })
+        const fetched = valid ? yield* cache.fetch("tavern", fetch).pipe(Effect.catch(() => Effect.succeed({}))) : {}
         const models = !valid || org || Object.keys(fetched).length > 0 ? fetched : (fallback?.models ?? {})
-        providers.kilo = {
-          id: "kilo",
-          name: "Kilo Gateway",
-          env: ["KILO_API_KEY"],
-          api: KILO_OPENROUTER_BASE.endsWith("/") ? KILO_OPENROUTER_BASE : `${KILO_OPENROUTER_BASE}/`,
-          npm: "@kilocode/kilo-gateway",
+        providers.tavern = {
+          id: "tavern",
+          name: "Tavern Gateway",
+          env: ["TAVERN_API_KEY"],
+          api: TAVERN_OPENROUTER_BASE.endsWith("/") ? TAVERN_OPENROUTER_BASE : `${TAVERN_OPENROUTER_BASE}/`,
+          npm: "@taverncode/tavern-gateway",
           models,
         }
         if (valid && !org && Object.keys(fetched).length === 0)
-          yield* cache.refresh("kilo", fetch).pipe(Effect.ignore, Effect.forkDetach)
+          yield* cache.refresh("tavern", fetch).pipe(Effect.ignore, Effect.forkDetach)
         yield* addApertis()
         return providers
       })
@@ -105,7 +105,7 @@ export const layer: Layer.Layer<Service, never, Core.Service | Config.Service | 
     }),
   )
 
-export const defaultLayer: Layer.Layer<Service> = Layer.suspend(() => AppNodeBuilder.build(node)) // kilocode_change - build from the LayerNode graph
+export const defaultLayer: Layer.Layer<Service> = Layer.suspend(() => AppNodeBuilder.build(node)) // taverncode_change - build from the LayerNode graph
 
 export const node = LayerNode.make({
   service: Service,

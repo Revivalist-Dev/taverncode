@@ -15,23 +15,23 @@ describe("RuntimeFlags", () => {
       const flags = yield* readFlags.pipe(Effect.provide(fromConfig({})))
 
       expect(flags.autoShare).toBe(false)
-      expect(flags.experimentalBackgroundSubagents).toBe(true) // kilocode_change
+      expect(flags.experimentalBackgroundSubagents).toBe(true) // taverncode_change
     }),
   )
 
-  // kilocode_change start - preserve the background-subagent kill switch
+  // taverncode_change start - preserve the background-subagent kill switch
   it.effect("allows disabling background subagents explicitly", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
-        Effect.provide(fromConfig({ KILO_EXPERIMENTAL_BACKGROUND_SUBAGENTS: "false" })),
+        Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL_BACKGROUND_SUBAGENTS: "false" })),
       )
 
       expect(flags.experimentalBackgroundSubagents).toBe(false)
     }),
   )
-  // kilocode_change end
+  // taverncode_change end
 
-  // kilocode_change start - shared agent board defaults on with a kill switch
+  // taverncode_change start - shared agent board defaults on with a kill switch
   it.effect("enables the shared agent board by default", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(Effect.provide(fromConfig({})))
@@ -42,30 +42,30 @@ describe("RuntimeFlags", () => {
 
   it.effect("allows disabling the shared agent board explicitly", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_SHARED_AGENT_BOARD: "false" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL_SHARED_AGENT_BOARD: "false" })))
 
       expect(flags.experimentalSharedAgentBoard).toBe(false)
     }),
   )
-  // kilocode_change end
+  // taverncode_change end
 
   it.effect("layer parses plugin flags from the active ConfigProvider", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_PURE: "true",
-            KILO_DISABLE_DEFAULT_PLUGINS: "true",
-            KILO_AUTO_SHARE: "true",
-            KILO_DISABLE_EMBEDDED_WEB_UI: "true",
-            KILO_DISABLE_EXTERNAL_SKILLS: "true",
-            KILO_DISABLE_LSP_DOWNLOAD: "true",
-            KILO_EXPERIMENTAL: "true",
-            KILO_ENABLE_EXA: "true",
-            KILO_ENABLE_PARALLEL: "true",
-            KILO_ENABLE_EXPERIMENTAL_MODELS: "true",
-            KILO_ENABLE_QUESTION_TOOL: "true",
-            KILO_CLIENT: "desktop",
+            TAVERN_PURE: "true",
+            TAVERN_DISABLE_DEFAULT_PLUGINS: "true",
+            TAVERN_AUTO_SHARE: "true",
+            TAVERN_DISABLE_EMBEDDED_WEB_UI: "true",
+            TAVERN_DISABLE_EXTERNAL_SKILLS: "true",
+            TAVERN_DISABLE_LSP_DOWNLOAD: "true",
+            TAVERN_EXPERIMENTAL: "true",
+            TAVERN_ENABLE_EXA: "true",
+            TAVERN_ENABLE_PARALLEL: "true",
+            TAVERN_ENABLE_EXPERIMENTAL_MODELS: "true",
+            TAVERN_ENABLE_QUESTION_TOOL: "true",
+            TAVERN_CLIENT: "desktop",
           }),
         ),
       )
@@ -84,7 +84,7 @@ describe("RuntimeFlags", () => {
       expect(flags.experimentalReferences).toBe(true)
       expect(flags.experimentalLspTy).toBe(false)
       expect(flags.experimentalLspTool).toBe(true)
-      expect(flags.experimentalContextTools).toBe(true) // kilocode_change
+      expect(flags.experimentalContextTools).toBe(true) // taverncode_change
       expect(flags.experimentalOxfmt).toBe(true)
       expect(flags.experimentalEventSystem).toBe(true)
       expect(flags.experimentalWorkspaces).toBe(true)
@@ -95,12 +95,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("layer parses KILO_EXPERIMENTAL_LSP_TY", () =>
+  it.effect("layer parses TAVERN_EXPERIMENTAL_LSP_TY", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL_LSP_TY: "true",
+            TAVERN_EXPERIMENTAL_LSP_TY: "true",
           }),
         ),
       )
@@ -111,8 +111,8 @@ describe("RuntimeFlags", () => {
 
   it.effect("enables native LLM via dedicated flag only", () =>
     Effect.gen(function* () {
-      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_NATIVE_LLM: "true" })))
-      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL: "true" })))
+      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL_NATIVE_LLM: "true" })))
+      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL: "true" })))
 
       expect(explicit.experimentalNativeLlm).toBe(true)
       expect(umbrella.experimentalNativeLlm).toBe(false)
@@ -121,8 +121,8 @@ describe("RuntimeFlags", () => {
 
   it.effect("enables WebSockets via dedicated flag only", () =>
     Effect.gen(function* () {
-      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_WEBSOCKETS: "true" })))
-      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL: "true" })))
+      const explicit = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL_WEBSOCKETS: "true" })))
+      const umbrella = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL: "true" })))
 
       expect(explicit.experimentalWebSockets).toBe(true)
       expect(umbrella.experimentalWebSockets).toBe(false)
@@ -142,7 +142,6 @@ describe("RuntimeFlags", () => {
       expect(flags.disableExternalSkills).toBe(false)
       expect(flags.disableLspDownload).toBe(false)
       expect(flags.disableClaudeCodePrompt).toBe(false)
-      expect(flags.disableClaudeCodeSkills).toBe(false)
       expect(flags.enableExa).toBe(false)
       expect(flags.experimentalIconDiscovery).toBe(false)
       expect(flags.experimentalOxfmt).toBe(false)
@@ -169,9 +168,9 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableExternalSkills reads KILO_DISABLE_EXTERNAL_SKILLS", () =>
+  it.effect("disableExternalSkills reads TAVERN_DISABLE_EXTERNAL_SKILLS", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_EXTERNAL_SKILLS: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_DISABLE_EXTERNAL_SKILLS: "true" })))
 
       expect(flags.disableExternalSkills).toBe(true)
     }),
@@ -185,9 +184,9 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableLspDownload reads KILO_DISABLE_LSP_DOWNLOAD", () =>
+  it.effect("disableLspDownload reads TAVERN_DISABLE_LSP_DOWNLOAD", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_LSP_DOWNLOAD: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_DISABLE_LSP_DOWNLOAD: "true" })))
 
       expect(flags.disableLspDownload).toBe(true)
     }),
@@ -201,45 +200,45 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableClaudeCodePrompt reads KILO_DISABLE_CLAUDE_CODE_PROMPT", () =>
+  it.effect("disableClaudeCodePrompt reads TAVERN_DISABLE_CLAUDE_CODE_PROMPT", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE_PROMPT: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_DISABLE_CLAUDE_CODE_PROMPT: "true" })))
 
       expect(flags.disableClaudeCodePrompt).toBe(true)
     }),
   )
 
-  it.effect("disableClaudeCodePrompt inherits KILO_DISABLE_CLAUDE_CODE", () =>
+  it.effect("disableClaudeCodePrompt inherits TAVERN_DISABLE_CLAUDE_CODE", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_DISABLE_CLAUDE_CODE: "true" })))
 
       expect(flags.disableClaudeCodePrompt).toBe(true)
     }),
   )
 
-  it.effect("experimentalIconDiscovery reads KILO_EXPERIMENTAL_ICON_DISCOVERY", () =>
+  it.effect("experimentalIconDiscovery reads TAVERN_EXPERIMENTAL_ICON_DISCOVERY", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL_ICON_DISCOVERY: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL_ICON_DISCOVERY: "true" })))
 
       expect(flags.experimentalIconDiscovery).toBe(true)
     }),
   )
 
-  it.effect("experimentalIconDiscovery inherits KILO_EXPERIMENTAL", () =>
+  it.effect("experimentalIconDiscovery inherits TAVERN_EXPERIMENTAL", () =>
     Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_EXPERIMENTAL: "true" })))
+      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ TAVERN_EXPERIMENTAL: "true" })))
 
       expect(flags.experimentalIconDiscovery).toBe(true)
     }),
   )
 
-  it.effect("specific experimental flags override KILO_EXPERIMENTAL", () =>
+  it.effect("specific experimental flags override TAVERN_EXPERIMENTAL", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL: "true",
-            KILO_EXPERIMENTAL_ICON_DISCOVERY: "false",
+            TAVERN_EXPERIMENTAL: "true",
+            TAVERN_EXPERIMENTAL_ICON_DISCOVERY: "false",
           }),
         ),
       )
@@ -256,12 +255,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("experimentalOxfmt is enabled by KILO_EXPERIMENTAL_OXFMT", () =>
+  it.effect("experimentalOxfmt is enabled by TAVERN_EXPERIMENTAL_OXFMT", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL_OXFMT: "true",
+            TAVERN_EXPERIMENTAL_OXFMT: "true",
           }),
         ),
       )
@@ -270,12 +269,12 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("experimentalOxfmt inherits KILO_EXPERIMENTAL", () =>
+  it.effect("experimentalOxfmt inherits TAVERN_EXPERIMENTAL", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL: "true",
+            TAVERN_EXPERIMENTAL: "true",
           }),
         ),
       )
@@ -284,7 +283,7 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  // kilocode_change start - self-context tools
+  // taverncode_change start - self-context tools
   it.effect("experimentalContextTools defaults to false", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(Effect.provide(fromConfig({})))
@@ -298,8 +297,8 @@ describe("RuntimeFlags", () => {
       const flags = yield* readFlags.pipe(
         Effect.provide(
           fromConfig({
-            KILO_EXPERIMENTAL: "true",
-            KILO_EXPERIMENTAL_CONTEXT_TOOLS: "false",
+            TAVERN_EXPERIMENTAL: "true",
+            TAVERN_EXPERIMENTAL_CONTEXT_TOOLS: "false",
           }),
         ),
       )
@@ -307,25 +306,25 @@ describe("RuntimeFlags", () => {
       expect(flags.experimentalContextTools).toBe(false)
     }),
   )
-  // kilocode_change end
+  // taverncode_change end
 
   for (const input of [
     { name: "absent", config: {}, expected: undefined },
     {
       name: "valid positive integer",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234" },
+      config: { TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234" },
       expected: 1234,
     },
     {
       name: "invalid string",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "nope" },
+      config: { TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "nope" },
       expected: undefined,
     },
-    { name: "zero", config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "0" }, expected: undefined },
-    { name: "negative", config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "-1" }, expected: undefined },
+    { name: "zero", config: { TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "0" }, expected: undefined },
+    { name: "negative", config: { TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "-1" }, expected: undefined },
     {
       name: "non-integer",
-      config: { KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1.5" },
+      config: { TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1.5" },
       expected: undefined,
     },
   ]) {
@@ -342,19 +341,19 @@ describe("RuntimeFlags", () => {
     { name: "absent", config: {}, expected: undefined },
     {
       name: "valid positive integer",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1234" },
+      config: { TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1234" },
       expected: 1234,
     },
     {
       name: "invalid string",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "nope" },
+      config: { TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "nope" },
       expected: undefined,
     },
-    { name: "zero", config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "0" }, expected: undefined },
-    { name: "negative", config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "-1" }, expected: undefined },
+    { name: "zero", config: { TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "0" }, expected: undefined },
+    { name: "negative", config: { TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "-1" }, expected: undefined },
     {
       name: "non-integer",
-      config: { KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1.5" },
+      config: { TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: "1.5" },
       expected: undefined,
     },
   ]) {
@@ -374,14 +373,14 @@ describe("RuntimeFlags", () => {
         Effect.provide(
           ConfigProvider.layer(
             ConfigProvider.fromUnknown({
-              KILO_PURE: "true",
-              KILO_DISABLE_DEFAULT_PLUGINS: "true",
-              KILO_DISABLE_EXTERNAL_SKILLS: "true",
-              KILO_DISABLE_LSP_DOWNLOAD: "true",
-              KILO_EXPERIMENTAL: "true",
-              KILO_ENABLE_EXA: "true",
-              KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234",
-              KILO_CLIENT: "desktop",
+              TAVERN_PURE: "true",
+              TAVERN_DISABLE_DEFAULT_PLUGINS: "true",
+              TAVERN_DISABLE_EXTERNAL_SKILLS: "true",
+              TAVERN_DISABLE_LSP_DOWNLOAD: "true",
+              TAVERN_EXPERIMENTAL: "true",
+              TAVERN_ENABLE_EXA: "true",
+              TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: "1234",
+              TAVERN_CLIENT: "desktop",
             }),
           ),
         ),
@@ -393,7 +392,6 @@ describe("RuntimeFlags", () => {
       expect(flags.disableExternalSkills).toBe(false)
       expect(flags.disableLspDownload).toBe(false)
       expect(flags.disableClaudeCodePrompt).toBe(false)
-      expect(flags.disableClaudeCodeSkills).toBe(false)
       expect(flags.enableExa).toBe(false)
       expect(flags.experimentalIconDiscovery).toBe(false)
       expect(flags.experimentalOxfmt).toBe(false)
@@ -403,27 +401,11 @@ describe("RuntimeFlags", () => {
     }),
   )
 
-  it.effect("disableClaudeCodeSkills defaults to false", () =>
+  it.effect("disableClaudeCodePrompt defaults to false", () =>
     Effect.gen(function* () {
       const flags = yield* readFlags.pipe(Effect.provide(fromConfig({})))
 
-      expect(flags.disableClaudeCodeSkills).toBe(false)
-    }),
-  )
-
-  it.effect("disableClaudeCodeSkills reads KILO_DISABLE_CLAUDE_CODE_SKILLS", () =>
-    Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE_SKILLS: "true" })))
-
-      expect(flags.disableClaudeCodeSkills).toBe(true)
-    }),
-  )
-
-  it.effect("disableClaudeCodeSkills inherits KILO_DISABLE_CLAUDE_CODE", () =>
-    Effect.gen(function* () {
-      const flags = yield* readFlags.pipe(Effect.provide(fromConfig({ KILO_DISABLE_CLAUDE_CODE: "true" })))
-
-      expect(flags.disableClaudeCodeSkills).toBe(true)
+      expect(flags.disableClaudeCodePrompt).toBe(false)
     }),
   )
 })

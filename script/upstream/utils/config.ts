@@ -9,16 +9,16 @@ export interface PackageMapping {
 }
 
 export interface MergeConfig {
-  /** Package name mappings from opencode to kilo */
+  /** Package name mappings from opencode to tavern */
   packageMappings: PackageMapping[]
 
-  /** Files to always keep Kilo's version (never take upstream changes) */
+  /** Files to always keep Tavern's version (never take upstream changes) */
   keepOurs: string[]
 
   /** Files to skip entirely (don't add from upstream, remove if added) */
   skipFiles: string[]
 
-  /** Files that should take upstream version and apply Kilo branding transforms */
+  /** Files that should take upstream version and apply Tavern branding transforms */
   takeTheirsAndTransform: string[]
 
   /** Script files with GitHub API references */
@@ -33,8 +33,8 @@ export interface MergeConfig {
   /** Lock files to accept ours and regenerate after merge */
   lockFiles: string[]
 
-  /** Directories that are Kilo-specific and should be preserved */
-  kiloDirectories: string[]
+  /** Directories that are Tavern-specific and should be preserved */
+  tavernDirectories: string[]
 
   /** File patterns to exclude from codemods */
   excludePatterns: string[]
@@ -57,10 +57,10 @@ export interface MergeConfig {
 
 export const defaultConfig: MergeConfig = {
   packageMappings: [
-    { from: "opencode-ai", to: "@kilocode/cli" },
-    { from: "@opencode-ai/cli", to: "@kilocode/cli" },
-    { from: "@opencode-ai/sdk", to: "@kilocode/sdk" },
-    { from: "@opencode-ai/plugin", to: "@kilocode/plugin" },
+    { from: "opencode-ai", to: "@taverncode/cli" },
+    { from: "@opencode-ai/cli", to: "@taverncode/cli" },
+    { from: "@opencode-ai/sdk", to: "@taverncode/sdk" },
+    { from: "@opencode-ai/plugin", to: "@taverncode/plugin" },
   ],
 
   keepOurs: [
@@ -74,23 +74,23 @@ export const defaultConfig: MergeConfig = {
     ".github/workflows/publish.yml",
     ".github/workflows/close-stale-prs.yml",
     ".github/pull_request_template.md",
-    // Kilo-specific command files
+    // Tavern-specific command files
     ".opencode/command/commit.md",
-    // Kilo-specific publish scripts
+    // Tavern-specific publish scripts
     "packages/opencode/script/publish-registries.ts",
     // Generated OpenAPI spec - kept ours and regenerated post-merge via script/generate.ts
     "packages/sdk/openapi.json",
-    // GitHub Action - Kilo version is fully ported and complete
+    // GitHub Action - Tavern version is fully ported and complete
     "github/action.yml",
     "github/README.md",
     "github/script/release",
     "github/script/publish",
   ],
 
-  // Files that only exist in upstream and should NOT be added to Kilo
+  // Files that only exist in upstream and should NOT be added to Tavern
   // These are removed during merge if they appear
   skipFiles: [
-    // Translated README files (Kilo doesn't have these)
+    // Translated README files (Tavern doesn't have these)
     "README.ar.md",
     "README.bn.md",
     "README.br.md",
@@ -114,43 +114,43 @@ export const defaultConfig: MergeConfig = {
     "README.zht.md",
     // Stats file
     "STATS.md",
-    // Team members file (Kilo doesn't maintain this upstream list)
+    // Team members file (Tavern doesn't maintain this upstream list)
     ".github/TEAM_MEMBERS",
-    // Workflows that don't exist in Kilo
+    // Workflows that don't exist in Tavern
     ".github/workflows/update-nix-hashes.yml",
     ".github/workflows/deploy.yml",
     ".github/workflows/docs-update.yml",
     ".github/workflows/docs-locale-sync.yml",
-    // Workflows deleted in Kilo (replaced or no longer needed)
+    // Workflows deleted in Tavern (replaced or no longer needed)
     ".github/workflows/close-prs.yml",
     ".github/workflows/opencode.yml",
     ".github/workflows/publish-vscode.yml",
-    // Upstream PR cleanup is replaced by .github/workflows/kilo-auto-close.yml
+    // Upstream PR cleanup is replaced by .github/workflows/tavern-auto-close.yml
     "script/github/close-prs.ts",
-    // VS Code example configs (Kilo ships real .vscode/* files)
+    // VS Code example configs (Tavern ships real .vscode/* files)
     ".vscode/launch.example.json",
     ".vscode/settings.example.json",
-    // Nix files for packages Kilo has removed / replaced with nix/kilo.nix
+    // Nix files for packages Tavern has removed / replaced with nix/tavern.nix
     "nix/desktop.nix",
     "nix/opencode.nix",
-    // opencode CLI bin (Kilo uses its own build output)
+    // opencode CLI bin (Tavern uses its own build output)
     "packages/opencode/bin/opencode",
-    // Kilo does not ship upstream's embedded web UI command.
+    // Tavern does not ship upstream's embedded web UI command.
     "packages/opencode/src/cli/cmd/web.ts",
     // Removed prompt file
     "packages/opencode/src/session/prompt/build-switch.txt",
-    // Upstream app translation automation targets products and binaries Kilo does not ship
+    // Upstream app translation automation targets products and binaries Tavern does not ship
     "script/translate-app.ts",
     "script/translate-app.test.ts",
     "script/translate-app.md",
-    // Vouch files (Kilo doesn't use Vouch).
+    // Vouch files (Tavern doesn't use Vouch).
     // Upstream currently ships VOUCHED.td (typo extension). The glob covers both
     // the current .td file and any future .md rename without another merge breaking.
     ".github/VOUCHED.*",
     ".github/workflows/vouch-check-issue.yml",
     ".github/workflows/vouch-check-pr.yml",
     ".github/workflows/vouch-manage-by-issue.yml",
-    // SST infrastructure files (Kilo is CLI-only, no hosted platform)
+    // SST infrastructure files (Tavern is CLI-only, no hosted platform)
     "sst.config.ts",
     "sst-env.d.ts",
     // Hosted platform packages (not needed for CLI)
@@ -168,7 +168,7 @@ export const defaultConfig: MergeConfig = {
     "packages/cli/**",
     "packages/stats/**",
     "sdks/vscode/**",
-    // GitHub Action - Kilo version is fully ported and complete
+    // GitHub Action - Tavern version is fully ported and complete
     "github/index.ts",
     "github/package.json",
     "github/tsconfig.json",
@@ -177,10 +177,10 @@ export const defaultConfig: MergeConfig = {
     "github/.gitignore",
   ],
 
-  // Files that should take upstream version and apply Kilo branding transforms
+  // Files that should take upstream version and apply Tavern branding transforms
   // These are files with only branding differences, no logic changes
   takeTheirsAndTransform: [
-    // Model-facing prompts that need Kilo product identity and documentation links
+    // Model-facing prompts that need Tavern product identity and documentation links
     "packages/opencode/src/session/prompt/meta.txt",
     // UI components
     "packages/ui/src/components/**/*.tsx",
@@ -212,16 +212,16 @@ export const defaultConfig: MergeConfig = {
     "nix/hashes.json",
   ],
 
-  kiloDirectories: [
-    "packages/opencode/src/kilocode",
-    "packages/opencode/test/kilocode",
-    "packages/kilo-gateway",
-    "packages/kilo-telemetry",
-    "packages/kilo-vscode",
-    "packages/kilo-jetbrains",
-    "packages/kilo-ui",
-    "packages/kilo-docs",
-    "packages/kilo-i18n",
+  tavernDirectories: [
+    "packages/opencode/src/taverncode",
+    "packages/opencode/test/taverncode",
+    "packages/tavern-gateway",
+    "packages/tavern-telemetry",
+    "packages/tavern-vscode",
+    "packages/tavern-jetbrains",
+    "packages/tavern-ui",
+    "packages/tavern-docs",
+    "packages/tavern-i18n",
     "script/upstream",
   ],
 
@@ -239,7 +239,7 @@ export const defaultConfig: MergeConfig = {
   upstreamRemote: "upstream",
   originRemote: "origin",
 
-  // i18n translation files that need Kilo branding transforms
+  // i18n translation files that need Tavern branding transforms
   i18nPatterns: ["packages/*/src/i18n/*.ts"],
 }
 

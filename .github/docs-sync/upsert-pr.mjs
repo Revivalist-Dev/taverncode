@@ -1,7 +1,7 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
- * Commits the agent's packages/kilo-docs changes, pushes the rolling
+ * Commits the agent's packages/tavern-docs changes, pushes the rolling
  * integration branch, and maintains one auto-docs PR per product surface
  * (plus one `other` PR).
  *
@@ -54,9 +54,9 @@ const FILE_CAP = 15
 const ROW_CAP = 150
 const PENDING_DISPLAY_CAP = 60
 const SUMMARY_FILE = ".docs-sync-summary.json"
-const DOCS_PATH = "packages/kilo-docs"
+const DOCS_PATH = "packages/tavern-docs"
 const MAP_FILE = ".github/docs-sync/surfaces.json"
-export const LEARNINGS_FILE = "packages/kilo-docs/LEARNINGS.md"
+export const LEARNINGS_FILE = "packages/tavern-docs/LEARNINGS.md"
 
 const git = (args, cwd) =>
   execFileSync("git", args, { cwd, stdio: ["ignore", "pipe", "inherit"] }).toString().trim()
@@ -300,8 +300,8 @@ export function nonContentFiles(changedFiles) {
   return (Array.isArray(changedFiles) ? changedFiles : []).filter(
     (f) =>
       f !== LEARNINGS_FILE &&
-      !f.startsWith("packages/kilo-docs/pages/") &&
-      !f.startsWith("packages/kilo-docs/lib/nav/"),
+      !f.startsWith("packages/tavern-docs/pages/") &&
+      !f.startsWith("packages/tavern-docs/lib/nav/"),
   )
 }
 
@@ -393,7 +393,7 @@ export function noDiffReport({ uncovered, sinceOverride }) {
     list.length === 0
       ? ["The agent found nothing worth documenting in this window."]
       : [
-          `No packages/kilo-docs diff was produced, but ${list.length} PR(s) remain uncovered and will be re-collected on the next scheduled run:`,
+          `No packages/tavern-docs diff was produced, but ${list.length} PR(s) remain uncovered and will be re-collected on the next scheduled run:`,
           "",
           ...list.map((u) => `- [${u.url}] ${u.reason || "uncovered"}`),
         ]
@@ -673,7 +673,7 @@ async function main() {
   const uncovered = computeUncovered({ worthy, summary: agentSummary, triage })
 
   if (git(["status", "--porcelain", "--", DOCS_PATH]) === "") {
-    console.log("no packages/kilo-docs changes produced; nothing to commit")
+    console.log("no packages/tavern-docs changes produced; nothing to commit")
     const { summary, warning } = noDiffReport({ uncovered, sinceOverride })
     appendSummary(summary)
     if (warning) console.warn(`::warning::${warning}`)

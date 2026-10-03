@@ -24,19 +24,19 @@ export const directories = Effect.fn("ConfigPaths.directories")(function* (direc
   const afs = yield* FSUtil.Service
   return unique([
     Global.Path.config,
-    ...(!Flag.KILO_DISABLE_PROJECT_CONFIG
+    ...(!Flag.TAVERN_DISABLE_PROJECT_CONFIG
       ? yield* afs.up({
-          targets: [".kilocode", ".kilo"], // kilocode_change
+          targets: [".taverncode", ".tavern"], // taverncode_change
           start: directory,
           stop: worktree,
         })
       : []),
     ...(yield* afs.up({
-      targets: [".kilocode", ".kilo"], // kilocode_change
+      targets: [".taverncode", ".tavern"], // taverncode_change
       start: Global.Path.home,
       stop: Global.Path.home,
     })),
-    ...(Flag.KILO_CONFIG_DIR ? [Flag.KILO_CONFIG_DIR] : []),
+    ...(Flag.TAVERN_CONFIG_DIR ? [Flag.TAVERN_CONFIG_DIR] : []),
   ])
 })
 

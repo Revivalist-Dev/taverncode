@@ -11,9 +11,8 @@ import { Flag } from "@opencode-ai/core/flag/flag"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { withTransientReadRetry } from "@/util/effect-http-client"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodeInstruction } from "@/kilocode/session/instruction" // kilocode_change
-import { ClaudeMigration } from "@/kilocode/config/claude-migration" // kilocode_change
-import type { KilocodeMarkdown } from "@/kilocode/config/markdown" // kilocode_change
+import { TaverncodeInstruction } from "@/taverncode/session/instruction" // taverncode_change
+import type { TaverncodeMarkdown } from "@/taverncode/config/markdown" // taverncode_change
 import type { MessageV2 } from "./message-v2"
 import type { MessageID } from "./schema"
 
@@ -60,16 +59,11 @@ const layer: Layer.Layer<
     const global = yield* Global.Service
     const flags = yield* RuntimeFlags.Service
     const http = HttpClient.filterStatusOk(withTransientReadRetry(yield* HttpClient.HttpClient))
-    const globalFiles = () => [ // kilocode_change - reevaluate the global handoff after config initialization
-      // kilocode_change start - prefer KILO_CONFIG_DIR profile when set
-      ...(Flag.KILO_CONFIG_DIR ? [path.join(Flag.KILO_CONFIG_DIR, "AGENTS.md")] : []),
-      // kilocode_change end
+    const globalFiles = () => [ // taverncode_change - reevaluate the global handoff after config initialization
+      // taverncode_change start - prefer TAVERN_CONFIG_DIR profile when set
+      ...(Flag.TAVERN_CONFIG_DIR ? [path.join(Flag.TAVERN_CONFIG_DIR, "AGENTS.md")] : []),
       path.join(global.config, "AGENTS.md"),
-      // kilocode_change start - stop automatic global Claude instructions after migration
-      ...(!flags.disableClaudeCodePrompt && !ClaudeMigration.globalHandoff()
-        ? [path.join(global.home, ".claude", "CLAUDE.md")]
-        : []),
-      // kilocode_change end
+      // taverncode_change end
     ]
     const instructionFiles = [
       "AGENTS.md",
@@ -88,18 +82,18 @@ const layer: Layer.Layer<
 
     const relative = Effect.fnUntraced(function* (instruction: string) {
       const ctx = yield* InstanceState.context
-      if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
+      if (!Flag.TAVERN_DISABLE_PROJECT_CONFIG) {
         return yield* fs
           .globUp(instruction, ctx.directory, ctx.worktree)
           .pipe(Effect.catch(() => Effect.succeed([] as string[])))
       }
-      // kilocode_change - prefer KILO_CONFIG_DIR profile when set, else fall back to global.config
-      const root = Flag.KILO_CONFIG_DIR ?? global.config
-      return yield* fs.globUp(instruction, root, root).pipe(Effect.catch(() => Effect.succeed([] as string[]))) // kilocode_change
+      // taverncode_change - prefer TAVERN_CONFIG_DIR profile when set, else fall back to global.config
+      const root = Flag.TAVERN_CONFIG_DIR ?? global.config
+      return yield* fs.globUp(instruction, root, root).pipe(Effect.catch(() => Effect.succeed([] as string[]))) // taverncode_change
     })
 
-    // kilocode_change start - project instructions cannot read env or files outside the project root
-    const options = Effect.fnUntraced(function* (filepath: string, origin?: KilocodeMarkdown.Source) {
+    // taverncode_change start - project instructions cannot read env or files outside the project root
+    const options = Effect.fnUntraced(function* (filepath: string, origin?: TaverncodeMarkdown.Source) {
       const ctx = yield* InstanceState.context
       const root = ctx.worktree === "/" ? ctx.directory : ctx.worktree
       const trusted = origin?.trusted ?? false
@@ -109,11 +103,11 @@ const layer: Layer.Layer<
       }
     })
 
-    const read = Effect.fnUntraced(function* (filepath: string, origin?: KilocodeMarkdown.Source) {
+    const read = Effect.fnUntraced(function* (filepath: string, origin?: TaverncodeMarkdown.Source) {
       const opts = yield* options(filepath, origin)
-      return yield* Effect.promise(() => KilocodeInstruction.read(filepath, opts).catch(() => ""))
+      return yield* Effect.promise(() => TaverncodeInstruction.read(filepath, opts).catch(() => ""))
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const fetch = Effect.fnUntraced(function* (url: string) {
       const res = yield* http.execute(HttpClientRequest.get(url)).pipe(
@@ -130,19 +124,19 @@ const layer: Layer.Layer<
       s.claims.delete(messageID)
     })
 
-    // kilocode_change start - retain declaration provenance through instruction path expansion
+    // taverncode_change start - retain declaration provenance through instruction path expansion
     const systemSources = Effect.fn("Instruction.systemSources")(function* () {
       const config = yield* cfg.get()
       const ctx = yield* InstanceState.context
       const root = ctx.worktree === "/" ? ctx.directory : ctx.worktree
-      const paths = new Map<string, KilocodeMarkdown.Source>()
-      const add = (item: string, origin: KilocodeMarkdown.Source) => {
+      const paths = new Map<string, TaverncodeMarkdown.Source>()
+      const add = (item: string, origin: TaverncodeMarkdown.Source) => {
         const filepath = path.resolve(item)
         if (paths.get(filepath)?.trusted) return
         paths.set(filepath, origin)
       }
 
-      for (const file of globalFiles()) { // kilocode_change - evaluate handoff at discovery time
+      for (const file of globalFiles()) { // taverncode_change - evaluate handoff at discovery time
         if (yield* fs.existsSafe(file)) {
           add(file, { trusted: true, source: file })
           break
@@ -150,7 +144,7 @@ const layer: Layer.Layer<
       }
 
       // The first project-level match wins so we don't stack AGENTS.md/CLAUDE.md from every ancestor.
-      if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
+      if (!Flag.TAVERN_DISABLE_PROJECT_CONFIG) {
         for (const file of instructionFiles) {
           const matches = yield* fs
             .findUp(file, ctx.directory, ctx.worktree)
@@ -176,7 +170,7 @@ const layer: Layer.Layer<
               : relative(instruction)
           ).pipe(Effect.catch(() => Effect.succeed([] as string[])))
           const declared = config.instruction_origins?.[raw] ?? { trusted: false, source: raw, root }
-          const trusted = declared.trusted && (path.isAbsolute(instruction) || Flag.KILO_DISABLE_PROJECT_CONFIG)
+          const trusted = declared.trusted && (path.isAbsolute(instruction) || Flag.TAVERN_DISABLE_PROJECT_CONFIG)
           const origin = { ...declared, trusted, root: trusted ? undefined : (declared.root ?? root) }
           matches.forEach((item) => add(item, origin))
         }
@@ -188,25 +182,25 @@ const layer: Layer.Layer<
     const systemPaths = Effect.fn("Instruction.systemPaths")(function* () {
       return new Set((yield* systemSources()).keys())
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const system = Effect.fn("Instruction.system")(function* () {
       const config = yield* cfg.get()
-      const sources = yield* systemSources() // kilocode_change
-      const paths = Array.from(sources.keys()) // kilocode_change
+      const sources = yield* systemSources() // taverncode_change
+      const paths = Array.from(sources.keys()) // taverncode_change
       const urls = (config.instructions ?? []).filter(
         (item) => item.startsWith("https://") || item.startsWith("http://"),
       )
 
-      // kilocode_change start
+      // taverncode_change start
       const files = yield* Effect.forEach(Array.from(sources.entries()), (item) => read(item[0], item[1]), {
         concurrency: 8,
       })
-      // kilocode_change end
+      // taverncode_change end
       const remote = yield* Effect.forEach(urls, fetch, { concurrency: 4 })
 
       return [
-        ...paths.flatMap((item, i) => (files[i] ? [`Instructions from: ${item}\n${files[i]}`] : [])), // kilocode_change
+        ...paths.flatMap((item, i) => (files[i] ? [`Instructions from: ${item}\n${files[i]}`] : [])), // taverncode_change
         ...urls.flatMap((item, i) => (remote[i] ? [`Instructions from: ${item}\n${remote[i]}`] : [])),
       ]
     })

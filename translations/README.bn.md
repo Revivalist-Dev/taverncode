@@ -3,36 +3,36 @@
 </p>
 
 <p align="center">
-  <a href="https://kilo.ai"><img width="250" alt="Kilo Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
+  <a href="https://kilo.ai"><img width="250" alt="Tavern Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
 </p>
 
 <p align="center">VS Code, JetBrains বা CLI-তে AI দিয়ে তৈরি করার জন্য ওপেন সোর্স কোডিং এজেন্ট।</p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
-  <a href="https://www.npmjs.com/package/@kilocode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@kilocode/cli?style=flat" height="20" /></a>
-  <a href="https://x.com/kilocode"><img src="https://raster.shields.io/badge/kilocode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
+  <a href="https://www.npmjs.com/package/@taverncode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@taverncode/cli?style=flat" height="20" /></a>
+  <a href="https://x.com/taverncode"><img src="https://raster.shields.io/badge/taverncode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
   <a href="https://blog.kilo.ai"><img src="https://raster.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Blog" height="20"></a>
   <a href="https://kilo.ai/discord"><img src="https://raster.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord" height="20"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://raster.shields.io/badge/Join%20r%2Fkilocode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
+  <a href="https://www.reddit.com/r/taverncode/"><img src="https://raster.shields.io/badge/Join%20r%2Ftaverncode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
 </p>
 
-![Kilo-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
+![Tavern-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
 
 ---
 
-Kilo Code হলো একটি AI কোডিং এজেন্ট যা আপনি যেখানে কাজ করেন সেখানেই কাজ করে: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native) এবং [CLI](https://kilo.ai/cli)। এটি ওপেন সোর্স এবং খোলা মূল্যনীতির। আপনি 500টির বেশি মডেল থেকে বেছে নিতে পারেন, কাজের মাঝখানে মডেল বদলাতে পারেন এবং কোনো অতিরিক্ত চার্জ ছাড়াই মডেল প্রদানকারীর রেট পরিশোধ করেন। শুরু করতে API key দরকার নেই।
+Tavern Code হলো একটি AI কোডিং এজেন্ট যা আপনি যেখানে কাজ করেন সেখানেই কাজ করে: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native) এবং [CLI](https://kilo.ai/cli)। এটি ওপেন সোর্স এবং খোলা মূল্যনীতির। আপনি 500টির বেশি মডেল থেকে বেছে নিতে পারেন, কাজের মাঝখানে মডেল বদলাতে পারেন এবং কোনো অতিরিক্ত চার্জ ছাড়াই মডেল প্রদানকারীর রেট পরিশোধ করেন। শুরু করতে API key দরকার নেই।
 
 ### ইনস্টলেশন
 
-আপনি কোথায় Kilo চালাতে চান তা বেছে নিন।
+আপনি কোথায় Tavern চালাতে চান তা বেছে নিন।
 
 <details open>
 <summary><strong>VS Code</strong></summary>
 
 <br>
 
-[Kilo Code extension](vscode:extension/kilocode.kilo-code) সরাসরি ইনস্টল করুন, অথবা [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code) থেকে নিন। একটি অ্যাকাউন্ট তৈরি করলে GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 এবং Gemini 3.1 Pro Preview সহ 500টির বেশি মডেলে প্রদানকারীর দামে অ্যাক্সেস পাবেন।
+[Tavern Code extension](vscode:extension/taverncode.tavern-code) সরাসরি ইনস্টল করুন, অথবা [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code) থেকে নিন। একটি অ্যাকাউন্ট তৈরি করলে GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 এবং Gemini 3.1 Pro Preview সহ 500টির বেশি মডেলে প্রদানকারীর দামে অ্যাক্সেস পাবেন।
 
 </details>
 
@@ -43,25 +43,25 @@ Kilo Code হলো একটি AI কোডিং এজেন্ট যা �
 
 ```bash
 # npm
-npm install -g @kilocode/cli
+npm install -g @taverncode/cli
 
 # curl
 curl -fsSL https://kilo.ai/cli/install | bash
 
 # pnpm
-pnpm add -g @kilocode/cli
+pnpm add -g @taverncode/cli
 
 # bun
-bun add -g @kilocode/cli
+bun add -g @taverncode/cli
 
 # Homebrew (macOS / Linux)
-brew install Kilo-Org/tap/kilo
+brew install Kilo-Org/tap/tavern
 
 # Arch Linux (AUR)
-paru -S kilo-bin
+paru -S tavern-bin
 ```
 
-তারপর শুরু করতে যেকোনো প্রজেক্ট ডিরেক্টরিতে `kilo` চালান।
+তারপর শুরু করতে যেকোনো প্রজেক্ট ডিরেক্টরিতে `tavern` চালান।
 
 </details>
 
@@ -70,7 +70,7 @@ paru -S kilo-bin
 
 <br>
 
-JetBrains Marketplace থেকে [Kilo Code plugin](https://plugins.jetbrains.com/plugin/28350-kilo-code) ইনস্টল করুন, অথবা যেকোনো JetBrains IDE-তে `Settings → Plugins`-এ "Kilo Code" খুঁজুন।
+JetBrains Marketplace থেকে [Tavern Code plugin](https://plugins.jetbrains.com/plugin/28350-tavern-code) ইনস্টল করুন, অথবা যেকোনো JetBrains IDE-তে `Settings → Plugins`-এ "Tavern Code" খুঁজুন।
 
 </details>
 
@@ -79,7 +79,7 @@ JetBrains Marketplace থেকে [Kilo Code plugin](https://plugins.jetbrains.
 
 <br>
 
-লোকাল মেশিন ছাড়াই ওয়েব থেকে [app.kilo.ai/cloud](https://app.kilo.ai/cloud)-এ Kilo চালান।
+লোকাল মেশিন ছাড়াই ওয়েব থেকে [app.kilo.ai/cloud](https://app.kilo.ai/cloud)-এ Tavern চালান।
 
 </details>
 
@@ -99,19 +99,19 @@ JetBrains Marketplace থেকে [Kilo Code plugin](https://plugins.jetbrains.
 
 | প্ল্যাটফর্ম | Asset |
 |---|---|
-| Windows (বেশিরভাগ PC) | `kilo-windows-x64.zip` |
-| macOS (Apple Silicon) | `kilo-darwin-arm64.zip` |
-| macOS (Intel) | `kilo-darwin-x64.zip` |
-| Linux x64 | `kilo-linux-x64.tar.gz` |
-| Linux ARM | `kilo-linux-arm64.tar.gz` |
+| Windows (বেশিরভাগ PC) | `tavern-windows-x64.zip` |
+| macOS (Apple Silicon) | `tavern-darwin-arm64.zip` |
+| macOS (Intel) | `tavern-darwin-x64.zip` |
+| Linux x64 | `tavern-linux-x64.tar.gz` |
+| Linux ARM | `tavern-linux-arm64.tar.gz` |
 
-নোট: `x64-baseline` হলো AVX ছাড়া পুরোনো CPU-এর জন্য compatibility build। `musl` হলো Alpine বা glibc ছাড়া minimal Docker image-এর জন্য statically linked build। `kilo-vscode-*.vsix` হলো VS Code extension package, CLI নয়। `Source code` archive source থেকে build করার জন্য।
+নোট: `x64-baseline` হলো AVX ছাড়া পুরোনো CPU-এর জন্য compatibility build। `musl` হলো Alpine বা glibc ছাড়া minimal Docker image-এর জন্য statically linked build। `tavern-vscode-*.vsix` হলো VS Code extension package, CLI নয়। `Source code` archive source থেকে build করার জন্য।
 
 </details>
 
 ### Agents
 
-Kilo বিশেষায়িত agents সহ আসে, কাজ অনুযায়ী আপনি এগুলোর মধ্যে বদলাতে পারেন। আপনি নিজের custom agents-ও বানাতে পারেন।
+Tavern বিশেষায়িত agents সহ আসে, কাজ অনুযায়ী আপনি এগুলোর মধ্যে বদলাতে পারেন। আপনি নিজের custom agents-ও বানাতে পারেন।
 
 - **Code** - ডিফল্ট। প্রাকৃতিক ভাষা থেকে কোড implement এবং edit করে।
 - **Plan** - কোনো কোড লেখার আগে architecture design করে এবং implementation plan লেখে।
@@ -132,10 +132,10 @@ Kilo বিশেষায়িত agents সহ আসে, কাজ অনু
 
 ### Autonomous Mode (CI/CD)
 
-CI/CD pipeline-এর জন্য prompts ছাড়া পুরোপুরি autonomous operation পেতে `kilo run`-এর সাথে `--auto` ব্যবহার করুন:
+CI/CD pipeline-এর জন্য prompts ছাড়া পুরোপুরি autonomous operation পেতে `tavern run`-এর সাথে `--auto` ব্যবহার করুন:
 
 ```bash
-kilo run --auto "run tests and fix any failures"
+tavern run --auto "run tests and fix any failures"
 ```
 
 `--auto` সব permission prompt বন্ধ করে এবং agent-কে confirmation ছাড়া যেকোনো action execute করতে দেয়। শুধু trusted environment-এ ব্যবহার করুন।
@@ -146,7 +146,7 @@ Configuration এবং বাকি সবকিছুর জন্য [docs](h
 
 ### Contributing
 
-Developer, writer এবং সবাইকে contribution-এর জন্য স্বাগতম। environment setup, coding standard এবং pull request খোলার পদ্ধতির জন্য [Contributing Guide](/CONTRIBUTING.md) দিয়ে শুরু করুন। VS Code extension এবং CLI release process-এর জন্য [RELEASING.md](../RELEASING.md), এবং JetBrains plugin-এর জন্য [packages/kilo-jetbrains/RELEASING.md](../packages/kilo-jetbrains/RELEASING.md) দেখুন।
+Developer, writer এবং সবাইকে contribution-এর জন্য স্বাগতম। environment setup, coding standard এবং pull request খোলার পদ্ধতির জন্য [Contributing Guide](/CONTRIBUTING.md) দিয়ে শুরু করুন। VS Code extension এবং CLI release process-এর জন্য [RELEASING.md](../RELEASING.md), এবং JetBrains plugin-এর জন্য [packages/tavern-jetbrains/RELEASING.md](../packages/tavern-jetbrains/RELEASING.md) দেখুন।
 
 অংশ নেওয়ার আগে আমাদের [Code of Conduct](/CODE_OF_CONDUCT.md) পড়ুন।
 
@@ -157,12 +157,12 @@ MIT। attribution এবং license notice রেখে আপনি এই cod
 ### FAQ
 
 <details>
-<summary>Kilo CLI কোথা থেকে এসেছে?</summary>
+<summary>Tavern CLI কোথা থেকে এসেছে?</summary>
 
-Kilo CLI হলো [OpenCode](https://github.com/anomalyco/opencode)-এর একটি fork, Kilo agentic engineering platform-এর মধ্যে কাজ করার জন্য উন্নত করা হয়েছে।
+Tavern CLI হলো [OpenCode](https://github.com/anomalyco/opencode)-এর একটি fork, Tavern agentic engineering platform-এর মধ্যে কাজ করার জন্য উন্নত করা হয়েছে।
 
 </details>
 
 ---
 
-**কমিউনিটিতে যোগ দিন** [Discord](https://kilo.ai/discord) | [X](https://x.com/kilocode) | [Reddit](https://www.reddit.com/r/kilocode/)
+**কমিউনিটিতে যোগ দিন** [Discord](https://kilo.ai/discord) | [X](https://x.com/taverncode) | [Reddit](https://www.reddit.com/r/taverncode/)

@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { cmd } from "./cmd"
-import { buildInstanceAdvertisement } from "@/kilo-sessions/instance-advertisement"
+import { buildInstanceAdvertisement } from "@/tavern-sessions/instance-advertisement"
 
 // Re-export so existing unit tests that import from this module keep working.
 export { buildInstanceAdvertisement }
@@ -14,21 +14,21 @@ export const RemoteCommand = cmd({
   builder: (yargs) => yargs,
   handler: async () => {
     const { bootstrap } = await import("../bootstrap")
-    const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+    const { TavernSessions } = await import("@/tavern-sessions/tavern-sessions")
     const { context } = await import("@/project/instance-context")
     const { InstanceRuntime } = await import("@/project/instance-runtime")
-    const { Instance } = await import("@/kilocode/instance")
+    const { Instance } = await import("@/taverncode/instance")
     await bootstrap(process.cwd(), async () => {
-      // kilocode_change - K1 W1: advertise this instance on the relay
+      // taverncode_change - K1 W1: advertise this instance on the relay
       // heartbeat so the cloud side can show it as a spawn-capable instance.
-      // The process-wide `KILO_REMOTE_ATTACH_SESSION` guard was removed in K1
+      // The process-wide `TAVERN_REMOTE_ATTACH_SESSION` guard was removed in K1
       // (in-process sessions only; no spawned children), so this is always
-      // advertised for the explicit `kilo remote` command path.
+      // advertised for the explicit `tavern remote` command path.
       // enableRemote() also ensures a default advertisement; this explicit call
       // remains a legitimate replace (or no-op when identical) per the contract.
-      KiloSessions.setInstanceAdvertisement(buildInstanceAdvertisement(Instance.directory, "remote"))
+      TavernSessions.setInstanceAdvertisement(buildInstanceAdvertisement(Instance.directory, "remote"))
 
-      await KiloSessions.enableRemote()
+      await TavernSessions.enableRemote()
       console.log("Remote connection enabled.")
 
       const abort = new AbortController()
@@ -42,7 +42,7 @@ export const RemoteCommand = cmd({
       const shutdown = async () => {
         try {
           await context.provide(instance, async () => {
-            KiloSessions.disableRemote("shutdown")
+            TavernSessions.disableRemote("shutdown")
             await InstanceRuntime.disposeInstance(instance)
           })
         } catch (err) {

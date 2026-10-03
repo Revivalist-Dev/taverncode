@@ -6,11 +6,13 @@ import { Duration, Effect, Layer, Schema } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import { Config } from "../config"
 import { makeLocationNode } from "../effect/app-node"
+import { EventV2 } from "../event" // taverncode_change
 import { FSUtil } from "../fs-util"
 import { LocationMutation } from "../location-mutation"
 import { AppProcess } from "../process"
 import { PermissionV2 } from "../permission"
 import { PositiveInt } from "../schema"
+import { TavernProgress } from "../taverncode/progress" // taverncode_change
 import { ToolRegistry } from "./registry"
 import { Tool } from "./tool"
 import { Tools } from "./tools"
@@ -19,6 +21,11 @@ export const name = "bash"
 export const DEFAULT_TIMEOUT_MS = 2 * 60 * 1_000
 export const MAX_TIMEOUT_MS = 10 * 60 * 1_000
 export const MAX_CAPTURE_BYTES = 1024 * 1024
+// taverncode_change start - bound on the in-memory preview returned to the model and
+// echoed in progress checkpoints. Full output beyond this is not retained; see the
+// streaming TODO below.
+export const MAX_PREVIEW_CHARS = 32 * 1024
+// taverncode_change end
 
 export const Input = Schema.Struct({
   command: Schema.String.annotate({ description: "Shell command string to execute" }),
@@ -74,7 +81,11 @@ const isTimeout = (error: AppProcess.AppProcessError) =>
 // TODO: Add HTTP background-job observation only after durable status, restart recovery, and authorization are defined.
 // TODO: Revisit process-group cleanup and platform coverage with shell-specific tests if current AppProcess semantics do not fully cover it.
 // TODO: Revisit binary output handling if stdout/stderr decoding is text-only.
-// TODO: Stream full shell output into managed storage while retaining only a bounded in-memory preview.
+// taverncode_change start - streamed output into a bounded in-memory preview while
+// emitting throttled `session.next.tool.progress` checkpoints; see TavernProgress.
+// TODO: Persist full shell output into managed storage and return an outputPath, so the
+// model preview stays bounded without discarding the tail of a long-running command.
+// taverncode_change end
 
 const shellTokens = (command: string) => command.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) ?? []
 const unquote = (value: string) => value.replace(/^(['"])(.*)\1$/, "$2")
@@ -102,6 +113,7 @@ const layer = Layer.effectDiscard(
     const appProcess = yield* AppProcess.Service
     const config = yield* Config.Service
     const permission = yield* PermissionV2.Service
+    const events = yield* EventV2.Service // taverncode_change - progress checkpoint publisher
 
     yield* tools
       .register({
@@ -163,18 +175,39 @@ const layer = Layer.effectDiscard(
                 forceKillAfter: Duration.seconds(3),
               })
               const timeout = input.timeout ?? DEFAULT_TIMEOUT_MS
-              const result = yield* appProcess
-                .run(command, {
-                  combineOutput: true,
-                  timeout: Duration.millis(timeout),
-                  maxOutputBytes: MAX_CAPTURE_BYTES,
-                })
+              // taverncode_change start - stream output instead of buffering to exit. Emits
+              // throttled progress checkpoints and returns a bounded preview, so a long or
+              // hanging command surfaces output live rather than stalling with nothing.
+              const tick = TavernProgress.cadence()
+              let accumulated = ""
+              const outcome = yield* appProcess
+                .runStreaming(
+                  command,
+                  (line) =>
+                    Effect.gen(function* () {
+                      accumulated += accumulated ? `\n${line}` : line
+                      const now = Date.now()
+                      if (!tick.due(now)) return
+                      tick.mark(now)
+                      yield* TavernProgress.publish(events, {
+                        sessionID: context.sessionID,
+                        assistantMessageID: context.assistantMessageID,
+                        callID: context.toolCallID,
+                        preview: TavernProgress.preview(accumulated, MAX_PREVIEW_CHARS).text,
+                      })
+                    }),
+                  {
+                    includeStderr: true,
+                    timeout: Duration.millis(timeout),
+                    maxErrorBytes: MAX_CAPTURE_BYTES,
+                  },
+                )
                 .pipe(
                   Effect.catchTag("AppProcessError", (error) =>
                     isTimeout(error) ? Effect.succeed(undefined) : Effect.fail(error),
                   ),
                 )
-              if (!result) {
+              if (!outcome) {
                 return {
                   output: `Command exceeded timeout of ${timeout} ms. Retry with a larger timeout if the command is expected to take longer.`,
                   truncated: false,
@@ -182,17 +215,16 @@ const layer = Layer.effectDiscard(
                   ...(warnings.length ? { warnings } : {}),
                 }
               }
-
-              const output = result.output?.toString("utf8") || "(no output)"
-              const notice = result.outputTruncated
-                ? "[output capture truncated at the in-memory safety limit]"
-                : undefined
+              const bounded = TavernProgress.preview(accumulated, MAX_PREVIEW_CHARS)
+              const output = bounded.text || "(no output)"
+              const notice = bounded.truncated ? "[output preview truncated at the in-memory safety limit]" : undefined
               return {
-                exit: result.exitCode,
+                exit: outcome.exitCode,
                 output: notice ? `${output}\n\n${notice}` : output,
-                truncated: result.outputTruncated === true,
+                truncated: bounded.truncated,
                 ...(warnings.length ? { warnings } : {}),
               }
+              // taverncode_change end
             }).pipe(Effect.mapError(() => new ToolFailure({ message: `Unable to execute command: ${input.command}` }))),
         }),
       })
@@ -203,5 +235,7 @@ const layer = Layer.effectDiscard(
 export const node = makeLocationNode({
   name: "tool/bash",
   layer,
-  deps: [ToolRegistry.node, LocationMutation.node, FSUtil.node, AppProcess.node, Config.node, PermissionV2.node],
+  // taverncode_change start - EventV2.node added for progress checkpoints
+  deps: [ToolRegistry.node, LocationMutation.node, FSUtil.node, AppProcess.node, Config.node, PermissionV2.node, EventV2.node],
+  // taverncode_change end
 })

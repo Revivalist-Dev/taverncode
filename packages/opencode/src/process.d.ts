@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 declare global {
   namespace NodeJS {

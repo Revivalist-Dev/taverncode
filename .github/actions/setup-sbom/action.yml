@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: "Setup SBOM tooling"
 description: "Install a pinned, checksum-verified Syft for CRA SBOM generation"
 
@@ -12,7 +12,7 @@ runs:
   using: "composite"
   steps:
     # Pinned and checksum-verified rather than installed through a convenience
-    # script: the SBOM generator is part of Kilo's supply-chain evidence, so it
+    # script: the SBOM generator is part of Tavern's supply-chain evidence, so it
     # must not be able to change underneath a release.
     - name: Install Syft
       shell: bash

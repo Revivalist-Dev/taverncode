@@ -5,32 +5,24 @@ import type {
   Plugin as PluginInstance,
   PluginModule,
   WorkspaceAdapter as PluginWorkspaceAdapter,
-} from "@kilocode/plugin"
+} from "@taverncode/plugin"
 import { Config } from "@/config/config"
-import { createKiloClient } from "@kilocode/sdk"
+import { createTavernClient } from "@taverncode/sdk"
 import { ServerAuth } from "@/server/auth"
-import { CodexAuthPlugin } from "./openai/codex"
 import { Session } from "@/session/session"
 import { NamedError } from "@opencode-ai/core/util/error"
-import { CopilotAuthPlugin } from "./github-copilot/copilot"
-import { ModalPlugin } from "./modal/modal"
-import { gitlabAuthPlugin as GitlabAuthPlugin } from "opencode-gitlab-auth"
-import { PoeAuthPlugin } from "opencode-poe-auth"
-import { CloudflareAIGatewayAuthPlugin, CloudflareWorkersAuthPlugin } from "./cloudflare"
-import { AzureAuthPlugin } from "./azure"
-import { DigitalOceanAuthPlugin } from "./digitalocean"
+// taverncode_change start - fork: only allowlisted provider connections are registered
 import { XaiAuthPlugin } from "./xai"
-import { CerebrasPlugin } from "./cerebras"
-import { SnowflakeCortexAuthPlugin } from "./snowflake-cortex"
+// taverncode_change end
 import { Effect, Layer, Context } from "effect"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceState } from "@/effect/instance-state"
 import { errorMessage } from "@/util/error"
 import { PluginLoader } from "./loader"
 import { parsePluginSpecifier, readPluginId, readV1Plugin, resolvePluginId } from "./shared"
-import { KiloAuthPlugin } from "@kilocode/kilo-gateway" // kilocode_change
-import { AtomicChatPlugin } from "@kilocode/plugin-atomic-chat" // kilocode_change
-import { AnacondaDesktopPlugin } from "@/kilocode/anaconda-desktop/provider" // kilocode_change
+import { TavernAuthPlugin } from "@taverncode/tavern-gateway" // taverncode_change
+import { AtomicChatPlugin } from "@taverncode/plugin-atomic-chat" // taverncode_change
+import { AnacondaDesktopPlugin } from "@/taverncode/anaconda-desktop/provider" // taverncode_change
 import { registerAdapter } from "@/control-plane/adapters"
 import type { WorkspaceAdapter } from "@/control-plane/types"
 import { RuntimeFlags } from "@/effect/runtime-flags"
@@ -67,31 +59,15 @@ export function experimentalWebSocketsEnabled(input: { enabled: boolean; channel
 }
 
 // Built-in plugins that are directly imported (not installed from npm)
-function internalPlugins(flags: RuntimeFlags.Info): PluginInstance[] {
+function internalPlugins(_flags: RuntimeFlags.Info): PluginInstance[] {
+  // taverncode_change start - fork: only allowlisted provider connections are registered
   return [
-    KiloAuthPlugin, // kilocode_change
-    AtomicChatPlugin, // kilocode_change
-    AnacondaDesktopPlugin, // kilocode_change
-    // Temporary rollout: pre-release builds use WebSockets by default; releases require explicit opt-in.
-    (input) =>
-      CodexAuthPlugin(input, {
-        experimentalWebSockets: experimentalWebSocketsEnabled({ enabled: flags.experimentalWebSockets }),
-      }),
-    CopilotAuthPlugin,
-    ModalPlugin,
-    // kilocode_change start
-    // kilocode_change - external auth plugins ship against @opencode-ai/plugin; bridge to our @kilocode/plugin types
-    GitlabAuthPlugin as unknown as PluginInstance,
-    PoeAuthPlugin as unknown as PluginInstance,
-    // kilocode_change end
-    CloudflareWorkersAuthPlugin,
-    CloudflareAIGatewayAuthPlugin,
-    AzureAuthPlugin,
-    DigitalOceanAuthPlugin,
-    SnowflakeCortexAuthPlugin,
+    TavernAuthPlugin, // taverncode_change
+    AtomicChatPlugin, // taverncode_change
+    AnacondaDesktopPlugin, // taverncode_change
     XaiAuthPlugin,
-    CerebrasPlugin,
   ]
+  // taverncode_change end
 }
 
 function isServerPlugin(value: unknown): value is PluginInstance {
@@ -113,8 +89,8 @@ function getLegacyPlugins(mod: Record<string, unknown>) {
     if (seen.has(entry)) continue
     seen.add(entry)
     const plugin = getServerPlugin(entry)
-    // kilocode_change: skip named exports (e.g. constants from @kilocode/plugin-atomic-chat)
-    if (!plugin) continue // kilocode_change
+    // taverncode_change: skip named exports (e.g. constants from @taverncode/plugin-atomic-chat)
+    if (!plugin) continue // taverncode_change
     result.push(plugin)
   }
 
@@ -153,7 +129,7 @@ const layer = Layer.effect(
         const { Server } = yield* Effect.promise(() => import("../server/server"))
 
         const serverUrl = Server.url
-        const client = createKiloClient({
+        const client = createTavernClient({
           baseUrl: serverUrl?.toString() ?? "http://localhost:4096",
           directory: ctx.directory,
           headers: ServerAuth.headers(),

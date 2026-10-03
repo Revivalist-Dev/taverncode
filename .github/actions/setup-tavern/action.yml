@@ -1,0 +1,13 @@
+# taverncode_change - new file
+name: "Setup Tavern"
+description: "Install Tavern CLI globally"
+runs:
+  using: "composite"
+  steps:
+    - name: Install Tavern CLI
+      run: curl -fsSL https://kilo.ai/cli/install | bash
+      shell: bash
+
+    - name: Add Tavern to PATH
+      run: echo "$HOME/.tavern/bin" >> $GITHUB_PATH
+      shell: bash

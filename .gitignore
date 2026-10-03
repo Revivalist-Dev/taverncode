@@ -68,10 +68,37 @@ tsconfig.tsbuildinfo
 .kilocode/yarn.lock
 .kilocode/node_modules
 
+# Tavern local state (mirrors the .kilo entries above)
+.tavern/.gitignore
+.tavern/package.json
+.tavern/package-lock.json
+.tavern/pnpm-lock.yaml
+.tavern/bun.lock
+.tavern/yarn.lock
+.tavern/node_modules
+.tavern/agent-manager.json
+.tavern/plans/
+.tavern/worktrees/
+**/.tavern/jetbrains.json
+.taverncode/.gitignore
+.taverncode/package.json
+.taverncode/package-lock.json
+.taverncode/pnpm-lock.yaml
+.taverncode/bun.lock
+.taverncode/yarn.lock
+.taverncode/node_modules
+.taverncode/agent-manager.json
+
 # Runtime-generated per-directory TUI config (e.g. written by `PATCH /tui/config`
 # during local testing); should never be committed.
-packages/*/.kilo/tui.json
-packages/*/.kilo/tui.jsonc
+packages/*/.tavern/tui.json
+packages/*/.tavern/tui.jsonc
+packages/*/.taverncode/tui.json
+packages/*/.taverncode/tui.jsonc
+
+# Local scratch output from lint/typecheck/test runs
+packages/*/*.tmp
+*.tmp
 
 # Test Artifacts
 packages/app/.artifacts/

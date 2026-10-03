@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   call-valtown:
-    # kilocode_change start
+    # taverncode_change start
     if: >
       github.event_name == 'workflow_dispatch' ||
       (
@@ -37,7 +37,7 @@ jobs:
           startsWith(github.event.pull_request.title, 'feat(')
         )
       )
-    # kilocode_change end
+    # taverncode_change end
 
     runs-on: ubuntu-latest
     timeout-minutes: 5

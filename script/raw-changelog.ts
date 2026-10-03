@@ -31,7 +31,7 @@ const team = [
     .then((x) => x.filter((x) => x && !x.startsWith("#")))),
   ...bot,
 ]
-const order = ["Core", "TUI", "SDK", "Extensions"] as const // kilocode_change
+const order = ["Core", "TUI", "SDK", "Extensions"] as const // taverncode_change
 const sections = {
   core: "Core",
   tui: "TUI",
@@ -72,7 +72,7 @@ async function diff(base: string, head: string) {
 }
 
 function section(areas: Set<string>) {
-  const priority = ["core", "tui", "sdk", "plugin", "extensions/vscode", "github"] // kilocode_change
+  const priority = ["core", "tui", "sdk", "plugin", "extensions/vscode", "github"] // taverncode_change
   for (const area of priority) {
     if (areas.has(area)) return sections[area as keyof typeof sections]
   }
@@ -118,7 +118,7 @@ async function commits(from: string, to: string) {
   }
 
   const log =
-    await $`git log ${base}..${head} --format=%H -- packages/opencode packages/sdk packages/plugin packages/extensions github`.text() // kilocode_change
+    await $`git log ${base}..${head} --format=%H -- packages/opencode packages/sdk packages/plugin packages/extensions github`.text() // taverncode_change
 
   const list: Commit[] = []
   for (const hash of log.split("\n").filter(Boolean)) {

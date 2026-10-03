@@ -39,7 +39,7 @@ jobs:
           nix flake show --all-systems
 
           SYSTEMS="x86_64-linux aarch64-linux x86_64-darwin aarch64-darwin"
-          PACKAGES="kilo"
+          PACKAGES="tavern"
 
           echo ""
           echo "=== Evaluating packages for all systems ==="

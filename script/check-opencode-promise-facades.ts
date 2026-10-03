@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Prevents new service-local runtimes in shared Effect modules while the
- * remaining Kilo Promise facades are migrated away. It also prevents tests
+ * remaining Tavern Promise facades are migrated away. It also prevents tests
  * from reaching through the global application runtime unless the integration
  * boundary is explicitly classified.
  *
@@ -30,28 +30,28 @@ const allow: Record<string, string> = {
 
 const testAllow: Record<string, { count: number; reason: string }> = {
   "preload.ts": { count: 2, reason: "global test-suite AppRuntime cleanup boundary" },
-  "kilocode/config-resilience.test.ts": { count: 4, reason: "existing runtime integration test" },
-  "kilocode/config-validation.test.ts": { count: 2, reason: "existing runtime integration test" },
-  "kilocode/cli-shutdown.test.ts": { count: 1, reason: "mocked runtime boundary for shutdown unit tests" },
-  "kilocode/plan-followup.test.ts": { count: 3, reason: "existing runtime integration test" },
-  "kilocode/session-compaction-chunks.test.ts": {
+  "taverncode/config-resilience.test.ts": { count: 4, reason: "existing runtime integration test" },
+  "taverncode/config-validation.test.ts": { count: 2, reason: "existing runtime integration test" },
+  "taverncode/cli-shutdown.test.ts": { count: 1, reason: "mocked runtime boundary for shutdown unit tests" },
+  "taverncode/plan-followup.test.ts": { count: 3, reason: "existing runtime integration test" },
+  "taverncode/session-compaction-chunks.test.ts": {
     count: 2,
     reason: "disk-backed instance integration test cleanup",
   },
-  "kilocode/session-fork-remap.test.ts": {
+  "taverncode/session-fork-remap.test.ts": {
     count: 2,
     reason: "disk-backed instance integration test cleanup",
   },
-  "kilocode/snapshot-track-timeout.test.ts": {
+  "taverncode/snapshot-track-timeout.test.ts": {
     count: 4,
     reason: "production default snapshot hooks require the shared runtime and instance context",
   },
-  "kilocode/kilo-sessions.test.ts": {
+  "taverncode/tavern-sessions.test.ts": {
     count: 49,
     reason:
       "K1 W1: real integration test for SessionStatus→detach→heartbeat-fence; " +
       "the test creates a session and sets its status via the global AppRuntime, " +
-      "then drives the module-level KiloSessions seams and verifies the fence. " +
+      "then drives the module-level TavernSessions seams and verifies the fence. " +
       "DEF-3 extends this with heartbeat attention-status coverage: the heartbeat " +
       "resolves pending question/permission from the global Question.Service and " +
       "Permission.Service, so a test can only assert it by raising and replying to " +
@@ -81,33 +81,33 @@ const testAllow: Record<string, { count: number; reason: string }> = {
       "its own session; the sweep's settle behavior is otherwise masked by sessions " +
       "earlier tests left in the shared project.",
   },
-  "kilocode/session/platform-attribution.test.ts": { count: 2, reason: "existing runtime integration test" },
-  "kilocode/session-prompt-queue.test.ts": { count: 6, reason: "prompt queue legacy instance bridge regression" },
-  "kilocode/session-prompt-steering.test.ts": {
+  "taverncode/session/platform-attribution.test.ts": { count: 2, reason: "existing runtime integration test" },
+  "taverncode/session-prompt-queue.test.ts": { count: 6, reason: "prompt queue legacy instance bridge regression" },
+  "taverncode/session-prompt-steering.test.ts": {
     count: 2,
     reason: "disk-backed prompt steering integration test cleanup",
   },
-  "server/experimental-session-list.test.ts": { count: 2, reason: "Kilo session list integration test" },
-  "kilocode/server/cloud-session-import.test.ts": { count: 5, reason: "full app cloud import transaction integration" },
-  "kilocode/server/listener-runtime.test.ts": { count: 4, reason: "listener and AppRuntime integration test" },
-  "kilocode/wakeup/wakeup-cron.test.ts": {
+  "server/experimental-session-list.test.ts": { count: 2, reason: "Tavern session list integration test" },
+  "taverncode/server/cloud-session-import.test.ts": { count: 5, reason: "full app cloud import transaction integration" },
+  "taverncode/server/listener-runtime.test.ts": { count: 4, reason: "listener and AppRuntime integration test" },
+  "taverncode/wakeup/wakeup-cron.test.ts": {
     count: 13,
     reason:
       "the cron goal-resume integration tests drive SessionPrompt.command and InstanceStore.reload through the " +
-      "production Wakeup Fire/resume path (src/kilocode/wakeup/resume.ts). That path resolves Session and " +
+      "production Wakeup Fire/resume path (src/taverncode/wakeup/resume.ts). That path resolves Session and " +
       "SessionPrompt from the global AppRuntime because a static layer dependency is impossible: Wakeup.node <- " +
-      "kilocode/tool/registry.ts (via schedule_wakeup/cancel_wakeup/cron_*) <- SessionPrompt.node <- " +
+      "taverncode/tool/registry.ts (via schedule_wakeup/cancel_wakeup/cron_*) <- SessionPrompt.node <- " +
       "ToolRegistry.node, which already depends on Wakeup.node. A one-shot cron fire and a reloaded-instance " +
       "wakeup fire must create the instance, session, and goal on that same runtime so the production timer " +
       "resumes the waiting goal; scoped layers cannot express the boundary under test.",
   },
-  "kilocode/wakeup/wakeup-resume.test.ts": {
+  "taverncode/wakeup/wakeup-resume.test.ts": {
     count: 53,
     reason:
       "the wakeup resume integration test schedules through the production Wakeup service and asserts the mock " +
       "model receives the scheduled prompt, so it must run the production Fire/resume path " +
-      "(src/kilocode/wakeup/resume.ts). That path resolves Session and SessionPrompt from the global AppRuntime " +
-      "because a static layer dependency is impossible: Wakeup.node <- kilocode/tool/registry.ts (via " +
+      "(src/taverncode/wakeup/resume.ts). That path resolves Session and SessionPrompt from the global AppRuntime " +
+      "because a static layer dependency is impossible: Wakeup.node <- taverncode/tool/registry.ts (via " +
       "schedule_wakeup/cancel_wakeup) <- SessionPrompt.node <- ToolRegistry.node, which already depends on Wakeup.node. " +
       "The test therefore creates the instance, session, and wakeup through that same global runtime and asserts the " +
       "pending list on it; scoped layers cannot express the boundary under test. The paused-session case pauses the " +
@@ -117,13 +117,13 @@ const testAllow: Record<string, { count: number; reason: string }> = {
       "Session.Service in AppRuntime; a waiting goal with no in-memory handler, a cancel of the awaited id, " +
       "an archived session that must settle paused with a readable reason, and an in-flight goal turn that must " +
       "queue a fire onto the next goal cycle all observe that production path. The session-removal case drives " +
-      "KiloSession.cancelWakeups, which resolves the Wakeup service from the same global runtime to cancel the " +
+      "TavernSession.cancelWakeups, which resolves the Wakeup service from the same global runtime to cancel the " +
       "removed session's timers.",
   },
   "tool/recall.test.ts": { count: 11, reason: "existing runtime integration test" },
 }
 
-const owned = (file: string) => file.startsWith("kilocode/") || file.startsWith("kilo-sessions/")
+const owned = (file: string) => file.startsWith("taverncode/") || file.startsWith("tavern-sessions/")
 const hits: Array<{ file: string; line: number }> = []
 const glob = new Bun.Glob("**/*.ts")
 

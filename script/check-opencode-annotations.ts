@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
 /**
- * Verifies that every Kilo-specific change in shared upstream-owned source files
- * is annotated with a kilocode_change marker.
+ * Verifies that every Tavern-specific change in shared upstream-owned source files
+ * is annotated with a taverncode_change marker.
  *
  * Usage:
  *   bun run script/check-opencode-annotations.ts                  # diff origin/main...HEAD
@@ -10,23 +10,23 @@
  *   bun run script/check-opencode-annotations.ts --worktree       # diff HEAD..worktree plus untracked files
  *
  * A line is "covered" if it:
- *   - contains a kilocode_change marker comment           (inline annotation)
- *   - falls inside a kilocode_change start/end block      (block annotation)
+ *   - contains a taverncode_change marker comment           (inline annotation)
+ *   - falls inside a taverncode_change start/end block      (block annotation)
  *   - is in a file whose first non-shebang non-empty line is (whole-file annotation)
- *     // kilocode_change - new file
+ *     // taverncode_change - new file
  *   - is empty / whitespace-only                          (skipped)
  *   - is itself a marker line                             (auto-covered)
  *
  * JS (//), JSX ({/ * ... * /}), YAML (#), TOML (#), and shell (#) comment styles are recognized.
  * Extensionless files with shebangs are treated as source files.
  *
- * Exempt paths (no markers needed — entirely Kilo-specific):
- *   - packages/opencode/src/kilocode/**
- *   - packages/opencode/test/kilocode/**
- *   - Any path containing "kilocode" in directory or filename
- *   - Any path with a directory starting with "kilo-" (e.g. kilo-sessions/)
+ * Exempt paths (no markers needed — entirely Tavern-specific):
+ *   - packages/opencode/src/taverncode/**
+ *   - packages/opencode/test/taverncode/**
+ *   - Any path containing "taverncode" in directory or filename
+ *   - Any path with a directory starting with "tavern-" (e.g. tavern-sessions/)
  *   - script/upstream/**
- *   - Kilo-specific annotation checker support files
+ *   - Tavern-specific annotation checker support files
  */
 
 import { spawnSync } from "node:child_process"
@@ -125,7 +125,7 @@ function isUpstreamMerge() {
 
 function isExempt(file: string) {
   const norm = file.replaceAll("\\", "/").toLowerCase()
-  if (norm.split("/").some((part) => part.includes("kilocode") || part.startsWith("kilo-"))) return true
+  if (norm.split("/").some((part) => part.includes("taverncode") || part.startsWith("tavern-"))) return true
   return EXEMPT_SCOPES.some((scope) => norm === scope || norm.startsWith(`${scope}/`))
 }
 
@@ -138,16 +138,16 @@ function isSource(file: string) {
   const ext = path.extname(file)
   if (SOURCE_EXTS.has(ext)) return true
   if (ext) return false
-  return content(file).startsWith("#!") // kilocode_change
+  return content(file).startsWith("#!") // taverncode_change
 }
 
 // Parses the unified=0 diff for `file` against the selected target and returns:
 //   - added: every added line number on the checked version
-//   - revert: true when the file's diff removes any kilocode_change marker.
-//     In that case the changes are reverting Kilo modifications back to the
+//   - revert: true when the file's diff removes any taverncode_change marker.
+//     In that case the changes are reverting Tavern modifications back to the
 //     upstream baseline, so newly added lines (which are restoring upstream
 //     content) should not require a marker. Refs that depended on a removed
-//     Kilo construct (e.g. `unixSkip(` → `unix(`) often live in different
+//     Tavern construct (e.g. `unixSkip(` → `unix(`) often live in different
 //     hunks than the marker itself, so we use file-level detection rather
 //     than hunk-level to avoid false positives on legitimate reverts.
 function addedLines(file: string): { added: Set<number>; revert: boolean } {
@@ -193,7 +193,7 @@ function addedLines(file: string): { added: Set<number>; revert: boolean } {
   return { added, revert }
 }
 
-// kilocode_change start
+// taverncode_change start
 function content(file: string) {
   const abs = path.join(ROOT, file)
   // The content must come from the SAME revision the added-line numbers come
@@ -212,10 +212,10 @@ function content(file: string) {
 
   return readFileSync(path.resolve(path.dirname(abs), target), "utf8")
 }
-// kilocode_change end
+// taverncode_change end
 
-// Matches the start of a kilocode_change marker in JS, JSX, YAML, TOML, and shell comments.
-const MARKER_PREFIX = /(?:\/\/|\{?\s*\/\*|#)\s*kilocode_change\b/
+// Matches the start of a taverncode_change marker in JS, JSX, YAML, TOML, and shell comments.
+const MARKER_PREFIX = /(?:\/\/|\{?\s*\/\*|#)\s*taverncode_change\b/
 
 function hasMarker(line: string) {
   return MARKER_PREFIX.test(line)
@@ -225,9 +225,9 @@ function coveredLines(text: string): { lines: string[]; covered: Set<number> } {
   const lines = text.split(/\r?\n/)
   const covered = new Set<number>()
 
-  // Whole-file annotation: first non-shebang non-empty line is a kilocode_change - new file marker.
+  // Whole-file annotation: first non-shebang non-empty line is a taverncode_change - new file marker.
   const first = lines.find((x) => x.trim() !== "" && !x.startsWith("#!"))
-  if (first?.match(/(?:\/\/|\{?\s*\/\*|#)\s*kilocode_change\s*-\s*new\s*file\b/)) {
+  if (first?.match(/(?:\/\/|\{?\s*\/\*|#)\s*taverncode_change\s*-\s*new\s*file\b/)) {
     for (let i = 1; i <= lines.length; i++) covered.add(i)
     return { lines, covered }
   }
@@ -237,13 +237,13 @@ function coveredLines(text: string): { lines: string[]; covered: Set<number> } {
     const n = i + 1
     const line = lines[i] ?? ""
 
-    if (line.match(/(?:\/\/|\{?\s*\/\*|#)\s*kilocode_change\s+start\b/)) {
+    if (line.match(/(?:\/\/|\{?\s*\/\*|#)\s*taverncode_change\s+start\b/)) {
       block = true
       covered.add(n)
       continue
     }
 
-    if (line.match(/(?:\/\/|\{?\s*\/\*|#)\s*kilocode_change\s+end\b/)) {
+    if (line.match(/(?:\/\/|\{?\s*\/\*|#)\s*taverncode_change\s+end\b/)) {
       covered.add(n)
       block = false
       continue
@@ -279,9 +279,9 @@ const violations: string[] = []
 for (const file of files) {
   const { added, revert } = addedLines(file)
   if (added.size === 0) continue
-  if (revert) continue // kilocode_change - file is reverting Kilo modifications back to upstream
+  if (revert) continue // taverncode_change - file is reverting Tavern modifications back to upstream
 
-  const text = content(file) // kilocode_change
+  const text = content(file) // taverncode_change
   const { lines, covered } = coveredLines(text)
 
   for (const n of added) {
@@ -294,51 +294,51 @@ for (const file of files) {
 }
 
 if (violations.length === 0) {
-  console.log("All shared upstream changes are annotated with kilocode_change markers.")
+  console.log("All shared upstream changes are annotated with taverncode_change markers.")
   process.exit(0)
 }
 
 console.error(
   [
-    "Unannotated Kilo changes found in shared upstream files:",
+    "Unannotated Tavern changes found in shared upstream files:",
     "",
     ...violations,
     "",
-    "Every Kilo-specific change in shared upstream source files must be annotated.",
+    "Every Tavern-specific change in shared upstream source files must be annotated.",
     "",
     "Checked paths:",
     ...SCOPES.map((scope) => `  - ${scope}/**`),
     "",
     "Inline (single line):",
-    "  const url = Flag.KILO_MODELS_URL || 'https://models.dev' // kilocode_change",
+    "  const url = Flag.TAVERN_MODELS_URL || 'https://models.dev' // taverncode_change",
     "",
     "Block (multiple lines):",
-    "  // kilocode_change start",
+    "  // taverncode_change start",
     "  ...",
-    "  // kilocode_change end",
+    "  // taverncode_change end",
     "",
     "JSX/TSX (inside JSX templates):",
-    "  {/* kilocode_change */}",
-    "  {/* kilocode_change start */}",
+    "  {/* taverncode_change */}",
+    "  {/* taverncode_change start */}",
     "  ...",
-    "  {/* kilocode_change end */}",
+    "  {/* taverncode_change end */}",
     "",
     "YAML/TOML/shell:",
-    "  # kilocode_change",
-    "  # kilocode_change start",
+    "  # taverncode_change",
+    "  # taverncode_change start",
     "  ...",
-    "  # kilocode_change end",
+    "  # taverncode_change end",
     "",
     "New file:",
-    "  // kilocode_change - new file",
+    "  // taverncode_change - new file",
     "",
     "Exempt paths (no markers needed):",
-    "  - packages/opencode/src/kilocode/**",
-    "  - packages/opencode/test/kilocode/**",
-    "  - Any path containing 'kilocode' in the directory or filename",
-    "  - Any directory starting with 'kilo-' (e.g. kilo-sessions/)",
+    "  - packages/opencode/src/taverncode/**",
+    "  - packages/opencode/test/taverncode/**",
+    "  - Any path containing 'taverncode' in the directory or filename",
+    "  - Any directory starting with 'tavern-' (e.g. tavern-sessions/)",
     "  - script/upstream/**",
-    "  - Kilo-specific annotation checker support files",
+    "  - Tavern-specific annotation checker support files",
     "",
     "See AGENTS.md for details.",
   ].join("\n"),

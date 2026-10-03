@@ -6,8 +6,8 @@
 
 ## Do Not Translate (Locale Additions)
 
-- `Kilo` (preserve casing in prose; keep `kilo` only in commands, package names, paths, or code)
-- `Kilo CLI`
+- `Tavern` (preserve casing in prose; keep `tavern` only in commands, package names, paths, or code)
+- `Tavern CLI`
 - `CLI`, `TUI`, `MCP`, `OAuth`
 - Locale code `br` in repo config, code, and paths (repo alias for Brazilian Portuguese)
 

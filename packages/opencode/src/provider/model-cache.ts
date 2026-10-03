@@ -1,35 +1,35 @@
-// kilocode_change - new file
-import { fetchKiloModels, type KiloModelsResult } from "@kilocode/kilo-gateway"
+// taverncode_change - new file
+import { fetchTavernModels, type TavernModelsResult } from "@taverncode/tavern-gateway"
 import { Context, Deferred, Duration, Effect, Exit, Layer, Schema, Scope } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
 import { Config } from "../config/config"
 import { Auth } from "../auth"
-import { compatible, organization, token } from "@/kilocode/provider/catalog"
+import { compatible, organization, token } from "@/taverncode/provider/catalog"
 import type { Provider } from "@opencode-ai/core/models-dev"
 import * as Log from "@opencode-ai/core/util/log"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // kilocode_change
-import { httpClient } from "@opencode-ai/core/effect/app-node-platform" // kilocode_change
+import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // taverncode_change
+import { httpClient } from "@opencode-ai/core/effect/app-node-platform" // taverncode_change
 
 type Models = Provider["models"]
-type KiloOptions = NonNullable<Parameters<typeof fetchKiloModels>[0]>
-type Options = { -readonly [K in keyof KiloOptions]?: KiloOptions[K] } & { apiKey?: string }
-type Failure = NonNullable<KiloModelsResult["error"]>
+type TavernOptions = NonNullable<Parameters<typeof fetchTavernModels>[0]>
+type Options = { -readonly [K in keyof TavernOptions]?: TavernOptions[K] } & { apiKey?: string }
+type Failure = NonNullable<TavernModelsResult["error"]>
 type Result = { readonly models: Models; readonly error?: Failure }
 type View = { models?: Models; timestamp?: number }
 type Flight = { readonly done: Deferred.Deferred<Result, unknown>; version: number }
 
-export interface KiloModels {
-  readonly fetch: (options: KiloOptions) => Effect.Effect<KiloModelsResult, unknown>
+export interface TavernModels {
+  readonly fetch: (options: TavernOptions) => Effect.Effect<TavernModelsResult, unknown>
 }
 
-export class KiloModelsService extends Context.Service<KiloModelsService, KiloModels>()(
-  "@kilocode/ModelCache/KiloModels",
+export class TavernModelsService extends Context.Service<TavernModelsService, TavernModels>()(
+  "@taverncode/ModelCache/TavernModels",
 ) {}
 
-export const kiloModelsLayer = Layer.succeed(
-  KiloModelsService,
-  KiloModelsService.of({ fetch: (options) => Effect.tryPromise(() => fetchKiloModels(options)) }),
+export const tavernModelsLayer = Layer.succeed(
+  TavernModelsService,
+  TavernModelsService.of({ fetch: (options) => Effect.tryPromise(() => fetchTavernModels(options)) }),
 )
 type Cell = {
   readonly providerID: string
@@ -48,7 +48,7 @@ export interface Interface {
   readonly clear: (providerID: string) => Effect.Effect<void>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@kilocode/ModelCache") {}
+export class Service extends Context.Service<Service, Interface>()("@taverncode/ModelCache") {}
 
 const log = Log.create({ service: "model-cache" })
 const ttl = Duration.minutes(5)
@@ -60,13 +60,13 @@ type ApertisItem = Schema.Schema.Type<typeof ApertisItem>
 export const layer: Layer.Layer<
   Service,
   never,
-  Auth.Service | Config.Service | KiloModelsService | HttpClient.HttpClient
+  Auth.Service | Config.Service | TavernModelsService | HttpClient.HttpClient
 > = Layer.effect(
   Service,
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const cfg = yield* Config.Service
-    const kilo = yield* KiloModelsService
+    const tavern = yield* TavernModelsService
     const http = yield* HttpClient.HttpClient
     const scope = yield* Scope.Scope
     const cells = new Map<string, Cell>()
@@ -120,19 +120,19 @@ export const layer: Layer.Layer<
     })
 
     const authOptions = Effect.fn("ModelCache.authOptions")(function* (providerID: string) {
-      if (providerID !== "kilo" && providerID !== "apertis") return {}
+      if (providerID !== "tavern" && providerID !== "apertis") return {}
       const config = yield* cfg.get()
       const options: Options = {}
 
-      if (providerID === "kilo") {
+      if (providerID === "tavern") {
         const item = config.provider?.[providerID]
         const info = yield* auth.get(providerID)
-        options.kilocodeOrganizationId = organization(item?.options, info)
-        options.kilocodeToken = token(item?.options, info)
+        options.taverncodeOrganizationId = organization(item?.options, info)
+        options.taverncodeToken = token(item?.options, info)
         log.debug("auth options resolved", {
           providerID,
-          hasToken: !!options.kilocodeToken,
-          hasOrganizationId: !!options.kilocodeOrganizationId,
+          hasToken: !!options.taverncodeToken,
+          hasOrganizationId: !!options.taverncodeOrganizationId,
         })
       }
 
@@ -156,7 +156,7 @@ export const layer: Layer.Layer<
     })
 
     const fetchModels = (providerID: string, options: Options): Effect.Effect<Result, unknown> => {
-      if (providerID === "kilo") return kilo.fetch(options)
+      if (providerID === "tavern") return tavern.fetch(options)
       if (providerID === "apertis") return fetchApertisModels(options).pipe(Effect.map((models) => ({ models })))
       log.debug("provider not implemented", { providerID })
       return Effect.succeed({ models: {} })
@@ -172,13 +172,13 @@ export const layer: Layer.Layer<
         ),
       )
       const input = { ...resolved, ...options }
-      if (providerID === "kilo" && !compatible(input)) return { models: {}, error: { kind: "schema" as const } }
+      if (providerID === "tavern" && !compatible(input)) return { models: {}, error: { kind: "schema" as const } }
       return yield* fetchModels(providerID, input)
     })
 
     const key = (providerID: string, options?: Options) => {
-      if (providerID === "kilo") {
-        return JSON.stringify([providerID, options?.baseURL, options?.kilocodeOrganizationId, options?.kilocodeToken])
+      if (providerID === "tavern") {
+        return JSON.stringify([providerID, options?.baseURL, options?.taverncodeOrganizationId, options?.taverncodeToken])
       }
       if (providerID === "apertis") return JSON.stringify([providerID, options?.baseURL, options?.apiKey])
       return providerID
@@ -321,13 +321,13 @@ export const layer: Layer.Layer<
   }),
 )
 
-export const defaultLayer: Layer.Layer<Service> = Layer.suspend(() => AppNodeBuilder.build(node)) // kilocode_change - build from the LayerNode graph
+export const defaultLayer: Layer.Layer<Service> = Layer.suspend(() => AppNodeBuilder.build(node)) // taverncode_change - build from the LayerNode graph
 
-const kiloModels = LayerNode.make({ name: "kilo-models", layer: kiloModelsLayer, deps: [] })
+const tavernModels = LayerNode.make({ name: "tavern-models", layer: tavernModelsLayer, deps: [] })
 export const node = LayerNode.make({
   service: Service,
   layer,
-  deps: [Auth.node, Config.node, kiloModels, httpClient],
+  deps: [Auth.node, Config.node, tavernModels, httpClient],
 })
 
 export * as ModelCache from "./model-cache"

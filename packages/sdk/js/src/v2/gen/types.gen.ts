@@ -112,12 +112,12 @@ export type Event =
   | EventSuggestionShown
   | EventSuggestionAccepted
   | EventSuggestionDismissed
-  | EventKilocodeAgentManagerStart
-  | EventKilocodeAgentManagerRequested
-  | EventKilocodeAgentManagerCancelled
-  | EventKilocodeNotebookRequested
-  | EventKilocodeNotebookCancelled
-  | EventKiloSessionsRemoteStatusChanged
+  | EventTaverncodeAgentManagerStart
+  | EventTaverncodeAgentManagerRequested
+  | EventTaverncodeAgentManagerCancelled
+  | EventTaverncodeNotebookRequested
+  | EventTaverncodeNotebookCancelled
+  | EventTavernSessionsRemoteStatusChanged
   | EventLspClientDiagnostics
   | EventMemoryStatus1
   | EventMemoryUpdated1
@@ -1161,12 +1161,12 @@ export type GlobalEvent = {
     | EventSuggestionShown
     | EventSuggestionAccepted
     | EventSuggestionDismissed
-    | EventKilocodeAgentManagerStart
-    | EventKilocodeAgentManagerRequested
-    | EventKilocodeAgentManagerCancelled
-    | EventKilocodeNotebookRequested
-    | EventKilocodeNotebookCancelled
-    | EventKiloSessionsRemoteStatusChanged
+    | EventTaverncodeAgentManagerStart
+    | EventTaverncodeAgentManagerRequested
+    | EventTaverncodeAgentManagerCancelled
+    | EventTaverncodeNotebookRequested
+    | EventTaverncodeNotebookCancelled
+    | EventTavernSessionsRemoteStatusChanged
     | EventLspClientDiagnostics
     | EventMemoryStatus
     | EventMemoryUpdated
@@ -2217,7 +2217,7 @@ export type GlobalEvent = {
 export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR"
 
 /**
- * Server configuration for the kilo serve command
+ * Server configuration for the tavern serve command
  */
 export type ServerConfig = {
   port?: number
@@ -2230,7 +2230,7 @@ export type ServerConfig = {
 export type IndexingConfig = {
   enabled?: boolean
   provider?:
-    | "kilo"
+    | "tavern"
     | "openai"
     | "ollama"
     | "openai-compatible"
@@ -2243,7 +2243,7 @@ export type IndexingConfig = {
   model?: string | null
   dimension?: number | null
   vectorStore?: "lancedb" | "qdrant"
-  kilo?: {
+  tavern?: {
     apiKey?: string
     baseUrl?: string
     organizationId?: string
@@ -2332,6 +2332,7 @@ export type AgentConfig = {
   temperature?: number
   top_p?: number
   prompt?: string
+  prefill?: string
   tools?: {
     [key: string]: boolean
   }
@@ -2563,7 +2564,7 @@ export type Config = {
   indexing?: IndexingConfig
   console?: {
     /**
-     * Width of the Kilo Console project context sidebar in pixels
+     * Width of the Tavern Console project context sidebar in pixels
      */
     context_sidebar_width?: number
     diff_style?: "unified" | "split"
@@ -3107,6 +3108,7 @@ export type Agent = {
   }
   variant?: string
   prompt?: string
+  prefill?: string
   options: {
     [key: string]: unknown
   }
@@ -4110,7 +4112,7 @@ export type TuiKeybindListResponse = {
   keybinds: Array<TuiKeybindInfo>
 }
 
-export type KiloEmbeddingModelCatalog = {
+export type TavernEmbeddingModelCatalog = {
   defaultModel: string
   models: Array<{
     id: string
@@ -4401,7 +4403,7 @@ export type ProviderUsageError = {
 export type ProviderUsageSnapshot = {
   id: string
   providerID: string
-  sourceKind: "kilo_managed" | "direct"
+  sourceKind: "tavern_managed" | "direct"
   providerLabel: string
   planLabel: string
   sourceLabel: string
@@ -4690,7 +4692,7 @@ export type AnacondaDesktopOperationError = {
   message: string
 }
 
-export type KilocodeMigrateSessionsMigrated = {
+export type TaverncodeMigrateSessionsMigrated = {
   /**
    * Source session UUID.
    */
@@ -4713,11 +4715,11 @@ export type KilocodeMigrateSessionsMigrated = {
   dropped: Array<string>
 }
 
-export type KilocodeMigrateSessionsResult = {
+export type TaverncodeMigrateSessionsResult = {
   /**
    * Per-source outcomes, most recently modified source first.
    */
-  sessions: Array<KilocodeMigrateSessionsMigrated>
+  sessions: Array<TaverncodeMigrateSessionsMigrated>
   /**
    * Number of sources migrated by this call.
    */
@@ -4736,12 +4738,12 @@ export type MigrateFailedError = {
   message: string
 }
 
-export type KilocodeMigrateSessionsModel = {
+export type TaverncodeMigrateSessionsModel = {
   providerID: string
   modelID: string
 }
 
-export type KilocodeMigrateSessionsDiscovered = {
+export type TaverncodeMigrateSessionsDiscovered = {
   /**
    * Session UUID parsed from the transcript filename.
    */
@@ -4767,22 +4769,22 @@ export type KilocodeMigrateSessionsDiscovered = {
    * Number of user + assistant steps in the transcript.
    */
   messages: number
-  model?: KilocodeMigrateSessionsModel
+  model?: TaverncodeMigrateSessionsModel
   sessionID?: string
 }
 
-export type KilocodeMigrateSessionsDiscoverResult = {
+export type TaverncodeMigrateSessionsDiscoverResult = {
   /**
    * Discovered migratable sessions, most recently modified first.
    */
-  sessions: Array<KilocodeMigrateSessionsDiscovered>
+  sessions: Array<TaverncodeMigrateSessionsDiscovered>
   /**
    * Human-readable reasons for transcripts that were found but could not be previewed.
    */
   dropped: Array<string>
 }
 
-export type KilocodeSessionImportResult = {
+export type TaverncodeSessionImportResult = {
   ok: boolean
   id: string
   skipped?: boolean
@@ -5244,9 +5246,9 @@ export type EventSuggestionDismissed = {
   }
 }
 
-export type EventKilocodeAgentManagerStart = {
+export type EventTaverncodeAgentManagerStart = {
   id: string
-  type: "kilocode.agent_manager.start"
+  type: "taverncode.agent_manager.start"
   properties: {
     requestID: string
     sessionID: string
@@ -5267,15 +5269,15 @@ export type EventKilocodeAgentManagerStart = {
   }
 }
 
-export type EventKilocodeAgentManagerRequested = {
+export type EventTaverncodeAgentManagerRequested = {
   id: string
-  type: "kilocode.agent_manager.requested"
+  type: "taverncode.agent_manager.requested"
   properties: AgentManagerRequest
 }
 
-export type EventKilocodeAgentManagerCancelled = {
+export type EventTaverncodeAgentManagerCancelled = {
   id: string
-  type: "kilocode.agent_manager.cancelled"
+  type: "taverncode.agent_manager.cancelled"
   properties: {
     requestID: AgentManagerRequestId
     sessionID: string
@@ -5283,15 +5285,15 @@ export type EventKilocodeAgentManagerCancelled = {
   }
 }
 
-export type EventKilocodeNotebookRequested = {
+export type EventTaverncodeNotebookRequested = {
   id: string
-  type: "kilocode.notebook.requested"
+  type: "taverncode.notebook.requested"
   properties: NotebookRequest
 }
 
-export type EventKilocodeNotebookCancelled = {
+export type EventTaverncodeNotebookCancelled = {
   id: string
-  type: "kilocode.notebook.cancelled"
+  type: "taverncode.notebook.cancelled"
   properties: {
     requestID: NotebookRequestId
     sessionID: string
@@ -5299,9 +5301,9 @@ export type EventKilocodeNotebookCancelled = {
   }
 }
 
-export type EventKiloSessionsRemoteStatusChanged = {
+export type EventTavernSessionsRemoteStatusChanged = {
   id: string
-  type: "kilo-sessions.remote-status-changed"
+  type: "tavern-sessions.remote-status-changed"
   properties: {
     enabled: boolean
     connected: boolean
@@ -16109,9 +16111,9 @@ export type IndexingModelsError = IndexingModelsErrors[keyof IndexingModelsError
 
 export type IndexingModelsResponses = {
   /**
-   * Kilo embedding model catalog
+   * Tavern embedding model catalog
    */
-  200: KiloEmbeddingModelCatalog
+  200: TavernEmbeddingModelCatalog
 }
 
 export type IndexingModelsResponse = IndexingModelsResponses[keyof IndexingModelsResponses]
@@ -16178,26 +16180,26 @@ export type InstanceReloadResponses = {
 
 export type InstanceReloadResponse = InstanceReloadResponses[keyof InstanceReloadResponses]
 
-export type KiloProfileData = {
+export type TavernProfileData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/profile"
+  url: "/tavern/profile"
 }
 
-export type KiloProfileErrors = {
+export type TavernProfileErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloProfileError = KiloProfileErrors[keyof KiloProfileErrors]
+export type TavernProfileError = TavernProfileErrors[keyof TavernProfileErrors]
 
-export type KiloProfileResponses = {
+export type TavernProfileResponses = {
   /**
    * Profile data
    */
@@ -16216,7 +16218,7 @@ export type KiloProfileResponses = {
     balance: {
       balance: number
     } | null
-    kiloPass: {
+    tavernPass: {
       currentPeriodBaseCreditsUsd: number
       currentPeriodUsageUsd: number
       currentPeriodBonusCreditsUsd: number
@@ -16226,30 +16228,30 @@ export type KiloProfileResponses = {
   }
 }
 
-export type KiloProfileResponse = KiloProfileResponses[keyof KiloProfileResponses]
+export type TavernProfileResponse = TavernProfileResponses[keyof TavernProfileResponses]
 
-export type KiloAuthStatusData = {
+export type TavernAuthStatusData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/auth-status"
+  url: "/tavern/auth-status"
 }
 
-export type KiloAuthStatusErrors = {
+export type TavernAuthStatusErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloAuthStatusError = KiloAuthStatusErrors[keyof KiloAuthStatusErrors]
+export type TavernAuthStatusError = TavernAuthStatusErrors[keyof TavernAuthStatusErrors]
 
-export type KiloAuthStatusResponses = {
+export type TavernAuthStatusResponses = {
   /**
-   * Kilo authentication status
+   * Tavern authentication status
    */
   200: {
     authenticated: boolean
@@ -16258,28 +16260,28 @@ export type KiloAuthStatusResponses = {
   }
 }
 
-export type KiloAuthStatusResponse = KiloAuthStatusResponses[keyof KiloAuthStatusResponses]
+export type TavernAuthStatusResponse = TavernAuthStatusResponses[keyof TavernAuthStatusResponses]
 
-export type KiloModesData = {
+export type TavernModesData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/modes"
+  url: "/tavern/modes"
 }
 
-export type KiloModesErrors = {
+export type TavernModesErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KiloModesError = KiloModesErrors[keyof KiloModesErrors]
+export type TavernModesError = TavernModesErrors[keyof TavernModesErrors]
 
-export type KiloModesResponses = {
+export type TavernModesResponses = {
   /**
    * Organization modes list
    */
@@ -16312,9 +16314,9 @@ export type KiloModesResponses = {
   }
 }
 
-export type KiloModesResponse = KiloModesResponses[keyof KiloModesResponses]
+export type TavernModesResponse = TavernModesResponses[keyof TavernModesResponses]
 
-export type KiloFimData = {
+export type TavernFimData = {
   body?: {
     prefix: string
     suffix: string
@@ -16328,40 +16330,28 @@ export type KiloFimData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/fim"
+  url: "/tavern/fim"
 }
 
-export type KiloFimErrors = {
+export type TavernFimErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloFimError = KiloFimErrors[keyof KiloFimErrors]
+export type TavernFimError = TavernFimErrors[keyof TavernFimErrors]
 
-export type KiloFimResponses = {
+export type TavernFimResponses = {
   /**
-   * Streaming FIM completion response
+   * Success
    */
-  200: {
-    choices?: Array<{
-      delta?: {
-        content?: string
-      }
-      text?: string
-    }>
-    usage?: {
-      prompt_tokens?: number
-      completion_tokens?: number
-    }
-    cost?: number
-  }
+  200: string
 }
 
-export type KiloFimResponse = KiloFimResponses[keyof KiloFimResponses]
+export type TavernFimResponse = TavernFimResponses[keyof TavernFimResponses]
 
-export type KiloEditData = {
+export type TavernEditData = {
   body?: {
     provider?: string
     model?: string
@@ -16383,19 +16373,19 @@ export type KiloEditData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/edit"
+  url: "/tavern/edit"
 }
 
-export type KiloEditErrors = {
+export type TavernEditErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloEditError = KiloEditErrors[keyof KiloEditErrors]
+export type TavernEditError = TavernEditErrors[keyof TavernEditErrors]
 
-export type KiloEditResponses = {
+export type TavernEditResponses = {
   /**
    * Next Edit completion
    */
@@ -16408,9 +16398,9 @@ export type KiloEditResponses = {
   }
 }
 
-export type KiloEditResponse = KiloEditResponses[keyof KiloEditResponses]
+export type TavernEditResponse = TavernEditResponses[keyof TavernEditResponses]
 
-export type KiloAudioTranscriptionsData = {
+export type TavernAudioTranscriptionsData = {
   body?: {
     model: string
     input_audio: {
@@ -16426,19 +16416,19 @@ export type KiloAudioTranscriptionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/audio/transcriptions"
+  url: "/tavern/audio/transcriptions"
 }
 
-export type KiloAudioTranscriptionsErrors = {
+export type TavernAudioTranscriptionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloAudioTranscriptionsError = KiloAudioTranscriptionsErrors[keyof KiloAudioTranscriptionsErrors]
+export type TavernAudioTranscriptionsError = TavernAudioTranscriptionsErrors[keyof TavernAudioTranscriptionsErrors]
 
-export type KiloAudioTranscriptionsResponses = {
+export type TavernAudioTranscriptionsResponses = {
   /**
    * Transcription response
    */
@@ -16448,28 +16438,29 @@ export type KiloAudioTranscriptionsResponses = {
   }
 }
 
-export type KiloAudioTranscriptionsResponse = KiloAudioTranscriptionsResponses[keyof KiloAudioTranscriptionsResponses]
+export type TavernAudioTranscriptionsResponse =
+  TavernAudioTranscriptionsResponses[keyof TavernAudioTranscriptionsResponses]
 
-export type KiloModelsImagesData = {
+export type TavernModelsImagesData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/models/images"
+  url: "/tavern/models/images"
 }
 
-export type KiloModelsImagesErrors = {
+export type TavernModelsImagesErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloModelsImagesError = KiloModelsImagesErrors[keyof KiloModelsImagesErrors]
+export type TavernModelsImagesError = TavernModelsImagesErrors[keyof TavernModelsImagesErrors]
 
-export type KiloModelsImagesResponses = {
+export type TavernModelsImagesResponses = {
   /**
    * Image-capable model list
    */
@@ -16480,28 +16471,28 @@ export type KiloModelsImagesResponses = {
   }>
 }
 
-export type KiloModelsImagesResponse = KiloModelsImagesResponses[keyof KiloModelsImagesResponses]
+export type TavernModelsImagesResponse = TavernModelsImagesResponses[keyof TavernModelsImagesResponses]
 
-export type KiloModelsTranscriptionsData = {
+export type TavernModelsTranscriptionsData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/models/transcriptions"
+  url: "/tavern/models/transcriptions"
 }
 
-export type KiloModelsTranscriptionsErrors = {
+export type TavernModelsTranscriptionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloModelsTranscriptionsError = KiloModelsTranscriptionsErrors[keyof KiloModelsTranscriptionsErrors]
+export type TavernModelsTranscriptionsError = TavernModelsTranscriptionsErrors[keyof TavernModelsTranscriptionsErrors]
 
-export type KiloModelsTranscriptionsResponses = {
+export type TavernModelsTranscriptionsResponses = {
   /**
    * Speech-to-text model list
    */
@@ -16511,29 +16502,29 @@ export type KiloModelsTranscriptionsResponses = {
   }>
 }
 
-export type KiloModelsTranscriptionsResponse =
-  KiloModelsTranscriptionsResponses[keyof KiloModelsTranscriptionsResponses]
+export type TavernModelsTranscriptionsResponse =
+  TavernModelsTranscriptionsResponses[keyof TavernModelsTranscriptionsResponses]
 
-export type KiloNotificationsData = {
+export type TavernNotificationsData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/notifications"
+  url: "/tavern/notifications"
 }
 
-export type KiloNotificationsErrors = {
+export type TavernNotificationsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloNotificationsError = KiloNotificationsErrors[keyof KiloNotificationsErrors]
+export type TavernNotificationsError = TavernNotificationsErrors[keyof TavernNotificationsErrors]
 
-export type KiloNotificationsResponses = {
+export type TavernNotificationsResponses = {
   /**
    * Notifications list
    */
@@ -16550,9 +16541,9 @@ export type KiloNotificationsResponses = {
   }>
 }
 
-export type KiloNotificationsResponse = KiloNotificationsResponses[keyof KiloNotificationsResponses]
+export type TavernNotificationsResponse = TavernNotificationsResponses[keyof TavernNotificationsResponses]
 
-export type KiloOrganizationSetData = {
+export type TavernOrganizationSetData = {
   body?: {
     organizationId: string | null
   }
@@ -16561,28 +16552,28 @@ export type KiloOrganizationSetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/organization"
+  url: "/tavern/organization"
 }
 
-export type KiloOrganizationSetErrors = {
+export type TavernOrganizationSetErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloOrganizationSetError = KiloOrganizationSetErrors[keyof KiloOrganizationSetErrors]
+export type TavernOrganizationSetError = TavernOrganizationSetErrors[keyof TavernOrganizationSetErrors]
 
-export type KiloOrganizationSetResponses = {
+export type TavernOrganizationSetResponses = {
   /**
    * Organization updated successfully
    */
   200: boolean
 }
 
-export type KiloOrganizationSetResponse = KiloOrganizationSetResponses[keyof KiloOrganizationSetResponses]
+export type TavernOrganizationSetResponse = TavernOrganizationSetResponses[keyof TavernOrganizationSetResponses]
 
-export type KiloCloudSessionsData = {
+export type TavernCloudSessionsData = {
   body?: never
   path?: never
   query?: {
@@ -16592,19 +16583,19 @@ export type KiloCloudSessionsData = {
     limit?: number
     gitUrl?: string
   }
-  url: "/kilo/cloud-sessions"
+  url: "/tavern/cloud-sessions"
 }
 
-export type KiloCloudSessionsErrors = {
+export type TavernCloudSessionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KiloCloudSessionsError = KiloCloudSessionsErrors[keyof KiloCloudSessionsErrors]
+export type TavernCloudSessionsError = TavernCloudSessionsErrors[keyof TavernCloudSessionsErrors]
 
-export type KiloCloudSessionsResponses = {
+export type TavernCloudSessionsResponses = {
   /**
    * Cloud sessions list
    */
@@ -16620,9 +16611,9 @@ export type KiloCloudSessionsResponses = {
   }
 }
 
-export type KiloCloudSessionsResponse = KiloCloudSessionsResponses[keyof KiloCloudSessionsResponses]
+export type TavernCloudSessionsResponse = TavernCloudSessionsResponses[keyof TavernCloudSessionsResponses]
 
-export type KiloCloudSessionGetData = {
+export type TavernCloudSessionGetData = {
   body?: never
   path: {
     id: string
@@ -16631,10 +16622,10 @@ export type KiloCloudSessionGetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/{id}"
+  url: "/tavern/cloud/session/{id}"
 }
 
-export type KiloCloudSessionGetErrors = {
+export type TavernCloudSessionGetErrors = {
   /**
    * Bad request
    */
@@ -16645,9 +16636,9 @@ export type KiloCloudSessionGetErrors = {
   404: NotFoundError
 }
 
-export type KiloCloudSessionGetError = KiloCloudSessionGetErrors[keyof KiloCloudSessionGetErrors]
+export type TavernCloudSessionGetError = TavernCloudSessionGetErrors[keyof TavernCloudSessionGetErrors]
 
-export type KiloCloudSessionGetResponses = {
+export type TavernCloudSessionGetResponses = {
   /**
    * Cloud session data
    */
@@ -16680,9 +16671,9 @@ export type KiloCloudSessionGetResponses = {
   }
 }
 
-export type KiloCloudSessionGetResponse = KiloCloudSessionGetResponses[keyof KiloCloudSessionGetResponses]
+export type TavernCloudSessionGetResponse = TavernCloudSessionGetResponses[keyof TavernCloudSessionGetResponses]
 
-export type KiloCloudSessionImportData = {
+export type TavernCloudSessionImportData = {
   body?: {
     sessionId: string
   }
@@ -16691,10 +16682,10 @@ export type KiloCloudSessionImportData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/import"
+  url: "/tavern/cloud/session/import"
 }
 
-export type KiloCloudSessionImportErrors = {
+export type TavernCloudSessionImportErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -16709,9 +16700,9 @@ export type KiloCloudSessionImportErrors = {
   500: CloudSessionImportError
 }
 
-export type KiloCloudSessionImportError = KiloCloudSessionImportErrors[keyof KiloCloudSessionImportErrors]
+export type TavernCloudSessionImportError = TavernCloudSessionImportErrors[keyof TavernCloudSessionImportErrors]
 
-export type KiloCloudSessionImportResponses = {
+export type TavernCloudSessionImportResponses = {
   /**
    * Imported session info
    */
@@ -16725,9 +16716,10 @@ export type KiloCloudSessionImportResponses = {
   }
 }
 
-export type KiloCloudSessionImportResponse = KiloCloudSessionImportResponses[keyof KiloCloudSessionImportResponses]
+export type TavernCloudSessionImportResponse =
+  TavernCloudSessionImportResponses[keyof TavernCloudSessionImportResponses]
 
-export type KilocodeResumeSessionData = {
+export type TaverncodeResumeSessionData = {
   body?: {
     messageID: string
     snapshotInitialization?: "wait"
@@ -16739,10 +16731,10 @@ export type KilocodeResumeSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/resume"
+  url: "/taverncode/session/{sessionID}/resume"
 }
 
-export type KilocodeResumeSessionErrors = {
+export type TaverncodeResumeSessionErrors = {
   /**
    * InvalidRequestError
    */
@@ -16753,18 +16745,18 @@ export type KilocodeResumeSessionErrors = {
   404: NotFoundError
 }
 
-export type KilocodeResumeSessionError = KilocodeResumeSessionErrors[keyof KilocodeResumeSessionErrors]
+export type TaverncodeResumeSessionError = TaverncodeResumeSessionErrors[keyof TaverncodeResumeSessionErrors]
 
-export type KilocodeResumeSessionResponses = {
+export type TaverncodeResumeSessionResponses = {
   /**
    * Session continuation accepted
    */
   200: boolean
 }
 
-export type KilocodeResumeSessionResponse = KilocodeResumeSessionResponses[keyof KilocodeResumeSessionResponses]
+export type TaverncodeResumeSessionResponse = TaverncodeResumeSessionResponses[keyof TaverncodeResumeSessionResponses]
 
-export type KilocodeDrainSessionData = {
+export type TaverncodeDrainSessionData = {
   body?: {
     token: string
   }
@@ -16775,10 +16767,10 @@ export type KilocodeDrainSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/drain"
+  url: "/taverncode/session/{sessionID}/drain"
 }
 
-export type KilocodeDrainSessionErrors = {
+export type TaverncodeDrainSessionErrors = {
   /**
    * Bad request
    */
@@ -16789,18 +16781,18 @@ export type KilocodeDrainSessionErrors = {
   404: NotFoundError
 }
 
-export type KilocodeDrainSessionError = KilocodeDrainSessionErrors[keyof KilocodeDrainSessionErrors]
+export type TaverncodeDrainSessionError = TaverncodeDrainSessionErrors[keyof TaverncodeDrainSessionErrors]
 
-export type KilocodeDrainSessionResponses = {
+export type TaverncodeDrainSessionResponses = {
   /**
    * Session work drained
    */
   200: boolean
 }
 
-export type KilocodeDrainSessionResponse = KilocodeDrainSessionResponses[keyof KilocodeDrainSessionResponses]
+export type TaverncodeDrainSessionResponse = TaverncodeDrainSessionResponses[keyof TaverncodeDrainSessionResponses]
 
-export type KilocodeSessionBoardData = {
+export type TaverncodeSessionBoardData = {
   body?: never
   path: {
     sessionID: string
@@ -16811,10 +16803,10 @@ export type KilocodeSessionBoardData = {
     before?: string
     limit?: number
   }
-  url: "/kilocode/session/{sessionID}/board"
+  url: "/taverncode/session/{sessionID}/board"
 }
 
-export type KilocodeSessionBoardErrors = {
+export type TaverncodeSessionBoardErrors = {
   /**
    * InvalidRequestError
    */
@@ -16833,18 +16825,18 @@ export type KilocodeSessionBoardErrors = {
   500: UnknownError1
 }
 
-export type KilocodeSessionBoardError = KilocodeSessionBoardErrors[keyof KilocodeSessionBoardErrors]
+export type TaverncodeSessionBoardError = TaverncodeSessionBoardErrors[keyof TaverncodeSessionBoardErrors]
 
-export type KilocodeSessionBoardResponses = {
+export type TaverncodeSessionBoardResponses = {
   /**
    * Shared board snapshot
    */
   200: SessionBoard
 }
 
-export type KilocodeSessionBoardResponse = KilocodeSessionBoardResponses[keyof KilocodeSessionBoardResponses]
+export type TaverncodeSessionBoardResponse = TaverncodeSessionBoardResponses[keyof TaverncodeSessionBoardResponses]
 
-export type KilocodeResetSessionBoardData = {
+export type TaverncodeResetSessionBoardData = {
   body?: {
     revision: number
   }
@@ -16855,10 +16847,10 @@ export type KilocodeResetSessionBoardData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/board/reset"
+  url: "/taverncode/session/{sessionID}/board/reset"
 }
 
-export type KilocodeResetSessionBoardErrors = {
+export type TaverncodeResetSessionBoardErrors = {
   /**
    * InvalidRequestError
    */
@@ -16877,75 +16869,76 @@ export type KilocodeResetSessionBoardErrors = {
   500: UnknownError1
 }
 
-export type KilocodeResetSessionBoardError = KilocodeResetSessionBoardErrors[keyof KilocodeResetSessionBoardErrors]
+export type TaverncodeResetSessionBoardError =
+  TaverncodeResetSessionBoardErrors[keyof TaverncodeResetSessionBoardErrors]
 
-export type KilocodeResetSessionBoardResponses = {
+export type TaverncodeResetSessionBoardResponses = {
   /**
    * Shared board after reset
    */
   200: SessionBoard
 }
 
-export type KilocodeResetSessionBoardResponse =
-  KilocodeResetSessionBoardResponses[keyof KilocodeResetSessionBoardResponses]
+export type TaverncodeResetSessionBoardResponse =
+  TaverncodeResetSessionBoardResponses[keyof TaverncodeResetSessionBoardResponses]
 
-export type KilocodeHeapSnapshotData = {
+export type TaverncodeHeapSnapshotData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/heap/snapshot"
+  url: "/taverncode/heap/snapshot"
 }
 
-export type KilocodeHeapSnapshotErrors = {
+export type TaverncodeHeapSnapshotErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeHeapSnapshotError = KilocodeHeapSnapshotErrors[keyof KilocodeHeapSnapshotErrors]
+export type TaverncodeHeapSnapshotError = TaverncodeHeapSnapshotErrors[keyof TaverncodeHeapSnapshotErrors]
 
-export type KilocodeHeapSnapshotResponses = {
+export type TaverncodeHeapSnapshotResponses = {
   /**
    * Heap snapshot file path
    */
   200: string
 }
 
-export type KilocodeHeapSnapshotResponse = KilocodeHeapSnapshotResponses[keyof KilocodeHeapSnapshotResponses]
+export type TaverncodeHeapSnapshotResponse = TaverncodeHeapSnapshotResponses[keyof TaverncodeHeapSnapshotResponses]
 
-export type KilocodeCommandFilesData = {
+export type TaverncodeCommandFilesData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/command/files"
+  url: "/taverncode/command/files"
 }
 
-export type KilocodeCommandFilesErrors = {
+export type TaverncodeCommandFilesErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeCommandFilesError = KilocodeCommandFilesErrors[keyof KilocodeCommandFilesErrors]
+export type TaverncodeCommandFilesError = TaverncodeCommandFilesErrors[keyof TaverncodeCommandFilesErrors]
 
-export type KilocodeCommandFilesResponses = {
+export type TaverncodeCommandFilesResponses = {
   /**
    * Command files
    */
   200: Array<CommandFile>
 }
 
-export type KilocodeCommandFilesResponse = KilocodeCommandFilesResponses[keyof KilocodeCommandFilesResponses]
+export type TaverncodeCommandFilesResponse = TaverncodeCommandFilesResponses[keyof TaverncodeCommandFilesResponses]
 
-export type KilocodeRemoveCommandData = {
+export type TaverncodeRemoveCommandData = {
   body?: {
     location: string
   }
@@ -16954,28 +16947,28 @@ export type KilocodeRemoveCommandData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/command/remove"
+  url: "/taverncode/command/remove"
 }
 
-export type KilocodeRemoveCommandErrors = {
+export type TaverncodeRemoveCommandErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveCommandError = KilocodeRemoveCommandErrors[keyof KilocodeRemoveCommandErrors]
+export type TaverncodeRemoveCommandError = TaverncodeRemoveCommandErrors[keyof TaverncodeRemoveCommandErrors]
 
-export type KilocodeRemoveCommandResponses = {
+export type TaverncodeRemoveCommandResponses = {
   /**
    * Command removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveCommandResponse = KilocodeRemoveCommandResponses[keyof KilocodeRemoveCommandResponses]
+export type TaverncodeRemoveCommandResponse = TaverncodeRemoveCommandResponses[keyof TaverncodeRemoveCommandResponses]
 
-export type KilocodeRemoveSkillData = {
+export type TaverncodeRemoveSkillData = {
   body?: {
     location: string
   }
@@ -16984,28 +16977,28 @@ export type KilocodeRemoveSkillData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/skill/remove"
+  url: "/taverncode/skill/remove"
 }
 
-export type KilocodeRemoveSkillErrors = {
+export type TaverncodeRemoveSkillErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveSkillError = KilocodeRemoveSkillErrors[keyof KilocodeRemoveSkillErrors]
+export type TaverncodeRemoveSkillError = TaverncodeRemoveSkillErrors[keyof TaverncodeRemoveSkillErrors]
 
-export type KilocodeRemoveSkillResponses = {
+export type TaverncodeRemoveSkillResponses = {
   /**
    * Skill removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveSkillResponse = KilocodeRemoveSkillResponses[keyof KilocodeRemoveSkillResponses]
+export type TaverncodeRemoveSkillResponse = TaverncodeRemoveSkillResponses[keyof TaverncodeRemoveSkillResponses]
 
-export type KilocodeRemoveAgentData = {
+export type TaverncodeRemoveAgentData = {
   body?: {
     name: string
     scope?: "global" | "project"
@@ -17015,56 +17008,57 @@ export type KilocodeRemoveAgentData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent/remove"
+  url: "/taverncode/agent/remove"
 }
 
-export type KilocodeRemoveAgentErrors = {
+export type TaverncodeRemoveAgentErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveAgentError = KilocodeRemoveAgentErrors[keyof KilocodeRemoveAgentErrors]
+export type TaverncodeRemoveAgentError = TaverncodeRemoveAgentErrors[keyof TaverncodeRemoveAgentErrors]
 
-export type KilocodeRemoveAgentResponses = {
+export type TaverncodeRemoveAgentResponses = {
   /**
    * Agent removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveAgentResponse = KilocodeRemoveAgentResponses[keyof KilocodeRemoveAgentResponses]
+export type TaverncodeRemoveAgentResponse = TaverncodeRemoveAgentResponses[keyof TaverncodeRemoveAgentResponses]
 
-export type KilocodeMarketplaceListData = {
+export type TaverncodeMarketplaceListData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace"
+  url: "/taverncode/marketplace"
 }
 
-export type KilocodeMarketplaceListErrors = {
+export type TaverncodeMarketplaceListErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeMarketplaceListError = KilocodeMarketplaceListErrors[keyof KilocodeMarketplaceListErrors]
+export type TaverncodeMarketplaceListError = TaverncodeMarketplaceListErrors[keyof TaverncodeMarketplaceListErrors]
 
-export type KilocodeMarketplaceListResponses = {
+export type TaverncodeMarketplaceListResponses = {
   /**
    * Marketplace catalog and installed metadata
    */
   200: MarketplaceListResult
 }
 
-export type KilocodeMarketplaceListResponse = KilocodeMarketplaceListResponses[keyof KilocodeMarketplaceListResponses]
+export type TaverncodeMarketplaceListResponse =
+  TaverncodeMarketplaceListResponses[keyof TaverncodeMarketplaceListResponses]
 
-export type KilocodeMarketplaceInstallData = {
+export type TaverncodeMarketplaceInstallData = {
   body?: {
     item: MarketplaceInstallItem
     target?: "project" | "global"
@@ -17077,29 +17071,30 @@ export type KilocodeMarketplaceInstallData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace/install"
+  url: "/taverncode/marketplace/install"
 }
 
-export type KilocodeMarketplaceInstallErrors = {
+export type TaverncodeMarketplaceInstallErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeMarketplaceInstallError = KilocodeMarketplaceInstallErrors[keyof KilocodeMarketplaceInstallErrors]
+export type TaverncodeMarketplaceInstallError =
+  TaverncodeMarketplaceInstallErrors[keyof TaverncodeMarketplaceInstallErrors]
 
-export type KilocodeMarketplaceInstallResponses = {
+export type TaverncodeMarketplaceInstallResponses = {
   /**
    * Marketplace install result
    */
   200: MarketplaceInstallResult
 }
 
-export type KilocodeMarketplaceInstallResponse =
-  KilocodeMarketplaceInstallResponses[keyof KilocodeMarketplaceInstallResponses]
+export type TaverncodeMarketplaceInstallResponse =
+  TaverncodeMarketplaceInstallResponses[keyof TaverncodeMarketplaceInstallResponses]
 
-export type KilocodeMarketplaceRemoveData = {
+export type TaverncodeMarketplaceRemoveData = {
   body?: {
     item: MarketplaceItemRef
     scope: "project" | "global"
@@ -17109,29 +17104,30 @@ export type KilocodeMarketplaceRemoveData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace/remove"
+  url: "/taverncode/marketplace/remove"
 }
 
-export type KilocodeMarketplaceRemoveErrors = {
+export type TaverncodeMarketplaceRemoveErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeMarketplaceRemoveError = KilocodeMarketplaceRemoveErrors[keyof KilocodeMarketplaceRemoveErrors]
+export type TaverncodeMarketplaceRemoveError =
+  TaverncodeMarketplaceRemoveErrors[keyof TaverncodeMarketplaceRemoveErrors]
 
-export type KilocodeMarketplaceRemoveResponses = {
+export type TaverncodeMarketplaceRemoveResponses = {
   /**
    * Marketplace removal result
    */
   200: MarketplaceRemoveResult
 }
 
-export type KilocodeMarketplaceRemoveResponse =
-  KilocodeMarketplaceRemoveResponses[keyof KilocodeMarketplaceRemoveResponses]
+export type TaverncodeMarketplaceRemoveResponse =
+  TaverncodeMarketplaceRemoveResponses[keyof TaverncodeMarketplaceRemoveResponses]
 
-export type KilocodeRemoveSnapshotData = {
+export type TaverncodeRemoveSnapshotData = {
   body?: {
     worktree: string
   }
@@ -17140,28 +17136,29 @@ export type KilocodeRemoveSnapshotData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/snapshot/remove"
+  url: "/taverncode/snapshot/remove"
 }
 
-export type KilocodeRemoveSnapshotErrors = {
+export type TaverncodeRemoveSnapshotErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeRemoveSnapshotError = KilocodeRemoveSnapshotErrors[keyof KilocodeRemoveSnapshotErrors]
+export type TaverncodeRemoveSnapshotError = TaverncodeRemoveSnapshotErrors[keyof TaverncodeRemoveSnapshotErrors]
 
-export type KilocodeRemoveSnapshotResponses = {
+export type TaverncodeRemoveSnapshotResponses = {
   /**
    * Snapshot repository removed
    */
   200: boolean
 }
 
-export type KilocodeRemoveSnapshotResponse = KilocodeRemoveSnapshotResponses[keyof KilocodeRemoveSnapshotResponses]
+export type TaverncodeRemoveSnapshotResponse =
+  TaverncodeRemoveSnapshotResponses[keyof TaverncodeRemoveSnapshotResponses]
 
-export type KilocodeTeardownWorktreeData = {
+export type TaverncodeTeardownWorktreeData = {
   body?: {
     worktree: string
   }
@@ -17170,19 +17167,19 @@ export type KilocodeTeardownWorktreeData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/worktree/teardown"
+  url: "/taverncode/worktree/teardown"
 }
 
-export type KilocodeTeardownWorktreeErrors = {
+export type TaverncodeTeardownWorktreeErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeTeardownWorktreeError = KilocodeTeardownWorktreeErrors[keyof KilocodeTeardownWorktreeErrors]
+export type TaverncodeTeardownWorktreeError = TaverncodeTeardownWorktreeErrors[keyof TaverncodeTeardownWorktreeErrors]
 
-export type KilocodeTeardownWorktreeResponses = {
+export type TaverncodeTeardownWorktreeResponses = {
   /**
    * Worktree backend teardown result
    */
@@ -17191,29 +17188,29 @@ export type KilocodeTeardownWorktreeResponses = {
   }
 }
 
-export type KilocodeTeardownWorktreeResponse =
-  KilocodeTeardownWorktreeResponses[keyof KilocodeTeardownWorktreeResponses]
+export type TaverncodeTeardownWorktreeResponse =
+  TaverncodeTeardownWorktreeResponses[keyof TaverncodeTeardownWorktreeResponses]
 
-export type KilocodeSnapshotPrepareData = {
+export type TaverncodeSnapshotPrepareData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/snapshot/prepare"
+  url: "/taverncode/snapshot/prepare"
 }
 
-export type KilocodeSnapshotPrepareErrors = {
+export type TaverncodeSnapshotPrepareErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeSnapshotPrepareError = KilocodeSnapshotPrepareErrors[keyof KilocodeSnapshotPrepareErrors]
+export type TaverncodeSnapshotPrepareError = TaverncodeSnapshotPrepareErrors[keyof TaverncodeSnapshotPrepareErrors]
 
-export type KilocodeSnapshotPrepareResponses = {
+export type TaverncodeSnapshotPrepareResponses = {
   /**
    * Snapshot repository preparation result
    */
@@ -17223,19 +17220,20 @@ export type KilocodeSnapshotPrepareResponses = {
   }
 }
 
-export type KilocodeSnapshotPrepareResponse = KilocodeSnapshotPrepareResponses[keyof KilocodeSnapshotPrepareResponses]
+export type TaverncodeSnapshotPrepareResponse =
+  TaverncodeSnapshotPrepareResponses[keyof TaverncodeSnapshotPrepareResponses]
 
-export type KilocodeProviderUsageGetData = {
+export type TaverncodeProviderUsageGetData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/provider-usage"
+  url: "/taverncode/provider-usage"
 }
 
-export type KilocodeProviderUsageGetErrors = {
+export type TaverncodeProviderUsageGetErrors = {
   /**
    * Bad request
    */
@@ -17246,29 +17244,29 @@ export type KilocodeProviderUsageGetErrors = {
   503: EffectHttpApiErrorServiceUnavailable
 }
 
-export type KilocodeProviderUsageGetError = KilocodeProviderUsageGetErrors[keyof KilocodeProviderUsageGetErrors]
+export type TaverncodeProviderUsageGetError = TaverncodeProviderUsageGetErrors[keyof TaverncodeProviderUsageGetErrors]
 
-export type KilocodeProviderUsageGetResponses = {
+export type TaverncodeProviderUsageGetResponses = {
   /**
    * Current provider usage
    */
   200: ProviderUsage
 }
 
-export type KilocodeProviderUsageGetResponse =
-  KilocodeProviderUsageGetResponses[keyof KilocodeProviderUsageGetResponses]
+export type TaverncodeProviderUsageGetResponse =
+  TaverncodeProviderUsageGetResponses[keyof TaverncodeProviderUsageGetResponses]
 
-export type KilocodeProviderUsageRefreshData = {
+export type TaverncodeProviderUsageRefreshData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/provider-usage/refresh"
+  url: "/taverncode/provider-usage/refresh"
 }
 
-export type KilocodeProviderUsageRefreshErrors = {
+export type TaverncodeProviderUsageRefreshErrors = {
   /**
    * Bad request
    */
@@ -17279,48 +17277,48 @@ export type KilocodeProviderUsageRefreshErrors = {
   503: EffectHttpApiErrorServiceUnavailable
 }
 
-export type KilocodeProviderUsageRefreshError =
-  KilocodeProviderUsageRefreshErrors[keyof KilocodeProviderUsageRefreshErrors]
+export type TaverncodeProviderUsageRefreshError =
+  TaverncodeProviderUsageRefreshErrors[keyof TaverncodeProviderUsageRefreshErrors]
 
-export type KilocodeProviderUsageRefreshResponses = {
+export type TaverncodeProviderUsageRefreshResponses = {
   /**
    * Refreshed provider usage
    */
   200: ProviderUsage
 }
 
-export type KilocodeProviderUsageRefreshResponse =
-  KilocodeProviderUsageRefreshResponses[keyof KilocodeProviderUsageRefreshResponses]
+export type TaverncodeProviderUsageRefreshResponse =
+  TaverncodeProviderUsageRefreshResponses[keyof TaverncodeProviderUsageRefreshResponses]
 
-export type KilocodeNotebookListData = {
+export type TaverncodeNotebookListData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook"
+  url: "/taverncode/notebook"
 }
 
-export type KilocodeNotebookListErrors = {
+export type TaverncodeNotebookListErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeNotebookListError = KilocodeNotebookListErrors[keyof KilocodeNotebookListErrors]
+export type TaverncodeNotebookListError = TaverncodeNotebookListErrors[keyof TaverncodeNotebookListErrors]
 
-export type KilocodeNotebookListResponses = {
+export type TaverncodeNotebookListResponses = {
   /**
    * Pending notebook host requests
    */
   200: Array<NotebookRequest>
 }
 
-export type KilocodeNotebookListResponse = KilocodeNotebookListResponses[keyof KilocodeNotebookListResponses]
+export type TaverncodeNotebookListResponse = TaverncodeNotebookListResponses[keyof TaverncodeNotebookListResponses]
 
-export type KilocodeNotebookReplyData = {
+export type TaverncodeNotebookReplyData = {
   body?: {
     result: NotebookResult
   }
@@ -17331,10 +17329,10 @@ export type KilocodeNotebookReplyData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook/{requestID}/reply"
+  url: "/taverncode/notebook/{requestID}/reply"
 }
 
-export type KilocodeNotebookReplyErrors = {
+export type TaverncodeNotebookReplyErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -17345,18 +17343,18 @@ export type KilocodeNotebookReplyErrors = {
   404: NotFoundError
 }
 
-export type KilocodeNotebookReplyError = KilocodeNotebookReplyErrors[keyof KilocodeNotebookReplyErrors]
+export type TaverncodeNotebookReplyError = TaverncodeNotebookReplyErrors[keyof TaverncodeNotebookReplyErrors]
 
-export type KilocodeNotebookReplyResponses = {
+export type TaverncodeNotebookReplyResponses = {
   /**
    * Notebook reply accepted
    */
   200: boolean
 }
 
-export type KilocodeNotebookReplyResponse = KilocodeNotebookReplyResponses[keyof KilocodeNotebookReplyResponses]
+export type TaverncodeNotebookReplyResponse = TaverncodeNotebookReplyResponses[keyof TaverncodeNotebookReplyResponses]
 
-export type KilocodeNotebookRejectData = {
+export type TaverncodeNotebookRejectData = {
   body?: {
     error: NotebookFailure
   }
@@ -17367,10 +17365,10 @@ export type KilocodeNotebookRejectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook/{requestID}/reject"
+  url: "/taverncode/notebook/{requestID}/reject"
 }
 
-export type KilocodeNotebookRejectErrors = {
+export type TaverncodeNotebookRejectErrors = {
   /**
    * Bad request
    */
@@ -17381,47 +17379,48 @@ export type KilocodeNotebookRejectErrors = {
   404: NotFoundError
 }
 
-export type KilocodeNotebookRejectError = KilocodeNotebookRejectErrors[keyof KilocodeNotebookRejectErrors]
+export type TaverncodeNotebookRejectError = TaverncodeNotebookRejectErrors[keyof TaverncodeNotebookRejectErrors]
 
-export type KilocodeNotebookRejectResponses = {
+export type TaverncodeNotebookRejectResponses = {
   /**
    * Notebook rejection accepted
    */
   200: boolean
 }
 
-export type KilocodeNotebookRejectResponse = KilocodeNotebookRejectResponses[keyof KilocodeNotebookRejectResponses]
+export type TaverncodeNotebookRejectResponse =
+  TaverncodeNotebookRejectResponses[keyof TaverncodeNotebookRejectResponses]
 
-export type KilocodeAgentManagerListData = {
+export type TaverncodeAgentManagerListData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager"
+  url: "/taverncode/agent-manager"
 }
 
-export type KilocodeAgentManagerListErrors = {
+export type TaverncodeAgentManagerListErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeAgentManagerListError = KilocodeAgentManagerListErrors[keyof KilocodeAgentManagerListErrors]
+export type TaverncodeAgentManagerListError = TaverncodeAgentManagerListErrors[keyof TaverncodeAgentManagerListErrors]
 
-export type KilocodeAgentManagerListResponses = {
+export type TaverncodeAgentManagerListResponses = {
   /**
    * Pending Agent Manager host requests
    */
   200: Array<AgentManagerRequest>
 }
 
-export type KilocodeAgentManagerListResponse =
-  KilocodeAgentManagerListResponses[keyof KilocodeAgentManagerListResponses]
+export type TaverncodeAgentManagerListResponse =
+  TaverncodeAgentManagerListResponses[keyof TaverncodeAgentManagerListResponses]
 
-export type KilocodeAgentManagerReplyData = {
+export type TaverncodeAgentManagerReplyData = {
   body?: {
     result: AgentManagerResult
   }
@@ -17432,10 +17431,10 @@ export type KilocodeAgentManagerReplyData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager/{requestID}/reply"
+  url: "/taverncode/agent-manager/{requestID}/reply"
 }
 
-export type KilocodeAgentManagerReplyErrors = {
+export type TaverncodeAgentManagerReplyErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -17446,19 +17445,20 @@ export type KilocodeAgentManagerReplyErrors = {
   404: NotFoundError
 }
 
-export type KilocodeAgentManagerReplyError = KilocodeAgentManagerReplyErrors[keyof KilocodeAgentManagerReplyErrors]
+export type TaverncodeAgentManagerReplyError =
+  TaverncodeAgentManagerReplyErrors[keyof TaverncodeAgentManagerReplyErrors]
 
-export type KilocodeAgentManagerReplyResponses = {
+export type TaverncodeAgentManagerReplyResponses = {
   /**
    * Agent Manager reply accepted
    */
   200: boolean
 }
 
-export type KilocodeAgentManagerReplyResponse =
-  KilocodeAgentManagerReplyResponses[keyof KilocodeAgentManagerReplyResponses]
+export type TaverncodeAgentManagerReplyResponse =
+  TaverncodeAgentManagerReplyResponses[keyof TaverncodeAgentManagerReplyResponses]
 
-export type KilocodeAgentManagerRejectData = {
+export type TaverncodeAgentManagerRejectData = {
   body?: {
     error: AgentManagerFailure
   }
@@ -17469,10 +17469,10 @@ export type KilocodeAgentManagerRejectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager/{requestID}/reject"
+  url: "/taverncode/agent-manager/{requestID}/reject"
 }
 
-export type KilocodeAgentManagerRejectErrors = {
+export type TaverncodeAgentManagerRejectErrors = {
   /**
    * Bad request
    */
@@ -17483,19 +17483,20 @@ export type KilocodeAgentManagerRejectErrors = {
   404: NotFoundError
 }
 
-export type KilocodeAgentManagerRejectError = KilocodeAgentManagerRejectErrors[keyof KilocodeAgentManagerRejectErrors]
+export type TaverncodeAgentManagerRejectError =
+  TaverncodeAgentManagerRejectErrors[keyof TaverncodeAgentManagerRejectErrors]
 
-export type KilocodeAgentManagerRejectResponses = {
+export type TaverncodeAgentManagerRejectResponses = {
   /**
    * Agent Manager rejection accepted
    */
   200: boolean
 }
 
-export type KilocodeAgentManagerRejectResponse =
-  KilocodeAgentManagerRejectResponses[keyof KilocodeAgentManagerRejectResponses]
+export type TaverncodeAgentManagerRejectResponse =
+  TaverncodeAgentManagerRejectResponses[keyof TaverncodeAgentManagerRejectResponses]
 
-export type KilocodeSessionModelUsageData = {
+export type TaverncodeSessionModelUsageData = {
   body?: never
   path: {
     sessionID: string
@@ -17507,7 +17508,7 @@ export type KilocodeSessionModelUsageData = {
   url: "/session/{sessionID}/model-usage"
 }
 
-export type KilocodeSessionModelUsageErrors = {
+export type TaverncodeSessionModelUsageErrors = {
   /**
    * Bad request
    */
@@ -17518,9 +17519,10 @@ export type KilocodeSessionModelUsageErrors = {
   404: NotFoundError
 }
 
-export type KilocodeSessionModelUsageError = KilocodeSessionModelUsageErrors[keyof KilocodeSessionModelUsageErrors]
+export type TaverncodeSessionModelUsageError =
+  TaverncodeSessionModelUsageErrors[keyof TaverncodeSessionModelUsageErrors]
 
-export type KilocodeSessionModelUsageResponses = {
+export type TaverncodeSessionModelUsageResponses = {
   /**
    * Model usage for a session tree
    */
@@ -17558,10 +17560,10 @@ export type KilocodeSessionModelUsageResponses = {
   }
 }
 
-export type KilocodeSessionModelUsageResponse =
-  KilocodeSessionModelUsageResponses[keyof KilocodeSessionModelUsageResponses]
+export type TaverncodeSessionModelUsageResponse =
+  TaverncodeSessionModelUsageResponses[keyof TaverncodeSessionModelUsageResponses]
 
-export type KilocodeBackgroundJobsData = {
+export type TaverncodeBackgroundJobsData = {
   body?: never
   path?: never
   query: {
@@ -17569,19 +17571,19 @@ export type KilocodeBackgroundJobsData = {
     workspace?: string
     sessionID: string
   }
-  url: "/kilocode/background-jobs"
+  url: "/taverncode/background-jobs"
 }
 
-export type KilocodeBackgroundJobsErrors = {
+export type TaverncodeBackgroundJobsErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeBackgroundJobsError = KilocodeBackgroundJobsErrors[keyof KilocodeBackgroundJobsErrors]
+export type TaverncodeBackgroundJobsError = TaverncodeBackgroundJobsErrors[keyof TaverncodeBackgroundJobsErrors]
 
-export type KilocodeBackgroundJobsResponses = {
+export type TaverncodeBackgroundJobsResponses = {
   /**
    * Background jobs
    */
@@ -17599,9 +17601,10 @@ export type KilocodeBackgroundJobsResponses = {
   }>
 }
 
-export type KilocodeBackgroundJobsResponse = KilocodeBackgroundJobsResponses[keyof KilocodeBackgroundJobsResponses]
+export type TaverncodeBackgroundJobsResponse =
+  TaverncodeBackgroundJobsResponses[keyof TaverncodeBackgroundJobsResponses]
 
-export type KilocodeBackgroundJobCancelData = {
+export type TaverncodeBackgroundJobCancelData = {
   body?: never
   path: {
     jobID: string
@@ -17610,10 +17613,10 @@ export type KilocodeBackgroundJobCancelData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/background-jobs/{jobID}/cancel"
+  url: "/taverncode/background-jobs/{jobID}/cancel"
 }
 
-export type KilocodeBackgroundJobCancelErrors = {
+export type TaverncodeBackgroundJobCancelErrors = {
   /**
    * Bad request
    */
@@ -17624,20 +17627,20 @@ export type KilocodeBackgroundJobCancelErrors = {
   404: NotFoundError
 }
 
-export type KilocodeBackgroundJobCancelError =
-  KilocodeBackgroundJobCancelErrors[keyof KilocodeBackgroundJobCancelErrors]
+export type TaverncodeBackgroundJobCancelError =
+  TaverncodeBackgroundJobCancelErrors[keyof TaverncodeBackgroundJobCancelErrors]
 
-export type KilocodeBackgroundJobCancelResponses = {
+export type TaverncodeBackgroundJobCancelResponses = {
   /**
    * Background job cancelled
    */
   200: boolean
 }
 
-export type KilocodeBackgroundJobCancelResponse =
-  KilocodeBackgroundJobCancelResponses[keyof KilocodeBackgroundJobCancelResponses]
+export type TaverncodeBackgroundJobCancelResponse =
+  TaverncodeBackgroundJobCancelResponses[keyof TaverncodeBackgroundJobCancelResponses]
 
-export type KilocodeBackgroundJobPromoteData = {
+export type TaverncodeBackgroundJobPromoteData = {
   body?: never
   path: {
     jobID: string
@@ -17646,10 +17649,10 @@ export type KilocodeBackgroundJobPromoteData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/background-jobs/{jobID}/promote"
+  url: "/taverncode/background-jobs/{jobID}/promote"
 }
 
-export type KilocodeBackgroundJobPromoteErrors = {
+export type TaverncodeBackgroundJobPromoteErrors = {
   /**
    * Bad request
    */
@@ -17660,39 +17663,39 @@ export type KilocodeBackgroundJobPromoteErrors = {
   404: NotFoundError
 }
 
-export type KilocodeBackgroundJobPromoteError =
-  KilocodeBackgroundJobPromoteErrors[keyof KilocodeBackgroundJobPromoteErrors]
+export type TaverncodeBackgroundJobPromoteError =
+  TaverncodeBackgroundJobPromoteErrors[keyof TaverncodeBackgroundJobPromoteErrors]
 
-export type KilocodeBackgroundJobPromoteResponses = {
+export type TaverncodeBackgroundJobPromoteResponses = {
   /**
    * Background job promoted
    */
   200: boolean
 }
 
-export type KilocodeBackgroundJobPromoteResponse =
-  KilocodeBackgroundJobPromoteResponses[keyof KilocodeBackgroundJobPromoteResponses]
+export type TaverncodeBackgroundJobPromoteResponse =
+  TaverncodeBackgroundJobPromoteResponses[keyof TaverncodeBackgroundJobPromoteResponses]
 
-export type KilocodeWakeupsData = {
+export type TaverncodeWakeupsData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/wakeups"
+  url: "/taverncode/wakeups"
 }
 
-export type KilocodeWakeupsErrors = {
+export type TaverncodeWakeupsErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeWakeupsError = KilocodeWakeupsErrors[keyof KilocodeWakeupsErrors]
+export type TaverncodeWakeupsError = TaverncodeWakeupsErrors[keyof TaverncodeWakeupsErrors]
 
-export type KilocodeWakeupsResponses = {
+export type TaverncodeWakeupsResponses = {
   /**
    * Pending wakeups for the routed directory
    */
@@ -17702,28 +17705,28 @@ export type KilocodeWakeupsResponses = {
   }>
 }
 
-export type KilocodeWakeupsResponse = KilocodeWakeupsResponses[keyof KilocodeWakeupsResponses]
+export type TaverncodeWakeupsResponse = TaverncodeWakeupsResponses[keyof TaverncodeWakeupsResponses]
 
-export type KilocodeRetentionStatusData = {
+export type TaverncodeRetentionStatusData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention"
+  url: "/taverncode/retention"
 }
 
-export type KilocodeRetentionStatusErrors = {
+export type TaverncodeRetentionStatusErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeRetentionStatusError = KilocodeRetentionStatusErrors[keyof KilocodeRetentionStatusErrors]
+export type TaverncodeRetentionStatusError = TaverncodeRetentionStatusErrors[keyof TaverncodeRetentionStatusErrors]
 
-export type KilocodeRetentionStatusResponses = {
+export type TaverncodeRetentionStatusResponses = {
   /**
    * Session retention policy and last run
    */
@@ -17753,9 +17756,10 @@ export type KilocodeRetentionStatusResponses = {
   }
 }
 
-export type KilocodeRetentionStatusResponse = KilocodeRetentionStatusResponses[keyof KilocodeRetentionStatusResponses]
+export type TaverncodeRetentionStatusResponse =
+  TaverncodeRetentionStatusResponses[keyof TaverncodeRetentionStatusResponses]
 
-export type KilocodeRetentionRunData = {
+export type TaverncodeRetentionRunData = {
   body?: {
     force?: boolean
   }
@@ -17764,19 +17768,19 @@ export type KilocodeRetentionRunData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention/run"
+  url: "/taverncode/retention/run"
 }
 
-export type KilocodeRetentionRunErrors = {
+export type TaverncodeRetentionRunErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeRetentionRunError = KilocodeRetentionRunErrors[keyof KilocodeRetentionRunErrors]
+export type TaverncodeRetentionRunError = TaverncodeRetentionRunErrors[keyof TaverncodeRetentionRunErrors]
 
-export type KilocodeRetentionRunResponses = {
+export type TaverncodeRetentionRunResponses = {
   /**
    * Retention pass outcome
    */
@@ -17806,28 +17810,28 @@ export type KilocodeRetentionRunResponses = {
   }
 }
 
-export type KilocodeRetentionRunResponse = KilocodeRetentionRunResponses[keyof KilocodeRetentionRunResponses]
+export type TaverncodeRetentionRunResponse = TaverncodeRetentionRunResponses[keyof TaverncodeRetentionRunResponses]
 
-export type KilocodeRetentionCancelData = {
+export type TaverncodeRetentionCancelData = {
   body?: never
   path?: never
   query?: {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention/cancel"
+  url: "/taverncode/retention/cancel"
 }
 
-export type KilocodeRetentionCancelErrors = {
+export type TaverncodeRetentionCancelErrors = {
   /**
    * Bad request
    */
   400: BadRequestError
 }
 
-export type KilocodeRetentionCancelError = KilocodeRetentionCancelErrors[keyof KilocodeRetentionCancelErrors]
+export type TaverncodeRetentionCancelError = TaverncodeRetentionCancelErrors[keyof TaverncodeRetentionCancelErrors]
 
-export type KilocodeRetentionCancelResponses = {
+export type TaverncodeRetentionCancelResponses = {
   /**
    * Retention cancel request outcome; false when no pass was running
    */
@@ -17836,7 +17840,8 @@ export type KilocodeRetentionCancelResponses = {
   }
 }
 
-export type KilocodeRetentionCancelResponse = KilocodeRetentionCancelResponses[keyof KilocodeRetentionCancelResponses]
+export type TaverncodeRetentionCancelResponse =
+  TaverncodeRetentionCancelResponses[keyof TaverncodeRetentionCancelResponses]
 
 export type AnacondaDesktopStatusData = {
   body?: never
@@ -17845,7 +17850,7 @@ export type AnacondaDesktopStatusData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/status"
+  url: "/taverncode/anaconda-desktop/status"
 }
 
 export type AnacondaDesktopStatusErrors = {
@@ -17873,7 +17878,7 @@ export type AnacondaDesktopOpenData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/open"
+  url: "/taverncode/anaconda-desktop/open"
 }
 
 export type AnacondaDesktopOpenErrors = {
@@ -17911,7 +17916,7 @@ export type AnacondaDesktopSyncData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/sync"
+  url: "/taverncode/anaconda-desktop/sync"
 }
 
 export type AnacondaDesktopSyncErrors = {
@@ -17950,7 +17955,7 @@ export type AnacondaDesktopSyncResponses = {
 
 export type AnacondaDesktopSyncResponse = AnacondaDesktopSyncResponses[keyof AnacondaDesktopSyncResponses]
 
-export type KilocodeMigrateSessionsData = {
+export type TaverncodeMigrateSessionsData = {
   body?: {
     cwd?: string
     formats?: Array<"claude" | "codex">
@@ -17964,10 +17969,10 @@ export type KilocodeMigrateSessionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/migrate/sessions"
+  url: "/taverncode/migrate/sessions"
 }
 
-export type KilocodeMigrateSessionsErrors = {
+export type TaverncodeMigrateSessionsErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -17978,18 +17983,19 @@ export type KilocodeMigrateSessionsErrors = {
   422: MigrateFailedError
 }
 
-export type KilocodeMigrateSessionsError = KilocodeMigrateSessionsErrors[keyof KilocodeMigrateSessionsErrors]
+export type TaverncodeMigrateSessionsError = TaverncodeMigrateSessionsErrors[keyof TaverncodeMigrateSessionsErrors]
 
-export type KilocodeMigrateSessionsResponses = {
+export type TaverncodeMigrateSessionsResponses = {
   /**
    * Session migration result
    */
-  200: KilocodeMigrateSessionsResult
+  200: TaverncodeMigrateSessionsResult
 }
 
-export type KilocodeMigrateSessionsResponse = KilocodeMigrateSessionsResponses[keyof KilocodeMigrateSessionsResponses]
+export type TaverncodeMigrateSessionsResponse =
+  TaverncodeMigrateSessionsResponses[keyof TaverncodeMigrateSessionsResponses]
 
-export type KilocodeMigrateDiscoverData = {
+export type TaverncodeMigrateDiscoverData = {
   body?: {
     cwd?: string
     formats?: Array<"claude" | "codex">
@@ -17999,10 +18005,10 @@ export type KilocodeMigrateDiscoverData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/migrate/sessions/discover"
+  url: "/taverncode/migrate/sessions/discover"
 }
 
-export type KilocodeMigrateDiscoverErrors = {
+export type TaverncodeMigrateDiscoverErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
@@ -18013,16 +18019,17 @@ export type KilocodeMigrateDiscoverErrors = {
   422: MigrateFailedError
 }
 
-export type KilocodeMigrateDiscoverError = KilocodeMigrateDiscoverErrors[keyof KilocodeMigrateDiscoverErrors]
+export type TaverncodeMigrateDiscoverError = TaverncodeMigrateDiscoverErrors[keyof TaverncodeMigrateDiscoverErrors]
 
-export type KilocodeMigrateDiscoverResponses = {
+export type TaverncodeMigrateDiscoverResponses = {
   /**
    * Discovered migratable sessions
    */
-  200: KilocodeMigrateSessionsDiscoverResult
+  200: TaverncodeMigrateSessionsDiscoverResult
 }
 
-export type KilocodeMigrateDiscoverResponse = KilocodeMigrateDiscoverResponses[keyof KilocodeMigrateDiscoverResponses]
+export type TaverncodeMigrateDiscoverResponse =
+  TaverncodeMigrateDiscoverResponses[keyof TaverncodeMigrateDiscoverResponses]
 
 export type NetworkListData = {
   body?: never
@@ -18324,7 +18331,7 @@ export type SandboxToggleResponses = {
 
 export type SandboxToggleResponse = SandboxToggleResponses[keyof SandboxToggleResponses]
 
-export type KilocodeSessionImportProjectData = {
+export type TaverncodeSessionImportProjectData = {
   body?: {
     id: string
     worktree: string
@@ -18345,30 +18352,30 @@ export type KilocodeSessionImportProjectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/project"
+  url: "/taverncode/session-import/project"
 }
 
-export type KilocodeSessionImportProjectErrors = {
+export type TaverncodeSessionImportProjectErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportProjectError =
-  KilocodeSessionImportProjectErrors[keyof KilocodeSessionImportProjectErrors]
+export type TaverncodeSessionImportProjectError =
+  TaverncodeSessionImportProjectErrors[keyof TaverncodeSessionImportProjectErrors]
 
-export type KilocodeSessionImportProjectResponses = {
+export type TaverncodeSessionImportProjectResponses = {
   /**
    * Project import result
    */
-  200: KilocodeSessionImportResult
+  200: TaverncodeSessionImportResult
 }
 
-export type KilocodeSessionImportProjectResponse =
-  KilocodeSessionImportProjectResponses[keyof KilocodeSessionImportProjectResponses]
+export type TaverncodeSessionImportProjectResponse =
+  TaverncodeSessionImportProjectResponses[keyof TaverncodeSessionImportProjectResponses]
 
-export type KilocodeSessionImportSessionData = {
+export type TaverncodeSessionImportSessionData = {
   body?: {
     id: string
     projectID: string
@@ -18408,30 +18415,30 @@ export type KilocodeSessionImportSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/session"
+  url: "/taverncode/session-import/session"
 }
 
-export type KilocodeSessionImportSessionErrors = {
+export type TaverncodeSessionImportSessionErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportSessionError =
-  KilocodeSessionImportSessionErrors[keyof KilocodeSessionImportSessionErrors]
+export type TaverncodeSessionImportSessionError =
+  TaverncodeSessionImportSessionErrors[keyof TaverncodeSessionImportSessionErrors]
 
-export type KilocodeSessionImportSessionResponses = {
+export type TaverncodeSessionImportSessionResponses = {
   /**
    * Session import result
    */
-  200: KilocodeSessionImportResult
+  200: TaverncodeSessionImportResult
 }
 
-export type KilocodeSessionImportSessionResponse =
-  KilocodeSessionImportSessionResponses[keyof KilocodeSessionImportSessionResponses]
+export type TaverncodeSessionImportSessionResponse =
+  TaverncodeSessionImportSessionResponses[keyof TaverncodeSessionImportSessionResponses]
 
-export type KilocodeSessionImportMessageData = {
+export type TaverncodeSessionImportMessageData = {
   body?: {
     id: string
     sessionID: string
@@ -18488,30 +18495,30 @@ export type KilocodeSessionImportMessageData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/message"
+  url: "/taverncode/session-import/message"
 }
 
-export type KilocodeSessionImportMessageErrors = {
+export type TaverncodeSessionImportMessageErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportMessageError =
-  KilocodeSessionImportMessageErrors[keyof KilocodeSessionImportMessageErrors]
+export type TaverncodeSessionImportMessageError =
+  TaverncodeSessionImportMessageErrors[keyof TaverncodeSessionImportMessageErrors]
 
-export type KilocodeSessionImportMessageResponses = {
+export type TaverncodeSessionImportMessageResponses = {
   /**
    * Message import result
    */
-  200: KilocodeSessionImportResult
+  200: TaverncodeSessionImportResult
 }
 
-export type KilocodeSessionImportMessageResponse =
-  KilocodeSessionImportMessageResponses[keyof KilocodeSessionImportMessageResponses]
+export type TaverncodeSessionImportMessageResponse =
+  TaverncodeSessionImportMessageResponses[keyof TaverncodeSessionImportMessageResponses]
 
-export type KilocodeSessionImportPartData = {
+export type TaverncodeSessionImportPartData = {
   body?: {
     id: string
     messageID: string
@@ -18607,27 +18614,28 @@ export type KilocodeSessionImportPartData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/part"
+  url: "/taverncode/session-import/part"
 }
 
-export type KilocodeSessionImportPartErrors = {
+export type TaverncodeSessionImportPartErrors = {
   /**
    * BadRequest | InvalidRequestError
    */
   400: EffectHttpApiErrorBadRequest | InvalidRequestError
 }
 
-export type KilocodeSessionImportPartError = KilocodeSessionImportPartErrors[keyof KilocodeSessionImportPartErrors]
+export type TaverncodeSessionImportPartError =
+  TaverncodeSessionImportPartErrors[keyof TaverncodeSessionImportPartErrors]
 
-export type KilocodeSessionImportPartResponses = {
+export type TaverncodeSessionImportPartResponses = {
   /**
    * Part import result
    */
-  200: KilocodeSessionImportResult
+  200: TaverncodeSessionImportResult
 }
 
-export type KilocodeSessionImportPartResponse =
-  KilocodeSessionImportPartResponses[keyof KilocodeSessionImportPartResponses]
+export type TaverncodeSessionImportPartResponse =
+  TaverncodeSessionImportPartResponses[keyof TaverncodeSessionImportPartResponses]
 
 export type SuggestionListData = {
   body?: never

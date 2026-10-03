@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     paths:
-      - "packages/kilo-docs/**"
+      - "packages/tavern-docs/**"
       - ".github/workflows/docs-check-links.yml"
   schedule:
     # Run daily at 9am UTC
@@ -17,17 +17,17 @@ jobs:
     if: github.repository == 'Kilo-Org/kilocode'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
+      - uses: actions/checkout@v6 # taverncode_change
 
       - name: Link Checker
         uses: Kilo-Org/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411
         with:
-          # kilocode_change start - avoid deployment races; scheduled and manual runs check the live URL
+          # taverncode_change start - avoid deployment races; scheduled and manual runs check the live URL
           args: >-
             "**/*.md"
-            ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && format('--remap ''kilo-docs/docs kilo-docs/pages'' --remap ''^https://kilo\.ai/docs/oauth/kilo/client\.json$ file://{0}/packages/kilo-docs/public/oauth/kilo/client.json''', github.workspace) || '' }}
-          # kilocode_change end
-          workingDirectory: packages/kilo-docs
+            ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && format('--remap ''tavern-docs/docs tavern-docs/pages'' --remap ''^https://tavern\.ai/docs/oauth/tavern/client\.json$ file://{0}/packages/tavern-docs/public/oauth/tavern/client.json''', github.workspace) || '' }}
+          # taverncode_change end
+          workingDirectory: packages/tavern-docs
           fail: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,5 @@
+/* Tavern Inline Input overrides */
+
+[data-component="inline-input"] {
+  font-size: var(--tavern-font-size-13);
+}

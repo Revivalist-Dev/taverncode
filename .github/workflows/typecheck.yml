@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  # kilocode_change start
+  # taverncode_change start
   changes:
     name: detect typecheck changes
-    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # kilocode_change
+    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # taverncode_change
     outputs:
       javascript: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.filter.outputs.javascript }}
       jetbrains: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.filter.outputs.jetbrains }}
@@ -30,43 +30,43 @@ jobs:
             javascript:
               - '**'
               - '!.changeset/**'
-              - '!.kilo/plans/**'
-              - '!packages/kilo-jetbrains/**'
+              - '!.tavern/plans/**'
+              - '!packages/tavern-jetbrains/**'
             jetbrains:
               - '**'
               - '!.changeset/**'
-              - '!.kilo/plans/**'
+              - '!.tavern/plans/**'
               - '!packages/opencode/**'
-              - '!packages/kilo-vscode/**'
-              - '!packages/kilo-docs/**'
-  # kilocode_change end
+              - '!packages/tavern-vscode/**'
+              - '!packages/tavern-docs/**'
+  # taverncode_change end
 
   typecheck-js:
     name: typecheck-js
-    needs: changes # kilocode_change
-    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.javascript == 'true' # kilocode_change
-    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # kilocode_change
+    needs: changes # taverncode_change
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.javascript == 'true' # taverncode_change
+    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # taverncode_change
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6 # kilocode_change
+        uses: actions/checkout@v6 # taverncode_change
 
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
 
-      # kilocode_change start
+      # taverncode_change start
       - name: Run TypeScript typecheck
-        run: bun turbo typecheck --filter='!@kilocode/kilo-jetbrains'
+        run: bun turbo typecheck --filter='!@taverncode/tavern-jetbrains'
 
-      - name: Build Kilo Console
-        run: bun turbo build --filter=@kilocode/kilo-console
-      # kilocode_change end
+      - name: Build Tavern Console
+        run: bun turbo build --filter=@taverncode/tavern-console
+      # taverncode_change end
 
-  # kilocode_change start
+  # taverncode_change start
   typecheck-jetbrains:
     name: typecheck-jetbrains
     needs: changes
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.jetbrains == 'true'
-    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # kilocode_change
+    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # taverncode_change
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -87,11 +87,11 @@ jobs:
 
       - name: Run JetBrains typecheck
         run: ./gradlew typecheck
-        working-directory: packages/kilo-jetbrains
+        working-directory: packages/tavern-jetbrains
 
   required:
     name: typecheck
-    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # kilocode_change
+    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # taverncode_change
     needs:
       - typecheck-js
       - changes
@@ -117,4 +117,4 @@ jobs:
             test "${{ needs.changes.outputs.jetbrains }}" = "false"
             test "${{ needs.typecheck-jetbrains.result }}" = "skipped"
           fi
-  # kilocode_change end
+  # taverncode_change end

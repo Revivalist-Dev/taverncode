@@ -11,29 +11,29 @@ import { it } from "./lib/effect"
 import { readFile, rm, writeFile, utimes, mkdir } from "fs/promises"
 import path from "path"
 
-// test/preload.ts pins KILO_MODELS_PATH to a fixture so other tests can
+// test/preload.ts pins TAVERN_MODELS_PATH to a fixture so other tests can
 // resolve providers without network. These tests need to drive the on-disk
 // cache themselves and silence the eager refresh fork. Save/restore around
 // the suite — never leak the mutation to subsequent test files in the same
 // bun process.
-const ORIGINAL_MODELS_PATH = Flag.KILO_MODELS_PATH
-const ORIGINAL_DISABLE_FETCH = Flag.KILO_DISABLE_MODELS_FETCH
-// kilocode_change start - isolate the mutable cache fixture from parallel package test processes
+const ORIGINAL_MODELS_PATH = Flag.TAVERN_MODELS_PATH
+const ORIGINAL_DISABLE_FETCH = Flag.TAVERN_DISABLE_MODELS_FETCH
+// taverncode_change start - isolate the mutable cache fixture from parallel package test processes
 const original = Global.Path.cache
 const root = path.join(Global.Path.tmp, `models-test-${process.pid}-${Math.random().toString(36).slice(2)}`)
-// kilocode_change end
+// taverncode_change end
 beforeAll(() => {
-  Flag.KILO_MODELS_PATH = undefined
-  Flag.KILO_DISABLE_MODELS_FETCH = true
-  Global.Path.cache = root // kilocode_change
+  Flag.TAVERN_MODELS_PATH = undefined
+  Flag.TAVERN_DISABLE_MODELS_FETCH = true
+  Global.Path.cache = root // taverncode_change
 })
 afterAll(() => {
-  Flag.KILO_MODELS_PATH = ORIGINAL_MODELS_PATH
-  Flag.KILO_DISABLE_MODELS_FETCH = ORIGINAL_DISABLE_FETCH
-  Global.Path.cache = original // kilocode_change
+  Flag.TAVERN_MODELS_PATH = ORIGINAL_MODELS_PATH
+  Flag.TAVERN_DISABLE_MODELS_FETCH = ORIGINAL_DISABLE_FETCH
+  Global.Path.cache = original // taverncode_change
 })
 
-const cacheFile = path.join(root, "models.json") // kilocode_change
+const cacheFile = path.join(root, "models.json") // taverncode_change
 
 const fixture: Record<string, ModelsDev.Provider> = {
   acme: {
@@ -123,7 +123,7 @@ beforeEach(async () => {
 })
 
 afterAll(async () => {
-  await rm(root, { recursive: true, force: true }) // kilocode_change
+  await rm(root, { recursive: true, force: true }) // taverncode_change
 })
 
 const initialState: MockState = {
@@ -167,12 +167,12 @@ describe("ModelsDev Service", () => {
       const context = yield* Layer.build(buildLayer(state))
       const result = yield* Effect.acquireUseRelease(
         Effect.sync(() => {
-          Flag.KILO_DISABLE_MODELS_FETCH = false
+          Flag.TAVERN_DISABLE_MODELS_FETCH = false
         }),
         () => ModelsDev.Service.use((s) => s.get()).pipe(Effect.provide(context)),
         () =>
           Effect.sync(() => {
-            Flag.KILO_DISABLE_MODELS_FETCH = true
+            Flag.TAVERN_DISABLE_MODELS_FETCH = true
           }),
       )
       expect(result).toEqual(fixture2)
@@ -239,7 +239,7 @@ describe("ModelsDev Service", () => {
       expect(final.calls.length).toBe(1)
       expect(final.calls[0].url).toContain("/api.json")
       expect(final.calls[0].userAgent).toStartWith("opencode/")
-      expect(final.calls[0].userAgent).toEndWith(`/${Flag.KILO_CLIENT}`)
+      expect(final.calls[0].userAgent).toEndWith(`/${Flag.TAVERN_CLIENT}`)
     }),
   )
 

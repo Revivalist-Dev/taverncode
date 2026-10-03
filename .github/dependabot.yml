@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 version: 2
 updates:
   # Bun workspace root (packages/*). Version updates are OFF (limit 0): this
@@ -9,7 +9,7 @@ updates:
   # A limit of 0 does not disable security updates: alerts still open PRs, and
   # security-findings-notify.yml reports them. Those PRs mostly edit upstream
   # manifests, and a root `overrides` or catalog pin can make them a no-op
-  # (check the resolved version in bun.lock before merging). packages/kilo-docs
+  # (check the resolved version in bun.lock before merging). packages/tavern-docs
   # has its own block below, since this scan can't see its separate
   # pnpm-lock.yaml.
   - package-ecosystem: "bun"
@@ -31,9 +31,9 @@ updates:
         patterns:
           - "*"
 
-  # packages/kilo-docs deploys separately via pnpm; see note above.
+  # packages/tavern-docs deploys separately via pnpm; see note above.
   - package-ecosystem: "npm"
-    directory: "/packages/kilo-docs"
+    directory: "/packages/tavern-docs"
     schedule:
       interval: "weekly"
     cooldown:
@@ -42,7 +42,7 @@ updates:
     labels:
       - "dependencies"
     commit-message:
-      prefix: "chore(kilo-docs)"
+      prefix: "chore(tavern-docs)"
     # Majors are never proposed. They can change peer specs or type targets
     # (for example the @types/node major, which no longer matched the Node
     # versions we target). Bump them by hand, on purpose.
@@ -70,13 +70,13 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      kilo-docs-minor-patch:
+      tavern-docs-minor-patch:
         update-types:
           - "minor"
           - "patch"
 
   - package-ecosystem: "gradle"
-    directory: "/packages/kilo-jetbrains"
+    directory: "/packages/tavern-jetbrains"
     schedule:
       interval: "weekly"
     cooldown:
@@ -139,9 +139,9 @@ updates:
 
 # Deliberately not covered: docker (packages/opencode/Dockerfile) and
 # github-actions (.github/workflows/**). Both paths are shared/upstream code
-# with no "kilo" in their path, so dependabot-auto-merge.yml would never
+# with no "tavern" in their path, so dependabot-auto-merge.yml would never
 # auto-merge them anyway, and .github/workflows/** changes routinely fail
-# the repo's kilocode_change annotation check unless they happen to land
+# the repo's taverncode_change annotation check unless they happen to land
 # inside an existing marker block. Watch these via Dependabot's native
 # security alerts (already repo-wide) and security-findings-notify.yml
 # instead of proposing PRs that need manual handling either way.

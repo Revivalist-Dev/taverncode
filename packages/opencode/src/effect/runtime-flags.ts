@@ -7,68 +7,64 @@ const positiveInteger = (name: string) =>
     Config.map((value) => (Number.isInteger(value) && value > 0 ? value : undefined)),
     Config.orElse(() => Config.succeed(undefined)),
   )
-const experimental = bool("KILO_EXPERIMENTAL")
+const experimental = bool("TAVERN_EXPERIMENTAL")
 const enabledByExperimental = (name: string) =>
   Config.all({ experimental, enabled: Config.boolean(name).pipe(Config.option) }).pipe(
     Config.map((flags) => Option.getOrElse(flags.enabled, () => flags.experimental)),
   )
 
 export class Service extends ConfigService.Service<Service>()("@opencode/RuntimeFlags", {
-  autoShare: bool("KILO_AUTO_SHARE"),
-  pure: bool("KILO_PURE"),
-  disableDefaultPlugins: bool("KILO_DISABLE_DEFAULT_PLUGINS"),
-  disableChannelDb: bool("KILO_DISABLE_CHANNEL_DB"), // kilocode_change
-  disableEmbeddedWebUi: bool("KILO_DISABLE_EMBEDDED_WEB_UI"),
-  disableExternalSkills: bool("KILO_DISABLE_EXTERNAL_SKILLS"),
-  disableSkillShell: bool("KILO_DISABLE_SKILL_SHELL"), // kilocode_change - disable shell injection in skill bodies
-  disableLspDownload: bool("KILO_DISABLE_LSP_DOWNLOAD"),
-  skipMigrations: bool("KILO_SKIP_MIGRATIONS"), // kilocode_change
+  autoShare: bool("TAVERN_AUTO_SHARE"),
+  pure: bool("TAVERN_PURE"),
+  disableDefaultPlugins: bool("TAVERN_DISABLE_DEFAULT_PLUGINS"),
+  disableChannelDb: bool("TAVERN_DISABLE_CHANNEL_DB"), // taverncode_change
+  disableEmbeddedWebUi: bool("TAVERN_DISABLE_EMBEDDED_WEB_UI"),
+  disableExternalSkills: bool("TAVERN_DISABLE_EXTERNAL_SKILLS"),
+  disableSkillShell: bool("TAVERN_DISABLE_SKILL_SHELL"), // taverncode_change - disable shell injection in skill bodies
+  disableLspDownload: bool("TAVERN_DISABLE_LSP_DOWNLOAD"),
+  skipMigrations: bool("TAVERN_SKIP_MIGRATIONS"), // taverncode_change
   disableClaudeCodePrompt: Config.all({
-    broad: bool("KILO_DISABLE_CLAUDE_CODE"),
-    direct: bool("KILO_DISABLE_CLAUDE_CODE_PROMPT"),
-  }).pipe(Config.map((flags) => flags.broad || flags.direct)),
-  disableClaudeCodeSkills: Config.all({
-    broad: bool("KILO_DISABLE_CLAUDE_CODE"),
-    direct: bool("KILO_DISABLE_CLAUDE_CODE_SKILLS"),
+    broad: bool("TAVERN_DISABLE_CLAUDE_CODE"),
+    direct: bool("TAVERN_DISABLE_CLAUDE_CODE_PROMPT"),
   }).pipe(Config.map((flags) => flags.broad || flags.direct)),
   enableExa: Config.all({
     experimental,
-    enabled: bool("KILO_ENABLE_EXA"),
-    legacy: bool("KILO_EXPERIMENTAL_EXA"),
+    enabled: bool("TAVERN_ENABLE_EXA"),
+    legacy: bool("TAVERN_EXPERIMENTAL_EXA"),
   }).pipe(Config.map((flags) => flags.experimental || flags.enabled || flags.legacy)),
   enableParallel: Config.all({
-    enabled: bool("KILO_ENABLE_PARALLEL"),
-    legacy: bool("KILO_EXPERIMENTAL_PARALLEL"),
+    enabled: bool("TAVERN_ENABLE_PARALLEL"),
+    legacy: bool("TAVERN_EXPERIMENTAL_PARALLEL"),
   }).pipe(Config.map((flags) => flags.enabled || flags.legacy)),
-  enableExperimentalModels: bool("KILO_ENABLE_EXPERIMENTAL_MODELS"),
-  enableQuestionTool: bool("KILO_ENABLE_QUESTION_TOOL"),
-  experimentalScout: enabledByExperimental("KILO_EXPERIMENTAL_SCOUT"), // kilocode_change
-  experimentalReferences: enabledByExperimental("KILO_EXPERIMENTAL_REFERENCES"),
-  // kilocode_change start - enabled by default, with an opt-out kill switch
-  experimentalBackgroundSubagents: Config.boolean("KILO_EXPERIMENTAL_BACKGROUND_SUBAGENTS").pipe(
+  enableExperimentalModels: bool("TAVERN_ENABLE_EXPERIMENTAL_MODELS"),
+  enableQuestionTool: bool("TAVERN_ENABLE_QUESTION_TOOL"),
+  experimentalScout: enabledByExperimental("TAVERN_EXPERIMENTAL_SCOUT"), // taverncode_change
+  experimentalReferences: enabledByExperimental("TAVERN_EXPERIMENTAL_REFERENCES"),
+  // taverncode_change start - enabled by default, with an opt-out kill switch
+  experimentalBackgroundSubagents: Config.boolean("TAVERN_EXPERIMENTAL_BACKGROUND_SUBAGENTS").pipe(
     Config.withDefault(true),
   ),
-  // kilocode_change end
-  experimentalLspTy: bool("KILO_EXPERIMENTAL_LSP_TY"),
-  experimentalLspTool: enabledByExperimental("KILO_EXPERIMENTAL_LSP_TOOL"),
-  // kilocode_change start - self-context tools
-  experimentalContextTools: enabledByExperimental("KILO_EXPERIMENTAL_CONTEXT_TOOLS"),
-  // kilocode_change end
-  experimentalOxfmt: enabledByExperimental("KILO_EXPERIMENTAL_OXFMT"),
-  experimentalCodeMode: enabledByExperimental("KILO_EXPERIMENTAL_CODE_MODE"),
-  experimentalEventSystem: enabledByExperimental("KILO_EXPERIMENTAL_EVENT_SYSTEM"),
-  experimentalSessionSwitcher: enabledByExperimental("KILO_EXPERIMENTAL_SESSION_SWITCHER"), // kilocode_change
-  // kilocode_change start - enabled by default, with an opt-out kill switch
-  experimentalSharedAgentBoard: Config.boolean("KILO_EXPERIMENTAL_SHARED_AGENT_BOARD").pipe(Config.withDefault(true)),
-  // kilocode_change end
-  experimentalWorkspaces: enabledByExperimental("KILO_EXPERIMENTAL_WORKSPACES"),
-  experimentalIconDiscovery: enabledByExperimental("KILO_EXPERIMENTAL_ICON_DISCOVERY"),
-  experimentalMcpApps: enabledByExperimental("KILO_EXPERIMENTAL_MCP_APPS"), // kilocode_change
-  outputTokenMax: positiveInteger("KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX"),
-  bashDefaultTimeoutMs: positiveInteger("KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS"),
-  experimentalNativeLlm: bool("KILO_EXPERIMENTAL_NATIVE_LLM"),
-  experimentalWebSockets: bool("KILO_EXPERIMENTAL_WEBSOCKETS"),
-  client: Config.string("KILO_CLIENT").pipe(Config.withDefault("cli")),
+  // taverncode_change end
+  experimentalLspTy: bool("TAVERN_EXPERIMENTAL_LSP_TY"),
+  experimentalLspTool: enabledByExperimental("TAVERN_EXPERIMENTAL_LSP_TOOL"),
+  // taverncode_change start - self-context tools
+  experimentalContextTools: enabledByExperimental("TAVERN_EXPERIMENTAL_CONTEXT_TOOLS"),
+  // taverncode_change end
+  experimentalOxfmt: enabledByExperimental("TAVERN_EXPERIMENTAL_OXFMT"),
+  experimentalCodeMode: enabledByExperimental("TAVERN_EXPERIMENTAL_CODE_MODE"),
+  experimentalEventSystem: enabledByExperimental("TAVERN_EXPERIMENTAL_EVENT_SYSTEM"),
+  experimentalSessionSwitcher: enabledByExperimental("TAVERN_EXPERIMENTAL_SESSION_SWITCHER"), // taverncode_change
+  // taverncode_change start - enabled by default, with an opt-out kill switch
+  experimentalSharedAgentBoard: Config.boolean("TAVERN_EXPERIMENTAL_SHARED_AGENT_BOARD").pipe(Config.withDefault(true)),
+  // taverncode_change end
+  experimentalWorkspaces: enabledByExperimental("TAVERN_EXPERIMENTAL_WORKSPACES"),
+  experimentalIconDiscovery: enabledByExperimental("TAVERN_EXPERIMENTAL_ICON_DISCOVERY"),
+  experimentalMcpApps: enabledByExperimental("TAVERN_EXPERIMENTAL_MCP_APPS"), // taverncode_change
+  outputTokenMax: positiveInteger("TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX"),
+  bashDefaultTimeoutMs: positiveInteger("TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS"),
+  experimentalNativeLlm: bool("TAVERN_EXPERIMENTAL_NATIVE_LLM"),
+  experimentalWebSockets: bool("TAVERN_EXPERIMENTAL_WEBSOCKETS"),
+  client: Config.string("TAVERN_CLIENT").pipe(Config.withDefault("cli")),
 }) {}
 
 export type Info = Context.Service.Shape<typeof Service>

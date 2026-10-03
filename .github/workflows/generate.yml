@@ -14,11 +14,11 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6 # kilocode_change
-        # kilocode_change start
+        uses: actions/checkout@v6 # taverncode_change
+        # taverncode_change start
         with:
           persist-credentials: false
-        # kilocode_change end
+        # taverncode_change end
 
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
@@ -27,10 +27,10 @@ jobs:
         id: committer
         uses: ./.github/actions/setup-git-committer
         with:
-          # kilocode_change start
-          kilo-maintainer-app-id: ${{ secrets.KILO_MAINTAINER_APP_ID }}
-          kilo-maintainer-app-secret: ${{ secrets.KILO_MAINTAINER_APP_SECRET }}
-          # kilocode_change end
+          # taverncode_change start
+          tavern-maintainer-app-id: ${{ secrets.TAVERN_MAINTAINER_APP_ID }}
+          tavern-maintainer-app-secret: ${{ secrets.TAVERN_MAINTAINER_APP_SECRET }}
+          # taverncode_change end
 
       - name: Generate
         run: ./script/generate.ts

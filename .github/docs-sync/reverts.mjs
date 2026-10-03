@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Pure helpers for intercepting revert PRs during docs-sync collect.

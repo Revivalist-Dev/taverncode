@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Shared helpers for the docs-sync bot scripts. Dependency-free (Node 20+
@@ -14,7 +14,7 @@ import fs from "node:fs"
 const API = process.env.DOCS_SYNC_API_BASE || "https://api.github.com"
 const MAX_RETRIES = 3
 
-// Reasoning effort passed to every `kilo run` as `--variant`. The workflow sets
+// Reasoning effort passed to every `tavern run` as `--variant`. The workflow sets
 // DOCS_SYNC_VARIANT (default "max"); scripts fall back to max so a local run or a
 // caller that forgets the env still gets the intended effort.
 export const REASONING_VARIANT = process.env.DOCS_SYNC_VARIANT || "max"
@@ -45,7 +45,7 @@ export async function api(path, { method = "GET", body, auth } = {}) {
           authorization: `Bearer ${auth ?? token()}`,
           accept: "application/vnd.github+json",
           "x-github-api-version": "2022-11-28",
-          "user-agent": "kilo-docs-sync-bot",
+          "user-agent": "tavern-docs-sync-bot",
         },
         body: body === undefined ? undefined : JSON.stringify(body),
       })
@@ -137,7 +137,7 @@ export function remainingMs(deadlineMs) {
 }
 
 /**
- * Backoff schedule between kilo-run attempts. Production waits 60s then 300s
+ * Backoff schedule between tavern-run attempts. Production waits 60s then 300s
  * (observed outage lasted ~11 min; batch 8 recovered on attempt 2). When
  * DOCS_SYNC_BACKOFF_MS is set it replaces EVERY wait (`0` disables waiting);
  * the workflow never sets it — only selftests do.
@@ -156,7 +156,7 @@ export function backoffMsForAttempt(attempt) {
 }
 
 /**
- * Blocking sleep used between kilo-run retries. Prefer this over async sleep
+ * Blocking sleep used between tavern-run retries. Prefer this over async sleep
  * so edit/triage stay synchronous around spawnSync.
  */
 export function sleepSync(ms) {
@@ -176,11 +176,11 @@ export function sleepSync(ms) {
 const STDERR_TAIL_LINES = 20
 const STDERR_TAIL_CHARS = 4_000
 
-// CSI sequences (colour, cursor moves, erases). kilo renders its TUI to stderr,
+// CSI sequences (colour, cursor moves, erases). tavern renders its TUI to stderr,
 // so an unstripped tail lands in the rolling PR's pending table as
 // "^[[0m→ ^[[0mRead packages/..." and the cause is unreadable. Stripped before
 // the line/char slice so escapes do not eat the budget. The persisted
-// docs-sync-out/kilo-stderr-*.log stays raw — that is the debugging record.
+// docs-sync-out/tavern-stderr-*.log stays raw — that is the debugging record.
 // eslint-disable-next-line no-control-regex
 const ANSI_CSI = /\u001b\[[0-9;?]*[ -/]*[@-~]/g
 
@@ -195,7 +195,7 @@ function tailText(text, { lines = STDERR_TAIL_LINES, chars = STDERR_TAIL_CHARS }
 
 /**
  * Artifact files are raw: GitHub masks secret values in log streams only, and the runner
- * env holds long-lived secrets (KILO_API_KEY), so exact values of secret-looking env vars
+ * env holds long-lived secrets (TAVERN_API_KEY), so exact values of secret-looking env vars
  * are redacted before stdout/stderr is persisted or printed.
  * Matching is exact-substring and case-sensitive on values — JSON-escaped, base64'd, or
  * line-wrapped renderings and values shorter than 8 chars survive (same limitation as
@@ -203,7 +203,7 @@ function tailText(text, { lines = STDERR_TAIL_LINES, chars = STDERR_TAIL_CHARS }
  */
 export function redactEnvSecrets(text) {
   let out = String(text ?? "")
-  // Also match CREDENTIAL/PASSWORD/ORG_ID/_PAT (e.g. KILO_ORG_ID, GH_PAT) beyond KEY|TOKEN|SECRET.
+  // Also match CREDENTIAL/PASSWORD/ORG_ID/_PAT (e.g. TAVERN_ORG_ID, GH_PAT) beyond KEY|TOKEN|SECRET.
   const nameRe = /KEY|TOKEN|SECRET|CREDENTIAL|PASSWORD|ORG_ID|_PAT$/i
   const candidates = []
   for (const [name, value] of Object.entries(process.env)) {
@@ -224,7 +224,7 @@ export function redactEnvSecrets(text) {
 const STDERR_LOG_MAX_CHARS = 8 * 1024 * 1024
 
 /**
- * Run `kilo` via spawnSync so stderr is always recoverable — including when
+ * Run `tavern` via spawnSync so stderr is always recoverable — including when
  * the child exits 0 after writing a diagnostic (execFileSync cannot return
  * piped stderr on exit 0; that path lost every diagnostic on run 30122603016).
  *
@@ -232,11 +232,11 @@ const STDERR_LOG_MAX_CHARS = 8 * 1024 * 1024
  * (triage parses it). stderr is always buffered.
  *
  * Always writes the full captured stderr to
- * docs-sync-out/kilo-stderr-<sanitized-label>.log (unconditional — success and
+ * docs-sync-out/tavern-stderr-<sanitized-label>.log (unconditional — success and
  * failure). The console return value still uses the short tailText.
  */
-export function runKilo({ args, timeoutMs, streamStdout = false, label = "kilo" }) {
-  const result = spawnSync("kilo", args, {
+export function runTavern({ args, timeoutMs, streamStdout = false, label = "tavern" }) {
+  const result = spawnSync("tavern", args, {
     encoding: "utf8",
     maxBuffer: 32 * 1024 * 1024,
     timeout: timeoutMs,
@@ -262,9 +262,9 @@ export function runKilo({ args, timeoutMs, streamStdout = false, label = "kilo" 
     fs.mkdirSync("docs-sync-out", { recursive: true })
     const safe = label.replace(/[^A-Za-z0-9._-]/g, "-")
     const body = stderrSafe.length > STDERR_LOG_MAX_CHARS ? stderrSafe.slice(-STDERR_LOG_MAX_CHARS) : stderrSafe
-    fs.writeFileSync(`docs-sync-out/kilo-stderr-${safe}.log`, body)
+    fs.writeFileSync(`docs-sync-out/tavern-stderr-${safe}.log`, body)
   } catch (err) {
-    console.warn(`${label}: failed to write kilo-stderr log: ${err.message}`)
+    console.warn(`${label}: failed to write tavern-stderr log: ${err.message}`)
   }
 
   if (result.error && !timedOut) {

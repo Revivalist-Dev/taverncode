@@ -3,36 +3,36 @@
 </p>
 
 <p align="center">
-  <a href="https://kilo.ai"><img width="250" alt="Kilo Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
+  <a href="https://kilo.ai"><img width="250" alt="Tavern Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
 </p>
 
 <p align="center">用於在 VS Code、JetBrains 或 CLI 中運用 AI 建構的開源編碼代理。</p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
-  <a href="https://www.npmjs.com/package/@kilocode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@kilocode/cli?style=flat" height="20" /></a>
-  <a href="https://x.com/kilocode"><img src="https://raster.shields.io/badge/kilocode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
+  <a href="https://www.npmjs.com/package/@taverncode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@taverncode/cli?style=flat" height="20" /></a>
+  <a href="https://x.com/taverncode"><img src="https://raster.shields.io/badge/taverncode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
   <a href="https://blog.kilo.ai"><img src="https://raster.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Blog" height="20"></a>
   <a href="https://kilo.ai/discord"><img src="https://raster.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord" height="20"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://raster.shields.io/badge/Join%20r%2Fkilocode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
+  <a href="https://www.reddit.com/r/taverncode/"><img src="https://raster.shields.io/badge/Join%20r%2Ftaverncode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
 </p>
 
-![Kilo-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
+![Tavern-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
 
 ---
 
-Kilo Code 是一個 AI 編碼代理，可在你工作的任何地方使用：[VS Code](https://kilo.ai/landing/vs-code)、[JetBrains](https://kilo.ai/features/jetbrains-native) 和 [CLI](https://kilo.ai/cli)。它是開源專案，並採用開放定價。你可以從 500 多個模型中選擇，在任務中途切換模型，並按模型供應商的價格付費，沒有加價。開始使用不需要 API 金鑰。
+Tavern Code 是一個 AI 編碼代理，可在你工作的任何地方使用：[VS Code](https://kilo.ai/landing/vs-code)、[JetBrains](https://kilo.ai/features/jetbrains-native) 和 [CLI](https://kilo.ai/cli)。它是開源專案，並採用開放定價。你可以從 500 多個模型中選擇，在任務中途切換模型，並按模型供應商的價格付費，沒有加價。開始使用不需要 API 金鑰。
 
 ### 安裝
 
-選擇你想執行 Kilo 的位置。
+選擇你想執行 Tavern 的位置。
 
 <details open>
 <summary><strong>VS Code</strong></summary>
 
 <br>
 
-直接安裝 [Kilo Code 擴充功能](vscode:extension/kilocode.kilo-code)，或從 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code) 取得。建立帳戶後，你可以按供應商價格使用 500 多個模型，包括 GPT-5.5、Claude Opus 4.7、Claude Sonnet 4.6 和 Gemini 3.1 Pro Preview。
+直接安裝 [Tavern Code 擴充功能](vscode:extension/taverncode.tavern-code)，或從 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code) 取得。建立帳戶後，你可以按供應商價格使用 500 多個模型，包括 GPT-5.5、Claude Opus 4.7、Claude Sonnet 4.6 和 Gemini 3.1 Pro Preview。
 
 </details>
 
@@ -43,25 +43,25 @@ Kilo Code 是一個 AI 編碼代理，可在你工作的任何地方使用：[VS
 
 ```bash
 # npm
-npm install -g @kilocode/cli
+npm install -g @taverncode/cli
 
 # curl
 curl -fsSL https://kilo.ai/cli/install | bash
 
 # pnpm
-pnpm add -g @kilocode/cli
+pnpm add -g @taverncode/cli
 
 # bun
-bun add -g @kilocode/cli
+bun add -g @taverncode/cli
 
 # Homebrew (macOS / Linux)
-brew install Kilo-Org/tap/kilo
+brew install Kilo-Org/tap/tavern
 
 # Arch Linux (AUR)
-paru -S kilo-bin
+paru -S tavern-bin
 ```
 
-然後在任何專案目錄中執行 `kilo` 即可開始。
+然後在任何專案目錄中執行 `tavern` 即可開始。
 
 </details>
 
@@ -70,7 +70,7 @@ paru -S kilo-bin
 
 <br>
 
-從 JetBrains Marketplace 安裝 [Kilo Code 外掛](https://plugins.jetbrains.com/plugin/28350-kilo-code)，或在任何 JetBrains IDE 的 `Settings → Plugins` 中搜尋 "Kilo Code"。
+從 JetBrains Marketplace 安裝 [Tavern Code 外掛](https://plugins.jetbrains.com/plugin/28350-tavern-code)，或在任何 JetBrains IDE 的 `Settings → Plugins` 中搜尋 "Tavern Code"。
 
 </details>
 
@@ -79,7 +79,7 @@ paru -S kilo-bin
 
 <br>
 
-無需本機電腦，在 Web 上透過 [app.kilo.ai/cloud](https://app.kilo.ai/cloud) 執行 Kilo。
+無需本機電腦，在 Web 上透過 [app.kilo.ai/cloud](https://app.kilo.ai/cloud) 執行 Tavern。
 
 </details>
 
@@ -99,19 +99,19 @@ paru -S kilo-bin
 
 | 平台 | 資源 |
 |---|---|
-| Windows（大多數 PC） | `kilo-windows-x64.zip` |
-| macOS（Apple Silicon） | `kilo-darwin-arm64.zip` |
-| macOS（Intel） | `kilo-darwin-x64.zip` |
-| Linux x64 | `kilo-linux-x64.tar.gz` |
-| Linux ARM | `kilo-linux-arm64.tar.gz` |
+| Windows（大多數 PC） | `tavern-windows-x64.zip` |
+| macOS（Apple Silicon） | `tavern-darwin-arm64.zip` |
+| macOS（Intel） | `tavern-darwin-x64.zip` |
+| Linux x64 | `tavern-linux-x64.tar.gz` |
+| Linux ARM | `tavern-linux-arm64.tar.gz` |
 
-注意：`x64-baseline` 是面向不支援 AVX 的舊 CPU 的相容性建置。`musl` 是面向 Alpine 或沒有 glibc 的極簡 Docker 映像的靜態連結建置。`kilo-vscode-*.vsix` 是 VS Code 擴充功能套件，不是 CLI。`Source code` 封存檔用於從原始碼建置。
+注意：`x64-baseline` 是面向不支援 AVX 的舊 CPU 的相容性建置。`musl` 是面向 Alpine 或沒有 glibc 的極簡 Docker 映像的靜態連結建置。`tavern-vscode-*.vsix` 是 VS Code 擴充功能套件，不是 CLI。`Source code` 封存檔用於從原始碼建置。
 
 </details>
 
 ### Agents
 
-Kilo 內建可依任務切換的專用 Agents。你也可以建立自己的自訂 Agents。
+Tavern 內建可依任務切換的專用 Agents。你也可以建立自己的自訂 Agents。
 
 - **Code** - 預設。根據自然語言實作和編輯程式碼。
 - **Plan** - 在撰寫任何程式碼之前設計架構並撰寫實作計畫。
@@ -132,10 +132,10 @@ Kilo 內建可依任務切換的專用 Agents。你也可以建立自己的自�
 
 ### 自主模式（CI/CD）
 
-使用 `--auto` 執行 `kilo run`，可在 CI/CD 管線中進行無提示的完全自主操作：
+使用 `--auto` 執行 `tavern run`，可在 CI/CD 管線中進行無提示的完全自主操作：
 
 ```bash
-kilo run --auto "run tests and fix any failures"
+tavern run --auto "run tests and fix any failures"
 ```
 
 `--auto` 會停用所有權限提示，並允許代理在無需確認的情況下執行任何操作。僅在可信任環境中使用。
@@ -146,7 +146,7 @@ kilo run --auto "run tests and fix any failures"
 
 ### 貢獻
 
-歡迎開發者、作者以及所有人參與貢獻。請先閱讀 [Contributing Guide](/CONTRIBUTING.md)，了解環境設定、程式碼標準以及如何建立 Pull Request。VS Code 擴充功能和 CLI 的發布流程請參閱 [RELEASING.md](../RELEASING.md)，JetBrains 外掛請參閱 [packages/kilo-jetbrains/RELEASING.md](../packages/kilo-jetbrains/RELEASING.md)。
+歡迎開發者、作者以及所有人參與貢獻。請先閱讀 [Contributing Guide](/CONTRIBUTING.md)，了解環境設定、程式碼標準以及如何建立 Pull Request。VS Code 擴充功能和 CLI 的發布流程請參閱 [RELEASING.md](../RELEASING.md)，JetBrains 外掛請參閱 [packages/tavern-jetbrains/RELEASING.md](../packages/tavern-jetbrains/RELEASING.md)。
 
 參與前請閱讀我們的 [Code of Conduct](/CODE_OF_CONDUCT.md)。
 
@@ -157,12 +157,12 @@ MIT。你可以使用、修改和散布此程式碼，包括商業用途，只�
 ### FAQ
 
 <details>
-<summary>Kilo CLI 從何而來？</summary>
+<summary>Tavern CLI 從何而來？</summary>
 
-Kilo CLI 是 [OpenCode](https://github.com/anomalyco/opencode) 的 fork，並增強為可在 Kilo agentic engineering 平台中使用。
+Tavern CLI 是 [OpenCode](https://github.com/anomalyco/opencode) 的 fork，並增強為可在 Tavern agentic engineering 平台中使用。
 
 </details>
 
 ---
 
-**加入社群** [Discord](https://kilo.ai/discord) | [X](https://x.com/kilocode) | [Reddit](https://www.reddit.com/r/kilocode/)
+**加入社群** [Discord](https://kilo.ai/discord) | [X](https://x.com/taverncode) | [Reddit](https://www.reddit.com/r/taverncode/)

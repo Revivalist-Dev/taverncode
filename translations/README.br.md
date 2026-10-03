@@ -3,36 +3,36 @@
 </p>
 
 <p align="center">
-  <a href="https://kilo.ai"><img width="250" alt="Kilo Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
+  <a href="https://kilo.ai"><img width="250" alt="Tavern Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
 </p>
 
 <p align="center">O agente de programação open source para criar com IA no VS Code, JetBrains ou CLI.</p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
-  <a href="https://www.npmjs.com/package/@kilocode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@kilocode/cli?style=flat" height="20" /></a>
-  <a href="https://x.com/kilocode"><img src="https://raster.shields.io/badge/kilocode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
+  <a href="https://www.npmjs.com/package/@taverncode/cli"><img alt="npm" src="https://raster.shields.io/npm/v/@taverncode/cli?style=flat" height="20" /></a>
+  <a href="https://x.com/taverncode"><img src="https://raster.shields.io/badge/taverncode-000000?style=flat&logo=x&logoColor=white" alt="X (Twitter)" height="20"></a>
   <a href="https://blog.kilo.ai"><img src="https://raster.shields.io/badge/Blog-555?style=flat&logo=substack&logoColor=white" alt="Blog" height="20"></a>
   <a href="https://kilo.ai/discord"><img src="https://raster.shields.io/badge/Join%20Discord-5865F2?style=flat&logo=discord&logoColor=white" alt="Discord" height="20"></a>
-  <a href="https://www.reddit.com/r/kilocode/"><img src="https://raster.shields.io/badge/Join%20r%2Fkilocode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
+  <a href="https://www.reddit.com/r/taverncode/"><img src="https://raster.shields.io/badge/Join%20r%2Ftaverncode-D84315?style=flat&logo=reddit&logoColor=white" alt="Reddit" height="20"></a>
 </p>
 
-![Kilo-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
+![Tavern-in-VS-Code-and-CLI](https://github.com/user-attachments/assets/0536ca59-ed81-4512-9e05-d186187a1b52)
 
 ---
 
-Kilo Code é um agente de programação com IA que acompanha você em todos os lugares onde trabalha: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native) e [CLI](https://kilo.ai/cli). É open source e tem preços abertos. Você escolhe entre mais de 500 modelos, alterna entre eles no meio da tarefa e paga a tarifa do provedor do modelo sem acréscimo. Não são necessárias chaves de API para começar.
+Tavern Code é um agente de programação com IA que acompanha você em todos os lugares onde trabalha: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native) e [CLI](https://kilo.ai/cli). É open source e tem preços abertos. Você escolhe entre mais de 500 modelos, alterna entre eles no meio da tarefa e paga a tarifa do provedor do modelo sem acréscimo. Não são necessárias chaves de API para começar.
 
 ### Instalação
 
-Escolha onde você quer executar o Kilo.
+Escolha onde você quer executar o Tavern.
 
 <details open>
 <summary><strong>VS Code</strong></summary>
 
 <br>
 
-Instale a [extensão Kilo Code](vscode:extension/kilocode.kilo-code) diretamente ou baixe pelo [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=kilocode.Kilo-Code). Crie uma conta e você terá acesso a mais de 500 modelos, incluindo GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 e Gemini 3.1 Pro Preview, todos com preço do provedor.
+Instale a [extensão Tavern Code](vscode:extension/taverncode.tavern-code) diretamente ou baixe pelo [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code). Crie uma conta e você terá acesso a mais de 500 modelos, incluindo GPT-5.5, Claude Opus 4.7, Claude Sonnet 4.6 e Gemini 3.1 Pro Preview, todos com preço do provedor.
 
 </details>
 
@@ -43,25 +43,25 @@ Instale a [extensão Kilo Code](vscode:extension/kilocode.kilo-code) diretamente
 
 ```bash
 # npm
-npm install -g @kilocode/cli
+npm install -g @taverncode/cli
 
 # curl
 curl -fsSL https://kilo.ai/cli/install | bash
 
 # pnpm
-pnpm add -g @kilocode/cli
+pnpm add -g @taverncode/cli
 
 # bun
-bun add -g @kilocode/cli
+bun add -g @taverncode/cli
 
 # Homebrew (macOS / Linux)
-brew install Kilo-Org/tap/kilo
+brew install Kilo-Org/tap/tavern
 
 # Arch Linux (AUR)
-paru -S kilo-bin
+paru -S tavern-bin
 ```
 
-Depois execute `kilo` em qualquer diretório de projeto para começar.
+Depois execute `tavern` em qualquer diretório de projeto para começar.
 
 </details>
 
@@ -70,7 +70,7 @@ Depois execute `kilo` em qualquer diretório de projeto para começar.
 
 <br>
 
-Instale o [plugin Kilo Code](https://plugins.jetbrains.com/plugin/28350-kilo-code) pelo JetBrains Marketplace ou procure por "Kilo Code" em `Settings → Plugins` dentro de qualquer IDE JetBrains.
+Instale o [plugin Tavern Code](https://plugins.jetbrains.com/plugin/28350-tavern-code) pelo JetBrains Marketplace ou procure por "Tavern Code" em `Settings → Plugins` dentro de qualquer IDE JetBrains.
 
 </details>
 
@@ -79,7 +79,7 @@ Instale o [plugin Kilo Code](https://plugins.jetbrains.com/plugin/28350-kilo-cod
 
 <br>
 
-Execute o Kilo pela web, sem máquina local, em [app.kilo.ai/cloud](https://app.kilo.ai/cloud).
+Execute o Tavern pela web, sem máquina local, em [app.kilo.ai/cloud](https://app.kilo.ai/cloud).
 
 </details>
 
@@ -99,19 +99,19 @@ Baixe o binário mais recente na [página de Releases](https://github.com/Kilo-O
 
 | Plataforma | Asset |
 |---|---|
-| Windows (a maioria dos PCs) | `kilo-windows-x64.zip` |
-| macOS (Apple Silicon) | `kilo-darwin-arm64.zip` |
-| macOS (Intel) | `kilo-darwin-x64.zip` |
-| Linux x64 | `kilo-linux-x64.tar.gz` |
-| Linux ARM | `kilo-linux-arm64.tar.gz` |
+| Windows (a maioria dos PCs) | `tavern-windows-x64.zip` |
+| macOS (Apple Silicon) | `tavern-darwin-arm64.zip` |
+| macOS (Intel) | `tavern-darwin-x64.zip` |
+| Linux x64 | `tavern-linux-x64.tar.gz` |
+| Linux ARM | `tavern-linux-arm64.tar.gz` |
 
-Notas: `x64-baseline` é uma build de compatibilidade para CPUs antigas sem AVX. `musl` é a build com link estático para Alpine ou imagens Docker mínimas sem glibc. `kilo-vscode-*.vsix` é o pacote da extensão VS Code, não a CLI. Arquivos `Source code` são para compilar a partir do código-fonte.
+Notas: `x64-baseline` é uma build de compatibilidade para CPUs antigas sem AVX. `musl` é a build com link estático para Alpine ou imagens Docker mínimas sem glibc. `tavern-vscode-*.vsix` é o pacote da extensão VS Code, não a CLI. Arquivos `Source code` são para compilar a partir do código-fonte.
 
 </details>
 
 ### Agents
 
-Kilo vem com agents especializados para você alternar dependendo da tarefa. Você também pode criar seus próprios agents personalizados.
+Tavern vem com agents especializados para você alternar dependendo da tarefa. Você também pode criar seus próprios agents personalizados.
 
 - **Code** - O padrão. Implementa e edita código a partir de linguagem natural.
 - **Plan** - Desenha a arquitetura e escreve planos de implementação antes de qualquer código ser escrito.
@@ -132,10 +132,10 @@ Saiba mais sobre [agents e agents personalizados](https://kilo.ai/docs/code-with
 
 ### Modo autônomo (CI/CD)
 
-Execute `kilo run` com `--auto` para operação totalmente autônoma e sem prompts, criada para pipelines CI/CD:
+Execute `tavern run` com `--auto` para operação totalmente autônoma e sem prompts, criada para pipelines CI/CD:
 
 ```bash
-kilo run --auto "run tests and fix any failures"
+tavern run --auto "run tests and fix any failures"
 ```
 
 `--auto` desativa todos os prompts de permissão e permite que o agente execute qualquer ação sem confirmação. Use apenas em ambientes confiáveis.
@@ -146,7 +146,7 @@ Para configuração e todo o resto, consulte a [documentação](https://kilo.ai/
 
 ### Contribuindo
 
-Contribuições são bem-vindas de desenvolvedores, escritores e qualquer pessoa. Comece pelo [Contributing Guide](/CONTRIBUTING.md) para configurar o ambiente, conhecer os padrões de código e abrir um pull request. Consulte [RELEASING.md](../RELEASING.md) para o processo de release da extensão VS Code e da CLI, e [packages/kilo-jetbrains/RELEASING.md](../packages/kilo-jetbrains/RELEASING.md) para o plugin JetBrains.
+Contribuições são bem-vindas de desenvolvedores, escritores e qualquer pessoa. Comece pelo [Contributing Guide](/CONTRIBUTING.md) para configurar o ambiente, conhecer os padrões de código e abrir um pull request. Consulte [RELEASING.md](../RELEASING.md) para o processo de release da extensão VS Code e da CLI, e [packages/tavern-jetbrains/RELEASING.md](../packages/tavern-jetbrains/RELEASING.md) para o plugin JetBrains.
 
 Leia nosso [Code of Conduct](/CODE_OF_CONDUCT.md) antes de participar.
 
@@ -157,12 +157,12 @@ MIT. Você pode usar, modificar e distribuir este código, inclusive comercialme
 ### FAQ
 
 <details>
-<summary>De onde veio o Kilo CLI?</summary>
+<summary>De onde veio o Tavern CLI?</summary>
 
-Kilo CLI é um fork do [OpenCode](https://github.com/anomalyco/opencode), aprimorado para funcionar dentro da plataforma de engenharia agêntica da Kilo.
+Tavern CLI é um fork do [OpenCode](https://github.com/anomalyco/opencode), aprimorado para funcionar dentro da plataforma de engenharia agêntica da Tavern.
 
 </details>
 
 ---
 
-**Participe da comunidade** [Discord](https://kilo.ai/discord) | [X](https://x.com/kilocode) | [Reddit](https://www.reddit.com/r/kilocode/)
+**Participe da comunidade** [Discord](https://kilo.ai/discord) | [X](https://x.com/taverncode) | [Reddit](https://www.reddit.com/r/taverncode/)

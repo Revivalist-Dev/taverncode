@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { afterAll, afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
 import { EOL } from "node:os"
 import { Effect } from "effect"
 
 // Restore these spies after the suite so other files use real PR-link helpers.
-const realPrLink = await import("@/kilo-sessions/pr-link")
-const realPoller = await import("@/kilo-sessions/pr-link-poller")
+const realPrLink = await import("@/tavern-sessions/pr-link")
+const realPoller = await import("@/tavern-sessions/pr-link-poller")
 
 type Record = {
   link: { platform: string; prUrl: string; prNumber: number }
@@ -74,16 +74,16 @@ function message(err: unknown): string {
   return err instanceof Error ? err.message : String(err)
 }
 
-const client = process.env.KILO_CLIENT
+const client = process.env.TAVERN_CLIENT
 beforeEach(() => {
-  process.env.KILO_CLIENT = "cli"
+  process.env.TAVERN_CLIENT = "cli"
 })
 afterEach(() => {
   if (client == null) {
-    delete process.env.KILO_CLIENT
+    delete process.env.TAVERN_CLIENT
     return
   }
-  process.env.KILO_CLIENT = client
+  process.env.TAVERN_CLIENT = client
 })
 
 describe("pr status", () => {
@@ -95,8 +95,8 @@ describe("pr status", () => {
     matches.mockClear()
     refresh.mockClear()
     writeSpy.mockClear()
-    delete process.env.KILO_SESSION_ID
-    delete process.env.KILO_SESSION
+    delete process.env.TAVERN_SESSION_ID
+    delete process.env.TAVERN_SESSION
   })
 
   test("prints the session's stored link", async () => {
@@ -124,8 +124,8 @@ describe("pr status", () => {
     expect(read).not.toHaveBeenCalled()
   })
 
-  test("resolves the session from KILO_SESSION_ID", async () => {
-    process.env.KILO_SESSION_ID = "ses_env"
+  test("resolves the session from TAVERN_SESSION_ID", async () => {
+    process.env.TAVERN_SESSION_ID = "ses_env"
     stored = {
       link: { platform: "github", prUrl: "https://github.com/owner/repo/pull/9", prNumber: 9 },
       evidence: "push",
@@ -155,8 +155,8 @@ describe("pr link", () => {
     record.mockClear()
     matches.mockClear()
     writeSpy.mockClear()
-    delete process.env.KILO_SESSION_ID
-    delete process.env.KILO_SESSION
+    delete process.env.TAVERN_SESSION_ID
+    delete process.env.TAVERN_SESSION
   })
 
   test("records the link for the explicit session only", async () => {
@@ -196,8 +196,8 @@ describe("pr unlink", () => {
     }
     clear.mockClear()
     writeSpy.mockClear()
-    delete process.env.KILO_SESSION_ID
-    delete process.env.KILO_SESSION
+    delete process.env.TAVERN_SESSION_ID
+    delete process.env.TAVERN_SESSION
   })
 
   test("clears only the explicit session", async () => {
@@ -230,7 +230,7 @@ describe("non-CLI PR-link commands", () => {
   test.each(["vscode", "jetbrains", "desktop", "acp", "custom"])(
     "%s rejects link, unlink, and status before validation, storage, or git work",
     async (client) => {
-      process.env.KILO_CLIENT = client
+      process.env.TAVERN_CLIENT = client
       for (const effect of [
         prLinkHandler({ url: "https://github.com/owner/repo/pull/55", session: "ses_alpha" }),
         prLinkHandler({ url: "invalid" }),

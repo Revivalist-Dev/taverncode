@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Offline self-check for the docs-sync failure paths (S4).
@@ -80,9 +80,9 @@ function writeExecutable(filePath, body) {
   fs.writeFileSync(filePath, body, { mode: 0o755 })
 }
 
-function makeStubKiloDir({ mode, callLog, stderrText = "event stream disconnected" }) {
-  const dir = mktemp("docs-sync-kilo-")
-  const kiloPath = path.join(dir, "kilo")
+function makeStubTavernDir({ mode, callLog, stderrText = "event stream disconnected" }) {
+  const dir = mktemp("docs-sync-tavern-")
+  const tavernPath = path.join(dir, "tavern")
   // mode: "stderr-exit0" | "record" | "partial-triage" | "mixed-triage" | "write-edit-summary"
   const script = `#!/usr/bin/env node
 const fs = require("node:fs");
@@ -111,7 +111,7 @@ if (fileArg && fs.existsSync(fileArg)) {
 }
 if (mode === "write-edit-summary") {
   // Success path: write the batch summary so edit.mjs returns true, while still
-  // emitting stderr so selftest can assert runKilo persisted it unconditionally.
+  // emitting stderr so selftest can assert runTavern persisted it unconditionally.
   process.stderr.write(stderrText + "\\n");
   const m = fileArg && String(fileArg).match(/edit-batch-(\\d+)\\.json/);
   const index = m ? m[1] : "0";
@@ -163,7 +163,7 @@ if (mode === "mixed-triage") {
 if (mode === "triage-embed-env-secret") {
   // Valid triage JSON with a secret env value embedded in a string field
   // (stdout is persisted to triage-raw-*.txt; must be redacted at capture).
-  const secret = process.env.KILO_API_KEY || "missing-secret";
+  const secret = process.env.TAVERN_API_KEY || "missing-secret";
   const entries = chunk.map((d) => ({
     pr: d.number,
     url: d.url,
@@ -188,7 +188,7 @@ if (mode === "extraction-delta") {
 process.stderr.write("unknown stub mode\\n");
 process.exit(1);
 `
-  writeExecutable(kiloPath, script)
+  writeExecutable(tavernPath, script)
   return dir
 }
 
@@ -352,8 +352,8 @@ function setupTriageCwd(digest) {
   return cwd
 }
 
-function runNodeScript(scriptPath, { cwd, env = {}, kiloDir, args = [] }) {
-  const pathEnv = [kiloDir, process.env.PATH].filter(Boolean).join(path.delimiter)
+function runNodeScript(scriptPath, { cwd, env = {}, tavernDir, args = [] }) {
+  const pathEnv = [tavernDir, process.env.PATH].filter(Boolean).join(path.delimiter)
   const result = spawnSync(process.execPath, [scriptPath, ...args], {
     cwd,
     env: {
@@ -391,7 +391,7 @@ function samplePr(n, { merged_at, repo = "Kilo-Org/cloud" } = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Case 2 — Defect B: edit.mjs with stub kilo (exit 0 + stderr)
+// Case 2 — Defect B: edit.mjs with stub tavern (exit 0 + stderr)
 // ---------------------------------------------------------------------------
 function case2_defectB() {
   console.log("case 2: Defect B (edit.mjs stderr-on-exit-0)")
@@ -408,12 +408,12 @@ function case2_defectB() {
   }))
   const cwd = setupEditCwd(worthy, triage)
   const stderrText = "event stream disconnected DIAG-CASE2"
-  const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+  const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
 
   const started = Date.now()
   const result = runNodeScript(EDIT_SCRIPT, {
     cwd,
-    kiloDir,
+    tavernDir,
     env: {
       EDIT_MODEL: "test/model",
       DOCS_SYNC_BACKOFF_MS: "0",
@@ -449,7 +449,7 @@ function case2_defectB() {
 }
 
 // ---------------------------------------------------------------------------
-// Case 2b — AC4a: every docs-sync kilo run argv carries --auto
+// Case 2b — AC4a: every docs-sync tavern run argv carries --auto
 // ---------------------------------------------------------------------------
 /** Slice `args: [` … matching `]` from source (newlines allowed inside). */
 function extractArgsArraySlice(source) {
@@ -469,13 +469,13 @@ function extractArgsArraySlice(source) {
   throw new assert.AssertionError({ message: "unclosed args: [ array in source" })
 }
 
-/** Label → kilo-stderr filename rule (must match lib.mjs runKilo). */
-function kiloStderrLogName(label) {
-  return `kilo-stderr-${String(label).replace(/[^A-Za-z0-9._-]/g, "-")}.log`
+/** Label → tavern-stderr filename rule (must match lib.mjs runTavern). */
+function tavernStderrLogName(label) {
+  return `tavern-stderr-${String(label).replace(/[^A-Za-z0-9._-]/g, "-")}.log`
 }
 
 function case2b_autoFlag() {
-  console.log("case 2b: AC4a (--auto on every docs-sync kilo run)")
+  console.log("case 2b: AC4a (--auto on every docs-sync tavern run)")
 
   // (i) region-scoped static check on triage.mjs / edit.mjs argv arrays
   for (const name of ["triage.mjs", "edit.mjs"]) {
@@ -484,7 +484,7 @@ function case2b_autoFlag() {
     assert.ok(slice.includes('"--auto"'), `${name} args array must contain "--auto"; got:\n${slice}`)
   }
 
-  // (ii) Fix verify failures step: join the run: | block and require --auto on kilo run
+  // (ii) Fix verify failures step: join the run: | block and require --auto on tavern run
   {
     const yml = fs.readFileSync(path.join(HERE, "..", "workflows", "docs-sync.yml"), "utf8")
     const stepIdx = yml.indexOf("Fix verify failures")
@@ -505,32 +505,32 @@ function case2b_autoFlag() {
       if (/^ {0,6}- name:/.test(line) || (/^\S/.test(line) && lines.length > 0)) break
       lines.push(line)
     }
-    // Join continuation backslashes then collapse whitespace for the kilo run line
+    // Join continuation backslashes then collapse whitespace for the tavern run line
     const joined = lines
       .map((l) => l.replace(/^\s+/, ""))
       .join("\n")
       .replace(/\\\n/g, " ")
       .replace(/\s+/g, " ")
-    assert.match(joined, /kilo run\b/, `expected kilo run in Fix verify block:\n${joined}`)
-    const kiloCmd = joined.match(/kilo run\b[^|]*/)?.[0] ?? ""
+    assert.match(joined, /tavern run\b/, `expected tavern run in Fix verify block:\n${joined}`)
+    const tavernCmd = joined.match(/tavern run\b[^|]*/)?.[0] ?? ""
     assert.ok(
-      /\s--auto\b/.test(kiloCmd) || /kilo run\s+--auto\b/.test(kiloCmd),
-      `Fix verify kilo run must contain --auto; got: ${kiloCmd}`,
+      /\s--auto\b/.test(tavernCmd) || /tavern run\s+--auto\b/.test(tavernCmd),
+      `Fix verify tavern run must contain --auto; got: ${tavernCmd}`,
     )
 
     // The step runs under `set -o pipefail` + the default `bash -e`, so an
-    // unguarded kilo pipeline aborts the block before verify2.log is written
+    // unguarded tavern pipeline aborts the block before verify2.log is written
     // once the CLI exits nonzero on a mid-stream error. The rebuild must decide
     // this step's outcome, not the agent's exit code.
-    // Window is the end of the kilo pipeline → the rebuild, so a comment
+    // Window is the end of the tavern pipeline → the rebuild, so a comment
     // elsewhere in the block cannot satisfy the guard assertion.
     const teeIdx = joined.indexOf("tee -a docs-sync-out/edit-log.txt")
-    assert.ok(teeIdx >= 0, `expected the kilo pipeline to tee edit-log.txt:\n${joined}`)
-    const kiloPipeline = joined.slice(teeIdx, joined.indexOf("bun run", teeIdx))
+    assert.ok(teeIdx >= 0, `expected the tavern pipeline to tee edit-log.txt:\n${joined}`)
+    const tavernPipeline = joined.slice(teeIdx, joined.indexOf("bun run", teeIdx))
     assert.match(
-      kiloPipeline,
+      tavernPipeline,
       /\|\|\s*(echo|true)\b/,
-      `Fix verify kilo pipeline must be guarded (|| echo/true) so bash -e cannot skip the rebuild; got: ${kiloPipeline}`,
+      `Fix verify tavern pipeline must be guarded (|| echo/true) so bash -e cannot skip the rebuild; got: ${tavernPipeline}`,
     )
     assert.match(joined, /verify2\.log/, "Fix verify block must still write verify2.log")
   }
@@ -548,13 +548,13 @@ function case2b_autoFlag() {
       priority: "high",
     }))
     const cwd = setupEditCwd(worthy, triage)
-    const callLog = path.join(cwd, "kilo-calls.log")
+    const callLog = path.join(cwd, "tavern-calls.log")
     const stderrText = "event stream disconnected DIAG-AUTO"
-    const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText, callLog })
+    const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText, callLog })
 
     const result = runNodeScript(EDIT_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         EDIT_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -571,7 +571,7 @@ function case2b_autoFlag() {
       const { argv } = JSON.parse(line)
       assert.ok(
         Array.isArray(argv) && argv.includes("--auto"),
-        `every kilo argv must include --auto; got ${JSON.stringify(argv)}`,
+        `every tavern argv must include --auto; got ${JSON.stringify(argv)}`,
       )
     }
   }
@@ -581,7 +581,7 @@ function case2b_autoFlag() {
 // Case 2c — full child stderr always written (success and failure paths)
 // ---------------------------------------------------------------------------
 function case2c_stderrLogAlways() {
-  console.log("case 2c: unconditional kilo-stderr-*.log")
+  console.log("case 2c: unconditional tavern-stderr-*.log")
 
   const prs = [1, 2, 3, 4, 5].map((n) => samplePr(n))
   const worthy = prs
@@ -598,10 +598,10 @@ function case2c_stderrLogAlways() {
   {
     const cwd = setupEditCwd(worthy, triage)
     const stderrText = "FAILPATH-STDERR-MARKER"
-    const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+    const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
     const result = runNodeScript(EDIT_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         EDIT_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -610,9 +610,9 @@ function case2c_stderrLogAlways() {
       },
     })
     assert.equal(result.status, 0, result.output)
-    const logName = kiloStderrLogName("edit batch 0 attempt 1")
+    const logName = tavernStderrLogName("edit batch 0 attempt 1")
     const logPath = path.join(cwd, "docs-sync-out", logName)
-    assert.equal(logName, "kilo-stderr-edit-batch-0-attempt-1.log")
+    assert.equal(logName, "tavern-stderr-edit-batch-0-attempt-1.log")
     assert.ok(fs.existsSync(logPath), `expected ${logPath} on failure path`)
     assert.match(fs.readFileSync(logPath, "utf8"), /FAILPATH-STDERR-MARKER/)
   }
@@ -621,10 +621,10 @@ function case2c_stderrLogAlways() {
   {
     const cwd = setupEditCwd(worthy, triage)
     const stderrText = "SUCCESSPATH-STDERR-MARKER"
-    const kiloDir = makeStubKiloDir({ mode: "write-edit-summary", stderrText })
+    const tavernDir = makeStubTavernDir({ mode: "write-edit-summary", stderrText })
     const result = runNodeScript(EDIT_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         EDIT_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -637,7 +637,7 @@ function case2c_stderrLogAlways() {
       fs.existsSync(path.join(cwd, "docs-sync-out", "edit-summary-0.json")),
       "stub must write summary (success path)",
     )
-    const logName = kiloStderrLogName("edit batch 0 attempt 1")
+    const logName = tavernStderrLogName("edit batch 0 attempt 1")
     const logPath = path.join(cwd, "docs-sync-out", logName)
     assert.ok(fs.existsSync(logPath), `expected ${logPath} on success path`)
     assert.match(fs.readFileSync(logPath, "utf8"), /SUCCESSPATH-STDERR-MARKER/)
@@ -645,10 +645,10 @@ function case2c_stderrLogAlways() {
 }
 
 // ---------------------------------------------------------------------------
-// Case 2d — redact secret env values from captured kilo stderr (artifact-safe)
+// Case 2d — redact secret env values from captured tavern stderr (artifact-safe)
 // ---------------------------------------------------------------------------
 function case2d_redactEnvSecrets() {
-  console.log("case 2d: redact env secrets from kilo stderr capture")
+  console.log("case 2d: redact env secrets from tavern stderr capture")
 
   const prs = [1, 2, 3, 4, 5].map((n) => samplePr(n))
   const worthy = prs
@@ -663,22 +663,22 @@ function case2d_redactEnvSecrets() {
   const cwd = setupEditCwd(worthy, triage)
   const secret = "selftest-secret-value-12345"
   const stderrText = `leak before ${secret} after`
-  const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+  const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
 
   const result = runNodeScript(EDIT_SCRIPT, {
     cwd,
-    kiloDir,
+    tavernDir,
     env: {
       EDIT_MODEL: "test/model",
       DOCS_SYNC_BACKOFF_MS: "0",
       EDIT_BUDGET_MINUTES: "5",
       EDIT_BATCH_TIMEOUT_MINUTES: "1",
-      KILO_API_KEY: secret,
+      TAVERN_API_KEY: secret,
     },
   })
   assert.equal(result.status, 0, `edit.mjs exit: ${result.output}`)
 
-  const logName = kiloStderrLogName("edit batch 0 attempt 1")
+  const logName = tavernStderrLogName("edit batch 0 attempt 1")
   const logPath = path.join(cwd, "docs-sync-out", logName)
   assert.ok(fs.existsSync(logPath), `expected ${logPath}`)
   const logBody = fs.readFileSync(logPath, "utf8")
@@ -712,11 +712,11 @@ function case2e_prefixSecretOrdering() {
   const shortSecret = "abcdefgh"
   const longSecret = "abcdefghIJKL-tail"
   const stderrText = `leak: ${longSecret} end`
-  const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+  const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
 
   const result = runNodeScript(EDIT_SCRIPT, {
     cwd,
-    kiloDir,
+    tavernDir,
     env: {
       EDIT_MODEL: "test/model",
       DOCS_SYNC_BACKOFF_MS: "0",
@@ -728,7 +728,7 @@ function case2e_prefixSecretOrdering() {
   })
   assert.equal(result.status, 0, `edit.mjs exit: ${result.output}`)
 
-  const logName = kiloStderrLogName("edit batch 0 attempt 1")
+  const logName = tavernStderrLogName("edit batch 0 attempt 1")
   const logPath = path.join(cwd, "docs-sync-out", logName)
   assert.ok(fs.existsSync(logPath), `expected ${logPath}`)
   const logBody = fs.readFileSync(logPath, "utf8")
@@ -737,27 +737,27 @@ function case2e_prefixSecretOrdering() {
 }
 
 // ---------------------------------------------------------------------------
-// Case 2f — redact secret values from captured kilo stdout (triage-raw artifact)
+// Case 2f — redact secret values from captured tavern stdout (triage-raw artifact)
 // ---------------------------------------------------------------------------
 function case2f_redactStdout() {
-  console.log("case 2f: redact env secrets from kilo stdout (triage-raw)")
+  console.log("case 2f: redact env secrets from tavern stdout (triage-raw)")
 
   const digest = [samplePr(501), samplePr(502)]
   const cwd = setupTriageCwd(digest)
   const secret = "selftest-stdout-secret-99999"
-  const kiloDir = makeStubKiloDir({ mode: "triage-embed-env-secret" })
+  const tavernDir = makeStubTavernDir({ mode: "triage-embed-env-secret" })
   const summaryFile = path.join(cwd, "step-summary.md")
   fs.writeFileSync(summaryFile, "")
 
   const result = runNodeScript(TRIAGE_SCRIPT, {
     cwd,
-    kiloDir,
+    tavernDir,
     env: {
       TRIAGE_MODEL: "test/model",
       DOCS_SYNC_BACKOFF_MS: "0",
       TRIAGE_BUDGET_MINUTES: "30",
       GITHUB_STEP_SUMMARY: summaryFile,
-      KILO_API_KEY: secret,
+      TAVERN_API_KEY: secret,
     },
   })
   assert.equal(result.status, 0, `triage.mjs exit: ${result.output}`)
@@ -789,7 +789,7 @@ function case2g_redactStream() {
 
   const input = `leak ${secret} after\npartial-${secret}`
   const result = spawnSync(process.execPath, [filterPath], {
-    env: { ...process.env, KILO_API_KEY: secret },
+    env: { ...process.env, TAVERN_API_KEY: secret },
     input,
     encoding: "utf8",
     timeout: 10_000,
@@ -815,14 +815,14 @@ function case2h_pendingCauseIsReadable() {
     priority: "high",
   }))
   const cwd = setupEditCwd(worthy, triage)
-  // Verbatim shape of a real kilo TUI stderr line (see PR #12521's pending table).
+  // Verbatim shape of a real tavern TUI stderr line (see PR #12521's pending table).
   const ESC = "\u001b"
-  const stderrText = `${ESC}[0m→ ${ESC}[0mRead packages/kilo-docs/AGENTS.md${ESC}[2K${ESC}[1G done`
-  const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+  const stderrText = `${ESC}[0m→ ${ESC}[0mRead packages/tavern-docs/AGENTS.md${ESC}[2K${ESC}[1G done`
+  const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
 
   const result = runNodeScript(EDIT_SCRIPT, {
     cwd,
-    kiloDir,
+    tavernDir,
     env: {
       EDIT_MODEL: "test/model",
       DOCS_SYNC_BACKOFF_MS: "0",
@@ -838,11 +838,11 @@ function case2h_pendingCauseIsReadable() {
     assert.equal(e.action, "pending", `expected pending, got ${JSON.stringify(e)}`)
     assert.ok(!e.reason.includes(ESC), `pending reason must not contain ANSI escapes: ${JSON.stringify(e.reason)}`)
     // Non-vacuous: the diagnostic text itself must survive the strip.
-    assert.match(e.reason, /Read packages\/kilo-docs\/AGENTS\.md/)
+    assert.match(e.reason, /Read packages\/tavern-docs\/AGENTS\.md/)
   }
 
   // The raw artifact log keeps the escapes — it is the debugging record.
-  const rawLog = fs.readFileSync(path.join(cwd, "docs-sync-out", "kilo-stderr-edit-batch-0-attempt-1.log"), "utf8")
+  const rawLog = fs.readFileSync(path.join(cwd, "docs-sync-out", "tavern-stderr-edit-batch-0-attempt-1.log"), "utf8")
   assert.ok(rawLog.includes(ESC), "persisted stderr log must stay raw")
 }
 
@@ -910,7 +910,7 @@ function case3_watermark() {
   {
     const worthy = [prA, prB]
     const summary = [
-      { pr: 10, url: prA.url, action: "updated packages/kilo-docs/pages/x.md", reason: "" },
+      { pr: 10, url: prA.url, action: "updated packages/tavern-docs/pages/x.md", reason: "" },
       { pr: 11, url: prB.url, action: "skipped", reason: "already documented" },
     ]
     const triage = [
@@ -1214,14 +1214,14 @@ function case6_budgets() {
       priority: "medium",
     }))
     const cwd = setupEditCwd(worthy, triage)
-    const callLog = path.join(cwd, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "record", callLog })
+    const callLog = path.join(cwd, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "record", callLog })
 
     // EDIT_BUDGET_MINUTES must be positive (0 falls through to default 50).
     // BATCH_TIMEOUT default would be 15m; set both tiny so left < BATCH_TIMEOUT immediately.
     const result = runNodeScript(EDIT_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         EDIT_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1235,7 +1235,7 @@ function case6_budgets() {
 
     const calls = fs.existsSync(callLog) ? fs.readFileSync(callLog, "utf8").trim() : ""
     const callCount = calls ? calls.split("\n").filter(Boolean).length : 0
-    assert.equal(callCount, 0, `kilo must not be invoked for deferred edit batches; got ${callCount}`)
+    assert.equal(callCount, 0, `tavern must not be invoked for deferred edit batches; got ${callCount}`)
 
     const summary = JSON.parse(fs.readFileSync(path.join(cwd, ".docs-sync-summary.json"), "utf8"))
     assert.ok(summary.every((e) => e.action === "pending"))
@@ -1249,14 +1249,14 @@ function case6_budgets() {
     // CHUNK_SIZE=25; 30 PRs = 2 chunks; budget too small for a 10m chunk
     const digest = Array.from({ length: 30 }, (_, i) => samplePr(200 + i))
     const cwd = setupTriageCwd(digest)
-    const callLog = path.join(cwd, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "record", callLog })
+    const callLog = path.join(cwd, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "record", callLog })
     const summaryFile = path.join(cwd, "step-summary.md")
     fs.writeFileSync(summaryFile, "")
 
     const result = runNodeScript(TRIAGE_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1269,7 +1269,7 @@ function case6_budgets() {
 
     const calls = fs.existsSync(callLog) ? fs.readFileSync(callLog, "utf8").trim() : ""
     const callCount = calls ? calls.split("\n").filter(Boolean).length : 0
-    assert.equal(callCount, 0, `kilo must not be invoked for deferred triage chunks; got ${callCount}`)
+    assert.equal(callCount, 0, `tavern must not be invoked for deferred triage chunks; got ${callCount}`)
 
     const triage = JSON.parse(fs.readFileSync(path.join(cwd, "docs-sync-out", "triage.json"), "utf8"))
     assert.equal(triage.length, 30)
@@ -1327,13 +1327,13 @@ function case8_triage() {
   {
     const digest = [samplePr(301), samplePr(302), samplePr(303)]
     const cwd = setupTriageCwd(digest)
-    const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText: "stream end before idle" })
+    const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText: "stream end before idle" })
     const summaryFile = path.join(cwd, "step-summary.md")
     fs.writeFileSync(summaryFile, "")
 
     const result = runNodeScript(TRIAGE_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1358,13 +1358,13 @@ function case8_triage() {
   {
     const digest = [samplePr(311), samplePr(312)]
     const cwd = setupTriageCwd(digest)
-    const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText: "stream end" })
+    const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText: "stream end" })
     const summaryFile = path.join(cwd, "step-summary.md")
     fs.writeFileSync(summaryFile, "")
 
     const result = runNodeScript(TRIAGE_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1383,13 +1383,13 @@ function case8_triage() {
   {
     const digest = [samplePr(321), samplePr(322), samplePr(323), samplePr(324)]
     const cwd = setupTriageCwd(digest)
-    const kiloDir = makeStubKiloDir({ mode: "mixed-triage" })
+    const tavernDir = makeStubTavernDir({ mode: "mixed-triage" })
     const summaryFile = path.join(cwd, "step-summary.md")
     fs.writeFileSync(summaryFile, "")
 
     const result = runNodeScript(TRIAGE_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1415,13 +1415,13 @@ function case8_triage() {
     // One chunk of 4 PRs; stub classifies first 3 only
     const digest = [samplePr(401), samplePr(402), samplePr(403), samplePr(404)]
     const cwd = setupTriageCwd(digest)
-    const kiloDir = makeStubKiloDir({ mode: "partial-triage" })
+    const tavernDir = makeStubTavernDir({ mode: "partial-triage" })
     const summaryFile = path.join(cwd, "step-summary.md")
     fs.writeFileSync(summaryFile, "")
 
     const result = runNodeScript(TRIAGE_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_BACKOFF_MS: "0",
@@ -1463,7 +1463,7 @@ function case9_reverts() {
   const defaultRepo = "Kilo-Org/kilocode"
   const body12497 = `The default stream inactivity watchdog introduced by #12249 aborts requests based only on the absence of normalized AI SDK events. That signal cannot distinguish a dead provider stream from long prompt processing, reasoning, buffering, or transport behavior, and the follow-up in #12481 reduces false positives without resolving that ambiguity.
 
-Revert both changes and restore the previous opt-in contract: Kilo does not impose a stream idle timeout unless the provider configuration explicitly sets \`chunkTimeout\`. Explicit provider timeouts continue to use the existing AI SDK and SSE timeout paths. This removes the global heuristic while the underlying stalled-stream source and the required transport-level observability are investigated.
+Revert both changes and restore the previous opt-in contract: Tavern does not impose a stream idle timeout unless the provider configuration explicitly sets \`chunkTimeout\`. Explicit provider timeouts continue to use the existing AI SDK and SSE timeout paths. This removes the global heuristic while the underlying stalled-stream source and the required transport-level observability are investigated.
 
 This deliberately restores the possibility that an unconfigured provider stream can remain open indefinitely. A default watchdog should be reintroduced only with evidence that its liveness signal and threshold do not terminate healthy responses.
 
@@ -1633,14 +1633,14 @@ Reverts #12249 and #12481.
   {
     // case-insensitive url matching: lowercase signal target vs canonical digest entry
     const canonical = "https://github.com/Kilo-Org/kilocode/pull/12249"
-    const lowerTarget = "https://github.com/kilo-org/kilocode/pull/12249"
+    const lowerTarget = "https://github.com/tavern-org/taverncode/pull/12249"
     const reverter = "https://github.com/Kilo-Org/kilocode/pull/12497"
     const digest = [{ url: canonical, title: "feat stream" }]
     const applied = applyRevertAnnotations(digest, [
       {
         url: reverter,
         merged_at: mergedAt,
-        targets: [{ repo: "kilo-org/kilocode", number: 12249, url: lowerTarget }],
+        targets: [{ repo: "tavern-org/taverncode", number: 12249, url: lowerTarget }],
       },
     ])
     assert.deepEqual(digest[0].reverted_by, { url: reverter, merged_at: mergedAt })
@@ -1785,7 +1785,7 @@ Reverts #12249 and #12481.
     // case-insensitivity: annotated set matches target urls differing only by case
     const signalUrl = "https://github.com/Kilo-Org/kilocode/pull/600"
     const targetMixed = "https://github.com/Kilo-Org/kilocode/pull/700"
-    const targetLower = "https://github.com/kilo-org/kilocode/pull/700"
+    const targetLower = "https://github.com/tavern-org/taverncode/pull/700"
     const signals = [
       {
         url: signalUrl,
@@ -1886,7 +1886,7 @@ function case10_learnings() {
   }
 
   const githubBotEmail = "41898282+github-actions[bot]@users.noreply.github.com"
-  const kiloconnectBotEmail = "240665456+kiloconnect[bot]@users.noreply.github.com"
+  const tavernconnectBotEmail = "240665456+tavernconnect[bot]@users.noreply.github.com"
 
   // 10a — three commit classes
   {
@@ -1899,17 +1899,17 @@ function case10_learnings() {
 
     // Branch
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    // 1. kiloconnect[bot] commit that touches packages/kilo-docs/pages/x.md
-    gitIn(dir, ["config", "user.email", kiloconnectBotEmail])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
+    // 1. tavernconnect[bot] commit that touches packages/tavern-docs/pages/x.md
+    gitIn(dir, ["config", "user.email", tavernconnectBotEmail])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
     gitIn(dir, ["commit", "-m", "docs: add x page"])
-    const kiloconnectSha = gitIn(dir, ["rev-parse", "HEAD"])
+    const tavernconnectSha = gitIn(dir, ["rev-parse", "HEAD"])
     // 2. github-actions[bot] commit
     gitIn(dir, ["config", "user.email", githubBotEmail])
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "y.md"), "# y\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/y.md"])
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "y.md"), "# y\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/y.md"])
     gitIn(dir, ["commit", "-m", "docs: add y page"])
     // 3. Merge commit (non-merge filter)
     gitIn(dir, ["config", "user.email", "someone@example.com"])
@@ -1936,13 +1936,13 @@ function case10_learnings() {
       comments: [],
     })
 
-    const callLog = path.join(dir, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog })
+    const callLog = path.join(dir, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog })
     writeExtractionDelta(dir, { add: [], remove: [] })
 
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd: dir,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -1951,17 +1951,17 @@ function case10_learnings() {
       },
     })
 
-    // Assert: input file written, exactly one correction — kiloconnect only.
+    // Assert: input file written, exactly one correction — tavernconnect only.
     // github-actions[bot] commit excluded (criterion 5), merge commit excluded
     // via --no-merges, main-reachable commit excluded by origin/main range (criterion 6).
     const inputFile = path.join(dir, "docs-sync-out", "learnings-input.json")
     assert.ok(fs.existsSync(inputFile), `expected ${inputFile}`)
     const input = JSON.parse(fs.readFileSync(inputFile, "utf8"))
-    assert.equal(input.corrections.length, 1, "exactly one correction (kiloconnect commit)")
+    assert.equal(input.corrections.length, 1, "exactly one correction (tavernconnect commit)")
     assert.equal(
       input.corrections[0].source,
-      `commit:${kiloconnectSha.slice(0, 7)}`,
-      "correction must be kiloconnect commit only",
+      `commit:${tavernconnectSha.slice(0, 7)}`,
+      "correction must be tavernconnect commit only",
     )
   }
 
@@ -1980,10 +1980,10 @@ function case10_learnings() {
 
     // Commit A: non-UTC offset, chronologically earliest (UTC 08:00)
     // iso = 2026-08-03T13:00:00+05:00
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "first edit x", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`], {
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "first edit x", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`], {
       GIT_COMMITTER_DATE: "2026-08-03T13:00:00+05:00",
     })
     const shaA = gitIn(dir, ["rev-parse", "HEAD"])
@@ -1991,9 +1991,9 @@ function case10_learnings() {
     // Commit B: UTC offset, chronologically later (UTC 09:00)
     // iso = 2026-08-03T09:00:00Z — string comparison would pick this as "earlier" (09 < 13)
     // but chronologically A is earlier (08:00 < 09:00)
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n## edit\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "second edit x", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`], {
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n## edit\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "second edit x", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`], {
       GIT_COMMITTER_DATE: "2026-08-03T09:00:00Z",
     })
     const shaB = gitIn(dir, ["rev-parse", "HEAD"])
@@ -2002,11 +2002,11 @@ function case10_learnings() {
     const existing = [
       { id: "pre", rule: "Pre-existing rule.", scope: "both", source: "commit:0000000", date: "2026-01-01" },
     ]
-    const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     fs.writeFileSync(learningsPath, renderLearnings(existing))
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
-    gitIn(dir, ["commit", "-m", "seed learnings", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
+    gitIn(dir, ["commit", "-m", "seed learnings", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
 
     const cwd = setupLearnRepo(dir)
 
@@ -2019,7 +2019,7 @@ function case10_learnings() {
         {
           id: 101,
           created_at: "2026-08-03T05:30:00Z",
-          path: "packages/kilo-docs/pages/x.md",
+          path: "packages/tavern-docs/pages/x.md",
           body: "Please fix the docs.",
           author_association: "MEMBER",
           user: { login: "maintainer" },
@@ -2027,12 +2027,12 @@ function case10_learnings() {
       ],
     })
 
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
     writeExtractionDelta(cwd, { add: [], remove: [] })
 
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2054,7 +2054,7 @@ function case10_learnings() {
 
     // Comment must be associated with commit A (chronologically earliest)
     assert.ok(commitA.comment, "commit A must have the comment associated")
-    assert.equal(commitA.comment.path, "packages/kilo-docs/pages/x.md")
+    assert.equal(commitA.comment.path, "packages/tavern-docs/pages/x.md")
     assert.equal(commitB.comment, undefined, "commit B must not have the comment associated")
 
     // No standalone comment candidate — the comment was correlated, not orphaned
@@ -2073,20 +2073,20 @@ function case10_learnings() {
 
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
     // corrective commit
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
 
     // Write LEARNINGS.md on the branch first, so the marker can point to the tip after it
     const existing = [
       { id: "test", rule: "existing rule", scope: "both", source: "commit:0000000", date: "2026-01-01" },
     ]
-    const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     const learningsContent = renderLearnings(existing)
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     fs.writeFileSync(learningsPath, learningsContent)
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
     gitIn(dir, ["commit", "-m", "seed learnings"])
 
     const tip = gitIn(dir, ["rev-parse", "HEAD"])
@@ -2099,15 +2099,15 @@ function case10_learnings() {
       comments: [],
     })
 
-    const callLog = path.join(cwd, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog })
+    const callLog = path.join(cwd, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog })
     writeExtractionDelta(cwd, { add: [], remove: [] })
 
     fs.writeFileSync(path.join(cwd, "docs-sync-out", "learnings.json"), JSON.stringify(existing, null, 2))
 
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2118,16 +2118,16 @@ function case10_learnings() {
 
     // Assert: stub never invoked, learnings.json unchanged, no model call
     const calls = fs.existsSync(callLog) ? fs.readFileSync(callLog, "utf8").trim() : ""
-    assert.equal(calls, "", `kilo must not be invoked when marker covers all; got ${calls}`)
+    assert.equal(calls, "", `tavern must not be invoked when marker covers all; got ${calls}`)
     const out = JSON.parse(fs.readFileSync(path.join(cwd, "docs-sync-out", "learnings.json"), "utf8"))
     assert.deepEqual(out, existing, "learnings.json must equal existing entries")
 
     // Run apply and prove LEARNINGS.md is byte-unchanged
-    const lp = path.join(cwd, "packages", "kilo-docs", "LEARNINGS.md")
+    const lp = path.join(cwd, "packages", "tavern-docs", "LEARNINGS.md")
     const before = fs.readFileSync(lp, "utf8")
     runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       args: ["--apply"],
       env: { DOCS_SYNC_BACKOFF_MS: "0" },
     })
@@ -2145,10 +2145,10 @@ function case10_learnings() {
     gitIn(dir, ["commit", "-m", "base"])
 
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
     let tip = gitIn(dir, ["rev-parse", "HEAD"])
 
     const add = [
@@ -2169,11 +2169,11 @@ function case10_learnings() {
         pr: { number: 1, head: { ref: "docs/auto-sync" }, body: "", user: { login: "github-actions[bot]" } },
         comments: [],
       })
-      const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+      const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
       writeExtractionDelta(cwd, { add, remove: [] })
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir,
+        tavernDir,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -2185,13 +2185,13 @@ function case10_learnings() {
       assert.equal(out1.length, 1)
       assert.equal(out1[0].id, "new-rule")
       // Write LEARNINGS.md on the branch so second run sees existing entries
-      const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+      const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
       fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
       fs.writeFileSync(learningsPath, renderLearnings(out1))
-      gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+      gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
       gitIn(dir, ["commit", "-m", "seed learnings"])
       tip = gitIn(dir, ["rev-parse", "HEAD"])
-      firstLEARNINGS = fs.readFileSync(path.join(dir, "packages", "kilo-docs", "LEARNINGS.md"), "utf8")
+      firstLEARNINGS = fs.readFileSync(path.join(dir, "packages", "tavern-docs", "LEARNINGS.md"), "utf8")
     }
 
     // Second run with marker covering first run's result
@@ -2202,12 +2202,12 @@ function case10_learnings() {
         pr: { number: 1, head: { ref: "docs/auto-sync" }, body, user: { login: "github-actions[bot]" } },
         comments: [],
       })
-      const callLog2 = path.join(cwd, "kilo-calls-run2.log")
-      const kiloDir2 = makeStubKiloDir({ mode: "extraction-delta", callLog: callLog2 })
+      const callLog2 = path.join(cwd, "tavern-calls-run2.log")
+      const tavernDir2 = makeStubTavernDir({ mode: "extraction-delta", callLog: callLog2 })
       writeExtractionDelta(cwd, { add, remove: [] })
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir: kiloDir2,
+        tavernDir: tavernDir2,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -2216,18 +2216,18 @@ function case10_learnings() {
         },
       })
       const calls2 = fs.existsSync(callLog2) ? fs.readFileSync(callLog2, "utf8").trim() : ""
-      assert.equal(calls2, "", "second run must not invoke kilo")
+      assert.equal(calls2, "", "second run must not invoke tavern")
       const out2 = JSON.parse(fs.readFileSync(path.join(cwd, "docs-sync-out", "learnings.json"), "utf8"))
       assert.equal(out2.length, 1)
       assert.equal(out2[0].id, "new-rule")
       // Run apply and prove LEARNINGS.md is byte-identical after idempotent rerun
       runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir: kiloDir2,
+        tavernDir: tavernDir2,
         args: ["--apply"],
         env: { DOCS_SYNC_BACKOFF_MS: "0" },
       })
-      const afterApply = fs.readFileSync(path.join(dir, "packages", "kilo-docs", "LEARNINGS.md"), "utf8")
+      const afterApply = fs.readFileSync(path.join(dir, "packages", "tavern-docs", "LEARNINGS.md"), "utf8")
       assert.equal(afterApply.length, firstLEARNINGS.length, "LEARNINGS.md must be same length after apply")
       assert.equal(afterApply, firstLEARNINGS, "LEARNINGS.md must be byte-identical after apply")
     }
@@ -2262,10 +2262,10 @@ function case10_learnings() {
     gitIn(dir, ["commit", "-m", "base"])
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
     // Add a corrective commit so extraction has a candidate
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
     const commitSha = gitIn(dir, ["rev-parse", "HEAD"])
 
     const cwd = setupLearnRepo(dir)
@@ -2273,8 +2273,8 @@ function case10_learnings() {
       pr: { number: 1, head: { ref: "docs/auto-sync" }, body: "", user: { login: "github-actions[bot]" } },
       comments: [],
     })
-    const callLog = path.join(cwd, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog })
+    const callLog = path.join(cwd, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog })
     // Three entries: triage, edit, both — all from the same candidate source
     const src = `commit:${commitSha.slice(0, 7)}`
     writeExtractionDelta(cwd, {
@@ -2290,7 +2290,7 @@ function case10_learnings() {
     // Only extraction writes these files; --apply writes only LEARNINGS.md.
     runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2310,10 +2310,10 @@ function case10_learnings() {
       const triageCwd = setupTriageCwd([samplePr(1)])
       fs.copyFileSync(triageBlockPath, path.join(triageCwd, "docs-sync-out", "learnings-triage.md"))
       const triageCallLog = path.join(triageCwd, "triage-calls.log")
-      const triageKiloDir = makeStubKiloDir({ mode: "record", callLog: triageCallLog })
+      const triageTavernDir = makeStubTavernDir({ mode: "record", callLog: triageCallLog })
       runNodeScript(TRIAGE_SCRIPT, {
         cwd: triageCwd,
-        kiloDir: triageKiloDir,
+        tavernDir: triageTavernDir,
         env: { TRIAGE_MODEL: "test/model", DOCS_SYNC_BACKOFF_MS: "0" },
       })
       const logText = fs.readFileSync(triageCallLog, "utf8")
@@ -2335,10 +2335,10 @@ function case10_learnings() {
       const editCwd = setupEditCwd([samplePr(1)], [triageEntry])
       fs.copyFileSync(editBlockPath, path.join(editCwd, "docs-sync-out", "learnings-edit.md"))
       const editCallLog = path.join(editCwd, "edit-calls.log")
-      const editKiloDir = makeStubKiloDir({ mode: "record", callLog: editCallLog })
+      const editTavernDir = makeStubTavernDir({ mode: "record", callLog: editCallLog })
       runNodeScript(EDIT_SCRIPT, {
         cwd: editCwd,
-        kiloDir: editKiloDir,
+        tavernDir: editTavernDir,
         env: { EDIT_MODEL: "test/model", DOCS_SYNC_BACKOFF_MS: "0" },
       })
       const logText = fs.readFileSync(editCallLog, "utf8")
@@ -2357,19 +2357,19 @@ function case10_learnings() {
     gitIn(dir, ["add", "base.txt"])
     gitIn(dir, ["commit", "-m", "base"])
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
 
     const existing = [
       { id: "test", rule: "existing rule", scope: "both", source: "commit:0000000", date: "2026-01-01" },
     ]
     // Write LEARNINGS.md on the branch so learn.mjs reads it as existing entries
-    const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     fs.writeFileSync(learningsPath, renderLearnings(existing))
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
     gitIn(dir, ["commit", "-m", "seed learnings"])
 
     const cwd = setupLearnRepo(dir)
@@ -2380,12 +2380,12 @@ function case10_learnings() {
 
     // Stub exits 0 with garbage stdout (stderr-exit0 mode)
     const stderrText = "some fake error stream"
-    const kiloDir = makeStubKiloDir({ mode: "stderr-exit0", stderrText })
+    const tavernDir = makeStubTavernDir({ mode: "stderr-exit0", stderrText })
 
     const outputFile = path.join(cwd, "gh-output-f")
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2407,11 +2407,11 @@ function case10_learnings() {
     }
 
     // Run apply and prove LEARNINGS.md is byte-unchanged
-    const lp = path.join(cwd, "packages", "kilo-docs", "LEARNINGS.md")
+    const lp = path.join(cwd, "packages", "tavern-docs", "LEARNINGS.md")
     const before = fs.readFileSync(lp, "utf8")
     runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       args: ["--apply"],
       env: { DOCS_SYNC_BACKOFF_MS: "0" },
     })
@@ -2447,7 +2447,7 @@ function case10_learnings() {
     }
     const entryWithPage = {
       id: "bad-page",
-      rule: "Edit packages/kilo-docs/pages/x.md",
+      rule: "Edit packages/tavern-docs/pages/x.md",
       scope: "both",
       source: "commit:aaaaaaa",
       date: "2026-08-03",
@@ -2582,7 +2582,7 @@ function case10_learnings() {
     assert.equal(isTrustedComment({ author_association: "OWNER", user: { login: "owner-user" } }), true)
     assert.equal(isTrustedComment({ author_association: "MEMBER", user: { login: "emilieschario" } }), true)
     assert.equal(isTrustedComment({ author_association: "COLLABORATOR", user: { login: "collab-user" } }), true)
-    assert.equal(isTrustedComment({ author_association: "CONTRIBUTOR", user: { login: "kilo-code-bot[bot]" } }), false)
+    assert.equal(isTrustedComment({ author_association: "CONTRIBUTOR", user: { login: "tavern-code-bot[bot]" } }), false)
     assert.equal(isTrustedComment({ author_association: "NONE", user: { login: "rando" } }), false)
     // MEMBER whose login ends in [bot]
     assert.equal(isTrustedComment({ author_association: "MEMBER", user: { login: "some-bot[bot]" } }), false)
@@ -2591,14 +2591,14 @@ function case10_learnings() {
   // 10i — draft gate (nonContentFiles)
   {
     console.log("  10i — draft gate")
-    const files = ["packages/kilo-docs/LEARNINGS.md", "packages/kilo-docs/pages/a.md"]
+    const files = ["packages/tavern-docs/LEARNINGS.md", "packages/tavern-docs/pages/a.md"]
     const result = nonContentFiles(files)
     assert.equal(result.length, 0, "LEARNINGS.md and pages must not trigger the draft gate")
     // Still flags non-content
-    const withConfig = ["packages/kilo-docs/next.config.js"]
+    const withConfig = ["packages/tavern-docs/next.config.js"]
     const flagged = nonContentFiles(withConfig)
     assert.equal(flagged.length, 1, "next.config.js must still trigger the gate")
-    assert.equal(flagged[0], "packages/kilo-docs/next.config.js")
+    assert.equal(flagged[0], "packages/tavern-docs/next.config.js")
   }
 
   // 10j — no --auto on extraction call
@@ -2606,12 +2606,12 @@ function case10_learnings() {
     console.log("  10j — no --auto on extraction call")
     const src = fs.readFileSync(LEARN_SCRIPT, "utf8")
 
-    // Find the extraction-mode runKilo args array
-    const argsStart = src.indexOf("runKilo({")
-    assert.ok(argsStart >= 0, "runKilo call must exist in learn.mjs")
+    // Find the extraction-mode runTavern args array
+    const argsStart = src.indexOf("runTavern({")
+    assert.ok(argsStart >= 0, "runTavern call must exist in learn.mjs")
     const argsBlock = src.slice(argsStart, src.indexOf("})", argsStart) + 2)
-    assert.ok(!argsBlock.includes("--auto"), "extraction runKilo must not include --auto")
-    assert.ok(argsBlock.includes("-f"), "extraction runKilo must include -f")
+    assert.ok(!argsBlock.includes("--auto"), "extraction runTavern must not include --auto")
+    assert.ok(argsBlock.includes("-f"), "extraction runTavern must include -f")
   }
 
   // 10k — hand-mangled file (parseLearnings)
@@ -2630,8 +2630,8 @@ Just prose, not a rule line.
 
   // 10l — first-run fallback (main when branch has none)
   // Prove the git commands learn.mjs relies on: when the branch file is absent,
-  // git show origin/<branch>:packages/kilo-docs/LEARNINGS.md fails, and
-  // git show origin/main:packages/kilo-docs/LEARNINGS.md returns the main's entries.
+  // git show origin/<branch>:packages/tavern-docs/LEARNINGS.md fails, and
+  // git show origin/main:packages/tavern-docs/LEARNINGS.md returns the main's entries.
   {
     console.log("  10l — empty file fallback")
     const dir = mktemp("docs-sync-learn-l-")
@@ -2641,16 +2641,16 @@ Just prose, not a rule line.
     const entries = [
       { id: "test", rule: "Test rule text.", scope: "both", source: "commit:aaaaaaa", date: "2026-01-01" },
     ]
-    const lp = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const lp = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(lp), { recursive: true })
     fs.writeFileSync(lp, renderLearnings(entries))
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
     gitIn(dir, ["commit", "-m", "main learnings"])
 
     // Branch from main, then remove LEARNINGS.md
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
     fs.rmSync(lp)
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
     gitIn(dir, ["commit", "-m", "remove learnings on branch"])
 
     // Set up origin refs so git show origin/<ref> resolves
@@ -2659,14 +2659,14 @@ Just prose, not a rule line.
     // git show on branch must fail — file absent at that ref
     let branchFailed = false
     try {
-      gitIn(dir, ["show", "origin/docs/auto-sync:packages/kilo-docs/LEARNINGS.md"])
+      gitIn(dir, ["show", "origin/docs/auto-sync:packages/tavern-docs/LEARNINGS.md"])
     } catch {
       branchFailed = true
     }
     assert.ok(branchFailed, "git show on branch must fail when LEARNINGS.md absent")
 
     // git show on main must succeed with the main's entries
-    const mainContent = gitIn(dir, ["show", "origin/main:packages/kilo-docs/LEARNINGS.md"])
+    const mainContent = gitIn(dir, ["show", "origin/main:packages/tavern-docs/LEARNINGS.md"])
     const parsed = parseLearnings(mainContent)
     assert.equal(parsed.length, 1, "main fallback must return the main's entries")
     assert.equal(parsed[0].id, "test")
@@ -2689,10 +2689,10 @@ Just prose, not a rule line.
     gitIn(dir, ["add", "base.txt"])
     gitIn(dir, ["commit", "-m", "base"])
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
     const tip = gitIn(dir, ["rev-parse", "HEAD"])
 
     const cwd = setupLearnRepo(dir)
@@ -2701,12 +2701,12 @@ Just prose, not a rule line.
       comments: [],
     })
 
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
     writeExtractionDelta(cwd, { add: [], remove: [] })
 
     const existing = []
     fs.writeFileSync(path.join(cwd, "docs-sync-out", "learnings.json"), JSON.stringify(existing, null, 2))
-    const learningsPath = path.join(cwd, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(cwd, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     fs.writeFileSync(learningsPath, renderLearnings(existing))
     const before = fs.readFileSync(learningsPath, "utf8")
@@ -2714,7 +2714,7 @@ Just prose, not a rule line.
     const outputFile = path.join(cwd, "gh-output-m")
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2740,7 +2740,7 @@ Just prose, not a rule line.
 
     runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       args: ["--apply"],
       env: { DOCS_SYNC_BACKOFF_MS: "0" },
     })
@@ -2778,10 +2778,10 @@ Just prose, not a rule line.
     gitIn(dir, ["add", "base.txt"])
     gitIn(dir, ["commit", "-m", "base"])
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
     const source = `commit:${gitIn(dir, ["rev-parse", "HEAD"]).slice(0, 7)}`
     const tip = gitIn(dir, ["rev-parse", "HEAD"])
 
@@ -2791,7 +2791,7 @@ Just prose, not a rule line.
       comments: [],
     })
 
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
     writeExtractionDelta(cwd, {
       add: [
         { id: "new-rule", rule: "A new rule.", scope: "both", source: `commit:${tip.slice(0, 7)}`, date: "2026-08-03" },
@@ -2804,7 +2804,7 @@ Just prose, not a rule line.
     const outputFile = path.join(cwd, "gh-output")
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -2985,10 +2985,10 @@ Just prose, not a rule line.
     gitIn(dir, ["add", "base.txt"])
     gitIn(dir, ["commit", "-m", "base"])
     gitIn(dir, ["checkout", "-b", "docs/auto-sync"])
-    fs.mkdirSync(path.join(dir, "packages", "kilo-docs", "pages"), { recursive: true })
-    fs.writeFileSync(path.join(dir, "packages", "kilo-docs", "pages", "x.md"), "# x\n")
-    gitIn(dir, ["add", "packages/kilo-docs/pages/x.md"])
-    gitIn(dir, ["commit", "-m", "docs update", "--author", `kiloconnect[bot] <${kiloconnectBotEmail}>`])
+    fs.mkdirSync(path.join(dir, "packages", "tavern-docs", "pages"), { recursive: true })
+    fs.writeFileSync(path.join(dir, "packages", "tavern-docs", "pages", "x.md"), "# x\n")
+    gitIn(dir, ["add", "packages/tavern-docs/pages/x.md"])
+    gitIn(dir, ["commit", "-m", "docs update", "--author", `tavernconnect[bot] <${tavernconnectBotEmail}>`])
 
     // DRY_RUN=true
     {
@@ -2998,13 +2998,13 @@ Just prose, not a rule line.
         comments: [],
       })
 
-      const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+      const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
       writeExtractionDelta(cwd, { add: [], remove: [] })
 
       const outputFile = path.join(cwd, "gh-output-q-dry")
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir,
+        tavernDir,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -3035,13 +3035,13 @@ Just prose, not a rule line.
         comments: [],
       })
 
-      const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+      const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
       writeExtractionDelta(cwd, { add: [], remove: [] })
 
       const outputFile = path.join(cwd, "gh-output-q-nopatch")
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir,
+        tavernDir,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -3079,7 +3079,7 @@ Just prose, not a rule line.
         comments: [],
       })
 
-      const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+      const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
       writeExtractionDelta(cwd, {
         add: [
           {
@@ -3096,7 +3096,7 @@ Just prose, not a rule line.
       const outputFile = path.join(cwd, "gh-output-q-dry-nonempty")
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir,
+        tavernDir,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -3129,7 +3129,7 @@ Just prose, not a rule line.
         comments: [],
       })
 
-      const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog: path.join(cwd, "kilo-calls.log") })
+      const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog: path.join(cwd, "tavern-calls.log") })
       writeExtractionDelta(cwd, {
         add: [
           {
@@ -3146,7 +3146,7 @@ Just prose, not a rule line.
       const outputFile = path.join(cwd, "gh-output-q-nopatch-nonempty")
       const result = runNodeScript(LEARN_SCRIPT, {
         cwd,
-        kiloDir,
+        tavernDir,
         env: {
           TRIAGE_MODEL: "test/model",
           DOCS_SYNC_FIXTURE: fixturePath,
@@ -3177,7 +3177,7 @@ Just prose, not a rule line.
   {
     console.log("  10s — prompt artifacts survive an API failure")
     const dir = mktemp("docs-sync-learn-s-")
-    const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     const seeded = [
       {
@@ -3233,10 +3233,10 @@ Just prose, not a rule line.
 
     // github-actions[bot] authored the only branch commit, so there is no candidate
     // correction and no model call. The run goes straight to the direct marker PATCH.
-    const learningsPath = path.join(dir, "packages", "kilo-docs", "LEARNINGS.md")
+    const learningsPath = path.join(dir, "packages", "tavern-docs", "LEARNINGS.md")
     fs.mkdirSync(path.dirname(learningsPath), { recursive: true })
     fs.writeFileSync(learningsPath, renderLearnings([]))
-    gitIn(dir, ["add", "packages/kilo-docs/LEARNINGS.md"])
+    gitIn(dir, ["add", "packages/tavern-docs/LEARNINGS.md"])
     gitIn(dir, ["commit", "-m", "seed learnings", "--author", `github-actions[bot] <${githubBotEmail}>`])
     gitIn(dir, ["remote", "add", "origin", dir]) // learn.mjs fetches origin itself
     const cwd = setupLearnRepo(dir, "docs/auto-sync/cli")
@@ -3470,10 +3470,10 @@ const SURFACE_NOW = "2026-09-01T00:00:00.000Z"
 const SURFACE_PREFIX = "docs/auto-sync/"
 const GITHUB_BOT_EMAIL = "41898282+github-actions[bot]@users.noreply.github.com"
 const SURFACE_PAGE_FILES = {
-  cli: "packages/kilo-docs/pages/getting-started/new.md",
-  vscode: "packages/kilo-docs/pages/code-with-ai/platforms/vscode/new.md",
-  gateway: "packages/kilo-docs/pages/gateway/new.md",
-  other: "packages/kilo-docs/pages/community/new.md",
+  cli: "packages/tavern-docs/pages/getting-started/new.md",
+  vscode: "packages/tavern-docs/pages/code-with-ai/platforms/vscode/new.md",
+  gateway: "packages/tavern-docs/pages/gateway/new.md",
+  other: "packages/tavern-docs/pages/community/new.md",
 }
 
 // Stub GitHub API. Routes are narrow: search, one pull read, commits by path,
@@ -3590,11 +3590,11 @@ function setupSurfaceRepo() {
   fs.mkdirSync(repoDir)
   initRepoWithIdentity(repoDir)
   for (const section of ["getting-started", "gateway", "community"]) {
-    const p = path.join(repoDir, "packages", "kilo-docs", "pages", section, "base.md")
+    const p = path.join(repoDir, "packages", "tavern-docs", "pages", section, "base.md")
     fs.mkdirSync(path.dirname(p), { recursive: true })
     fs.writeFileSync(p, "# base\n")
   }
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "base docs"])
   gitIn(repoDir, ["remote", "add", "origin", originDir])
   gitIn(repoDir, ["push", "-q", "origin", "main"])
@@ -3633,8 +3633,8 @@ function case12_surfaceSegmentation() {
     openPrs: [],
     commits: {
       "packages/opencode/": [stubCommit("alice", 1), stubCommit("bob", 5)],
-      "packages/kilo-vscode/": [stubCommit("erin", 1), stubCommit("frank", 3)],
-      "packages/kilo-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
+      "packages/tavern-vscode/": [stubCommit("erin", 1), stubCommit("frank", 3)],
+      "packages/tavern-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
     },
     permissions: { alice: "write", bob: "write", erin: "write", frank: "write", carol: "write", dave: "write" },
   })
@@ -3679,7 +3679,7 @@ function case12_surfaceSegmentation() {
     for (const create of creates) {
       const body = create.body.body
       assert.match(body, /Derived from the repository layout/, `derivation in ${create.head}`)
-      assert.match(body, /`packages\/kilo-docs\/pages\/community\/`/, `other paths in ${create.head}`)
+      assert.match(body, /`packages\/tavern-docs\/pages\/community\/`/, `other paths in ${create.head}`)
       assert.match(body, /\.github\/docs-sync\/surfaces\.json/, `map file in ${create.head}`)
     }
     assert.match(byHead.get(`${SURFACE_PREFIX}cli`).body.body, /half-life 180 days/)
@@ -3709,7 +3709,7 @@ function case13_surfaceFailureIsolated() {
   const stub = startSurfaceStub({
     openPrs: [],
     failHead: `${SURFACE_PREFIX}cli`,
-    commits: { "packages/kilo-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)] },
+    commits: { "packages/tavern-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)] },
     permissions: { carol: "write", dave: "write" },
   })
   try {
@@ -3744,24 +3744,24 @@ function case14_prepareBranchSurfaces() {
     fs.mkdirSync(path.dirname(p), { recursive: true })
     fs.writeFileSync(p, text)
   }
-  write("packages/kilo-docs/pages/getting-started/base.md", "# base\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/base.md", "# base\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "base"])
   gitIn(repoDir, ["remote", "add", "origin", originDir])
   gitIn(repoDir, ["push", "-q", "origin", "main"])
 
   // Durability integration branch.
   gitIn(repoDir, ["checkout", "-q", "-b", "docs/auto-sync-integration"])
-  write("packages/kilo-docs/pages/getting-started/integ.md", "# integ\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/integ.md", "# integ\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "integ"])
   gitIn(repoDir, ["push", "-q", "origin", "docs/auto-sync-integration"])
 
   // Surface branch carrying a human commit.
   gitIn(repoDir, ["checkout", "-q", "main"])
   gitIn(repoDir, ["checkout", "-q", "-b", "docs/auto-sync/cli"])
-  write("packages/kilo-docs/pages/getting-started/human.md", "# human\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/human.md", "# human\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "human"])
   gitIn(repoDir, ["push", "-q", "origin", "docs/auto-sync/cli"])
   // actions/checkout leaves other branches as remote-tracking refs; drop the
@@ -3786,11 +3786,11 @@ function case14_prepareBranchSurfaces() {
     assert.match(out, /branch=docs\/auto-sync\n/, "integration branch output")
     assert.match(out, /mode=update\n/, "mode output")
     assert.ok(
-      fs.existsSync(path.join(repoDir, "packages/kilo-docs/pages/getting-started/human.md")),
+      fs.existsSync(path.join(repoDir, "packages/tavern-docs/pages/getting-started/human.md")),
       "the surface branch's human commit must be merged into the integration tree",
     )
     assert.ok(
-      fs.existsSync(path.join(repoDir, "packages/kilo-docs/pages/getting-started/integ.md")),
+      fs.existsSync(path.join(repoDir, "packages/tavern-docs/pages/getting-started/integ.md")),
       "the durability content must be present",
     )
   } finally {
@@ -3810,7 +3810,7 @@ function case15_surfaceUpdate() {
     ],
     commits: {
       "packages/opencode/": [stubCommit("alice", 1), stubCommit("bob", 5)],
-      "packages/kilo-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
+      "packages/tavern-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
     },
     permissions: { alice: "write", bob: "write", carol: "write", dave: "write" },
   })
@@ -3819,10 +3819,10 @@ function case15_surfaceUpdate() {
 
     // A human commit on the open cli PR branch.
     gitIn(repoDir, ["checkout", "-q", "-b", "human-tmp", "origin/main"])
-    const human = path.join(repoDir, "packages/kilo-docs/pages/getting-started/human.md")
+    const human = path.join(repoDir, "packages/tavern-docs/pages/getting-started/human.md")
     fs.mkdirSync(path.dirname(human), { recursive: true })
     fs.writeFileSync(human, "# human\n")
-    gitIn(repoDir, ["add", "packages/kilo-docs/pages/getting-started/human.md"])
+    gitIn(repoDir, ["add", "packages/tavern-docs/pages/getting-started/human.md"])
     gitIn(repoDir, ["commit", "-m", "human edit"])
     gitIn(repoDir, ["push", "-q", "origin", "HEAD:refs/heads/docs/auto-sync/cli"])
     gitIn(repoDir, ["checkout", "-q", "docs/auto-sync"])
@@ -3842,8 +3842,8 @@ function case15_surfaceUpdate() {
     // The updated cli branch keeps the human commit and adds the new cli file.
     const diff = gitIn(repoDir, ["diff", "--name-only", "origin/main", `origin/${SURFACE_PREFIX}cli`])
     assert.deepEqual(diff.split("\n").filter(Boolean).sort(), [
-      "packages/kilo-docs/pages/getting-started/human.md",
-      "packages/kilo-docs/pages/getting-started/new.md",
+      "packages/tavern-docs/pages/getting-started/human.md",
+      "packages/tavern-docs/pages/getting-started/new.md",
     ])
   } finally {
     stub.child.kill()
@@ -3856,17 +3856,17 @@ function case16_surfaceDeletion() {
     openPrs: [],
     commits: {
       "packages/opencode/": [stubCommit("alice", 1)],
-      "packages/kilo-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
+      "packages/tavern-gateway/": [stubCommit("carol", 2), stubCommit("dave", 4)],
     },
     permissions: { alice: "write", carol: "write", dave: "write" },
   })
   try {
     const { root, repoDir } = setupSurfaceRepo()
     // The integration tree removes a page that still exists on origin/main.
-    const gone = path.join(repoDir, "packages/kilo-docs/pages/gateway/base.md")
+    const gone = path.join(repoDir, "packages/tavern-docs/pages/gateway/base.md")
     assert.ok(fs.existsSync(gone), "fixture must start with the gateway base page")
     fs.rmSync(gone)
-    gitIn(repoDir, ["rm", "-q", "packages/kilo-docs/pages/gateway/base.md"])
+    gitIn(repoDir, ["rm", "-q", "packages/tavern-docs/pages/gateway/base.md"])
     gitIn(repoDir, ["commit", "-m", "remove gateway base page"])
 
     const result = runUpsert(repoDir, root, stub.port)
@@ -3880,11 +3880,11 @@ function case16_surfaceDeletion() {
     const status = gitIn(repoDir, ["diff", "--name-status", "origin/main", `origin/${SURFACE_PREFIX}gateway`])
     const lines = status.split("\n").filter(Boolean)
     assert.ok(
-      lines.includes("D\tpackages/kilo-docs/pages/gateway/base.md"),
+      lines.includes("D\tpackages/tavern-docs/pages/gateway/base.md"),
       `the gateway branch must carry the deletion; got:\n${status}`,
     )
     assert.ok(
-      lines.includes("A\tpackages/kilo-docs/pages/gateway/new.md"),
+      lines.includes("A\tpackages/tavern-docs/pages/gateway/new.md"),
       `the gateway branch must still add its new page; got:\n${status}`,
     )
   } finally {
@@ -3898,7 +3898,7 @@ function case16_surfaceDeletion() {
 function case17_learnAllSurfaces() {
   console.log("case 17 — learnings cover every surface PR")
 
-  const humanBotEmail = "240665456+kiloconnect[bot]@users.noreply.github.com"
+  const humanBotEmail = "240665456+tavernconnect[bot]@users.noreply.github.com"
 
   const dir = mktemp("docs-sync-learn-multi-")
   initRepoWithIdentity(dir)
@@ -3913,16 +3913,16 @@ function case17_learnAllSurfaces() {
   }
 
   gitIn(dir, ["checkout", "-q", "-b", "docs/auto-sync/cli"])
-  addDoc("packages/kilo-docs/pages/cli.md", "# cli\n")
-  gitIn(dir, ["add", "packages/kilo-docs"])
-  gitIn(dir, ["commit", "-m", "cli edit", "--author", `kiloconnect[bot] <${humanBotEmail}>`])
+  addDoc("packages/tavern-docs/pages/cli.md", "# cli\n")
+  gitIn(dir, ["add", "packages/tavern-docs"])
+  gitIn(dir, ["commit", "-m", "cli edit", "--author", `tavernconnect[bot] <${humanBotEmail}>`])
   const cliSha = gitIn(dir, ["rev-parse", "HEAD"])
 
   gitIn(dir, ["checkout", "-q", "main"])
   gitIn(dir, ["checkout", "-q", "-b", "docs/auto-sync/vscode"])
-  addDoc("packages/kilo-docs/pages/vscode.md", "# vscode\n")
-  gitIn(dir, ["add", "packages/kilo-docs"])
-  gitIn(dir, ["commit", "-m", "vscode edit", "--author", `kiloconnect[bot] <${humanBotEmail}>`])
+  addDoc("packages/tavern-docs/pages/vscode.md", "# vscode\n")
+  gitIn(dir, ["add", "packages/tavern-docs"])
+  gitIn(dir, ["commit", "-m", "vscode edit", "--author", `tavernconnect[bot] <${humanBotEmail}>`])
   const vscodeSha = gitIn(dir, ["rev-parse", "HEAD"])
 
   // origin refs, as actions/checkout would leave them.
@@ -3940,12 +3940,12 @@ function case17_learnAllSurfaces() {
   {
     const fixturePath = path.join(dir, "fixture.json")
     fs.writeFileSync(fixturePath, JSON.stringify({ prs: prs(), comments: [] }, null, 2))
-    const callLog = path.join(dir, "kilo-calls.log")
-    const kiloDir = makeStubKiloDir({ mode: "extraction-delta", callLog })
+    const callLog = path.join(dir, "tavern-calls.log")
+    const tavernDir = makeStubTavernDir({ mode: "extraction-delta", callLog })
     fs.writeFileSync(path.join(dir, "docs-sync-out", "extraction-delta.json"), JSON.stringify({ add: [], remove: [] }))
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd: dir,
-      kiloDir,
+      tavernDir,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -3976,11 +3976,11 @@ function case17_learnAllSurfaces() {
       fixturePath,
       JSON.stringify({ prs: prs().map((p) => ({ ...p, body: marker })), comments: [] }, null, 2),
     )
-    const callLog2 = path.join(dir, "kilo-calls2.log")
-    const kiloDir2 = makeStubKiloDir({ mode: "extraction-delta", callLog: callLog2 })
+    const callLog2 = path.join(dir, "tavern-calls2.log")
+    const tavernDir2 = makeStubTavernDir({ mode: "extraction-delta", callLog: callLog2 })
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd: dir,
-      kiloDir: kiloDir2,
+      tavernDir: tavernDir2,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -4010,12 +4010,12 @@ function case17_learnAllSurfaces() {
         2,
       ),
     )
-    const callLog3 = path.join(dir, "kilo-calls3.log")
-    const kiloDir3 = makeStubKiloDir({ mode: "extraction-delta", callLog: callLog3 })
+    const callLog3 = path.join(dir, "tavern-calls3.log")
+    const tavernDir3 = makeStubTavernDir({ mode: "extraction-delta", callLog: callLog3 })
     fs.writeFileSync(path.join(dir, "docs-sync-out", "extraction-delta.json"), JSON.stringify({ add: [], remove: [] }))
     const result = runNodeScript(LEARN_SCRIPT, {
       cwd: dir,
-      kiloDir: kiloDir3,
+      tavernDir: tavernDir3,
       env: {
         TRIAGE_MODEL: "test/model",
         DOCS_SYNC_FIXTURE: fixturePath,
@@ -4049,15 +4049,15 @@ function case18_legacyRefDeletedWithoutPr() {
     fs.mkdirSync(path.dirname(p), { recursive: true })
     fs.writeFileSync(p, text)
   }
-  write("packages/kilo-docs/pages/getting-started/base.md", "# base\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/base.md", "# base\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "base"])
   gitIn(repoDir, ["remote", "add", "origin", originDir])
   gitIn(repoDir, ["push", "-q", "origin", "main"])
 
   gitIn(repoDir, ["checkout", "-q", "-b", "docs/auto-sync-integration"])
-  write("packages/kilo-docs/pages/getting-started/integ.md", "# integ\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/integ.md", "# integ\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "integ"])
   gitIn(repoDir, ["push", "-q", "origin", "docs/auto-sync-integration"])
 
@@ -4065,8 +4065,8 @@ function case18_legacyRefDeletedWithoutPr() {
   // It must be pushed from a temp branch: origin (like a local repo) refuses to
   // hold both `docs/auto-sync` and `docs/auto-sync/cli`.
   gitIn(repoDir, ["checkout", "-q", "-b", "legacy-tmp", "main"])
-  write("packages/kilo-docs/pages/getting-started/legacy.md", "# legacy\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/legacy.md", "# legacy\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "legacy"])
   const legacySha = gitIn(repoDir, ["rev-parse", "HEAD"])
   gitIn(repoDir, ["push", "-q", "origin", "HEAD:refs/heads/docs/auto-sync"])
@@ -4205,7 +4205,7 @@ function case21_twoSurfacesOneUnmapped() {
     openPrs: [],
     commits: {
       "packages/opencode/": [stubCommit("alice", 1), stubCommit("bob", 5)],
-      "packages/kilo-vscode/": [stubCommit("erin", 1), stubCommit("frank", 3)],
+      "packages/tavern-vscode/": [stubCommit("erin", 1), stubCommit("frank", 3)],
     },
     permissions: { alice: "write", bob: "write", erin: "write", frank: "write" },
   })
@@ -4283,7 +4283,7 @@ function case21_twoSurfacesOneUnmapped() {
 }
 
 // Write a docs page that routes to a cloud surface. The mobile page
-// (packages/kilo-docs/pages/code-with-ai/platforms/mobile.md) routes to
+// (packages/tavern-docs/pages/code-with-ai/platforms/mobile.md) routes to
 // cloud-mobile, whose reviewers come from Kilo-Org/cloud history.
 function addCloudPage(repoDir, rel) {
   const p = path.join(repoDir, rel)
@@ -4291,7 +4291,7 @@ function addCloudPage(repoDir, rel) {
   fs.writeFileSync(p, "# new\n")
 }
 
-const MOBILE_PAGE = "packages/kilo-docs/pages/code-with-ai/platforms/mobile.md"
+const MOBILE_PAGE = "packages/tavern-docs/pages/code-with-ai/platforms/mobile.md"
 
 // The create entry plus the assignee/reviewer POSTs for one surface head.
 function createdPair(entries, head) {
@@ -4388,30 +4388,30 @@ function case24_legacyDatedPrIgnored() {
     fs.mkdirSync(path.dirname(p), { recursive: true })
     fs.writeFileSync(p, text)
   }
-  write("packages/kilo-docs/pages/getting-started/base.md", "# base\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/base.md", "# base\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "base"])
   gitIn(repoDir, ["remote", "add", "origin", originDir])
   gitIn(repoDir, ["push", "-q", "origin", "main"])
 
   // Durability integration branch: the base prepare-branch must choose.
   gitIn(repoDir, ["checkout", "-q", "-b", "docs/auto-sync-integration"])
-  write("packages/kilo-docs/pages/getting-started/integ.md", "# integ\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/integ.md", "# integ\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "integ"])
   gitIn(repoDir, ["push", "-q", "origin", "docs/auto-sync-integration"])
 
   // A real surface branch and its open PR.
   gitIn(repoDir, ["checkout", "-q", "-b", "docs/auto-sync/cli", "main"])
-  write("packages/kilo-docs/pages/getting-started/cli-surface.md", "# cli surface\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/cli-surface.md", "# cli surface\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "cli surface"])
   gitIn(repoDir, ["push", "-q", "origin", "docs/auto-sync/cli"])
 
   // A dated legacy branch carrying a file that is not on main.
   gitIn(repoDir, ["checkout", "-q", "-b", "legacy-tmp", "main"])
-  write("packages/kilo-docs/pages/getting-started/dated.md", "# dated legacy\n")
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/pages/getting-started/dated.md", "# dated legacy\n")
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "dated legacy"])
   gitIn(repoDir, ["push", "-q", "origin", "HEAD:refs/heads/docs/auto-sync-2026-09-11"])
   gitIn(repoDir, ["checkout", "-q", "main"])
@@ -4452,11 +4452,11 @@ function case24_legacyDatedPrIgnored() {
       "prepare-branch must not close the dated legacy PR",
     )
     assert.ok(
-      !fs.existsSync(path.join(repoDir, "packages/kilo-docs/pages/getting-started/dated.md")),
+      !fs.existsSync(path.join(repoDir, "packages/tavern-docs/pages/getting-started/dated.md")),
       "the dated branch's file must not be reused as an integration base",
     )
     assert.ok(
-      fs.existsSync(path.join(repoDir, "packages/kilo-docs/pages/getting-started/cli-surface.md")),
+      fs.existsSync(path.join(repoDir, "packages/tavern-docs/pages/getting-started/cli-surface.md")),
       "the cli surface branch must be merged into the integration tree",
     )
   } finally {
@@ -4465,7 +4465,7 @@ function case24_legacyDatedPrIgnored() {
 
   // Upsert against only the dated legacy PR still open: the dated head is not
   // counted as an existing surface PR, so the cli surface gets a fresh PR.
-  write("packages/kilo-docs/pages/getting-started/new.md", "# new\n")
+  write("packages/tavern-docs/pages/getting-started/new.md", "# new\n")
   const upsertStub = startSurfaceStub({ openPrs: [{ number: 14043, head: "docs/auto-sync-2026-09-11", body: "" }] })
   try {
     const result = runUpsert(repoDir, root, upsertStub.port)
@@ -4521,8 +4521,8 @@ function setupLearnLiveRepo(branches) {
     fs.mkdirSync(path.dirname(p), { recursive: true })
     fs.writeFileSync(p, text)
   }
-  write("packages/kilo-docs/LEARNINGS.md", renderLearnings([]))
-  gitIn(repoDir, ["add", "packages/kilo-docs"])
+  write("packages/tavern-docs/LEARNINGS.md", renderLearnings([]))
+  gitIn(repoDir, ["add", "packages/tavern-docs"])
   gitIn(repoDir, ["commit", "-m", "base"])
   gitIn(repoDir, ["remote", "add", "origin", originDir])
   gitIn(repoDir, ["push", "-q", "origin", "main"])
@@ -4530,8 +4530,8 @@ function setupLearnLiveRepo(branches) {
 
   for (const branch of branches) {
     gitIn(repoDir, ["checkout", "-q", "-b", branch, "main"])
-    write(`packages/kilo-docs/pages/${branch.replaceAll("/", "-")}.md`, `# ${branch}\n`)
-    gitIn(repoDir, ["add", "packages/kilo-docs"])
+    write(`packages/tavern-docs/pages/${branch.replaceAll("/", "-")}.md`, `# ${branch}\n`)
+    gitIn(repoDir, ["add", "packages/tavern-docs"])
     gitIn(repoDir, ["commit", "-m", `docs ${branch}`, "--author", `github-actions[bot] <${GITHUB_BOT_EMAIL}>`])
     gitIn(repoDir, ["push", "-q", "origin", branch])
     gitIn(repoDir, ["update-ref", `refs/remotes/origin/${branch}`, branch])

@@ -1,12 +1,12 @@
 import { Config } from "effect"
-import { InstallationChannel } from "../installation/version" // kilocode_change
+import { InstallationChannel } from "../installation/version" // taverncode_change
 
 export function truthy(key: string) {
   const value = process.env[key]?.toLowerCase()
   return value === "true" || value === "1"
 }
 
-// kilocode_change start
+// taverncode_change start
 function falsy(key: string) {
   const value = process.env[key]?.toLowerCase()
   return value === "false" || value === "0"
@@ -24,137 +24,133 @@ function number(key: string) {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : undefined
 }
 
-const KILO_EXPERIMENTAL = truthy("KILO_EXPERIMENTAL")
-const KILO_DISABLE_CLAUDE_CODE = truthy("KILO_DISABLE_CLAUDE_CODE")
-const KILO_DISABLE_CLAUDE_CODE_SKILLS = KILO_DISABLE_CLAUDE_CODE || truthy("KILO_DISABLE_CLAUDE_CODE_SKILLS")
-// kilocode_change end
-const copy = process.env["KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT"]
-const fff = process.env["KILO_DISABLE_FFF"]
+const TAVERN_EXPERIMENTAL = truthy("TAVERN_EXPERIMENTAL")
+const TAVERN_DISABLE_CLAUDE_CODE = truthy("TAVERN_DISABLE_CLAUDE_CODE")
+// taverncode_change end
+const copy = process.env["TAVERN_EXPERIMENTAL_DISABLE_COPY_ON_SELECT"]
+const fff = process.env["TAVERN_DISABLE_FFF"]
 
 function enabledByExperimental(key: string) {
-  return process.env[key] === undefined ? truthy("KILO_EXPERIMENTAL") : truthy(key)
+  return process.env[key] === undefined ? truthy("TAVERN_EXPERIMENTAL") : truthy(key)
 }
 
 export const Flag = {
   OTEL_EXPORTER_OTLP_ENDPOINT: process.env["OTEL_EXPORTER_OTLP_ENDPOINT"],
   OTEL_EXPORTER_OTLP_HEADERS: process.env["OTEL_EXPORTER_OTLP_HEADERS"],
 
-  KILO_AUTO_SHARE: truthy("KILO_AUTO_SHARE"), // kilocode_change
-  KILO_AUTO_HEAP_SNAPSHOT: truthy("KILO_AUTO_HEAP_SNAPSHOT"),
-  KILO_GIT_BASH_PATH: process.env["KILO_GIT_BASH_PATH"],
-  KILO_CONFIG: process.env["KILO_CONFIG"],
-  KILO_CONFIG_CONTENT: process.env["KILO_CONFIG_CONTENT"],
-  KILO_DISABLE_AUTOUPDATE: truthy("KILO_DISABLE_AUTOUPDATE"),
-  KILO_ALWAYS_NOTIFY_UPDATE: truthy("KILO_ALWAYS_NOTIFY_UPDATE"),
-  KILO_DISABLE_PRUNE: truthy("KILO_DISABLE_PRUNE"),
-  KILO_DISABLE_TERMINAL_TITLE: truthy("KILO_DISABLE_TERMINAL_TITLE"),
-  KILO_SHOW_TTFD: truthy("KILO_SHOW_TTFD"),
-  // kilocode_change start
-  KILO_DISABLE_DEFAULT_PLUGINS: truthy("KILO_DISABLE_DEFAULT_PLUGINS"),
-  KILO_DISABLE_LSP_DOWNLOAD: truthy("KILO_DISABLE_LSP_DOWNLOAD"),
-  KILO_ENABLE_EXPERIMENTAL_MODELS: truthy("KILO_ENABLE_EXPERIMENTAL_MODELS"),
-  // kilocode_change end
-  KILO_DISABLE_AUTOCOMPACT: truthy("KILO_DISABLE_AUTOCOMPACT"),
-  KILO_DISABLE_MODELS_FETCH: truthy("KILO_DISABLE_MODELS_FETCH"),
-  KILO_DISABLE_MOUSE: truthy("KILO_DISABLE_MOUSE"),
-  // kilocode_change start
-  KILO_DISABLE_CLAUDE_CODE,
-  KILO_DISABLE_CLAUDE_CODE_PROMPT: KILO_DISABLE_CLAUDE_CODE || truthy("KILO_DISABLE_CLAUDE_CODE_PROMPT"),
-  KILO_DISABLE_CLAUDE_CODE_SKILLS,
-  KILO_DISABLE_EXTERNAL_SKILLS: truthy("KILO_DISABLE_EXTERNAL_SKILLS"),
-  KILO_EXPERIMENTAL_CUSTOMIZE_SKILL: unstableDefault("KILO_EXPERIMENTAL_CUSTOMIZE_SKILL"),
-  // kilocode_change end
-  KILO_FAKE_VCS: process.env["KILO_FAKE_VCS"],
-  KILO_SERVER_PASSWORD: process.env["KILO_SERVER_PASSWORD"],
-  KILO_SERVER_USERNAME: process.env["KILO_SERVER_USERNAME"],
-  KILO_ENABLE_QUESTION_TOOL: truthy("KILO_ENABLE_QUESTION_TOOL"), // kilocode_change
+  TAVERN_AUTO_SHARE: truthy("TAVERN_AUTO_SHARE"), // taverncode_change
+  TAVERN_AUTO_HEAP_SNAPSHOT: truthy("TAVERN_AUTO_HEAP_SNAPSHOT"),
+  TAVERN_GIT_BASH_PATH: process.env["TAVERN_GIT_BASH_PATH"],
+  TAVERN_CONFIG: process.env["TAVERN_CONFIG"],
+  TAVERN_CONFIG_CONTENT: process.env["TAVERN_CONFIG_CONTENT"],
+  TAVERN_DISABLE_AUTOUPDATE: truthy("TAVERN_DISABLE_AUTOUPDATE"),
+  TAVERN_ALWAYS_NOTIFY_UPDATE: truthy("TAVERN_ALWAYS_NOTIFY_UPDATE"),
+  TAVERN_DISABLE_PRUNE: truthy("TAVERN_DISABLE_PRUNE"),
+  TAVERN_DISABLE_TERMINAL_TITLE: truthy("TAVERN_DISABLE_TERMINAL_TITLE"),
+  TAVERN_SHOW_TTFD: truthy("TAVERN_SHOW_TTFD"),
+  // taverncode_change start
+  TAVERN_DISABLE_DEFAULT_PLUGINS: truthy("TAVERN_DISABLE_DEFAULT_PLUGINS"),
+  TAVERN_DISABLE_LSP_DOWNLOAD: truthy("TAVERN_DISABLE_LSP_DOWNLOAD"),
+  TAVERN_ENABLE_EXPERIMENTAL_MODELS: truthy("TAVERN_ENABLE_EXPERIMENTAL_MODELS"),
+  // taverncode_change end
+  TAVERN_DISABLE_AUTOCOMPACT: truthy("TAVERN_DISABLE_AUTOCOMPACT"),
+  TAVERN_DISABLE_MODELS_FETCH: truthy("TAVERN_DISABLE_MODELS_FETCH"),
+  TAVERN_DISABLE_MOUSE: truthy("TAVERN_DISABLE_MOUSE"),
+  // taverncode_change start
+  TAVERN_DISABLE_CLAUDE_CODE,
+  TAVERN_DISABLE_CLAUDE_CODE_PROMPT: TAVERN_DISABLE_CLAUDE_CODE || truthy("TAVERN_DISABLE_CLAUDE_CODE_PROMPT"),
+  TAVERN_DISABLE_EXTERNAL_SKILLS: truthy("TAVERN_DISABLE_EXTERNAL_SKILLS"),
+  TAVERN_EXPERIMENTAL_CUSTOMIZE_SKILL: unstableDefault("TAVERN_EXPERIMENTAL_CUSTOMIZE_SKILL"),
+  // taverncode_change end
+  TAVERN_FAKE_VCS: process.env["TAVERN_FAKE_VCS"],
+  TAVERN_SERVER_PASSWORD: process.env["TAVERN_SERVER_PASSWORD"],
+  TAVERN_SERVER_USERNAME: process.env["TAVERN_SERVER_USERNAME"],
+  TAVERN_ENABLE_QUESTION_TOOL: truthy("TAVERN_ENABLE_QUESTION_TOOL"), // taverncode_change
 
-  KILO_EXPERIMENTAL, // kilocode_change
+  TAVERN_EXPERIMENTAL, // taverncode_change
 
-  KILO_EXPERIMENTAL_CLAUDE_MIGRATION: truthy("KILO_EXPERIMENTAL_CLAUDE_MIGRATION"), // kilocode_change
+  TAVERN_EXPERIMENTAL_FILEWATCHER: Config.boolean("TAVERN_EXPERIMENTAL_FILEWATCHER").pipe(Config.withDefault(false)), // taverncode_change
 
-  KILO_EXPERIMENTAL_FILEWATCHER: Config.boolean("KILO_EXPERIMENTAL_FILEWATCHER").pipe(Config.withDefault(false)), // kilocode_change
-
-  KILO_EXPERIMENTAL_DISABLE_FILEWATCHER: Config.boolean("KILO_EXPERIMENTAL_DISABLE_FILEWATCHER").pipe(
+  TAVERN_EXPERIMENTAL_DISABLE_FILEWATCHER: Config.boolean("TAVERN_EXPERIMENTAL_DISABLE_FILEWATCHER").pipe(
     Config.withDefault(false),
   ),
 
-  KILO_EXPERIMENTAL_ICON_DISCOVERY: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_ICON_DISCOVERY"), // kilocode_change
+  TAVERN_EXPERIMENTAL_ICON_DISCOVERY: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_ICON_DISCOVERY"), // taverncode_change
 
-  KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT:
-    copy === undefined ? process.platform === "win32" : truthy("KILO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT"),
+  TAVERN_EXPERIMENTAL_DISABLE_COPY_ON_SELECT:
+    copy === undefined ? process.platform === "win32" : truthy("TAVERN_EXPERIMENTAL_DISABLE_COPY_ON_SELECT"),
 
-  KILO_ENABLE_EXA: truthy("KILO_ENABLE_EXA") || KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_EXA"), // kilocode_change
+  TAVERN_ENABLE_EXA: truthy("TAVERN_ENABLE_EXA") || TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_EXA"), // taverncode_change
 
-  KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: number("KILO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS"), // kilocode_change
+  TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS: number("TAVERN_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS"), // taverncode_change
 
-  KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX: number("KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX"), // kilocode_change
+  TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX: number("TAVERN_EXPERIMENTAL_OUTPUT_TOKEN_MAX"), // taverncode_change
 
-  KILO_EXPERIMENTAL_OXFMT: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_OXFMT"), // kilocode_change
+  TAVERN_EXPERIMENTAL_OXFMT: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_OXFMT"), // taverncode_change
 
-  KILO_EXPERIMENTAL_LSP_TY: truthy("KILO_EXPERIMENTAL_LSP_TY"), // kilocode_change
+  TAVERN_EXPERIMENTAL_LSP_TY: truthy("TAVERN_EXPERIMENTAL_LSP_TY"), // taverncode_change
 
-  KILO_EXPERIMENTAL_LSP_TOOL: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_LSP_TOOL"), // kilocode_change
+  TAVERN_EXPERIMENTAL_LSP_TOOL: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_LSP_TOOL"), // taverncode_change
 
-  KILO_EXPERIMENTAL_SCOUT: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_SCOUT"), // kilocode_change
+  TAVERN_EXPERIMENTAL_SCOUT: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_SCOUT"), // taverncode_change
 
-  KILO_EXPERIMENTAL_MARKDOWN: !falsy("KILO_EXPERIMENTAL_MARKDOWN"), // kilocode_change
+  TAVERN_EXPERIMENTAL_MARKDOWN: !falsy("TAVERN_EXPERIMENTAL_MARKDOWN"), // taverncode_change
 
-  KILO_ENABLE_PARALLEL: truthy("KILO_ENABLE_PARALLEL") || truthy("KILO_EXPERIMENTAL_PARALLEL"), // kilocode_change
+  TAVERN_ENABLE_PARALLEL: truthy("TAVERN_ENABLE_PARALLEL") || truthy("TAVERN_EXPERIMENTAL_PARALLEL"), // taverncode_change
 
-  KILO_MODELS_URL: process.env["KILO_MODELS_URL"],
+  TAVERN_MODELS_URL: process.env["TAVERN_MODELS_URL"],
 
-  KILO_MODELS_PATH: process.env["KILO_MODELS_PATH"],
+  TAVERN_MODELS_PATH: process.env["TAVERN_MODELS_PATH"],
 
-  KILO_DISABLE_EMBEDDED_WEB_UI: truthy("KILO_DISABLE_EMBEDDED_WEB_UI"), // kilocode_change
+  TAVERN_DISABLE_EMBEDDED_WEB_UI: truthy("TAVERN_DISABLE_EMBEDDED_WEB_UI"), // taverncode_change
 
-  KILO_DB: process.env["KILO_DB"],
+  TAVERN_DB: process.env["TAVERN_DB"],
 
-  KILO_DISABLE_CHANNEL_DB: truthy("KILO_DISABLE_CHANNEL_DB"), // kilocode_change
+  TAVERN_DISABLE_CHANNEL_DB: truthy("TAVERN_DISABLE_CHANNEL_DB"), // taverncode_change
 
-  KILO_SKIP_MIGRATIONS: truthy("KILO_SKIP_MIGRATIONS"), // kilocode_change
+  TAVERN_SKIP_MIGRATIONS: truthy("TAVERN_SKIP_MIGRATIONS"), // taverncode_change
 
-  KILO_STRICT_CONFIG_DEPS: truthy("KILO_STRICT_CONFIG_DEPS"), // kilocode_change
+  TAVERN_STRICT_CONFIG_DEPS: truthy("TAVERN_STRICT_CONFIG_DEPS"), // taverncode_change
 
-  KILO_WORKSPACE_ID: process.env["KILO_WORKSPACE_ID"],
+  TAVERN_WORKSPACE_ID: process.env["TAVERN_WORKSPACE_ID"],
 
-  KILO_EXPERIMENTAL_WORKSPACES: enabledByExperimental("KILO_EXPERIMENTAL_WORKSPACES"),
+  TAVERN_EXPERIMENTAL_WORKSPACES: enabledByExperimental("TAVERN_EXPERIMENTAL_WORKSPACES"),
 
-  KILO_EXPERIMENTAL_EVENT_SYSTEM: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_EVENT_SYSTEM"), // kilocode_change
+  TAVERN_EXPERIMENTAL_EVENT_SYSTEM: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_EVENT_SYSTEM"), // taverncode_change
 
-  KILO_EXPERIMENTAL_SESSION_SWITCHING: KILO_EXPERIMENTAL || truthy("KILO_EXPERIMENTAL_SESSION_SWITCHING"), // kilocode_change
+  TAVERN_EXPERIMENTAL_SESSION_SWITCHING: TAVERN_EXPERIMENTAL || truthy("TAVERN_EXPERIMENTAL_SESSION_SWITCHING"), // taverncode_change
 
-  KILO_EXPERIMENTAL_SESSION_SWITCHER: enabledByExperimental("KILO_EXPERIMENTAL_SESSION_SWITCHER"), // kilocode_change
+  TAVERN_EXPERIMENTAL_SESSION_SWITCHER: enabledByExperimental("TAVERN_EXPERIMENTAL_SESSION_SWITCHER"), // taverncode_change
 
-  KILO_DISABLE_FFF: fff === undefined ? process.platform === "win32" : truthy("KILO_DISABLE_FFF"), // kilocode_change
+  TAVERN_DISABLE_FFF: fff === undefined ? process.platform === "win32" : truthy("TAVERN_DISABLE_FFF"), // taverncode_change
 
-  get KILO_DISABLE_PROJECT_CONFIG() {
-    return truthy("KILO_DISABLE_PROJECT_CONFIG")
+  get TAVERN_DISABLE_PROJECT_CONFIG() {
+    return truthy("TAVERN_DISABLE_PROJECT_CONFIG")
   },
-  get KILO_EXPERIMENTAL_REFERENCES() {
-    return enabledByExperimental("KILO_EXPERIMENTAL_REFERENCES")
+  get TAVERN_EXPERIMENTAL_REFERENCES() {
+    return enabledByExperimental("TAVERN_EXPERIMENTAL_REFERENCES")
   },
-  get KILO_TUI_CONFIG() {
-    return process.env["KILO_TUI_CONFIG"]
+  get TAVERN_TUI_CONFIG() {
+    return process.env["TAVERN_TUI_CONFIG"]
   },
-  get KILO_CONFIG_DIR() {
-    return process.env["KILO_CONFIG_DIR"]
+  get TAVERN_CONFIG_DIR() {
+    return process.env["TAVERN_CONFIG_DIR"]
   },
-  get KILO_PURE() {
-    return truthy("KILO_PURE")
+  get TAVERN_PURE() {
+    return truthy("TAVERN_PURE")
   },
-  get KILO_PERMISSION() {
-    return process.env["KILO_PERMISSION"]
+  get TAVERN_PERMISSION() {
+    return process.env["TAVERN_PERMISSION"]
   },
-  get KILO_PLUGIN_META_FILE() {
-    return process.env["KILO_PLUGIN_META_FILE"]
+  get TAVERN_PLUGIN_META_FILE() {
+    return process.env["TAVERN_PLUGIN_META_FILE"]
   },
-  get KILO_CLIENT() {
-    return process.env["KILO_CLIENT"] ?? "cli"
+  get TAVERN_CLIENT() {
+    return process.env["TAVERN_CLIENT"] ?? "cli"
   },
-  // kilocode_change start
-  get KILO_SESSION_RETRY_LIMIT() {
-    return number("KILO_SESSION_RETRY_LIMIT")
+  // taverncode_change start
+  get TAVERN_SESSION_RETRY_LIMIT() {
+    return number("TAVERN_SESSION_RETRY_LIMIT")
   },
-  // kilocode_change end
+  // taverncode_change end
 }

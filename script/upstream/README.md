@@ -1,6 +1,6 @@
 # Upstream Merge Automation
 
-Scripts for automating the merge of upstream opencode changes into Kilo.
+Scripts for automating the merge of upstream opencode changes into Tavern.
 
 ## Quick Start
 
@@ -22,7 +22,7 @@ bun run merge.ts --version v1.1.49
 bun run merge.ts --version v1.1.49 --dry-run
 
 # Use a different base branch (e.g., for incremental merges)
-bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
+bun run merge.ts --version v1.1.50 --base-branch username/tavern-opencode-v1.1.44
 ```
 
 ## Scripts
@@ -34,8 +34,8 @@ bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
 | `merge.ts` | Main orchestration script for upstream merges |
 | `list-versions.ts` | List available upstream versions |
 | `analyze.ts` | Analyze changes without merging |
-| `opencode-changesets.ts` | Generate Kilo changesets from upstream opencode release notes |
-| `fix-kilocode-markers.ts` | Rebuild `kilocode_change` markers for one file against the last merged upstream |
+| `opencode-changesets.ts` | Generate Tavern changesets from upstream opencode release notes |
+| `fix-taverncode-markers.ts` | Rebuild `taverncode_change` markers for one file against the last merged upstream |
 | `reset-to-upstream.ts` | Reset one file to the transformed last merged upstream version |
 | `find-reset-candidates.ts` | Bulk-find files that have drifted insignificantly from upstream and (optionally) reset them |
 
@@ -43,14 +43,14 @@ bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
 
 | Script | Description |
 |---|---|
-| `transforms/package-names.ts` | Transform opencode package names to kilo |
-| `transforms/preserve-versions.ts` | Preserve Kilo's package versions |
-| `transforms/keep-ours.ts` | Keep Kilo's version of specific files |
-| `transforms/skip-files.ts` | Skip/remove files that shouldn't exist in Kilo |
-| `transforms/remove-kilo-web.ts` | Remove the unsupported embedded web command and warn when upstream reshapes it |
-| `transforms/transform-i18n.ts` | Transform i18n files with Kilo branding |
-| `transforms/transform-take-theirs.ts` | Take upstream + apply Kilo branding for branding-only files |
-| `transforms/transform-package-json.ts` | Enhanced package.json with Kilo dependency injection and newest-Bun-wins reconciliation |
+| `transforms/package-names.ts` | Transform opencode package names to tavern |
+| `transforms/preserve-versions.ts` | Preserve Tavern's package versions |
+| `transforms/keep-ours.ts` | Keep Tavern's version of specific files |
+| `transforms/skip-files.ts` | Skip/remove files that shouldn't exist in Tavern |
+| `transforms/remove-tavern-web.ts` | Remove the unsupported embedded web command and warn when upstream reshapes it |
+| `transforms/transform-i18n.ts` | Transform i18n files with Tavern branding |
+| `transforms/transform-take-theirs.ts` | Take upstream + apply Tavern branding for branding-only files |
+| `transforms/transform-package-json.ts` | Enhanced package.json with Tavern dependency injection and newest-Bun-wins reconciliation |
 | `transforms/transform-scripts.ts` | Transform script files with GitHub API references |
 | `transforms/transform-extensions.ts` | Transform extension files (Zed, etc.) |
 | `transforms/transform-web.ts` | Transform web/docs files (.mdx) |
@@ -64,13 +64,13 @@ bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
 
 ## Release Notes Changesets
 
-After merging upstream opencode releases, use `opencode-changesets.ts` to turn the upstream GitHub release notes into Kilo changesets:
+After merging upstream opencode releases, use `opencode-changesets.ts` to turn the upstream GitHub release notes into Tavern changesets:
 
 ```bash
 bun script/upstream/opencode-changesets.ts --from 1.17.0 --to 1.17.7
 ```
 
-The script fetches releases from `anomalyco/opencode`, selects published releases in the semver range `(from, to]`, and writes one `.changeset/opencode-vX-Y-Z-to-vX-Y-Z.md` file for the whole range. It requires the target release to exist, merges notes from every release into shared `##` sections and `###` categories, then folds those headings into each bullet (for example, `Core Bugfixes: ...`) so Changesets can embed the notes cleanly in package changelogs. It generates a patch changeset for the fixed release group, `@kilocode/cli` and `kilo-code`. Generated notes omit contributor thank-you blocks and the upstream `Desktop` and `SDK` sections by default because Kilo does not ship the opencode desktop app and SDK release notes are not user-facing for Kilo.
+The script fetches releases from `anomalyco/opencode`, selects published releases in the semver range `(from, to]`, and writes one `.changeset/opencode-vX-Y-Z-to-vX-Y-Z.md` file for the whole range. It requires the target release to exist, merges notes from every release into shared `##` sections and `###` categories, then folds those headings into each bullet (for example, `Core Bugfixes: ...`) so Changesets can embed the notes cleanly in package changelogs. It generates a patch changeset for the fixed release group, `@taverncode/cli` and `tavern-code`. Generated notes omit contributor thank-you blocks and the upstream `Desktop` and `SDK` sections by default because Tavern does not ship the opencode desktop app and SDK release notes are not user-facing for Tavern.
 
 ## Merge Process
 
@@ -86,29 +86,29 @@ The merge automation follows this process, applying **all transformations BEFORE
 
 4. **Create branches**
    - `backup/<branch>-<timestamp>` - Backup of current state
-   - `<author>/kilo-opencode-<version>` - Merge target branch
+   - `<author>/tavern-opencode-<version>` - Merge target branch
    - `<author>/opencode-<version>` - Transformed upstream branch
 
 5. **Apply ALL transformations to upstream branch (PRE-MERGE)**:
-   - Remove files that should not exist in Kilo (`skipFiles`)
+   - Remove files that should not exist in Tavern (`skipFiles`)
    - Remove the unsupported embedded web command and its CLI registration
-   - Transform package names (opencode-ai -> @kilocode/cli)
-   - Preserve Kilo's versions
-   - Transform i18n files with Kilo branding
+   - Transform package names (opencode-ai -> @taverncode/cli)
+   - Preserve Tavern's versions
+   - Transform i18n files with Tavern branding
    - Transform branding-only files (UI components, configs)
-   - Transform package.json files (names, deps, Kilo injections)
+   - Transform package.json files (names, deps, Tavern injections)
    - Transform script files (GitHub API references)
    - Transform extension files (Zed, etc.)
    - Transform web/docs files
-   - Reset Kilo-specific files
+   - Reset Tavern-specific files
 
-6. **Merge** transformed upstream into Kilo branch
+6. **Merge** transformed upstream into Tavern branch
    - Since all branding transforms are applied pre-merge, conflicts should be minimal
-   - Remaining conflicts are files with actual code differences (kilocode_change markers)
+   - Remaining conflicts are files with actual code differences (taverncode_change markers)
 
 7. **Auto-resolve** any remaining conflicts
-   - Skip files that shouldn't exist in Kilo
-   - Keep Kilo's version of specific files
+   - Skip files that shouldn't exist in Tavern
+   - Keep Tavern's version of specific files
    - Fallback transforms for edge cases
 
 8. **Push** and generate final report
@@ -121,12 +121,12 @@ Configuration is defined in `utils/config.ts`:
 {
   // Package name mappings
   packageMappings: [
-    { from: "opencode-ai", to: "@kilocode/cli" },
-    { from: "@opencode-ai/cli", to: "@kilocode/cli" },
+    { from: "opencode-ai", to: "@taverncode/cli" },
+    { from: "@opencode-ai/cli", to: "@taverncode/cli" },
     // ...
   ],
 
-  // Files to always keep Kilo's version (never take upstream)
+  // Files to always keep Tavern's version (never take upstream)
   keepOurs: [
     "README.md",
     "CONTRIBUTING.md",
@@ -143,17 +143,17 @@ Configuration is defined in `utils/config.ts`:
     // ...
   ],
 
-  // Files to take upstream + apply Kilo branding transforms
+  // Files to take upstream + apply Tavern branding transforms
   takeTheirsAndTransform: [
     "packages/ui/src/**/*.tsx",
     // ...
   ],
 
-  // Kilo-specific directories (preserved)
-  kiloDirectories: [
-    "packages/opencode/src/kilocode",
-    "packages/kilo-gateway",
-    "packages/kilo-telemetry",
+  // Tavern-specific directories (preserved)
+  tavernDirectories: [
+    "packages/opencode/src/taverncode",
+    "packages/tavern-gateway",
+    "packages/tavern-telemetry",
     // ...
   ],
 }
@@ -161,18 +161,18 @@ Configuration is defined in `utils/config.ts`:
 
 ## Pre-Merge Transformation Strategy
 
-**Key insight**: By applying all branding transforms to the upstream branch BEFORE merging, we eliminate most conflicts that would otherwise occur due to branding differences (OpenCode -> Kilo).
+**Key insight**: By applying all branding transforms to the upstream branch BEFORE merging, we eliminate most conflicts that would otherwise occur due to branding differences (OpenCode -> Tavern).
 
 ### Transform Order (Pre-Merge)
 
 The following transforms are applied to the opencode branch before merging:
 
-1. **Skip files** - Remove upstream-only packages/files that should not exist in Kilo
-2. **Package names** - `opencode-ai` -> `@kilocode/cli`, etc.
-3. **Versions** - Preserve Kilo's version numbers
-4. **i18n files** - OpenCode -> Kilo in user-visible strings
+1. **Skip files** - Remove upstream-only packages/files that should not exist in Tavern
+2. **Package names** - `opencode-ai` -> `@taverncode/cli`, etc.
+3. **Versions** - Preserve Tavern's version numbers
+4. **i18n files** - OpenCode -> Tavern in user-visible strings
 5. **Branding files** - UI components, configs with branding only
-6. **package.json** - Names, dependencies, Kilo injections
+6. **package.json** - Names, dependencies, Tavern injections
 7. **Scripts** - GitHub API references
 8. **Extensions** - Zed, etc.
 9. **Web/docs** - Documentation files
@@ -183,35 +183,35 @@ After merging, any remaining conflicts are handled based on file type:
 
 | File Type | Strategy | Description |
 |---|---|---|
-| i18n files | `i18n-transform` | Take upstream, apply Kilo branding |
+| i18n files | `i18n-transform` | Take upstream, apply Tavern branding |
 | UI components | `take-theirs-transform` | Take upstream, apply branding (no logic changes) |
-| package.json | `package-transform` | Take upstream, transform names, inject Kilo deps |
+| package.json | `package-transform` | Take upstream, transform names, inject Tavern deps |
 | Script files | `script-transform` | Take upstream, transform GitHub references |
 | Extensions | `extension-transform` | Take upstream, apply branding |
 | Web/docs | `web-transform` | Take upstream, apply branding |
-| README/docs | `keep-ours` | Keep Kilo's version |
-| GitHub workflows | `keep-ours` | Keep Kilo's version (manual review) |
-| Code with markers | `manual` | Has `kilocode_change` markers, needs review |
+| README/docs | `keep-ours` | Keep Tavern's version |
+| GitHub workflows | `keep-ours` | Keep Tavern's version (manual review) |
+| Code with markers | `manual` | Has `taverncode_change` markers, needs review |
 
 ### Why This Reduces Conflicts
 
 Previously, conflicts occurred because:
 
 - Upstream had `OpenCode` branding
-- Kilo had `Kilo` branding
+- Tavern had `Tavern` branding
 - Git saw these as conflicting changes
 
 Now:
 
-- We transform upstream to `Kilo` branding BEFORE merge
+- We transform upstream to `Tavern` branding BEFORE merge
 - Both branches have the same branding
 - Git sees no conflict for branding-only files
 
-The only remaining conflicts are files with **actual code differences** - files with `kilocode_change` markers that contain Kilo-specific logic.
+The only remaining conflicts are files with **actual code differences** - files with `taverncode_change` markers that contain Tavern-specific logic.
 
 ### Bun Version Safety
 
-Root `package.json` reconciliation uses the newer valid `packageManager` Bun version from Kilo and upstream. An older upstream version cannot downgrade Kilo, while a newer upstream version is retained as an upgrade. Before the merge is finalized, `merge.ts` also validates the result against the pristine Kilo base and upstream commit and aborts if the merged Bun version is lower than either input.
+Root `package.json` reconciliation uses the newer valid `packageManager` Bun version from Tavern and upstream. An older upstream version cannot downgrade Tavern, while a newer upstream version is retained as an upgrade. Before the merge is finalized, `merge.ts` also validates the result against the pristine Tavern base and upstream commit and aborts if the merged Bun version is lower than either input.
 
 ## CLI Options
 
@@ -235,7 +235,7 @@ By default, `merge.ts` also prepares prompt-friendly reference worktrees under `
 | Path | Snapshot |
 |---|---|
 | `.worktrees/opencode-merge/opencode` | Pristine upstream opencode at the requested version or commit |
-| `.worktrees/opencode-merge/kilo-main` | The Kilo base branch snapshot used for the merge |
+| `.worktrees/opencode-merge/tavern-main` | The Tavern base branch snapshot used for the merge |
 | `.worktrees/opencode-merge/auto-merge` | The automated merge result before final lockfile or SDK regeneration |
 
 If conflicts remain after automation, `auto-merge` is a committed local snapshot branch that may intentionally contain conflict markers as normal file content. The real merge branch remains unresolved so manual resolution can continue with accurate git conflict state.
@@ -250,17 +250,17 @@ Options:
   --output <file>        Output file for report
 ```
 
-### fix-kilocode-markers.ts
+### fix-taverncode-markers.ts
 
 ```
 Usage:
-  bun run script/upstream/fix-kilocode-markers.ts <repo-relative-file> [--dry-run]
+  bun run script/upstream/fix-taverncode-markers.ts <repo-relative-file> [--dry-run]
 
 Options:
   --dry-run              Show what would change without writing the file
 ```
 
-The command finds the newest upstream tag already merged into `HEAD` (read from `.opencode-version` at the repo root, falling back to an `ls-remote` + `merge-base --is-ancestor` walk), reads that upstream version of the file, applies the same branding transforms used by upstream merge automation, strips existing `kilocode_change` markers from the current file, and adds fresh markers around the remaining lines that differ from upstream.
+The command finds the newest upstream tag already merged into `HEAD` (read from `.opencode-version` at the repo root, falling back to an `ls-remote` + `merge-base --is-ancestor` walk), reads that upstream version of the file, applies the same branding transforms used by upstream merge automation, strips existing `taverncode_change` markers from the current file, and adds fresh markers around the remaining lines that differ from upstream.
 
 The `.opencode-version` file is a single-line tag (e.g. `v1.14.33`) recorded by `merge.ts` after every successful upstream merge. Editing it by hand pins the "last merged" tag for the per-file commands above; delete it to fall back to the slower automatic discovery.
 
@@ -295,21 +295,21 @@ Options:
 
 The command pre-filters with `git diff --name-only <last-merged-upstream>..HEAD` and drops:
 
-- Kilo-only paths: anything under `packages/kilo-*/`, any `**/kilocode/**` subdir, `script/upstream/`.
+- Tavern-only paths: anything under `packages/tavern-*/`, any `**/taverncode/**` subdir, `script/upstream/`.
 - Non-code assets: SVG, PNG, fonts, archives, lock files, etc. (see `SKIP_EXTENSIONS` / `SKIP_FILENAMES` in the script).
-- Files covered by the merge config's `keepOurs` or `skipFiles` lists in `utils/config.ts` — these are intentionally preserved or removed in Kilo and must not be bulk-reset.
+- Files covered by the merge config's `keepOurs` or `skipFiles` lists in `utils/config.ts` — these are intentionally preserved or removed in Tavern and must not be bulk-reset.
 
 It then issues one `git cat-file --batch-check` for all remaining paths to grab upstream blob sizes in a single subprocess. Files absent upstream land in `upstream-missing` immediately; files above 256 KB land in `too-large` (generated manifests, giant snapshots). Only the survivors get fetched via `git show` and classified:
 
 | Bucket | Meaning | Action |
 |---|---|---|
 | `identical` | Local bytes already match transformed upstream (branding-only drift in raw git diff) | none |
-| `markers-only` | Stripping `kilocode_change` markers makes local match upstream | reset |
+| `markers-only` | Stripping `taverncode_change` markers makes local match upstream | reset |
 | `cosmetic-only` | Non-marker diff is only whitespace or reordered lines (the line multiset is identical) | reset |
 | `small-diff` | ≤ `--review-limit` non-marker, non-cosmetic diff lines | reset |
 | `large-diff` | > `--review-limit` non-marker, non-cosmetic diff lines | skipped |
-| `upstream-missing` | File does not exist upstream (kilo-only, intentional) | skipped |
-| `local-missing` | File tracked but missing locally (deleted in Kilo) | skipped |
+| `upstream-missing` | File does not exist upstream (tavern-only, intentional) | skipped |
+| `local-missing` | File tracked but missing locally (deleted in Tavern) | skipped |
 | `binary-diff` | Binary file differs | skipped (use `reset-to-upstream.ts` per file) |
 | `binary-identical` | Binary file already matches | none |
 | `too-large` | Upstream blob > 256 KB | skipped (use `reset-to-upstream.ts` per file) |
@@ -336,13 +336,13 @@ When working on multiple upstream versions, you can create a chain of merge PRs:
 # First merge: v1.1.44 into main
 bun run merge.ts --version v1.1.44
 
-# Create PR: username/kilo-opencode-v1.1.44 -> main
+# Create PR: username/tavern-opencode-v1.1.44 -> main
 
 # Second merge: v1.1.50 based on the previous PR (without waiting for approval)
-bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
+bun run merge.ts --version v1.1.50 --base-branch username/tavern-opencode-v1.1.44
 
-# Create PR: username/kilo-opencode-v1.1.50 -> username/kilo-opencode-v1.1.44
-# OR: username/kilo-opencode-v1.1.50 -> main (once first PR is merged)
+# Create PR: username/tavern-opencode-v1.1.50 -> username/tavern-opencode-v1.1.44
+# OR: username/tavern-opencode-v1.1.50 -> main (once first PR is merged)
 ```
 
 ### Benefits
@@ -356,13 +356,13 @@ bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
 
 ```bash
 # 1. Analyze next version from your WIP branch
-bun run analyze.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
+bun run analyze.ts --version v1.1.50 --base-branch username/tavern-opencode-v1.1.44
 
 # 2. Run the merge
-bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
+bun run merge.ts --version v1.1.50 --base-branch username/tavern-opencode-v1.1.44
 
-# 3. Create PR from username/kilo-opencode-v1.1.50
-#    - Target: username/kilo-opencode-v1.1.44 (if first PR not merged yet)
+# 3. Create PR from username/tavern-opencode-v1.1.50
+#    - Target: username/tavern-opencode-v1.1.44 (if first PR not merged yet)
 #    - Target: main (if first PR is already merged)
 ```
 
@@ -371,8 +371,8 @@ bun run merge.ts --version v1.1.50 --base-branch username/kilo-opencode-v1.1.44
 After running the merge script, you may have remaining conflicts. To resolve:
 
 1. Open each conflicted file
-2. Look for `kilocode_change` markers to identify Kilo-specific code
-3. Resolve conflicts, keeping Kilo-specific changes
+2. Look for `taverncode_change` markers to identify Tavern-specific code
+3. Resolve conflicts, keeping Tavern-specific changes
 4. Stage and commit:
    ```bash
    git add -A

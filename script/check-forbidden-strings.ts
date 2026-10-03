@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Greps tracked files for forbidden strings that must not appear in the repo.
@@ -29,8 +29,8 @@ const forbidden: { pattern: string; reason: string; allow?: string[] }[] = [
       "README.md",
       "translations/README.",
       ".opencode/glossary/",
-      "packages/kilo-vscode/AGENTS.md",
-      "packages/kilo-docs/source-links.md",
+      "packages/tavern-vscode/AGENTS.md",
+      "packages/tavern-docs/source-links.md",
       "patches/",
       "script/upstream/",
       "translations/",
@@ -39,7 +39,7 @@ const forbidden: { pattern: string; reason: string; allow?: string[] }[] = [
   {
     pattern: "sst/opencode",
     reason: "old upstream org path -- should be Kilo-Org/kilocode",
-    allow: [".kilo/agent/upstream-merge.md", "script/upstream/"],
+    allow: [".tavern/agent/upstream-merge.md", "script/upstream/"],
   },
   { pattern: `"HTTP-Referer": "https://opencode.ai/"`, reason: "attributes outbound LLM traffic to upstream" },
   { pattern: `"http-referer": "https://opencode.ai/"`, reason: "attributes outbound LLM traffic to upstream" },

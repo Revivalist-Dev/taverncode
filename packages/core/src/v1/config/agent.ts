@@ -11,33 +11,39 @@ const Color = Schema.Union([
 
 const AgentSchema = Schema.StructWithRest(
   Schema.Struct({
-    model: Schema.optional(Schema.NullOr(Schema.String)), // kilocode_change - nullable for delete sentinel
-    // kilocode_change start - nullable for delete sentinel
+    model: Schema.optional(Schema.NullOr(Schema.String)), // taverncode_change - nullable for delete sentinel
+    // taverncode_change start - nullable for delete sentinel
     variant: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description: "Default model variant for this agent (applies only when using the agent's configured model).",
     }),
-    // kilocode_change end
-    temperature: Schema.optional(Schema.NullOr(Schema.Finite)), // kilocode_change - nullable for delete sentinel
-    top_p: Schema.optional(Schema.NullOr(Schema.Finite)), // kilocode_change - nullable for delete sentinel
-    prompt: Schema.optional(Schema.NullOr(Schema.String)), // kilocode_change - nullable for delete sentinel
+    // taverncode_change end
+    temperature: Schema.optional(Schema.NullOr(Schema.Finite)), // taverncode_change - nullable for delete sentinel
+    top_p: Schema.optional(Schema.NullOr(Schema.Finite)), // taverncode_change - nullable for delete sentinel
+    prompt: Schema.optional(Schema.NullOr(Schema.String)), // taverncode_change - nullable for delete sentinel
+    // taverncode_change start - per-agent assistant prefill (fork feature)
+    prefill: Schema.optional(Schema.NullOr(Schema.String)).annotate({
+      description:
+        "Text appended as a trailing assistant message so the model continues from it. Ignored on models that reject assistant prefill.",
+    }),
+    // taverncode_change end
     tools: Schema.optional(Schema.Record(Schema.String, Schema.Boolean)).annotate({
       description: "@deprecated Use 'permission' field instead",
     }),
     disable: Schema.optional(Schema.Boolean),
-    // kilocode_change start - nullable for delete sentinel
+    // taverncode_change start - nullable for delete sentinel
     description: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description: "Description of when to use the agent",
     }),
-    // kilocode_change end
+    // taverncode_change end
     mode: Schema.optional(Schema.Literals(["subagent", "primary", "all"])),
-    // kilocode_change start - typed metadata carriers so they never fall into `options` (provider params)
+    // taverncode_change start - typed metadata carriers so they never fall into `options` (provider params)
     displayName: Schema.optional(Schema.String).annotate({
       description: "Human-readable name shown in the UI (e.g. for organization or marketplace agents)",
     }),
     source: Schema.optional(Schema.String).annotate({
       description: "Origin marker for managed agents (organization | global | project)",
     }),
-    // kilocode_change end
+    // taverncode_change end
     hidden: Schema.optional(Schema.Boolean).annotate({
       description: "Hide this subagent from the @ autocomplete menu (default: false, only applies to mode: subagent)",
     }),
@@ -45,11 +51,11 @@ const AgentSchema = Schema.StructWithRest(
     color: Schema.optional(Color).annotate({
       description: "Hex color code (e.g., #FF5733) or theme color (e.g., primary)",
     }),
-    // kilocode_change start - nullable for delete sentinel
+    // taverncode_change start - nullable for delete sentinel
     steps: Schema.optional(Schema.NullOr(PositiveInt)).annotate({
       description: "Maximum number of agentic iterations before forcing text-only response",
     }),
-    // kilocode_change end
+    // taverncode_change end
     maxSteps: Schema.optional(PositiveInt).annotate({ description: "@deprecated Use 'steps' field instead." }),
     permission: Schema.optional(ConfigPermissionV1.Info),
   }),
@@ -61,12 +67,13 @@ const KNOWN_KEYS = new Set([
   "model",
   "variant",
   "prompt",
+  "prefill", // taverncode_change
   "description",
   "temperature",
   "top_p",
   "mode",
-  "displayName", // kilocode_change
-  "source", // kilocode_change
+  "displayName", // taverncode_change
+  "source", // taverncode_change
   "hidden",
   "color",
   "steps",
@@ -75,7 +82,7 @@ const KNOWN_KEYS = new Set([
   "permission",
   "disable",
   "tools",
-  "requirements", // kilocode_change - ignore declarations from removed agent requirements feature
+  "requirements", // taverncode_change - ignore declarations from removed agent requirements feature
 ])
 
 const normalize = (agent: Schema.Schema.Type<typeof AgentSchema>): Schema.Schema.Type<typeof AgentSchema> => {
@@ -95,10 +102,10 @@ const normalize = (agent: Schema.Schema.Type<typeof AgentSchema>): Schema.Schema
   }
   globalThis.Object.assign(permission, agent.permission)
 
-  // kilocode_change start - preserve null delete sentinel (?? would collapse null to maxSteps)
+  // taverncode_change start - preserve null delete sentinel (?? would collapse null to maxSteps)
   const steps = agent.steps !== undefined ? agent.steps : agent.maxSteps
   return { ...agent, options, permission, ...(steps !== undefined ? { steps } : {}) }
-  // kilocode_change end
+  // taverncode_change end
 }
 
 export const Info = AgentSchema.pipe(

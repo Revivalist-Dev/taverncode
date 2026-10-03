@@ -4,7 +4,7 @@
   //   "url": "https://enterprise.dev.opencode.ai",
   // },
   "provider": {
-    "kilo": {
+    "tavern": {
       "options": {},
     },
   },

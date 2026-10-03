@@ -29,13 +29,13 @@ export function ide() {
 }
 
 export function alreadyInstalled() {
-  return process.env["KILO_CALLER"] === "vscode" || process.env["KILO_CALLER"] === "vscode-insiders"
+  return process.env["TAVERN_CALLER"] === "vscode" || process.env["TAVERN_CALLER"] === "vscode-insiders"
 }
 
-// kilocode_change start - Kilo's VS Code extension bundles the CLI; auto-install from CLI is not applicable
+// taverncode_change start - Tavern's VS Code extension bundles the CLI; auto-install from CLI is not applicable
 export async function install(_ide: (typeof SUPPORTED_IDES)[number]["name"]) {
   throw new AlreadyInstalledError({})
 }
-// kilocode_change end
+// taverncode_change end
 
 export * as Ide from "."

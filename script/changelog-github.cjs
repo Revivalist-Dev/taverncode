@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 // Custom changelog generator that wraps @changesets/changelog-github
 // but strips "Thanks @user!" for team members.
 const github = require("@changesets/changelog-github")
@@ -18,18 +18,18 @@ const team = new Set([
   "emilieschario",
   "eshurakov",
   "evanjacobson",
-  "Helix-Kilo",
+  "Helix-Tavern",
   "iscekic",
   "jeanduplessis",
   "jobrietbergen",
   "johnnyeric",
   "jrf0110",
-  "kilo-code-bot",
-  "kilo-code-bot[bot]",
-  "kilo-maintainer[bot]",
-  "kilocode-bot",
-  "kiloconnect-lite[bot]",
-  "kiloconnect[bot]",
+  "tavern-code-bot",
+  "tavern-code-bot[bot]",
+  "tavern-maintainer[bot]",
+  "taverncode-bot",
+  "tavernconnect-lite[bot]",
+  "tavernconnect[bot]",
   "kirillk",
   "lambertjosh",
   "marius-kilocode",

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Prepares the rolling docs-sync integration branch before the edit pass.

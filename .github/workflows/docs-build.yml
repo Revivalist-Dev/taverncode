@@ -4,27 +4,27 @@ on:
   push:
     branches: [main]
     paths:
-      - "packages/kilo-docs/**"
+      - "packages/tavern-docs/**"
   pull_request:
     paths:
-      - "packages/kilo-docs/**"
+      - "packages/tavern-docs/**"
   workflow_dispatch:
 
 jobs:
   build:
     name: Build docs site
-    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # kilocode_change
+    runs-on: ${{ github.repository == 'Kilo-Org/kilocode' && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-latest' }} # taverncode_change
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6 # kilocode_change
+        uses: actions/checkout@v6 # taverncode_change
 
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
 
       - name: Build site
-        run: bun run --filter @kilocode/kilo-docs build
+        run: bun run --filter @taverncode/tavern-docs build
         env:
           NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.POSTHOG_API_KEY }}
 
       - name: Run tests
-        run: bun run --filter @kilocode/kilo-docs test
+        run: bun run --filter @taverncode/tavern-docs test

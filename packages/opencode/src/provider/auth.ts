@@ -1,5 +1,5 @@
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import type { AuthOAuthResult, Hooks } from "@kilocode/plugin"
+import type { AuthOAuthResult, Hooks } from "@taverncode/plugin"
 import { serviceUse } from "@opencode-ai/core/effect/service-use"
 import { Auth } from "@/auth"
 import { InstanceState } from "@/effect/instance-state"
@@ -7,12 +7,12 @@ import { optional } from "@opencode-ai/core/schema"
 import { Plugin } from "../plugin"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { Array as Arr, Effect, Layer, Record, Result, Context, Schema } from "effect"
-import { errorMessage } from "@/util/error" // kilocode_change
+import { errorMessage } from "@/util/error" // taverncode_change
 
-// kilocode_change start
-import { Telemetry } from "@kilocode/kilo-telemetry"
+// taverncode_change start
+import { Telemetry } from "@taverncode/tavern-telemetry"
 import { ModelCache } from "./model-cache"
-// kilocode_change end
+// taverncode_change end
 
 const When = Schema.Struct({
   key: Schema.String,
@@ -117,7 +117,7 @@ const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | ModelCa
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const plugin = yield* Plugin.Service
-    const cache = yield* ModelCache.Service // kilocode_change
+    const cache = yield* ModelCache.Service // taverncode_change
     const state = yield* InstanceState.make<State>(
       Effect.fn("ProviderAuth.state")(function* () {
         const plugins = yield* plugin.list()
@@ -183,12 +183,12 @@ const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | ModelCa
         }
       }
 
-      // kilocode_change start
+      // taverncode_change start
       const result = yield* Effect.tryPromise({
         try: () => method.authorize(input.inputs),
         catch: (err) => new Auth.AuthError({ message: errorMessage(err), cause: err }),
       })
-      // kilocode_change end
+      // taverncode_change end
       pending.set(input.providerID, result)
       return {
         url: result.url,
@@ -231,8 +231,8 @@ const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | ModelCa
         })
       }
 
-      // kilocode_change start - Update telemetry identity on Kilo auth
-      if (input.providerID === "kilo") {
+      // taverncode_change start - Update telemetry identity on Tavern auth
+      if (input.providerID === "tavern") {
         const info = yield* auth.get(input.providerID)
         if (info) {
           const token = info.type === "oauth" ? info.access : info.type === "api" ? info.key : null
@@ -242,13 +242,13 @@ const layer: Layer.Layer<Service, never, Auth.Service | Plugin.Service | ModelCa
       }
       Telemetry.trackAuthSuccess(input.providerID)
       yield* cache.clear(input.providerID)
-      // kilocode_change end
+      // taverncode_change end
     })
 
     return Service.of({ methods, authorize, callback })
   }),
 )
 
-export const node = LayerNode.make({ service: Service, layer: layer, deps: [Auth.node, Plugin.node, ModelCache.node] }) // kilocode_change
+export const node = LayerNode.make({ service: Service, layer: layer, deps: [Auth.node, Plugin.node, ModelCache.node] }) // taverncode_change
 
 export * as ProviderAuth from "./auth"

@@ -1,0 +1,38 @@
+import { debug, warn } from "../utils/logger"
+
+const INDEX = "packages/opencode/src/index.ts"
+const IMPORT = /^import \{ WebCommand \} from "\.\/cli\/cmd\/web"\n/m
+const REGISTER = /^(\s*)\.command\(WebCommand\)\n/m
+const REFERENCE = /\bWebCommand\b|["']\.\/cli\/cmd\/web["']/
+const OMIT_IMPORT =
+  "// taverncode_change - upstream web command intentionally omitted; Tavern does not ship an embedded web UI\n"
+const OMIT_REGISTER = "// taverncode_change - upstream web command intentionally omitted\n"
+
+export type TavernWebResult = {
+  result: string
+  removals: number
+  review: boolean
+}
+
+export function removeTavernWeb(file: string, content: string): TavernWebResult {
+  if (file !== INDEX) return { result: content, removals: 0, review: false }
+
+  const result = content.replace(IMPORT, OMIT_IMPORT).replace(REGISTER, `$1${OMIT_REGISTER}`)
+  const removals = Number(result !== content)
+  const review = REFERENCE.test(result)
+  return { result, removals, review }
+}
+
+export async function transformTavernWeb(options: { dryRun?: boolean; verbose?: boolean } = {}): Promise<TavernWebResult> {
+  const file = Bun.file(INDEX)
+  if (!(await file.exists())) return { result: "", removals: 0, review: false }
+
+  const content = await file.text()
+  const transformed = removeTavernWeb(INDEX, content)
+  if (transformed.removals > 0 && !options.dryRun) await Bun.write(INDEX, transformed.result)
+  if (transformed.removals > 0 && options.verbose) debug("Removed unsupported Tavern web command registration")
+  if (transformed.review) {
+    warn("Tavern web command shape changed upstream — review packages/opencode/src/index.ts; merge continues")
+  }
+  return transformed
+}

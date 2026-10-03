@@ -1,14 +1,14 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Guards the docs-sync model + reasoning-effort wiring.
  *
  * The bot runs DeepSeek V4.1 Flash at maximum reasoning effort on every LLM
  * call. The id and effort are easy to drift (a hand-edited workflow env, a new
- * `kilo run` call site that forgets `--variant`), so this ordinary unit test
+ * `tavern run` call site that forgets `--variant`), so this ordinary unit test
  * asserts the wiring from the source of truth: the workflow env defaults, the
  * shared `REASONING_VARIANT` constant, and every `args` array passed to
- * `runKilo` in triage.mjs, edit.mjs, learn.mjs, plus the workflow's fix step.
+ * `runTavern` in triage.mjs, edit.mjs, learn.mjs, plus the workflow's fix step.
  *
  * Run: node .github/docs-sync/model-config.test.mjs
  */
@@ -22,7 +22,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(HERE, "..", "..")
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8")
 
-const MODEL = "kilo/deepseek/deepseek-v4.1-flash"
+const MODEL = "tavern/deepseek/deepseek-v4.1-flash"
 const MAX = "max"
 
 const workflow = read(".github/workflows/docs-sync.yml")
@@ -39,15 +39,15 @@ function check(label, fn) {
   }
 }
 
-/** Every `args: [ ... ]` array literal passed to a `runKilo(` call, as source text. */
-function runKiloArgArrays(src) {
+/** Every `args: [ ... ]` array literal passed to a `runTavern(` call, as source text. */
+function runTavernArgArrays(src) {
   const arrays = []
-  const marker = "runKilo("
+  const marker = "runTavern("
   let i = src.indexOf(marker)
   while (i !== -1) {
     const argsIdx = src.indexOf("args:", i)
     const start = src.indexOf("[", argsIdx)
-    assert.ok(argsIdx !== -1 && start !== -1, "runKilo call without an args array")
+    assert.ok(argsIdx !== -1 && start !== -1, "runTavern call without an args array")
     let depth = 0
     let j = start
     for (; j < src.length; j++) {
@@ -69,7 +69,7 @@ function stepBlock(prefix) {
   return blocks.find((b) => b.startsWith(prefix)) ?? null
 }
 
-// 1. Model defaults: DeepSeek 4.1 Flash via the kilo provider, vars. override kept.
+// 1. Model defaults: DeepSeek 4.1 Flash via the tavern provider, vars. override kept.
 for (const [key, varName] of [
   ["TRIAGE_MODEL", "DOCS_SYNC_TRIAGE_MODEL"],
   ["EDIT_MODEL", "DOCS_SYNC_EDIT_MODEL"],
@@ -89,8 +89,8 @@ check(`DOCS_SYNC_VARIANT defaults to "${MAX}"`, () => {
 
 // 2b. The comment above it cites where the id and variants come from, so a
 //     future id/effort change can be re-verified against the live list.
-check("workflow comment cites the Kilo gateway model list", () => {
-  assert.match(workflow, /api\.kilo\.ai\/api\/openrouter\/models/, "the model source URL is not cited in the workflow")
+check("workflow comment cites the Tavern gateway model list", () => {
+  assert.match(workflow, /api\.tavern\.ai\/api\/openrouter\/models/, "the model source URL is not cited in the workflow")
 })
 
 // 3. One shared constant so all call sites agree.
@@ -109,17 +109,17 @@ check(`REASONING_VARIANT resolves to "${MAX}" by default`, () => {
   assert.equal(REASONING_VARIANT, MAX)
 })
 
-// 4. Every script's `kilo run` argv carries -m and --variant REASONING_VARIANT.
+// 4. Every script's `tavern run` argv carries -m and --variant REASONING_VARIANT.
 for (const file of ["triage.mjs", "edit.mjs", "learn.mjs"]) {
   const src = read(`.github/docs-sync/${file}`)
-  const arrays = runKiloArgArrays(src)
+  const arrays = runTavernArgArrays(src)
 
-  check(`${file} has at least one runKilo call`, () => {
-    assert.ok(arrays.length > 0, "no runKilo call found")
+  check(`${file} has at least one runTavern call`, () => {
+    assert.ok(arrays.length > 0, "no runTavern call found")
   })
 
   arrays.forEach((args, index) => {
-    check(`${file} runKilo args #${index + 1} pass -m and --variant REASONING_VARIANT`, () => {
+    check(`${file} runTavern args #${index + 1} pass -m and --variant REASONING_VARIANT`, () => {
       assert.ok(args.includes('"run"'), `argv does not start the run command: ${args}`)
       assert.ok(args.includes('"-m"'), `argv is missing -m: ${args}`)
       assert.ok(args.includes('"--variant"'), `argv is missing --variant: ${args}`)
@@ -132,12 +132,12 @@ for (const file of ["triage.mjs", "edit.mjs", "learn.mjs"]) {
 //    agent; the learnings extraction stays tool-free (learn.mjs:694-697).
 for (const file of ["triage.mjs", "edit.mjs"]) {
   check(`${file} keeps --auto`, () => {
-    const arrays = runKiloArgArrays(read(`.github/docs-sync/${file}`))
+    const arrays = runTavernArgArrays(read(`.github/docs-sync/${file}`))
     for (const args of arrays) assert.ok(args.includes('"--auto"'), `argv is missing --auto: ${args}`)
   })
 }
 check("learn.mjs stays without --auto", () => {
-  const arrays = runKiloArgArrays(read(".github/docs-sync/learn.mjs"))
+  const arrays = runTavernArgArrays(read(".github/docs-sync/learn.mjs"))
   for (const args of arrays) assert.ok(!args.includes('"--auto"'), `learn.mjs must not pass --auto: ${args}`)
 })
 
@@ -145,17 +145,17 @@ check("learn.mjs stays without --auto", () => {
 check('workflow fix step passes --variant "$DOCS_SYNC_VARIANT"', () => {
   const block = stepBlock("Fix verify failures")
   assert.ok(block, "Fix verify failures step not found")
-  assert.ok(block.includes("kilo run"), "fix step no longer runs `kilo run`")
+  assert.ok(block.includes("tavern run"), "fix step no longer runs `tavern run`")
   assert.ok(block.includes('--variant "$DOCS_SYNC_VARIANT"'), 'fix step is missing --variant "$DOCS_SYNC_VARIANT"')
 })
 
-// 7. Every `kilo run` in the workflow lives in a step that also passes --variant.
-check("every workflow kilo run passes --variant", () => {
-  const runs = workflow.split("\n      - name: ").filter((b) => /(^|\s)kilo run(\s|$)/m.test(b))
-  assert.ok(runs.length > 0, "no `kilo run` found in the workflow")
+// 7. Every `tavern run` in the workflow lives in a step that also passes --variant.
+check("every workflow tavern run passes --variant", () => {
+  const runs = workflow.split("\n      - name: ").filter((b) => /(^|\s)tavern run(\s|$)/m.test(b))
+  assert.ok(runs.length > 0, "no `tavern run` found in the workflow")
   for (const block of runs) {
     const name = block.split("\n")[0]
-    assert.ok(block.includes("--variant"), `step "${name}" runs kilo without --variant`)
+    assert.ok(block.includes("--variant"), `step "${name}" runs tavern without --variant`)
   }
 })
 

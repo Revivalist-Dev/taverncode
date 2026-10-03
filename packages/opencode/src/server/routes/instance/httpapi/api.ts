@@ -7,7 +7,7 @@ import { Integration } from "@opencode-ai/core/integration"
 import { SkillV2 } from "@opencode-ai/core/skill"
 import { InstanceDisposed } from "@/server/event"
 import { Question } from "@/question"
-import { BusEvent } from "@/bus/bus-event" // kilocode_change - include legacy Kilo events until they migrate to EventV2
+import { BusEvent } from "@/bus/bus-event" // taverncode_change - include legacy Tavern events until they migrate to EventV2
 import { ConfigApi } from "./groups/config"
 import { ControlApi } from "./groups/control"
 import { ControlPlaneApi } from "./groups/control-plane"
@@ -26,26 +26,26 @@ import { SessionApi } from "./groups/session"
 import { SyncApi } from "./groups/sync"
 import { TuiApi } from "./groups/tui"
 import { WorkspaceApi } from "./groups/workspace"
-// kilocode_change start - Kilo HttpApi groups
-import { AgentBuilderApi } from "@/kilocode/server/httpapi/groups/agent-builder"
-import { BranchNameApi } from "@/kilocode/server/httpapi/groups/branch-name"
-import { CommitMessageApi } from "@/kilocode/server/httpapi/groups/commit-message"
-import { BackgroundProcessApi } from "@/kilocode/server/httpapi/groups/background-process"
-import { ConfigConsoleApi } from "@/kilocode/server/httpapi/groups/config-console"
-import { EnhancePromptApi } from "@/kilocode/server/httpapi/groups/enhance-prompt"
-import { IndexingApi } from "@/kilocode/server/httpapi/groups/indexing"
-import { InstanceReloadApi } from "@/kilocode/server/httpapi/groups/instance-reload"
-import { KiloGatewayApi } from "@/kilocode/server/httpapi/groups/kilo-gateway"
-import { KilocodeApi } from "@/kilocode/server/httpapi/groups/kilocode"
-import { MigrateApi } from "@/kilocode/server/httpapi/groups/migrate"
-import { NetworkApi } from "@/kilocode/server/httpapi/groups/network"
-import { RemoteApi } from "@/kilocode/server/httpapi/groups/remote"
-import { SandboxApi } from "@/kilocode/server/httpapi/groups/sandbox"
-import { SessionImportApi } from "@/kilocode/server/httpapi/groups/session-import"
-import { SuggestionApi } from "@/kilocode/server/httpapi/groups/suggestion"
-import { TelemetryApi } from "@/kilocode/server/httpapi/groups/telemetry"
-import { MemoryApi } from "@/kilocode/server/httpapi/groups/memory" // kilocode_change
-// kilocode_change end
+// taverncode_change start - Tavern HttpApi groups
+import { AgentBuilderApi } from "@/taverncode/server/httpapi/groups/agent-builder"
+import { BranchNameApi } from "@/taverncode/server/httpapi/groups/branch-name"
+import { CommitMessageApi } from "@/taverncode/server/httpapi/groups/commit-message"
+import { BackgroundProcessApi } from "@/taverncode/server/httpapi/groups/background-process"
+import { ConfigConsoleApi } from "@/taverncode/server/httpapi/groups/config-console"
+import { EnhancePromptApi } from "@/taverncode/server/httpapi/groups/enhance-prompt"
+import { IndexingApi } from "@/taverncode/server/httpapi/groups/indexing"
+import { InstanceReloadApi } from "@/taverncode/server/httpapi/groups/instance-reload"
+import { TavernGatewayApi } from "@/taverncode/server/httpapi/groups/tavern-gateway"
+import { TaverncodeApi } from "@/taverncode/server/httpapi/groups/taverncode"
+import { MigrateApi } from "@/taverncode/server/httpapi/groups/migrate"
+import { NetworkApi } from "@/taverncode/server/httpapi/groups/network"
+import { RemoteApi } from "@/taverncode/server/httpapi/groups/remote"
+import { SandboxApi } from "@/taverncode/server/httpapi/groups/sandbox"
+import { SessionImportApi } from "@/taverncode/server/httpapi/groups/session-import"
+import { SuggestionApi } from "@/taverncode/server/httpapi/groups/suggestion"
+import { TelemetryApi } from "@/taverncode/server/httpapi/groups/telemetry"
+import { MemoryApi } from "@/taverncode/server/httpapi/groups/memory" // taverncode_change
+// taverncode_change end
 import { makeApi } from "@opencode-ai/protocol/api"
 import { LocationMiddleware } from "@opencode-ai/server/location"
 import { SessionLocationMiddleware } from "@opencode-ai/server/middleware/session-location"
@@ -63,7 +63,7 @@ const EventSchema = Schema.Union([
       }).annotate({ identifier: `Event.${definition.type}` }),
     )
     .toArray(),
-  ...BusEvent.effectPayloads(), // kilocode_change - include legacy Kilo events until they migrate to EventV2
+  ...BusEvent.effectPayloads(), // taverncode_change - include legacy Tavern events until they migrate to EventV2
   InstanceDisposed,
 ]).annotate({ identifier: "Event" })
 
@@ -96,7 +96,7 @@ export const InstanceHttpApi = HttpApi.make("opencode-instance")
   .addHttpApi(SyncApi)
   .addHttpApi(TuiApi)
   .addHttpApi(WorkspaceApi)
-  // kilocode_change start - Kilo HttpApi groups
+  // taverncode_change start - Tavern HttpApi groups
   .addHttpApi(AgentBuilderApi)
   .addHttpApi(BackgroundProcessApi)
   .addHttpApi(BranchNameApi)
@@ -105,8 +105,8 @@ export const InstanceHttpApi = HttpApi.make("opencode-instance")
   .addHttpApi(EnhancePromptApi)
   .addHttpApi(IndexingApi)
   .addHttpApi(InstanceReloadApi)
-  .addHttpApi(KiloGatewayApi)
-  .addHttpApi(KilocodeApi)
+  .addHttpApi(TavernGatewayApi)
+  .addHttpApi(TaverncodeApi)
   .addHttpApi(MigrateApi)
   .addHttpApi(NetworkApi)
   .addHttpApi(RemoteApi)
@@ -115,7 +115,7 @@ export const InstanceHttpApi = HttpApi.make("opencode-instance")
   .addHttpApi(SuggestionApi)
   .addHttpApi(TelemetryApi)
   .addHttpApi(MemoryApi)
-  // kilocode_change end
+  // taverncode_change end
   .middleware(SchemaErrorMiddleware)
 
 export const OpenCodeHttpApi = HttpApi.make("opencode")

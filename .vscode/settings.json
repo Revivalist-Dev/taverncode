@@ -4,12 +4,12 @@
     "editor.defaultFormatter": null
   },
   "files.exclude": {
-    "packages/kilo-vscode/out": false,
-    "packages/kilo-vscode/dist": false
+    "packages/tavern-vscode/out": false,
+    "packages/tavern-vscode/dist": false
   },
   "search.exclude": {
-    "packages/kilo-vscode/out": true,
-    "packages/kilo-vscode/dist": true
+    "packages/tavern-vscode/out": true,
+    "packages/tavern-vscode/dist": true
   },
   "typescript.tsc.autoDetect": "off"
 }

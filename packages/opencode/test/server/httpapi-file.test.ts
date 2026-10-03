@@ -17,7 +17,7 @@ function request(route: string, directory: string, query?: Record<string, string
   return HttpApiApp.webHandler().handler(
     new Request(url, {
       headers: {
-        "x-kilo-directory": directory,
+        "x-tavern-directory": directory,
       },
     }),
     context,
@@ -52,7 +52,7 @@ describe("file HttpApi", () => {
     expect(await status.json()).toEqual([])
   })
 
-  // kilocode_change - skip on Windows: Kilo file search returns [] for hello.txt.
+  // taverncode_change - skip on Windows: Tavern file search returns [] for hello.txt.
   // Tracked in Kilo-Org/kilocode#9831.
   const searchTest = process.platform === "win32" ? test.skip : test
   searchTest("serves search endpoints", async () => {

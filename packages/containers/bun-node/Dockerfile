@@ -1,6 +1,6 @@
-# kilocode_change start
-ARG REGISTRY=ghcr.io/kilo-org
-# kilocode_change end
+# taverncode_change start
+ARG REGISTRY=ghcr.io/tavern-org
+# taverncode_change end
 FROM ${REGISTRY}/build/base:24.04
 
 SHELL ["/bin/bash", "-lc"]
@@ -19,7 +19,7 @@ RUN set -euo pipefail; \
   | tar -xJf - -C /usr/local --strip-components=1; \
   corepack enable
 
-# kilocode_change start - retry the installer and its internal release download
+# taverncode_change start - retry the installer and its internal release download
 RUN set -euo pipefail; \
   for attempt in 1 2 3 4 5; do \
     if curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"; then \
@@ -35,4 +35,4 @@ RUN set -euo pipefail; \
   bun --version; \
   node --version; \
   npm --version
-# kilocode_change end
+# taverncode_change end

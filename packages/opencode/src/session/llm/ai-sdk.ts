@@ -2,8 +2,8 @@ import { FinishReason, LLMEvent, ProviderMetadata, ToolResultValue } from "@open
 import { Effect, Schema } from "effect"
 import { type streamText } from "ai"
 import { errorMessage } from "@/util/error"
-import { KiloRoutedModel } from "@/kilocode/session/routed-model" // kilocode_change
-import { KiloResponseMetadata } from "@/kilocode/session/response-metadata" // kilocode_change
+import { TavernRoutedModel } from "@/taverncode/session/routed-model" // taverncode_change
+import { TavernResponseMetadata } from "@/taverncode/session/response-metadata" // taverncode_change
 import { ProviderError } from "@/provider/error"
 
 type Result = Awaited<ReturnType<typeof streamText>>
@@ -54,7 +54,7 @@ function usage(value: unknown) {
     cachedInputTokens?: number
     inputTokenDetails?: { cacheReadTokens?: number; cacheWriteTokens?: number }
     outputTokenDetails?: { reasoningTokens?: number }
-    raw?: Record<string, unknown> // kilocode_change - preserve provider billing details
+    raw?: Record<string, unknown> // taverncode_change - preserve provider billing details
   }
   const entries = Object.entries({
     inputTokens: item.inputTokens,
@@ -63,7 +63,7 @@ function usage(value: unknown) {
     reasoningTokens: item.outputTokenDetails?.reasoningTokens ?? item.reasoningTokens,
     cacheReadInputTokens: item.inputTokenDetails?.cacheReadTokens ?? item.cachedInputTokens,
     cacheWriteInputTokens: item.inputTokenDetails?.cacheWriteTokens,
-    providerMetadata: item.raw ? { aiSdk: item.raw } : undefined, // kilocode_change - retain Kilo billing details
+    providerMetadata: item.raw ? { aiSdk: item.raw } : undefined, // taverncode_change - retain Tavern billing details
   }).filter((entry) => entry[1] !== undefined)
   return entries.length === 0 ? undefined : Object.fromEntries(entries)
 }
@@ -110,12 +110,12 @@ export function toLLMEvents(
             index: state.step++,
             reason: finishReason(event.finishReason),
             usage: usage(event.usage),
-            // kilocode_change start
-            providerMetadata: KiloResponseMetadata.write(
-              KiloRoutedModel.write(metadata, event.response?.modelId),
+            // taverncode_change start
+            providerMetadata: TavernResponseMetadata.write(
+              TavernRoutedModel.write(metadata, event.response?.modelId),
               event.response?.headers,
             ),
-            // kilocode_change end
+            // taverncode_change end
           }),
         ]
       })

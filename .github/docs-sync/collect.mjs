@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Collects PRs merged to the source repos since the watermark, applies a
@@ -30,7 +30,7 @@ const PATCH_LIMIT = 8000
 const FILE_LIMIT = 30
 // Revert PRs (conventional AND GitHub-native) are intercepted below BEFORE this filter; the "revert" alternative here is unreachable and kept only to minimize diff.
 const DROP_TITLE = /^(chore|test|ci|build|docs|style|refactor|revert)(\(.+\))?!?:/i
-const DOCS_ONLY_PATH = /^(packages\/kilo-docs\/|\.github\/docs-sync\/|docs-sync-out\/|docs\/|[^/]+\.md$)/
+const DOCS_ONLY_PATH = /^(packages\/tavern-docs\/|\.github\/docs-sync\/|docs-sync-out\/|docs\/|[^/]+\.md$)/
 
 function argSince() {
   const i = process.argv.indexOf("--since")

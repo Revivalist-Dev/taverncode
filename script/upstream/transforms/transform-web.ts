@@ -1,15 +1,15 @@
 #!/usr/bin/env bun
 /**
- * Transform web/docs files with Kilo branding
+ * Transform web/docs files with Tavern branding
  *
  * This script handles documentation and web content files (.mdx, etc.)
- * by transforming OpenCode references to Kilo.
+ * by transforming OpenCode references to Tavern.
  */
 
 import { $ } from "bun"
 import { info, success, warn, debug } from "../utils/logger"
 import { defaultConfig } from "../utils/config"
-import { oursHasKilocodeChanges } from "../utils/git"
+import { oursHasTaverncodeChanges } from "../utils/git"
 
 export interface WebTransformResult {
   file: string
@@ -58,44 +58,44 @@ const WEB_REPLACEMENTS: WebReplacement[] = [
   // Product names
   {
     pattern: /\bOpenCode\b(?!\.json|\/| Zen)/g,
-    replacement: "Kilo",
+    replacement: "Tavern",
     description: "Product name",
   },
 
   // CLI commands
   {
     pattern: /npx opencode(?!\w)/g,
-    replacement: "npx kilo",
+    replacement: "npx tavern",
     description: "npx command",
   },
   {
     pattern: /bun add opencode(?!\w)/g,
-    replacement: "bun add kilo",
+    replacement: "bun add tavern",
     description: "bun add command",
   },
   {
     pattern: /npm install opencode(?!\w)/g,
-    replacement: "npm install kilo",
+    replacement: "npm install tavern",
     description: "npm install command",
   },
   {
     pattern: /opencode upgrade/g,
-    replacement: "kilo upgrade",
+    replacement: "tavern upgrade",
     description: "upgrade command",
   },
   {
     pattern: /opencode dev/g,
-    replacement: "kilo dev",
+    replacement: "tavern dev",
     description: "dev command",
   },
   {
     pattern: /opencode serve/g,
-    replacement: "kilo serve",
+    replacement: "tavern serve",
     description: "serve command",
   },
   {
     pattern: /opencode auth/g,
-    replacement: "kilo auth",
+    replacement: "tavern auth",
     description: "auth command",
   },
 ]
@@ -174,9 +174,9 @@ export async function transformWebFile(file: string, options: WebTransformOption
     return { file, action: "transformed", replacements: 0, dryRun: true }
   }
 
-  // If our version has kilocode_change markers, flag for manual resolution
-  if (await oursHasKilocodeChanges(file)) {
-    warn(`${file} has kilocode_change markers — skipping auto-transform, needs manual resolution`)
+  // If our version has taverncode_change markers, flag for manual resolution
+  if (await oursHasTaverncodeChanges(file)) {
+    warn(`${file} has taverncode_change markers — skipping auto-transform, needs manual resolution`)
     return { file, action: "flagged", replacements: 0, dryRun: false }
   }
 

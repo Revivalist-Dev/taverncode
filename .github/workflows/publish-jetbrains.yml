@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: publish-jetbrains
 
 on:
@@ -68,8 +68,8 @@ jobs:
 
       - name: Save reviewed release metadata
         run: |
-          cp packages/kilo-jetbrains/CHANGELOG.md "$RUNNER_TEMP/jetbrains-CHANGELOG.md"
-          cp packages/kilo-jetbrains/gradle.properties "$RUNNER_TEMP/jetbrains-gradle.properties"
+          cp packages/tavern-jetbrains/CHANGELOG.md "$RUNNER_TEMP/jetbrains-CHANGELOG.md"
+          cp packages/tavern-jetbrains/gradle.properties "$RUNNER_TEMP/jetbrains-gradle.properties"
 
       - name: Checkout release tag
         uses: actions/checkout@v6
@@ -79,8 +79,8 @@ jobs:
 
       - name: Restore reviewed release metadata
         run: |
-          cp "$RUNNER_TEMP/jetbrains-CHANGELOG.md" packages/kilo-jetbrains/CHANGELOG.md
-          cp "$RUNNER_TEMP/jetbrains-gradle.properties" packages/kilo-jetbrains/gradle.properties
+          cp "$RUNNER_TEMP/jetbrains-CHANGELOG.md" packages/tavern-jetbrains/CHANGELOG.md
+          cp "$RUNNER_TEMP/jetbrains-gradle.properties" packages/tavern-jetbrains/gradle.properties
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -141,8 +141,8 @@ jobs:
       # exact signed bytes that ship, and so evidence problems surface while the
       # publish is still reversible. publishPlugin reuses these outputs.
       - name: Build, sign, and verify plugin
-        working-directory: packages/kilo-jetbrains
-        run: ./gradlew buildPlugin signPlugin verifyPluginSignature verifyPlugin -Pproduction=true -Pkilo.channel="$CHANNEL"
+        working-directory: packages/tavern-jetbrains
+        run: ./gradlew buildPlugin signPlugin verifyPluginSignature verifyPlugin -Pproduction=true -Ptavern.channel="$CHANNEL"
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.release.outputs.version }}
@@ -150,10 +150,10 @@ jobs:
           JETBRAINS_PRIVATE_KEY_PASSWORD: ${{ secrets.JETBRAINS_PRIVATE_KEY_PASSWORD }}
 
       - name: Render release notes
-        working-directory: packages/kilo-jetbrains
+        working-directory: packages/tavern-jetbrains
         run: |
           if ! grep -Fq "## [$VERSION]" CHANGELOG.md; then
-            echo "Missing packages/kilo-jetbrains/CHANGELOG.md entry for $VERSION. Review and merge a release PR before publishing." >&2
+            echo "Missing packages/tavern-jetbrains/CHANGELOG.md entry for $VERSION. Review and merge a release PR before publishing." >&2
             exit 1
           fi
           ./gradlew getChangelog --project-version "$VERSION" --no-header --no-empty-sections --output-file=build/release-notes.md
@@ -163,7 +163,7 @@ jobs:
       - name: Resolve plugin archive
         id: archive
         run: |
-          mapfile -t signed < <(compgen -G "packages/kilo-jetbrains/build/distributions/*-signed.zip")
+          mapfile -t signed < <(compgen -G "packages/tavern-jetbrains/build/distributions/*-signed.zip")
           if [[ "${#signed[@]}" -eq 1 ]]; then
             echo "path=${signed[0]}" >> "$GITHUB_OUTPUT"
             exit 0
@@ -174,7 +174,7 @@ jobs:
             exit 1
           fi
 
-          mapfile -t files < <(compgen -G "packages/kilo-jetbrains/build/distributions/*.zip")
+          mapfile -t files < <(compgen -G "packages/tavern-jetbrains/build/distributions/*.zip")
           if [[ "${#files[@]}" -ne 1 ]]; then
             echo "Expected exactly one JetBrains plugin ZIP, found ${#files[@]}." >&2
             printf '%s\n' "${files[@]}" >&2
@@ -185,7 +185,7 @@ jobs:
       - name: Generate plugin SBOM
         id: sbom
         run: |
-          bun packages/kilo-jetbrains/script/sbom.ts \
+          bun packages/tavern-jetbrains/script/sbom.ts \
             --zip "$ARCHIVE" \
             --variant lean \
             --version "$VERSION" \
@@ -212,8 +212,8 @@ jobs:
           sbom-path: ${{ steps.sbom.outputs.sidecar }}
 
       - name: Publish to JetBrains Marketplace
-        working-directory: packages/kilo-jetbrains
-        run: ./gradlew publishPlugin -Pproduction=true -Pkilo.channel="$CHANNEL"
+        working-directory: packages/tavern-jetbrains
+        run: ./gradlew publishPlugin -Pproduction=true -Ptavern.channel="$CHANNEL"
         env:
           VERSION: ${{ steps.release.outputs.version }}
           CHANNEL: ${{ steps.release.outputs.marketplace_channel }}
@@ -244,8 +244,8 @@ jobs:
           VERSION: ${{ steps.release.outputs.version }}
           KIND: ${{ steps.release.outputs.kind }}
           ARCHIVE: ${{ steps.archive.outputs.path }}
-          EVIDENCE: ${{ steps.archive.outputs.path }}.cdx.json packages/kilo-jetbrains/build/distributions/jetbrains-sbom-evidence.json packages/kilo-jetbrains/build/distributions/kilo-jetbrains-SHA256SUMS
-          NOTES: packages/kilo-jetbrains/build/release-notes.md
+          EVIDENCE: ${{ steps.archive.outputs.path }}.cdx.json packages/tavern-jetbrains/build/distributions/jetbrains-sbom-evidence.json packages/tavern-jetbrains/build/distributions/tavern-jetbrains-SHA256SUMS
+          NOTES: packages/tavern-jetbrains/build/release-notes.md
 
       - name: Dispatch bundled GitHub release build
         continue-on-error: true
@@ -264,10 +264,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: kilo-jetbrains-${{ steps.release.outputs.version }}
+          name: tavern-jetbrains-${{ steps.release.outputs.version }}
           path: |
-            packages/kilo-jetbrains/build/distributions/*.zip
-            packages/kilo-jetbrains/build/distributions/*.cdx.json
-            packages/kilo-jetbrains/build/distributions/jetbrains-sbom-evidence.json
-            packages/kilo-jetbrains/build/distributions/kilo-jetbrains-SHA256SUMS
+            packages/tavern-jetbrains/build/distributions/*.zip
+            packages/tavern-jetbrains/build/distributions/*.cdx.json
+            packages/tavern-jetbrains/build/distributions/jetbrains-sbom-evidence.json
+            packages/tavern-jetbrains/build/distributions/tavern-jetbrains-SHA256SUMS
           if-no-files-found: ignore

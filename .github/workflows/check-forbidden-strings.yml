@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: Check forbidden strings
 
 on:
@@ -11,7 +11,7 @@ jobs:
     if: github.repository == 'Kilo-Org/kilocode'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6 # kilocode_change
+      - uses: actions/checkout@v6 # taverncode_change
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 

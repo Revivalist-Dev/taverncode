@@ -1,13 +1,13 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: Dependabot auto-merge
 
 # Runs on a schedule, not `pull_request`: GitHub gives dependabot[bot]-
 # triggered runs a read-only GITHUB_TOKEN regardless of `permissions:`.
 #
 # Title match on dependabot.yml's `*-minor-patch` group name is the low-risk
-# classifier. kilocode forks opencode, sharing one bun.lock with ~17
+# classifier. taverncode forks opencode, sharing one bun.lock with ~17
 # upstream-owned packages, so every changed file (besides bun.lock) must
-# also live under a "kilo"-named path (AGENTS.md's shared-vs-owned rule) --
+# also live under a "tavern"-named path (AGENTS.md's shared-vs-owned rule) --
 # shared-code PRs are left for a human, since auto-merging risks a recurring
 # conflict or silent revert on the next upstream sync.
 
@@ -47,7 +47,7 @@ jobs:
               echo "::warning::could not fetch diff for $pr_url, skipping"
               continue
             fi
-            unsafe=$(echo "$diff_files" | grep -viE '^bun\.lock$|kilo' || true)
+            unsafe=$(echo "$diff_files" | grep -viE '^bun\.lock$|tavern' || true)
             if [ -n "$unsafe" ]; then
               echo "::warning::skipping $pr_url, touches shared/upstream path(s): $(echo "$unsafe" | tr '\n' ' ')"
               continue

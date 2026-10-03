@@ -1,0 +1,860 @@
+bun test v1.3.14 (0d9b296a)
+
+test\taverncode\non-git-global-skills.test.ts:
+[00:19:43.579] ERROR (#2): 58 |         const skill = yield* Skill.Service
+59 |         const list = yield* skill.all()
+60 | 
+61 |         for (const root of roots) {
+62 |           const name = `${root.slice(1)}-global`
+63 |           expect(list.find((item) => item.name === name)?.location).toBe(
+     ^
+error: expect(received).toBe(expected)
+
+Expected: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-n6je4st9zna\\.claude\\skills\\claude-global\\SKILL.md"
+Received: undefined
+
+      at toBe (unknown:1:1)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\opencode\test\taverncode\non-git-global-skills.test.ts:63:69
+
+58 |         const skill = yield* Skill.Service
+59 |         const list = yield* skill.all()
+60 | 
+61 |         for (const root of roots) {
+62 |           const name = `${root.slice(1)}-global`
+63 |           expect(list.find((item) => item.name === name)?.location).toBe(
+     ^
+error: expect(received).toBe(expected)
+
+Expected: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-n6je4st9zna\\.claude\\skills\\claude-global\\SKILL.md"
+Received: undefined
+
+      at toBe (unknown:1:1)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\opencode\test\taverncode\non-git-global-skills.test.ts:63:69
+      at ~effect/Effect/successCont (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:910:23)
+      at runLoop (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:420:66)
+      at evaluate (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:380:20)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:734:14
+      at processTicksAndRejections (unknown:7:39)
+(fail) non-Git global skills > loads global skills when the project is below the home directory [571.90ms]
+
+test\taverncode\worktree-project-skills.test.ts:
+[00:19:44.957] ERROR (#16865): 114 |           return yield* skill.all()
+115 |         }),
+116 |       )
+117 | 
+118 |       for (const [root, name] of skills) {
+119 |         expect(list.find((item) => item.name === `${name}-fallback`)?.location).toBe(
+      ^
+error: expect(received).toBe(expected)
+
+Expected: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mlwb19hequ\\.claude\\skills\\claude-fallback\\SKILL.md"
+Received: undefined
+
+      at toBe (unknown:1:1)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\opencode\test\taverncode\worktree-project-skills.test.ts:119:81
+
+114 |           return yield* skill.all()
+115 |         }),
+116 |       )
+117 | 
+118 |       for (const [root, name] of skills) {
+119 |         expect(list.find((item) => item.name === `${name}-fallback`)?.location).toBe(
+      ^
+error: expect(received).toBe(expected)
+
+Expected: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mlwb19hequ\\.claude\\skills\\claude-fallback\\SKILL.md"
+Received: undefined
+
+      at toBe (unknown:1:1)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\packages\opencode\test\taverncode\worktree-project-skills.test.ts:119:81
+      at ~effect/Effect/successCont (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:910:23)
+      at runLoop (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:420:66)
+      at evaluate (C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:380:20)
+      at C:\DeveloperData\project-fenoxo\tavern-code\taverncode\node_modules\.bun\effect@4.0.0-beta.83\node_modules\effect\dist\internal\effect.js:734:14
+      at processTicksAndRejections (unknown:7:39)
+(fail) worktree project skills > uses primary skills as fallbacks and prefers worktree copies [1371.42ms]
+INFO  2026-10-03T00:19:48 +7002ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-qhdi8o7us69\tavern.json migrated bash permission to allow for existing user
+
+test\taverncode\config\config.test.ts:
+[00:19:48.282] INFO (#18583): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\config.json",
+}
+[00:19:48.283] INFO (#18583): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\tavern.json",
+}
+[00:19:48.284] INFO (#18583): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\tavern.jsonc",
+}
+[00:19:48.284] INFO (#18583): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\opencode.json",
+}
+[00:19:48.285] INFO (#18583): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\opencode.jsonc",
+}
+[00:19:48.355] INFO (#18650): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\config.json",
+}
+[00:19:48.355] INFO (#18650): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\tavern.json",
+}
+[00:19:48.356] INFO (#18650): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\tavern.jsonc",
+}
+[00:19:48.356] INFO (#18650): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\opencode.json",
+}
+[00:19:48.356] INFO (#18650): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-qhdi8o7us69\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:49 +779ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-74r4vtj33sw\tavern.json migrated bash permission to allow for existing user
+[00:19:49.061] INFO (#18886): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\config.json",
+}
+[00:19:49.061] INFO (#18886): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\tavern.json",
+}
+[00:19:49.070] INFO (#18886): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\tavern.jsonc",
+}
+[00:19:49.070] INFO (#18886): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\opencode.json",
+}
+[00:19:49.070] INFO (#18886): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\opencode.jsonc",
+}
+[00:19:49.136] INFO (#18953): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\config.json",
+}
+[00:19:49.136] INFO (#18953): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\tavern.json",
+}
+[00:19:49.137] INFO (#18953): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\tavern.jsonc",
+}
+[00:19:49.137] INFO (#18953): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\opencode.json",
+}
+[00:19:49.137] INFO (#18953): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-74r4vtj33sw\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:49 +829ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-eoiq9hszh8\tavern.json migrated bash permission to allow for existing user
+[00:19:49.890] INFO (#19189): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\config.json",
+}
+[00:19:49.890] INFO (#19189): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\tavern.json",
+}
+[00:19:49.892] INFO (#19189): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\tavern.jsonc",
+}
+[00:19:49.892] INFO (#19189): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\opencode.json",
+}
+[00:19:49.892] INFO (#19189): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\opencode.jsonc",
+}
+[00:19:49.965] INFO (#19256): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\config.json",
+}
+[00:19:49.965] INFO (#19256): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\tavern.json",
+}
+[00:19:49.966] INFO (#19256): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\tavern.jsonc",
+}
+[00:19:49.966] INFO (#19256): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\opencode.json",
+}
+[00:19:49.966] INFO (#19256): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eoiq9hszh8\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:50 +815ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-rio7bkl0tem\tavern.json migrated bash permission to allow for existing user
+[00:19:50.710] INFO (#19492): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\config.json",
+}
+[00:19:50.711] INFO (#19492): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\tavern.json",
+}
+[00:19:50.712] INFO (#19492): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\tavern.jsonc",
+}
+[00:19:50.712] INFO (#19492): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\opencode.json",
+}
+[00:19:50.712] INFO (#19492): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\opencode.jsonc",
+}
+[00:19:50.782] INFO (#19559): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\config.json",
+}
+[00:19:50.782] INFO (#19559): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\tavern.json",
+}
+[00:19:50.783] INFO (#19559): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\tavern.jsonc",
+}
+[00:19:50.783] INFO (#19559): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\opencode.json",
+}
+[00:19:50.783] INFO (#19559): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-rio7bkl0tem\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:53 +2851ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-h7nqysarptw\tavern.json migrated bash permission to allow for existing user
+[00:19:53.563] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-h7nqysarptw\\config.json",
+}
+[00:19:53.564] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-h7nqysarptw\\tavern.json",
+}
+[00:19:53.565] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-h7nqysarptw\\tavern.jsonc",
+}
+[00:19:53.565] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-h7nqysarptw\\opencode.json",
+}
+[00:19:53.565] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-h7nqysarptw\\opencode.jsonc",
+}
+[00:19:53.566] INFO (#20441): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-k149p822q6d\\tavern.json",
+}
+[00:19:54.276] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\config.json",
+}
+[00:19:54.277] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\tavern.json",
+}
+[00:19:54.277] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\tavern.jsonc",
+}
+[00:19:54.277] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\opencode.json",
+}
+[00:19:54.278] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\opencode.jsonc",
+}
+[00:19:54.278] INFO (#20683): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xnkodl3amq\\tavern.json",
+}
+[00:19:54.378] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\config.json",
+}
+[00:19:54.378] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\tavern.json",
+}
+[00:19:54.378] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\tavern.jsonc",
+}
+[00:19:54.379] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\opencode.json",
+}
+[00:19:54.379] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-2v9rxo6uigv\\opencode.jsonc",
+}
+[00:19:54.385] INFO (#20750): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xnkodl3amq\\tavern.json",
+}
+[00:19:55.111] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\config.json",
+}
+[00:19:55.112] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\tavern.json",
+}
+[00:19:55.112] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\tavern.jsonc",
+}
+[00:19:55.112] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\opencode.json",
+}
+[00:19:55.112] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\opencode.jsonc",
+}
+[00:19:55.113] INFO (#20986): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yidndjqg17e\\tavern.json",
+}
+[00:19:55.182] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\config.json",
+}
+[00:19:55.182] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\tavern.json",
+}
+[00:19:55.182] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\tavern.jsonc",
+}
+[00:19:55.182] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\opencode.json",
+}
+[00:19:55.182] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-ouxvl7yjvf8\\opencode.jsonc",
+}
+[00:19:55.183] INFO (#21053): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yidndjqg17e\\tavern.json",
+}
+INFO  2026-10-03T00:19:55 +2372ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-msi16idz8t\tavern.json migrated bash permission to allow for existing user
+[00:19:55.928] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-msi16idz8t\\config.json",
+}
+[00:19:55.928] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-msi16idz8t\\tavern.json",
+}
+[00:19:55.929] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-msi16idz8t\\tavern.jsonc",
+}
+[00:19:55.929] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-msi16idz8t\\opencode.json",
+}
+[00:19:55.929] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-msi16idz8t\\opencode.jsonc",
+}
+[00:19:55.930] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-38hq2qda6tf\\tavern.json",
+}
+[00:19:55.993] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-38hq2qda6tf\\.tavern\\tavern.jsonc",
+}
+[00:19:55.993] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-38hq2qda6tf\\.tavern\\tavern.json",
+}
+[00:19:55.994] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-38hq2qda6tf\\.tavern\\opencode.jsonc",
+}
+[00:19:55.994] INFO (#21289): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-38hq2qda6tf\\.tavern\\opencode.json",
+}
+[00:19:56.646] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:19:56.647] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:19:56.647] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:19:56.647] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:19:56.647] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:19:56.648] INFO (#21531): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-7kd50a8m30k\\tavern.json",
+}
+WARN  2026-10-03T00:19:56 +725ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-7kd50a8m30k\tavern.json ignored retired experimental.semantic_indexing config; use indexing.enabled instead
+WARN  2026-10-03T00:19:56 +0ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-7kd50a8m30k\tavern.json ignored retired experimental.codebase_search config
+WARN  2026-10-03T00:19:56 +0ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-7kd50a8m30k\tavern.json ignored retired experimental.shared_agent_board config; use the top-level shared_agent_board key instead
+WARN  2026-10-03T00:19:57 +772ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-i7b9fe8y76\.tavern\tavern.json ignored retired experimental.codebase_search config
+WARN  2026-10-03T00:19:57 +0ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-i7b9fe8y76\.tavern\tavern.json ignored retired experimental.codebase_search config
+[00:19:57.422] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:19:57.422] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:19:57.429] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:19:57.430] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:19:57.430] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:19:57.491] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-i7b9fe8y76\\.tavern\\tavern.jsonc",
+}
+[00:19:57.491] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-i7b9fe8y76\\.tavern\\tavern.json",
+}
+[00:19:57.492] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-i7b9fe8y76\\.tavern\\opencode.jsonc",
+}
+[00:19:57.492] INFO (#21728): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-i7b9fe8y76\\.tavern\\opencode.json",
+}
+WARN  2026-10-03T00:19:57 +145ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-onw32hrxueg\tavern.jsonc ignored retired experimental.codebase_search config
+INFO  2026-10-03T00:19:57 +7ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-onw32hrxueg\tavern.jsonc migrated bash permission to allow for existing user
+[00:19:57.584] INFO (#21954): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-onw32hrxueg\\config.json",
+}
+[00:19:57.584] INFO (#21954): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-onw32hrxueg\\tavern.json",
+}
+[00:19:57.584] INFO (#21954): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-onw32hrxueg\\tavern.jsonc",
+}
+WARN  2026-10-03T00:19:57 +12ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-onw32hrxueg\tavern.jsonc ignored retired experimental.codebase_search config
+[00:19:57.585] INFO (#21954): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-onw32hrxueg\\opencode.json",
+}
+[00:19:57.585] INFO (#21954): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-onw32hrxueg\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:57 +97ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-6i1kyzfcq0o\tavern.json migrated bash permission to allow for existing user
+[00:19:57.690] INFO (#22181): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\config.json",
+}
+[00:19:57.690] INFO (#22181): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\tavern.json",
+}
+[00:19:57.690] INFO (#22181): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\tavern.jsonc",
+}
+[00:19:57.690] INFO (#22181): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\opencode.json",
+}
+[00:19:57.691] INFO (#22181): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\opencode.jsonc",
+}
+[00:19:57.755] INFO (#22248): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\config.json",
+}
+[00:19:57.755] INFO (#22248): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\tavern.json",
+}
+[00:19:57.756] INFO (#22248): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\tavern.jsonc",
+}
+[00:19:57.756] INFO (#22248): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\opencode.json",
+}
+[00:19:57.756] INFO (#22248): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-6i1kyzfcq0o\\opencode.jsonc",
+}
+INFO  2026-10-03T00:19:58 +685ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-xgt3eo52hon\tavern.json migrated bash permission to allow for existing user
+[00:19:58.371] INFO (#22480): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\config.json",
+}
+[00:19:58.371] INFO (#22480): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\tavern.json",
+}
+[00:19:58.372] INFO (#22480): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\tavern.jsonc",
+}
+[00:19:58.372] INFO (#22480): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\opencode.json",
+}
+[00:19:58.372] INFO (#22480): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\opencode.jsonc",
+}
+[00:19:58.374] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\config.json",
+}
+[00:19:58.374] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\tavern.json",
+}
+[00:19:58.380] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\tavern.jsonc",
+}
+[00:19:58.381] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\opencode.json",
+}
+[00:19:58.381] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-xgt3eo52hon\\opencode.jsonc",
+}
+[00:19:58.381] INFO (#22537): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-w3nok8zk4ei\\opencode.json",
+}
+INFO  2026-10-03T00:19:59 +1366ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-iragj40424n\tavern.json migrated bash permission to allow for existing user
+[00:19:59.743] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-iragj40424n\\config.json",
+}
+[00:19:59.743] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-iragj40424n\\tavern.json",
+}
+[00:19:59.744] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-iragj40424n\\tavern.jsonc",
+}
+[00:19:59.744] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-iragj40424n\\opencode.json",
+}
+[00:19:59.744] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-iragj40424n\\opencode.jsonc",
+}
+[00:19:59.745] INFO (#22991): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-5582zb713ow\\tavern.json",
+}
+INFO  2026-10-03T00:20:00 +726ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-lhaj5b56jrb\tavern.json migrated bash permission to allow for existing user
+[00:20:00.462] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lhaj5b56jrb\\config.json",
+}
+[00:20:00.462] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lhaj5b56jrb\\tavern.json",
+}
+[00:20:00.463] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lhaj5b56jrb\\tavern.jsonc",
+}
+[00:20:00.463] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lhaj5b56jrb\\opencode.json",
+}
+[00:20:00.463] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lhaj5b56jrb\\opencode.jsonc",
+}
+[00:20:00.468] INFO (#23233): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-619q585rc7s\\tavern.json",
+}
+INFO  2026-10-03T00:20:00 +148ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-zk1p5uzgvub\tavern.json migrated bash permission to allow for existing user
+[00:20:00.614] INFO (#23580): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-zk1p5uzgvub\\config.json",
+}
+[00:20:00.614] INFO (#23580): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-zk1p5uzgvub\\tavern.json",
+}
+[00:20:00.615] INFO (#23580): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-zk1p5uzgvub\\tavern.jsonc",
+}
+[00:20:00.615] INFO (#23580): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-zk1p5uzgvub\\opencode.json",
+}
+[00:20:00.615] INFO (#23580): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-zk1p5uzgvub\\opencode.jsonc",
+}
+INFO  2026-10-03T00:20:00 +42ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-vfzmbwge6hp\tavern.jsonc migrated bash permission to allow for existing user
+[00:20:00.653] INFO (#23925): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-vfzmbwge6hp\\config.json",
+}
+[00:20:00.653] INFO (#23925): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-vfzmbwge6hp\\tavern.json",
+}
+[00:20:00.654] INFO (#23925): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-vfzmbwge6hp\\tavern.jsonc",
+}
+[00:20:00.659] INFO (#23925): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-vfzmbwge6hp\\opencode.json",
+}
+[00:20:00.660] INFO (#23925): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-vfzmbwge6hp\\opencode.jsonc",
+}
+INFO  2026-10-03T00:20:00 +50ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-yvtm9jsb1sl\opencode.jsonc migrated bash permission to allow for existing user
+[00:20:00.703] INFO (#24188): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yvtm9jsb1sl\\config.json",
+}
+[00:20:00.703] INFO (#24188): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yvtm9jsb1sl\\tavern.json",
+}
+[00:20:00.703] INFO (#24188): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yvtm9jsb1sl\\tavern.jsonc",
+}
+[00:20:00.709] INFO (#24188): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yvtm9jsb1sl\\opencode.json",
+}
+[00:20:00.709] INFO (#24188): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yvtm9jsb1sl\\opencode.jsonc",
+}
+[00:20:01.342] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:20:01.342] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:20:01.342] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:20:01.342] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:20:01.343] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:20:01.409] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eeo0c4hoq5h\\.tavern\\tavern.jsonc",
+}
+[00:20:01.410] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eeo0c4hoq5h\\.tavern\\tavern.json",
+}
+[00:20:01.410] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eeo0c4hoq5h\\.tavern\\opencode.jsonc",
+}
+[00:20:01.410] INFO (#24595): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eeo0c4hoq5h\\.tavern\\opencode.json",
+}
+[00:20:01.473] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-0x848emivce\\config.json",
+}
+[00:20:01.473] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-0x848emivce\\tavern.json",
+}
+[00:20:01.473] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-0x848emivce\\tavern.jsonc",
+}
+[00:20:01.473] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-0x848emivce\\opencode.json",
+}
+[00:20:01.474] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-0x848emivce\\opencode.jsonc",
+}
+[00:20:01.576] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-3kkv1z52x7b\\.tavern\\tavern.jsonc",
+}
+[00:20:01.576] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-3kkv1z52x7b\\.tavern\\tavern.json",
+}
+[00:20:01.577] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-3kkv1z52x7b\\.tavern\\opencode.jsonc",
+}
+[00:20:01.577] INFO (#24781): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-3kkv1z52x7b\\.tavern\\opencode.json",
+}
+[00:20:01.595] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mje49tzfgx\\config.json",
+}
+[00:20:01.595] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mje49tzfgx\\tavern.json",
+}
+[00:20:01.595] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mje49tzfgx\\tavern.jsonc",
+}
+[00:20:01.606] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mje49tzfgx\\opencode.json",
+}
+[00:20:01.606] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-mje49tzfgx\\opencode.jsonc",
+}
+[00:20:01.671] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-5hoc73u04pw\\.tavern\\tavern.jsonc",
+}
+[00:20:01.671] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-5hoc73u04pw\\.tavern\\tavern.json",
+}
+[00:20:01.671] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-5hoc73u04pw\\.tavern\\opencode.jsonc",
+}
+[00:20:01.671] INFO (#24930): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-5hoc73u04pw\\.tavern\\opencode.json",
+}
+[00:20:01.704] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-toox3fgwr07\\config.json",
+}
+[00:20:01.704] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-toox3fgwr07\\tavern.json",
+}
+[00:20:01.704] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-toox3fgwr07\\tavern.jsonc",
+}
+[00:20:01.704] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-toox3fgwr07\\opencode.json",
+}
+[00:20:01.704] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-toox3fgwr07\\opencode.jsonc",
+}
+[00:20:01.771] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-hmgjgtrkbba\\.tavern\\tavern.jsonc",
+}
+[00:20:01.771] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-hmgjgtrkbba\\.tavern\\tavern.json",
+}
+[00:20:01.772] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-hmgjgtrkbba\\.tavern\\opencode.jsonc",
+}
+[00:20:01.772] INFO (#25084): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-hmgjgtrkbba\\.tavern\\opencode.json",
+}
+[00:20:01.789] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yqrcl4rk16\\config.json",
+}
+[00:20:01.789] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yqrcl4rk16\\tavern.json",
+}
+[00:20:01.789] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yqrcl4rk16\\tavern.jsonc",
+}
+[00:20:01.790] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yqrcl4rk16\\opencode.json",
+}
+[00:20:01.790] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-yqrcl4rk16\\opencode.jsonc",
+}
+[00:20:01.857] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lv4js8itecp\\.tavern\\tavern.jsonc",
+}
+[00:20:01.857] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lv4js8itecp\\.tavern\\tavern.json",
+}
+[00:20:01.859] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lv4js8itecp\\.tavern\\opencode.jsonc",
+}
+[00:20:01.859] INFO (#25235): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-lv4js8itecp\\.tavern\\opencode.json",
+}
+[00:20:01.989] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:20:01.995] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:20:01.995] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:20:01.995] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:20:01.996] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:20:02.055] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.taverncode\\tavern.jsonc",
+}
+[00:20:02.055] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.taverncode\\tavern.json",
+}
+[00:20:02.055] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.taverncode\\opencode.jsonc",
+}
+[00:20:02.055] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.taverncode\\opencode.json",
+}
+[00:20:02.061] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.tavern\\tavern.jsonc",
+}
+[00:20:02.061] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.tavern\\tavern.json",
+}
+[00:20:02.061] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.tavern\\opencode.jsonc",
+}
+[00:20:02.061] INFO (#25782): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-uk0go7njcnq\\.tavern\\opencode.json",
+}
+[00:20:02.925] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:20:02.925] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:20:02.925] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:20:02.926] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:20:02.926] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:20:02.926] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew-config-feature\\tavern.json",
+}
+[00:20:03.053] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew\\.tavern\\tavern.jsonc",
+}
+[00:20:03.054] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew\\.tavern\\tavern.json",
+}
+[00:20:03.054] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew\\.tavern\\opencode.jsonc",
+}
+[00:20:03.055] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew\\.tavern\\opencode.json",
+}
+[00:20:03.063] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew-config-feature\\.tavern\\tavern.jsonc",
+}
+[00:20:03.064] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew-config-feature\\.tavern\\tavern.json",
+}
+[00:20:03.064] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew-config-feature\\.tavern\\opencode.jsonc",
+}
+[00:20:03.064] INFO (#25942): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-erwuoujxew-config-feature\\.tavern\\opencode.json",
+}
+[00:20:03.892] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:20:03.892] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:20:03.892] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:20:03.892] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:20:03.892] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:20:04.011] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.taverncode\\tavern.jsonc",
+}
+[00:20:04.012] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.taverncode\\tavern.json",
+}
+[00:20:04.012] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.taverncode\\opencode.jsonc",
+}
+[00:20:04.012] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.taverncode\\opencode.json",
+}
+[00:20:04.013] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.tavern\\tavern.jsonc",
+}
+[00:20:04.014] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.tavern\\tavern.json",
+}
+[00:20:04.014] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.tavern\\opencode.jsonc",
+}
+[00:20:04.014] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo\\packages\\.tavern\\opencode.json",
+}
+[00:20:04.016] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo-config-nested\\packages\\app\\.tavern\\tavern.jsonc",
+}
+[00:20:04.022] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo-config-nested\\packages\\app\\.tavern\\tavern.json",
+}
+[00:20:04.022] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo-config-nested\\packages\\app\\.tavern\\opencode.jsonc",
+}
+[00:20:04.022] INFO (#26103): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-eqbd8a0tigo-config-nested\\packages\\app\\.tavern\\opencode.json",
+}
+[00:20:04.839] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\config.json",
+}
+[00:20:04.840] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.json",
+}
+[00:20:04.840] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\tavern.jsonc",
+}
+[00:20:04.840] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.json",
+}
+[00:20:04.840] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-data-57908\\config\\tavern\\opencode.jsonc",
+}
+[00:20:04.975] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-1vbre2bl5nx\\.tavern\\tavern.jsonc",
+}
+[00:20:04.976] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-1vbre2bl5nx\\.tavern\\tavern.json",
+}
+[00:20:04.976] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-1vbre2bl5nx\\.tavern\\opencode.jsonc",
+}
+[00:20:04.976] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-1vbre2bl5nx\\.tavern\\opencode.json",
+}
+[00:20:04.977] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-c1rv44pjghq\\tavern.jsonc",
+}
+[00:20:04.978] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-c1rv44pjghq\\tavern.json",
+}
+[00:20:04.978] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-c1rv44pjghq\\opencode.jsonc",
+}
+[00:20:04.978] INFO (#26264): loading {
+  path: "C:\\Users\\Wesle\\AppData\\Local\\Temp\\opencode-test-c1rv44pjghq\\opencode.json",
+}
+INFO  2026-10-03T00:20:05 +4517ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-6szmz118t8s\tavern.jsonc migrated bash permission to allow for existing user
+INFO  2026-10-03T00:20:05 +17ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-9i8g8t9n5y\tavern.jsonc migrated bash permission to allow for existing user
+WARN  2026-10-03T00:20:05 +25ms service=taverncode.config file=C:\Users\Wesle\AppData\Local\Temp\opencode-test-ftuwyzcbqc\tavern.jsonc errors=[{"error":1,"offset":2,"length":3},{"error":1,"offset":6,"length":5},{"error":1,"offset":12,"length":4},{"error":7,"offset":16,"length":0}] skipping bash permission migration due to malformed config
+INFO  2026-10-03T00:20:05 +2ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-ftuwyzcbqc\tavern.jsonc migrated bash permission to allow for existing user
+WARN  2026-10-03T00:20:05 +10ms service=taverncode.config file=C:\Users\Wesle\AppData\Local\Temp\opencode-test-go4f1y426p9\tavern.jsonc err=Directories cannot be read like files skipping bash permission migration due to unreadable config
+INFO  2026-10-03T00:20:05 +2ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-go4f1y426p9\tavern.jsonc migrated bash permission to allow for existing user
+INFO  2026-10-03T00:20:05 +13ms service=taverncode.config path=C:\Users\Wesle\AppData\Local\Temp\opencode-test-c72hvqwsxqt\tavern.jsonc migrated bash permission to allow for existing user
+
+ 64 pass
+ 2 fail
+ 177 expect() calls
+Ran 66 tests across 4 files. [25.21s]

@@ -13,15 +13,15 @@ import {
   transformDependencies,
 } from "./transform-package-json"
 
-test("fixScripts preserves Kilo-only root scripts from base", () => {
+test("fixScripts preserves Tavern-only root scripts from base", () => {
   const ours = {
     scripts: {
-      dev: "KILO_CLIENT=cli bun run --cwd packages/opencode --conditions=node src/index.ts",
-      "dev-setup": "kilo dev-setup",
+      dev: "TAVERN_CLIENT=cli bun run --cwd packages/opencode --conditions=node src/index.ts",
+      "dev-setup": "tavern dev-setup",
       postinstall: "bun run --cwd packages/opencode fix-node-pty && bun run script/setup-git.ts",
-      extension: "bun --cwd packages/kilo-vscode script/launch.ts",
-      "extension:isolated": "bun --cwd packages/kilo-vscode script/launch.ts --isolated",
-      "extension:isolated:clean": "bun --cwd packages/kilo-vscode script/launch.ts --isolated --clean",
+      extension: "bun --cwd packages/tavern-vscode script/launch.ts",
+      "extension:isolated": "bun --cwd packages/tavern-vscode script/launch.ts --isolated",
+      "extension:isolated:clean": "bun --cwd packages/tavern-vscode script/launch.ts --isolated --clean",
       "test:script:ci": "bun test ./script",
     },
   }
@@ -45,7 +45,7 @@ test("fixScripts preserves Kilo-only root scripts from base", () => {
   expect(changes.some((c) => c.includes("dev-setup"))).toBe(true)
 })
 
-test("fixRepository preserves Kilo package links", () => {
+test("fixRepository preserves Tavern package links", () => {
   const ours = {
     repository: { url: "https://github.com/Kilo-Org/kilocode.git" },
     homepage: "https://github.com/Kilo-Org/kilocode/tree/main/packages/example",
@@ -64,9 +64,9 @@ test("fixRepository preserves Kilo package links", () => {
   expect(pkg.homepage).toBe(ours.homepage)
   expect(pkg.bugs).toBe(ours.bugs)
   expect(changes).toEqual([
-    "repository: preserved Kilo metadata",
-    "homepage: preserved Kilo metadata",
-    "bugs: preserved Kilo metadata",
+    "repository: preserved Tavern metadata",
+    "homepage: preserved Tavern metadata",
+    "bugs: preserved Tavern metadata",
   ])
 })
 
@@ -138,7 +138,7 @@ test("fixScripts preserves dev:local and shared-package test:ci scripts", () => 
   }
 })
 
-test("fixTrustedDependencies removes native-build permissions against Kilo policy", () => {
+test("fixTrustedDependencies removes native-build permissions against Tavern policy", () => {
   const pkg: Record<string, unknown> = { trustedDependencies: ["tree-sitter-powershell", "bun-pty"] }
   const changes: string[] = []
   fixTrustedDependencies(pkg, "package.json", changes)
@@ -210,7 +210,7 @@ test("transformDependencies removes the incompatible spinner runtime", () => {
 })
 
 test("fixMetadata preserves opencode publish metadata from base", () => {
-  const ours = { keywords: ["cli", "kilo", "opencode"], private: false }
+  const ours = { keywords: ["cli", "tavern", "opencode"], private: false }
   const pkg: Record<string, unknown> = { keywords: ["opencode"], private: true }
   const changes: string[] = []
   fixMetadata(pkg, "packages/opencode/package.json", ours, changes)
@@ -220,8 +220,8 @@ test("fixMetadata preserves opencode publish metadata from base", () => {
   expect(changes).toContain("private: preserved from base")
 })
 
-test("mergeWithNewestVersions preserves ours' key order so kilo-only deps don't relocate", () => {
-  // Regression: when ours has a kilo-only dep in the middle (e.g. rotating-file-stream
+test("mergeWithNewestVersions preserves ours' key order so tavern-only deps don't relocate", () => {
+  // Regression: when ours has a tavern-only dep in the middle (e.g. rotating-file-stream
   // alphabetically between npm-package-arg and semver) and theirs lacks it, the merge
   // result must keep that key in its original position. Previously this function
   // started from theirs' keys and appended ours-only keys at the end, causing git's
@@ -250,10 +250,10 @@ test("mergeWithNewestVersions appends theirs-only keys at the end", () => {
   expect(Object.keys(result)).toEqual(["a", "b", "c"])
 })
 
-test("selectBunPackageManager keeps the newer Bun version and prefers Kilo on ties", () => {
+test("selectBunPackageManager keeps the newer Bun version and prefers Tavern on ties", () => {
   expect(selectBunPackageManager("bun@1.3.14", "bun@1.3.13")).toBe("bun@1.3.14")
   expect(selectBunPackageManager("bun@1.3.14", "bun@1.3.15")).toBe("bun@1.3.15")
-  expect(selectBunPackageManager("bun@1.3.14+kilo", "bun@1.3.14+upstream")).toBe("bun@1.3.14+kilo")
+  expect(selectBunPackageManager("bun@1.3.14+tavern", "bun@1.3.14+upstream")).toBe("bun@1.3.14+tavern")
 })
 
 test("selectBunPackageManager preserves valid versions over malformed values", () => {
@@ -268,15 +268,15 @@ test("fixPackageManager prevents root Bun downgrades", () => {
   const changes: string[] = []
   fixPackageManager(pkg, "package.json", ours, changes)
   expect(pkg.packageManager).toBe("bun@1.3.14")
-  expect(changes).toEqual(["packageManager: bun@1.3.13 -> bun@1.3.14 (preserved Kilo pin)"])
+  expect(changes).toEqual(["packageManager: bun@1.3.13 -> bun@1.3.14 (preserved Tavern pin)"])
 })
 
-test("fixPackageManager restores a valid Kilo pin over malformed upstream", () => {
+test("fixPackageManager restores a valid Tavern pin over malformed upstream", () => {
   const pkg: Record<string, unknown> = { packageManager: "bun@latest" }
   const changes: string[] = []
   fixPackageManager(pkg, "package.json", { packageManager: "bun@1.3.14" }, changes)
   expect(pkg.packageManager).toBe("bun@1.3.14")
-  expect(changes).toEqual(["packageManager: bun@latest -> bun@1.3.14 (preserved Kilo pin)"])
+  expect(changes).toEqual(["packageManager: bun@latest -> bun@1.3.14 (preserved Tavern pin)"])
 })
 
 test("fixPackageManager accepts upstream Bun upgrades", () => {

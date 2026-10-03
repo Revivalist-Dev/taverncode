@@ -352,6 +352,53 @@ describe("AppProcess", () => {
     )
   })
 
+  describe("runStreaming", () => {
+    it.live(
+      "streams each line through the callback and returns the exit code",
+      Effect.gen(function* () {
+        const svc = yield* AppProcess.Service
+        const lines: string[] = []
+        const result = yield* svc.runStreaming(cmd("-e", "console.log('one'); console.log('two')"), (line) =>
+          Effect.sync(() => {
+            lines.push(line)
+          }),
+        )
+        expect(lines).toEqual(["one", "two"])
+        expect(result.exitCode).toBe(0)
+      }),
+    )
+
+    it.live(
+      "returns a non-zero exit code without failing",
+      Effect.gen(function* () {
+        const svc = yield* AppProcess.Service
+        const result = yield* svc.runStreaming(cmd("-e", "process.exit(3)"), () => Effect.void)
+        expect(result.exitCode).toBe(3)
+      }),
+    )
+
+    it.live(
+      "fails with a timeout cause when the command exceeds its timeout",
+      Effect.gen(function* () {
+        const svc = yield* AppProcess.Service
+        const exit = yield* Effect.exit(
+          svc.runStreaming(cmd("-e", "setInterval(() => {}, 60_000)"), () => Effect.void, {
+            timeout: "150 millis",
+          }),
+        )
+        expect(Exit.isFailure(exit)).toBe(true)
+        if (Exit.isFailure(exit)) {
+          const reason = exit.cause.reasons[0]
+          if (reason && reason._tag === "Fail") {
+            expect(reason.error).toBeInstanceOf(AppProcess.AppProcessError)
+            expect((reason.error as AppProcess.AppProcessError).cause).toBeInstanceOf(Error)
+            expect(((reason.error as AppProcess.AppProcessError).cause as Error).message).toBe("Timed out")
+          }
+        }
+      }),
+    )
+  })
+
   describe("spawn (inherited)", () => {
     it.live(
       "returns the platform ChildProcessHandle for advanced use",

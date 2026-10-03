@@ -7,8 +7,8 @@
 
 ## Do Not Translate (Locale Additions)
 
-- `Kilo` (preserve casing in prose; keep `kilo` only in commands, package names, paths, or code)
-- `Kilo CLI`
+- `Tavern` (preserve casing in prose; keep `tavern` only in commands, package names, paths, or code)
+- `Tavern CLI`
 - `CLI`, `TUI`, `MCP`, `OAuth`
 - Sound names (PR #10018 notes these were intentionally left untranslated)
 

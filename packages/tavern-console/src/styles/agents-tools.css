@@ -1,0 +1,394 @@
+.tavern-console .agents {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tavern-console .tools {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tavern-console .tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tavern-console .tools [data-component="config-row"] {
+  align-items: flex-start;
+}
+
+.tavern-console .agent-tags {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tavern-console .agents [data-component="config-row"] {
+  align-items: flex-start;
+}
+
+.tavern-console .agents [data-slot="config-row-subtitle"] {
+  overflow: visible;
+  white-space: normal;
+}
+
+.tavern-console .agent-subtitle {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.tavern-console .agent-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tavern-console .agent-description {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tavern-console .agent-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tavern-console .agent-section [data-component="section-title"] {
+  margin: 0.75rem 0 0.25rem;
+}
+
+.tavern-console .agent-mode-dot {
+  margin-top: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--muted-foreground);
+}
+
+.tavern-console .agent-mode-dot[data-mode="primary"] {
+  background: var(--primary);
+}
+
+.tavern-console .agent-mode-dot[data-mode="all"] {
+  background: var(--info);
+}
+
+.tavern-console .tools [data-slot="config-row-subtitle"] {
+  overflow: visible;
+  white-space: normal;
+}
+
+.tavern-console .tool-subtitle {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.tavern-console .tool-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tavern-console .tool-description {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tavern-console .tool-section {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.tavern-console .provider-drawer[aria-label="Agent tool access selector"] .drawer-header span,
+.tavern-console .provider-drawer[aria-label="Agent tool access selector"] .tool-capabilities {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+}
+
+.tavern-console .provider-drawer[aria-label="Agent tool access selector"] .tool-capabilities {
+  margin: 0;
+  padding-left: 0;
+}
+
+@media (max-width: 980px) {
+  .tavern-console .tool-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.tavern-console .advanced {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tavern-console .advanced section {
+  display: grid;
+  gap: 0.75rem;
+  border: 1px solid var(--border-weak-base);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+}
+
+.tavern-console .advanced h3 {
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.tavern-console .builder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.tavern-console .agent-builder-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tavern-console .agent-builder-card {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.tavern-console .agent-builder-form {
+  grid-template-columns: 1fr;
+  gap: 0.625rem;
+}
+
+.tavern-console .agent-builder-field {
+  background: color-mix(in oklab, var(--card) 72%, transparent);
+}
+
+.tavern-console .agent-builder-field-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.tavern-console .agent-builder-field-head > div:not(.agent-builder-field-actions) {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.tavern-console .agent-builder-field-head span:not([data-component="tag"]),
+.tavern-console .agent-builder-field > span:not([data-component="tag"]) {
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.tavern-console .agent-builder-field-head small {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+}
+
+.tavern-console .agent-builder-field-head > .agent-builder-field-actions {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+  flex: 0 0 auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.tavern-console .agent-builder-control {
+  display: grid;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.tavern-console .agent-builder-control input,
+.tavern-console .agent-builder-control select,
+.tavern-console .agent-builder-control textarea,
+.tavern-console .agent-builder-field input,
+.tavern-console .agent-builder-field select {
+  width: 100%;
+}
+
+.tavern-console .agent-builder-control > strong,
+.tavern-console .agent-builder-control > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tavern-console .agent-builder-control > strong {
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.tavern-console .agent-builder-control > span {
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+}
+
+.tavern-console .agent-prompt-input {
+  min-height: 16rem;
+  resize: vertical;
+}
+
+.tavern-console .agent-builder-field input[readonly],
+.tavern-console .agent-builder-field textarea[readonly] {
+  border-color: var(--border);
+  background: color-mix(in oklab, var(--muted) 45%, transparent);
+  color: var(--muted-foreground);
+  cursor: default;
+}
+
+.tavern-console .agent-builder-control .tag-cloud {
+  justify-content: flex-start;
+}
+
+.tavern-console .agent-tool-summary {
+  margin-top: 0.15rem;
+}
+
+.tavern-console .wide {
+  grid-column: 1 / -1;
+}
+
+.tavern-console .agent-color-control {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tavern-console .agent-color-swatches {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.tavern-console .agent-color-swatch {
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.tavern-console .agent-color-swatch.selected {
+  outline: 2px solid var(--foreground);
+  outline-offset: 1px;
+}
+
+.tavern-console .agent-color-swatch:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.tavern-console .agent-snippets {
+  display: grid;
+  gap: 0.625rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+
+.tavern-console .block-title {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.tavern-console .block-title strong {
+  color: var(--foreground);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.tavern-console .block-title span {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tavern-console .snippet-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tavern-console .snippet-list button {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.tavern-console .markdown-preview {
+  margin: 0;
+  overflow: auto;
+  border: 1px solid var(--border-weak-base);
+  border-radius: var(--radius-lg);
+  background: var(--background-stronger);
+  color: var(--text-strong);
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+.tavern-console .markdown-picker .markdown-preview {
+  min-height: 100%;
+}
+
+.tavern-console .compact {
+  grid-template-columns: repeat(3, minmax(8rem, 1fr)) auto;
+  margin-bottom: 0;
+}
+
+.tavern-console .mini-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tavern-console .mini-list.columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tavern-console .mini-list.spaced {
+  margin-top: 0.75rem;
+}
+
+.tavern-console .mini-item {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.65rem;
+}
+
+.tavern-console .mini-item.simple {
+  grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1.4fr) auto;
+}
+
+.tavern-console .mini-item span {
+  overflow: hidden;
+  color: var(--text-weaker);
+  font-size: var(--font-size-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tavern-console .tag-cloud {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 /**
  * Unit tests for the docs-sync surface map and reviewer ranking.
@@ -84,21 +84,21 @@ test("every configured prefix resolves to exactly its own surface", () => {
 })
 
 test("platform pages route to the matching extension surface", () => {
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/vscode/index.md", map), "vscode")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/vscode/whats-new.md", map), "vscode")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/jetbrains.md", map), "jetbrains")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/cli.md", map), "cli")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/features/autocomplete.md", map), "cli")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/vscode/index.md", map), "vscode")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/vscode/whats-new.md", map), "vscode")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/jetbrains.md", map), "jetbrains")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/cli.md", map), "cli")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/features/autocomplete.md", map), "cli")
   // Longest prefix wins: the specific platform prefix beats the broad cli one.
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/vscode/nested/deep.md", map), "vscode")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/vscode/nested/deep.md", map), "vscode")
 })
 
 test("cloud doc pages route to the cloud surfaces, not other", () => {
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/mobile.md", map), "cloud-mobile")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/code-with-ai/platforms/cloud-agent.md", map), "cloud-agent")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/mobile.md", map), "cloud-mobile")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/code-with-ai/platforms/cloud-agent.md", map), "cloud-agent")
   // collaborate/ documents the cloud web app, so it no longer routes to cli.
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/collaborate/teams/dashboard.md", map), "cloud-web")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/collaborate/billing/usage.md", map), "cloud-web")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/collaborate/teams/dashboard.md", map), "cloud-web")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/collaborate/billing/usage.md", map), "cloud-web")
 })
 
 test("cloud sources are repo-qualified while bare strings still mean this repo", () => {
@@ -108,7 +108,7 @@ test("cloud sources are repo-qualified while bare strings still mean this repo",
   assert.equal(surfaceForSource("packages/cloud-agent-sdk/src/index.ts", map), "cloud-agent")
   // The committed bare-string entries keep resolving to this repository.
   assert.equal(surfaceForSource("packages/opencode/src/index.ts", map), "cli")
-  assert.equal(surfaceForSource("packages/kilo-gateway/src/index.ts", map), "gateway")
+  assert.equal(surfaceForSource("packages/tavern-gateway/src/index.ts", map), "gateway")
 
   assert.deepEqual(surfaceSourceRepos("cloud-web", map), ["Kilo-Org/cloud"])
   assert.deepEqual(surfaceSourceRepos("cloud-agent", map), ["Kilo-Org/cloud"])
@@ -131,57 +131,57 @@ test("isSurfaceBranch separates surface branches from the integration and dated 
 })
 
 test("unmatched doc and source paths fall to other", () => {
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/community/index.md", map), OTHER)
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/contributing/index.md", map), OTHER)
-  assert.equal(surfaceForDoc("packages/kilo-docs/LEARNINGS.md", map), OTHER)
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/never-seen/new.md", map), OTHER)
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/index.tsx", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/community/index.md", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/contributing/index.md", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/LEARNINGS.md", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/never-seen/new.md", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/index.tsx", map), OTHER)
   assert.equal(surfaceForDoc("docs/jetbrains-vscode-settings-parity.md", map), OTHER)
-  assert.equal(surfaceForSource("packages/kilo-telemetry/src/index.ts", map), OTHER)
+  assert.equal(surfaceForSource("packages/tavern-telemetry/src/index.ts", map), OTHER)
   assert.equal(surfaceForDoc("README.md", map), OTHER)
 
-  assert.ok(otherDocPrefixes(map).includes("packages/kilo-docs/pages/community/"))
+  assert.ok(otherDocPrefixes(map).includes("packages/tavern-docs/pages/community/"))
   assert.ok(otherDocPrefixes(map).includes("docs/"))
 })
 
 test("the map is read from data: changing a prefix changes the answer", () => {
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/getting-started/index.md", map), "cli")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/getting-started/index.md", map), "cli")
 
   const changed = structuredClone(map)
   const cli = changed.surfaces.find((s) => s.name === "cli")
   cli.docs = cli.docs.map((p) =>
-    p === "packages/kilo-docs/pages/getting-started/" ? "packages/kilo-docs/pages/renamed/" : p,
+    p === "packages/tavern-docs/pages/getting-started/" ? "packages/tavern-docs/pages/renamed/" : p,
   )
   const changedFile = loadSurfaceMap(writeMap(changed))
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/getting-started/index.md", changedFile), OTHER)
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/renamed/index.md", changedFile), "cli")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/getting-started/index.md", changedFile), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/renamed/index.md", changedFile), "cli")
 
   const extended = structuredClone(map)
   extended.surfaces.push({
     name: "extra",
-    sources: ["packages/kilo-extra/"],
-    docs: ["packages/kilo-docs/pages/extra/"],
+    sources: ["packages/tavern-extra/"],
+    docs: ["packages/tavern-docs/pages/extra/"],
   })
   const extendedFile = loadSurfaceMap(writeMap(extended))
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/extra/index.md", extendedFile), "extra")
-  assert.equal(surfaceForSource("packages/kilo-extra/src/index.ts", extendedFile), "extra")
-  assert.equal(surfaceForDoc("packages/kilo-docs/pages/extra/index.md", map), OTHER)
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/extra/index.md", extendedFile), "extra")
+  assert.equal(surfaceForSource("packages/tavern-extra/src/index.ts", extendedFile), "extra")
+  assert.equal(surfaceForDoc("packages/tavern-docs/pages/extra/index.md", map), OTHER)
 })
 
 test("groupBySurface partitions files with no duplicates in deterministic order", () => {
   const files = [
-    "packages/kilo-docs/pages/community/index.md",
-    "packages/kilo-docs/pages/gateway/index.md",
-    "packages/kilo-docs/pages/getting-started/index.md",
-    "packages/kilo-docs/pages/unknown/a.md",
+    "packages/tavern-docs/pages/community/index.md",
+    "packages/tavern-docs/pages/gateway/index.md",
+    "packages/tavern-docs/pages/getting-started/index.md",
+    "packages/tavern-docs/pages/unknown/a.md",
   ]
   const groups = groupBySurface(files, map)
   assert.deepEqual([...groups.keys()], ["cli", "gateway", "other"])
   assert.deepEqual(groups.get("other"), [
-    "packages/kilo-docs/pages/community/index.md",
-    "packages/kilo-docs/pages/unknown/a.md",
+    "packages/tavern-docs/pages/community/index.md",
+    "packages/tavern-docs/pages/unknown/a.md",
   ])
-  assert.deepEqual(groups.get("cli"), ["packages/kilo-docs/pages/getting-started/index.md"])
+  assert.deepEqual(groups.get("cli"), ["packages/tavern-docs/pages/getting-started/index.md"])
   const flat = [...groups.values()].flat()
   assert.equal(flat.length, files.length)
   assert.equal(new Set(flat).size, files.length)
@@ -234,7 +234,7 @@ test("other reviewers are the fixed pair and never hit the API", async () => {
       calls++
       return []
     },
-    repo: "acme/kilo",
+    repo: "acme/tavern",
     now: NOW,
     map,
   })
@@ -264,11 +264,11 @@ test("product-surface reviewers come from ranked commits that have write access"
     throw new Error(`unexpected ${p}`)
   }
 
-  const result = await computeSurfaceReviewers("gateway", { api, repo: "acme/kilo", now: NOW, map })
+  const result = await computeSurfaceReviewers("gateway", { api, repo: "acme/tavern", now: NOW, map })
   assert.deepEqual(result.reviewers, ["bob", "carl"])
   assert.deepEqual(result.sourcePrefixes, surfaceSourcePrefixes("gateway", map))
-  assert.ok(seen.some((p) => p === "/repos/acme/kilo/commits?path=packages%2Fkilo-gateway%2F&per_page=100"))
-  assert.match(result.note, /packages\/kilo-gateway\//)
+  assert.ok(seen.some((p) => p === "/repos/acme/tavern/commits?path=packages%2Ftavern-gateway%2F&per_page=100"))
+  assert.match(result.note, /packages\/tavern-gateway\//)
   assert.match(result.note, /half-life 180 days/)
   assert.match(result.note, /write/)
 })
@@ -288,7 +288,7 @@ test("a 404 permission skips the candidate and keeps walking", async () => {
     }
     return { permission: "write" }
   }
-  const result = await computeSurfaceReviewers("cli", { api, repo: "acme/kilo", now: NOW, map })
+  const result = await computeSurfaceReviewers("cli", { api, repo: "acme/tavern", now: NOW, map })
   assert.deepEqual(result.reviewers, ["real"])
 })
 
@@ -296,7 +296,7 @@ test("API or token failure yields no reviewers and a named reason", async () => 
   const api = async () => {
     throw new Error("GH_TOKEN (or GITHUB_TOKEN) is required")
   }
-  const result = await computeSurfaceReviewers("gateway", { api, repo: "acme/kilo", now: NOW, map })
+  const result = await computeSurfaceReviewers("gateway", { api, repo: "acme/tavern", now: NOW, map })
   assert.deepEqual(result.reviewers, [])
   assert.match(result.note, /GH_TOKEN/)
 })
@@ -324,7 +324,7 @@ test("cloud reviewers are ranked from the named repo's history with its token", 
 
   const result = await computeSurfaceReviewers("cloud-web", {
     api,
-    repo: "Kilo-Org/kilo",
+    repo: "Kilo-Org/tavern",
     now: NOW,
     map,
     cloudToken: "cloud-token",
@@ -347,7 +347,7 @@ test("an unreachable cloud history falls back to the fixed other pair, never thr
   }
   const result = await computeSurfaceReviewers("cloud-web", {
     api,
-    repo: "Kilo-Org/kilo",
+    repo: "Kilo-Org/tavern",
     now: NOW,
     map,
     cloudToken: "cloud-token",
@@ -372,7 +372,7 @@ test("a cloud surface with no token falls back before making any call", async ()
     }
     const result = await computeSurfaceReviewers("cloud-mobile", {
       api,
-      repo: "Kilo-Org/kilo",
+      repo: "Kilo-Org/tavern",
       now: NOW,
       map,
     })

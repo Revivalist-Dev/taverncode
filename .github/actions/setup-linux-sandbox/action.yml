@@ -1,4 +1,4 @@
-# kilocode_change - new file
+# taverncode_change - new file
 name: "Setup Linux Sandbox"
 description: "Build the Linux bubblewrap helper"
 runs:
@@ -59,6 +59,6 @@ runs:
 
     - name: Build bubblewrap helper
       run: |
-        bun packages/opencode/script/kilocode/bubblewrap.ts --arch x64 --output "$RUNNER_TEMP/bwrap"
-        echo "KILO_BWRAP_PATH=$RUNNER_TEMP/bwrap" >> "$GITHUB_ENV"
+        bun packages/opencode/script/taverncode/bubblewrap.ts --arch x64 --output "$RUNNER_TEMP/bwrap"
+        echo "TAVERN_BWRAP_PATH=$RUNNER_TEMP/bwrap" >> "$GITHUB_ENV"
       shell: bash
