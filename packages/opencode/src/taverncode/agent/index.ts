@@ -19,7 +19,7 @@ import PROMPT_ORCHESTRATOR from "../../agent/prompt/orchestrator.txt"
 import PROMPT_ASK from "../../agent/prompt/ask.txt"
 import PROMPT_EXPLORE from "../../agent/prompt/explore.txt"
 
-const mermaidClients = new Set(["vscode", "jetbrains"])
+const mermaidClients = new Set(["vscode"])
 
 const readable: Record<string, "allow"> = {
   "cat *": "allow",

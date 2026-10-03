@@ -17,12 +17,12 @@ export namespace TaverncodeWatcher {
 
   export class Service extends Context.Service<Service, Interface>()("@taverncode/Watcher") {}
 
-  // Embedded editor clients (VS Code, JetBrains) have their own file watching
+  // The VS Code extension has its own file watching
   // and git integration and do not consume the CLI's vcs.branch.updated event,
   // so they must not eagerly warm the location stack. The standalone CLI/TUI
   // keeps this subscription for live branch-label updates.
   export function eager(client = Flag.TAVERN_CLIENT) {
-    return client !== "vscode" && client !== "jetbrains"
+    return client !== "vscode"
   }
 
   export const layer = Layer.effect(

@@ -289,7 +289,7 @@ export function init() {
             ? "Disable saved auto-approve"
             : "Enable saved auto-approve"
         },
-        // taverncode_change - the saved rule is server side, so it also stops VS Code, JetBrains and
+        // taverncode_change - the saved rule is server side, so it also stops VS Code and
         // headless runs from prompting
         desc: "Toggle auto-approve for all permission prompts, saved to global config and shared with every client",
         category: "System",

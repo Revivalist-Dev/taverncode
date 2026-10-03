@@ -3,7 +3,6 @@ import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstab
 
 const Package = Schema.Struct({ version: Schema.String })
 
-// GitHub's latest Tavern release can be a JetBrains release, not a CLI release.
 // Use the public npm channel so curl installs resolve only Tavern CLI versions.
 export function latest(http: HttpClient.HttpClient, path: string, channel: string) {
   return Effect.gen(function* () {

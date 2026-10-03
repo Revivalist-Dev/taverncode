@@ -740,7 +740,7 @@ export class WorktreeManager {
    * Background reap for a staged orphan directory, with one reappearance retry.
    *
    * A dev backend or the worktree pool can recreate a directory moments after it was renamed away
-   * (e.g. `.tavern-dev` from a running JetBrains dev instance). One retry self-heals that race without
+   * (e.g. `.tavern-dev` from a running dev instance). One retry self-heals that race without
    * looping forever: anything that survives the retry simply reappears in the next reconcile.
    */
   private async reapOrphan(original: string, temp: string): Promise<void> {

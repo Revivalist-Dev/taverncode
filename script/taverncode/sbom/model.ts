@@ -2,7 +2,7 @@
  * CycloneDX 1.6 document model and composer.
  *
  * Tavern publishes one SBOM per shipped artifact (CLI archive, npm tarball, OCI
- * manifest, VSIX, JetBrains plugin ZIP). Every document is composed here so the
+ * manifest, VSIX). Every document is composed here so the
  * shape, property namespace, and determinism rules stay identical across
  * products instead of drifting per build script.
  */
@@ -18,10 +18,10 @@ export const PROPERTY_NAMESPACE = "taverncode"
  * How a component reaches the user.
  *
  * - `contained` is physically inside the artifact bytes.
- * - `provided` is supplied by the host (IDE platform modules, JNA, coroutines)
- *   and must not be claimed as part of the artifact.
+ * - `provided` is supplied by the host and must not be claimed as part of the
+ *   artifact.
  * - `runtime` is downloaded or installed later by Tavern against a pinned
- *   version (JetBrains lean CLI assets, optional LanceDB, ripgrep).
+ *   version (optional LanceDB, ripgrep).
  */
 export type Delivery = "contained" | "provided" | "runtime"
 
@@ -66,7 +66,7 @@ export type Build = {
   channel?: string
   workflow?: string
   run?: string
-  /** Extra provenance, e.g. JetBrains tag SHA and reviewed merge SHA. */
+  /** Extra provenance, e.g. reviewed merge SHA. */
   properties?: Record<string, string>
 }
 

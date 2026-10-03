@@ -2,8 +2,8 @@
  * Tavern SBOM tooling.
  *
  * One place that knows how a Tavern SBOM is shaped, validated, and recorded, so
- * the CLI, VS Code, and JetBrains release paths produce interchangeable evidence
- * instead of three divergent formats.
+ * the CLI and VS Code release paths produce interchangeable evidence
+ * instead of divergent formats.
  */
 
 export * as Artifact from "./artifact"

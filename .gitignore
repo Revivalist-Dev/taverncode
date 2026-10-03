@@ -37,12 +37,9 @@ a.out
 target
 .scripts
 .direnv/
-packages/kilo-jetbrains/build-tasks/.gradle/
-packages/tavern-jetbrains/build-tasks/.gradle/
-
 # JetBrains/Kotlin build output. Generated during gradle builds; never tracked.
 # Without these, `git add -A` during upstream merges sweeps in deep .class
-# paths that also exceed the Windows path limit. See FORK-MERGE.md §5.
+# paths that also exceed the Windows path limit. See FORK-MERGE.md Â§5.
 **/backend/build/
 **/frontend/build/
 **/shared/build/
@@ -64,25 +61,7 @@ logs/
 telemetry-id
 tsconfig.tsbuildinfo
 
-# Kilo
-.kilo/.gitignore
-.kilo/package.json
-.kilo/package-lock.json
-.kilo/pnpm-lock.yaml
-.kilo/bun.lock
-.kilo/yarn.lock
-.kilo/node_modules
-.kilo/plans/*upstream-merge-report-*.md
-**/.kilo/jetbrains.json
-.kilocode/.gitignore
-.kilocode/package.json
-.kilocode/package-lock.json
-.kilocode/pnpm-lock.yaml
-.kilocode/bun.lock
-.kilocode/yarn.lock
-.kilocode/node_modules
-
-# Tavern local state (mirrors the .kilo entries above)
+# Tavern local state
 .tavern/.gitignore
 .tavern/package.json
 .tavern/package-lock.json
@@ -94,21 +73,11 @@ tsconfig.tsbuildinfo
 .tavern/plans/
 .tavern/worktrees/
 **/.tavern/jetbrains.json
-.taverncode/.gitignore
-.taverncode/package.json
-.taverncode/package-lock.json
-.taverncode/pnpm-lock.yaml
-.taverncode/bun.lock
-.taverncode/yarn.lock
-.taverncode/node_modules
-.taverncode/agent-manager.json
 
 # Runtime-generated per-directory TUI config (e.g. written by `PATCH /tui/config`
 # during local testing); should never be committed.
 packages/*/.tavern/tui.json
 packages/*/.tavern/tui.jsonc
-packages/*/.taverncode/tui.json
-packages/*/.taverncode/tui.jsonc
 
 # Local scratch output from lint/typecheck/test runs
 packages/*/*.tmp

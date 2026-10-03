@@ -21,7 +21,7 @@ Workflows that automate dependency remediation and give the team Slack visibilit
 
 `dependabot.yml` is not a workflow — it's a config file that GitHub's Dependabot backend reads directly. None of the workflow files in this directory ever open a PR; they only act on PRs or alerts that already exist, or report on dependencies.
 
-Dependabot re-scans on the `schedule: interval` set per ecosystem block, and once immediately whenever `dependabot.yml` itself changes on the default branch. Per ecosystem (`npm` for tavern-docs, `gradle` for tavern-jetbrains), it checks each dependency for updates, bundles minor and patch bumps into `groups: *-minor-patch` PRs (related packages share a group, so they move together), and ignores every major bump. Majors are bumped by hand. The `bun` block has `open-pull-requests-limit: 0`, so it opens no version-update PRs, only security-alert PRs, which a `security-updates` group bundles into one PR. These are normal PRs from that point on — required CI and branch protection apply like any other PR.
+Dependabot re-scans on the `schedule: interval` set per ecosystem block, and once immediately whenever `dependabot.yml` itself changes on the default branch. Per ecosystem (`npm` for tavern-docs), it checks each dependency for updates, bundles minor and patch bumps into `groups: *-minor-patch` PRs (related packages share a group, so they move together), and ignores every major bump. Majors are bumped by hand. The `bun` block has `open-pull-requests-limit: 0`, so it opens no version-update PRs, only security-alert PRs, which a `security-updates` group bundles into one PR. These are normal PRs from that point on — required CI and branch protection apply like any other PR.
 
 ### The 4 workflows each poll independently on their own schedule
 
@@ -31,7 +31,7 @@ They don't call each other or trigger off PR creation. Each one wakes up on its 
 |---|---|---|---|
 | `dependabot-auto-merge.yml` | Hourly | Open `app/dependabot` PRs with a grouped `*-minor-patch` title | Enables GitHub's native auto-merge flag if every changed file besides shared `bun.lock` is under a `tavern`-named path; otherwise leaves it and logs a warning. |
 | `security-findings-notify.yml` | Every 6h | GitHub's Dependabot **Alerts** (the vulnerability list, separate from the PR list above) | Posts new/at-risk/breached critical & high alerts to Slack, independent of whether a fix PR exists. |
-| `outdated-tavern-deps.yml` | Monthly, 1st at 09:23 UTC | `bun outdated` for `packages/tavern-*` (not tavern-docs; it has its own Dependabot block) | Posts the count of outdated major/minor/patch dependencies to Slack, with the major and minor ones listed. Fills the gap left by turning off the root `bun` version updates. |
+| `outdated-tavern-deps.yml` | Monthly, 1st at 09:23 UTC | `bun outdated` for `packages/tavern-*` (not tavern-docs, which has its own Dependabot block) | Posts the count of outdated major/minor/patch dependencies to Slack, with the major and minor ones listed. Fills the gap left by turning off the root `bun` version updates. |
 | `stale-bot-pr-notify.yml` | Daily, 13:00 UTC | All open bot-authored PRs (not limited to Dependabot) | Flags any that are conflicting or long-unreviewed to Slack. |
 
 ### Enabling auto-merge isn't the same as merging

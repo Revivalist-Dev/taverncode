@@ -12,7 +12,7 @@ Tavern CLI is an open source AI coding agent that generates code from natural la
 - **Dev**: `bun run dev` (runs from root) or `bun run --cwd packages/opencode --conditions=browser src/index.ts`
 - **Dev with params**: `bun dev -- help`
 - **Extension**: `bun run extension` (build + launch VS Code with the extension in dev mode). Pass `--no-build` to skip the build. When asked to run an isolated VS Code/Tavern environment, use the CLI scripts instead of interactive launch configs: `bun run extension:isolated` reuses `.tavern-dev/`, and `bun run extension:isolated:clean` clears `.tavern-dev/` first. Pass an optional workspace path after `--`, for example `bun run extension:isolated -- ../sample-project`.
-- **Typecheck**: `bun turbo typecheck` (uses `tsgo`, not `tsc`). Includes the JetBrains plugin and requires Java 21; do not run `java -version` as a routine preflight. Only check Java when a Gradle/Java command fails with a Java-version or missing-Java error. If missing, install via SDKMAN: `sdk install java 21-tem && sdk use java 21-tem`. If SDKMAN is not installed, see https://sdkman.io/install.
+- **Typecheck**: `bun turbo typecheck` (uses `tsgo`, not `tsc`).
 - **Test**: `bun test` from `packages/opencode/` (NOT from root -- root blocks tests)
 - **Single test**: `bun test ./test/tool/tool-define.test.ts` from `packages/opencode/`
 - **CLI build artifact size check**: after `bun run script/build.ts --single --skip-install` in `packages/opencode/`, use `du -h dist/*/*/bin/tavern` (scoped package output lives under `dist/@taverncode/`)
@@ -35,7 +35,6 @@ Before saying an implementation is ready, run the smallest relevant checks that 
 | CLI | From `packages/opencode/`: `bun run typecheck`, `bun test` or targeted `bun test ./path/to/file.test.ts` |
 | VS Code extension | From `packages/tavern-vscode/`: `bun run typecheck`, `bun run lint`, `bun run test:unit` or `bun run test` |
 | Extension build/package | From `packages/tavern-vscode/`: `bun run compile` or `bun run package` when touching build, packaging, SDK, or webview integration paths |
-| JetBrains plugin | From `packages/tavern-jetbrains/`: `./gradlew typecheck`, `./gradlew test`. Requires Java 21; do not run `java -version` as a routine preflight. Check Java only after a Java-version or missing-Java failure. |
 | CI/local guards | Run affected guards documented above, such as `bun run knip`, `bun run check-taverncode-change`, `bun run script/check-opencode-annotations.ts --worktree`, or source link extraction |
 
 Never run root `bun test`; the root script prints `do not run tests from root` and exits with code 1. Use package-level tests instead.
@@ -54,10 +53,6 @@ All products are clients of the **CLI** (`packages/opencode/`), which contains t
 In each VS Code extension host, one `TavernConnectionService` is created for the sidebar, every Tavern editor tab, and Agent Manager; it lazily starts and reuses one current `tavern serve` backend at a time. Agent Manager worktree sessions pass a directory context to this shared backend rather than starting one per worktree. State captured by the active service layer, such as Snapshot `trackState`, is shared across those requests; only directory-keyed `InstanceState` data is isolated.
 
 Extension-specific settings should live in the Tavern extension settings, not default VS Code settings, unless they are intentionally VS Code-wide. Experimental flags should follow existing flag patterns, not VS Code settings; they usually belong in the Tavern Experimental settings section.
-
-## Package Instructions
-
-- When a task primarily touches `packages/tavern-jetbrains/`, read `packages/tavern-jetbrains/AGENTS.md` before planning or editing. It holds hard restrictions, a shared-code reuse index, and a skill/command index; load the matching `jetbrains-ui`, `jetbrains-session`, `jetbrains-arch`, or `jetbrains-dev` skill (or the `/release-jetbrains` command) for detailed guidance.
 
 ## Monorepo Structure
 
@@ -168,7 +163,7 @@ PR descriptions should explain **what** changed, **why** the change is needed, a
 
 ## GitHub Issues
 
-When creating or managing GitHub issues for the VS Code extension or JetBrains plugin via `gh`, load `.tavern/skills/gh-issues/SKILL.md`. It covers templates, project boards (`VS Code Extension`, `Jetbrains Plugin`), title conventions, and the `gh auth refresh -s project` recovery path.
+When creating or managing GitHub issues for the VS Code extension via `gh`, load `.tavern/skills/gh-issues/SKILL.md`. It covers templates, project boards (`VS Code Extension`), title conventions, and the `gh auth refresh -s project` recovery path.
 
 ## Fork Merge Process
 

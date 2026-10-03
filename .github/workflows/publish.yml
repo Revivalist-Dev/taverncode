@@ -35,9 +35,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.version || inpu
 permissions:
   id-token: write
   contents: write
-  issues: write # taverncode_change - label automated JetBrains CLI pin bump PRs
   packages: write
-  pull-requests: write # taverncode_change - create automated JetBrains CLI pin bump PRs
 
 jobs:
   version:

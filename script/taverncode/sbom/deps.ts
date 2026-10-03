@@ -280,7 +280,7 @@ function storeName(name: string) {
 
 // Read once per root instead of per lookup: a full glob walk over `.bun` (order
 // 1,000-2,000 entries) for every unresolved package made a multi-platform
-// closure -- the JetBrains plugin merges six of them -- take tens of seconds.
+// closure -- merging six platforms -- take tens of seconds.
 const storeCache = new Map<string, string[]>()
 
 function storeEntries(root: string) {
@@ -410,7 +410,7 @@ function family(name: string) {
  * `enrich` applies this within its own input, which is a no-op for a
  * single-platform closure (CLI archives, one VSIX) since at most one variant
  * per family is ever present there. Composing several platforms' closures
- * separately -- the JetBrains plugin merges all six CLI platforms one call at
+ * separately -- merging all six CLI platforms one call at
  * a time -- needs this run again on the combined result, which is why it is
  * exported rather than kept private to `enrich`.
  */

@@ -143,7 +143,6 @@ describe("Ask diagram guidance", () => {
     ["acp", false],
     ["unknown", false],
     ["vscode", true],
-    ["jetbrains", true],
   ] as const)("matches rendering support for %s", (client, mermaid) => {
     const previous = process.env.TAVERN_CLIENT
     try {

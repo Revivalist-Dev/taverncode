@@ -4,9 +4,6 @@
  * Exists because the previous answer to "why is Agent Manager empty?" was reading an output channel
  * full of per-poll failures and guessing. The report states what git and gh actually did, which
  * worktrees are unhealthy and why, and what is left on disk — in one place, copyable into an issue.
- *
- * The JetBrains plugin renders the same sections in the same order (see AgentManagerDiagnosticsAction)
- * so a report from either client can be read the same way.
  */
 
 import { BUDGET } from "./command-budget"

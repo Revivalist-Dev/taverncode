@@ -35,7 +35,7 @@ function revealLabelKey(userAgent: string | undefined): string {
 }
 
 /**
- * Header explanation, mirroring the JetBrains dialog's banner: the list comes from a heuristic over a
+ * Header explanation: the list comes from a heuristic over a
  * directory Tavern owns, and "delete 48 folders" is not a decision anybody can make from paths alone.
  *
  * Rendered inside the shared dialog's description slot, which is a `<p>`, so every block here is a

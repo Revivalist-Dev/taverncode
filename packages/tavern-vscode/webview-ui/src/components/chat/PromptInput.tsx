@@ -389,8 +389,8 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
   const [text, setText] = createSignal("")
   const [reviewComments, setReviewComments] = createSignal<ReviewCommentEntry[]>([])
   const [browsers, setBrowsers] = createSignal<BrowserReference[]>([])
-  // Large pastes collapse into a `[Pasted ~N lines]` chip, matching the CLI and
-  // JetBrains plugin. Honor the same experimental opt-out.
+  // Large pastes collapse into a `[Pasted ~N lines]` chip, matching the CLI.
+  // Honor the same experimental opt-out.
   const paste = usePasteCollapse({
     enabled: () => globalConfig()?.experimental?.disable_paste_summary !== true,
     text,

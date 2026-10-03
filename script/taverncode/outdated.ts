@@ -7,8 +7,6 @@
 // `full` the complete list for the job summary.
 //
 // tavern-docs is left out because Dependabot still has its own block for it.
-// tavern-jetbrains has no bun dependencies (its Gradle ones are covered by the
-// Dependabot gradle block), so the filter matches it but finds nothing.
 
 export type Row = {
   name: string

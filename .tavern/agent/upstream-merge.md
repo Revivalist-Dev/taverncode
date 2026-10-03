@@ -333,10 +333,9 @@ git commit -m "chore: resync versions after upstream merge"
 ```
 
 The script rewrites every top-level `"version"` in `package.json` files
-(excluding `node_modules`, hidden dirs, and `packages/tavern-jetbrains/` which
-tracks its own cadence), plus the Zed extension toml. It is idempotent — rerun
-it any time to rebase the version back onto Tavern main (useful during
-long-running upstream merges where `main` releases in the meantime).
+(excluding `node_modules` and hidden dirs). It is idempotent — rerun it any time
+to rebase the version back onto Tavern main (useful during long-running upstream
+merges where `main` releases in the meantime).
 
 Keeping this in its own commit makes reviewers' job easier: the merge commit
 only contains behavioural resolutions, and the version resync is a trivial

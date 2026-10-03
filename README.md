@@ -6,7 +6,7 @@
   <a href="https://kilo.ai"><img width="250" alt="Tavern Code logo" src="https://github.com/user-attachments/assets/bdb0c174-b9fd-40ad-a47b-f3aab9b54e8d" /></a>
 </p>
 
-<p align="center">The open source coding agent for building with AI in VS Code, JetBrains, or the CLI.</p>
+<p align="center">The open source coding agent for building with AI in VS Code, or the CLI.</p>
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=taverncode.Tavern-Code"><img src="https://raster.shields.io/badge/VS_Code_Marketplace-007ACC?style=flat&logo=visualstudiocode&logoColor=white" alt="VS Code Marketplace" height="20"></a>
@@ -21,7 +21,7 @@
 
 ---
 
-Tavern Code is an AI coding agent that meets you everywhere you work: [VS Code](https://kilo.ai/landing/vs-code), [JetBrains](https://kilo.ai/features/jetbrains-native), and the [CLI](https://kilo.ai/cli). It's open source with open pricing. You pick from 500+ models, switch between them mid-task, and pay the model provider's rate with zero markup. No API keys required to start.
+Tavern Code is an AI coding agent that meets you everywhere you work: [VS Code](https://kilo.ai/landing/vs-code) and the [CLI](https://kilo.ai/cli). It's open source with open pricing. You pick from 500+ models, switch between them mid-task, and pay the model provider's rate with zero markup. No API keys required to start.
 
 ### Installation
 
@@ -62,15 +62,6 @@ paru -S tavern-bin
 ```
 
 Then run `tavern` in any project directory to start.
-
-</details>
-
-<details>
-<summary><strong>JetBrains</strong></summary>
-
-<br>
-
-Install the [Tavern Code plugin](https://plugins.jetbrains.com/plugin/28350-tavern-code) from the JetBrains Marketplace, or search "Tavern Code" in `Settings → Plugins` inside any JetBrains IDE.
 
 </details>
 
@@ -145,7 +136,7 @@ For configuration and everything else, [head over to the docs](https://kilo.ai/d
 
 ### Contributing
 
-Contributions are welcome from developers, writers, and everyone in between. Start with the [Contributing Guide](/CONTRIBUTING.md) for environment setup, coding standards, and how to open a pull request. See [RELEASING.md](RELEASING.md) for the VS Code extension and CLI release process, and [packages/tavern-jetbrains/RELEASING.md](packages/tavern-jetbrains/RELEASING.md) for the JetBrains plugin.
+Contributions are welcome from developers, writers, and everyone in between. Start with the [Contributing Guide](/CONTRIBUTING.md) for environment setup, coding standards, and how to open a pull request. See [RELEASING.md](RELEASING.md) for the VS Code extension and CLI release process.
 
 Please review our [Code of Conduct](/CODE_OF_CONDUCT.md) before getting involved.
 

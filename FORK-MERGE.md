@@ -51,18 +51,15 @@ The baseline applies a regular, mechanical rename pass. These substitutions are 
 
 | Upstream path | Fork path |
 |---|---|
-| `packages/kilo-console/` | `packages/tavern-console/` |
 | `packages/kilo-docs/` | `packages/tavern-docs/` |
 | `packages/kilo-gateway/` | `packages/tavern-gateway/` |
 | `packages/kilo-i18n/` | `packages/tavern-i18n/` |
 | `packages/kilo-indexing/` | `packages/tavern-indexing/` |
-| `packages/kilo-jetbrains/` | `packages/tavern-jetbrains/` |
 | `packages/kilo-memory/` | `packages/tavern-memory/` |
 | `packages/kilo-sandbox/` | `packages/tavern-sandbox/` |
 | `packages/kilo-telemetry/` | `packages/tavern-telemetry/` |
 | `packages/kilo-ui/` | `packages/tavern-ui/` |
 | `packages/kilo-vscode/` | `packages/tavern-vscode/` |
-| `packages/kilo-web-ui/` | `packages/tavern-web-ui/` |
 | `packages/opencode/src/kilocode/` | `packages/opencode/src/taverncode/` |
 | `packages/opencode/test/kilocode/` | `packages/opencode/test/taverncode/` |
 | `packages/core/src/kilocode/` | `packages/core/src/taverncode/` |

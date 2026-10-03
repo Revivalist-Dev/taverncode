@@ -40,24 +40,17 @@ test("chart tool is excluded for cli", () => {
   expect(ids("cli")).not.toContain("chart")
 })
 
-test("chart tool is excluded for jetbrains", () => {
-  expect(ids("jetbrains")).not.toContain("chart")
-})
-
 test("browser tool is included only for vscode clients", () => {
   expect(ids("vscode")).toContain("browser_open")
   expect(ids("cli")).not.toContain("browser_open")
-  expect(ids("jetbrains")).not.toContain("browser_open")
 })
 
 test("open plan tool is included only for vscode clients", () => {
   expect(ids("vscode")).toContain("open_plan")
   expect(ids("cli")).not.toContain("open_plan")
-  expect(ids("jetbrains")).not.toContain("open_plan")
 })
 
 test("link_pr tool is included only for cli clients", () => {
   expect(ids("cli")).toContain("link_pr")
   expect(ids("vscode")).not.toContain("link_pr")
-  expect(ids("jetbrains")).not.toContain("link_pr")
 })

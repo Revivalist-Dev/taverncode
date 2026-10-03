@@ -303,7 +303,7 @@ describe("validate", () => {
 
 describe("reconcile", () => {
   test("resolves a sibling across two independently-enriched batches", async () => {
-    // Reproduces the JetBrains shape: each platform's closure is enriched
+    // Reproduces the multi-platform shape: each platform's closure is enriched
     // separately (a package's own platform variant is never in another
     // platform's closure at all, so `enrich`'s own internal reconciliation
     // sees nothing to borrow from). Only a second pass across the merged
@@ -555,8 +555,8 @@ describe("deps", () => {
     const dir = await scratch()
     try {
       // Only the host's own platform variant is installed -- the situation
-      // when one runner composes closures for every shipped target, as the
-      // JetBrains plugin does for all six CLI platforms.
+      // when one runner composes closures for every shipped target, all six CLI
+      // platforms.
       await Bun.write(
         path.join(dir, "@opentui", "core-darwin-arm64", "package.json"),
         JSON.stringify({ license: "MIT", description: "Prebuilt darwin-arm64 binaries for @opentui/core" }),

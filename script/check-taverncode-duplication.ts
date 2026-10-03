@@ -306,7 +306,7 @@ async function main() {
         "--report prints findings without changing the allowlist.\n" +
         "--prune only removes stale exceptions and lowers existing limits; new findings still fail.\n" +
         "--init creates the initial legacy baseline and refuses to overwrite an existing allowlist.\n" +
-        "JetBrains, shared upstream files, docs, translations, tests, generated source and vendored code are outside this ratchet.",
+        "Shared upstream files, docs, translations, tests, generated source and vendored code are outside this ratchet.",
     )
     return
   }

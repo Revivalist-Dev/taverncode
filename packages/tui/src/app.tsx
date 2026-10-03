@@ -969,11 +969,13 @@ function App(props: { onSnapshot?: () => Promise<string[]>; pluginHost: TuiPlugi
           dialog.clear()
         },
       },
-      // taverncode_change - titled by scope. This toggles the in-memory mode that `--auto`/`--yolo`
+      // taverncode_change start
+      // titled by scope. This toggles the in-memory mode that `--auto`/`--yolo`
       // seed, which lasts for the TUI process and survives switching sessions. It is also the only
       // way to leave that mode without restarting; Tavern's `permission.allow_everything`
       // (taverncode/cli/cmd/tui/app.tsx) saves a global rule instead. Consolidating the two is a
-      // follow-up that has to cover VS Code and JetBrains as well.
+      // follow-up that has to cover VS Code as well.
+      // taverncode_change end
       {
         name: "permission.mode",
         title:

@@ -56,9 +56,9 @@ export async function read(file: string) {
 /**
  * Merge a later stage's entries into an existing manifest.
  *
- * The JetBrains bundled ZIP is produced by a separate workflow after the lean
- * ZIP is already published, so evidence for one release accumulates across runs
- * rather than being written once.
+ * Extra artifacts for a release can be produced by separate workflows after the
+ * first is already published, so evidence for one release accumulates across
+ * runs rather than being written once.
  */
 export function merge(base: Manifest, next: Manifest): Manifest {
   if (base.version !== next.version) {

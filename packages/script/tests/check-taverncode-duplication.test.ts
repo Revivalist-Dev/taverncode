@@ -148,7 +148,7 @@ test(
 )
 
 test(
-  "includes new Tavern packages without counting JetBrains, upstream, generated, locale or fixture files",
+  "includes new Tavern packages without counting upstream, generated, locale or fixture files",
   async () => {
     await fixture(
       {
@@ -161,8 +161,8 @@ test(
         "packages/tavern-example/src/copy.d.ts": source,
         "packages/tavern-i18n/src/en.ts": source,
         "packages/tavern-docs/src/copy.ts": source,
-        "packages/tavern-jetbrains/src/first.ts": source,
-        "packages/tavern-jetbrains/src/second.tsx": source,
+        "packages/tavern-gateway/src/first.ts": source,
+        "packages/tavern-gateway/src/second.tsx": source,
         "packages/tavern-vscode/src/services/autocomplete/continuedev/copy.ts": source,
       },
       async (root) => {

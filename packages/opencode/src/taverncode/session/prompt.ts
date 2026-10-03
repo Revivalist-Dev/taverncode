@@ -108,7 +108,7 @@ export namespace TavernSessionPrompt {
   }
 
   function supportsPlanFollowup() {
-    return ["cli", "vscode", "jetbrains"].includes(Flag.TAVERN_CLIENT)
+    return ["cli", "vscode"].includes(Flag.TAVERN_CLIENT)
   }
 
   /**

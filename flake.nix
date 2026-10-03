@@ -172,8 +172,6 @@
                 gzip
                 patchelf
                 ripgrep
-                jetbrains.jdk
-                jdk21
                 tavern-dev
                 tavern-install-bin
                 tavern-bin
