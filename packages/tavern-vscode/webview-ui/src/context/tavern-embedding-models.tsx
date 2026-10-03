@@ -1,37 +1,37 @@
 import { createContext, createSignal, onCleanup, useContext, type Accessor, type ParentComponent } from "solid-js"
 import {
-  EMPTY_KILO_EMBEDDING_MODEL_CATALOG,
-  type KiloEmbeddingModelCatalog,
+  EMPTY_TAVERN_EMBEDDING_MODEL_CATALOG,
+  type TavernEmbeddingModelCatalog,
 } from "@taverncode/tavern-indexing/embedding-models"
 import { useVSCode } from "./vscode"
 import type { ExtensionMessage } from "../types/messages"
 
-type KiloEmbeddingModelsContextValue = {
-  catalog: Accessor<KiloEmbeddingModelCatalog>
+type TavernEmbeddingModelsContextValue = {
+  catalog: Accessor<TavernEmbeddingModelCatalog>
 }
 
-export const KiloEmbeddingModelsContext = createContext<KiloEmbeddingModelsContextValue>()
+export const TavernEmbeddingModelsContext = createContext<TavernEmbeddingModelsContextValue>()
 
-export const KiloEmbeddingModelsProvider: ParentComponent = (props) => {
+export const TavernEmbeddingModelsProvider: ParentComponent = (props) => {
   const vscode = useVSCode()
-  const [catalog, setCatalog] = createSignal<KiloEmbeddingModelCatalog>(EMPTY_KILO_EMBEDDING_MODEL_CATALOG)
+  const [catalog, setCatalog] = createSignal<TavernEmbeddingModelCatalog>(EMPTY_TAVERN_EMBEDDING_MODEL_CATALOG)
 
   const unsubscribe = vscode.onMessage((message: ExtensionMessage) => {
-    if (message.type !== "kiloEmbeddingModelsLoaded") return
+    if (message.type !== "tavernEmbeddingModelsLoaded") return
     setCatalog(message.catalog)
   })
 
-  vscode.postMessage({ type: "requestKiloEmbeddingModels" })
+  vscode.postMessage({ type: "requestTavernEmbeddingModels" })
 
   onCleanup(unsubscribe)
 
-  return <KiloEmbeddingModelsContext.Provider value={{ catalog }}>{props.children}</KiloEmbeddingModelsContext.Provider>
+  return <TavernEmbeddingModelsContext.Provider value={{ catalog }}>{props.children}</TavernEmbeddingModelsContext.Provider>
 }
 
-export function useKiloEmbeddingModels(): KiloEmbeddingModelsContextValue {
-  const context = useContext(KiloEmbeddingModelsContext)
+export function useTavernEmbeddingModels(): TavernEmbeddingModelsContextValue {
+  const context = useContext(TavernEmbeddingModelsContext)
   if (!context) {
-    throw new Error("useKiloEmbeddingModels must be used within a KiloEmbeddingModelsProvider")
+    throw new Error("useTavernEmbeddingModels must be used within a TavernEmbeddingModelsProvider")
   }
   return context
 }

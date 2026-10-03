@@ -36,7 +36,7 @@ const plugins = [
   Reload,
 ] satisfies BuiltinTuiPlugin[]
 
-export function withKiloTuiPlugins(
+export function withTavernTuiPlugins(
   builtins: BuiltinTuiPlugin[],
   flags: Pick<RuntimeFlags.Info, "experimentalEventSystem" | "experimentalSessionSwitcher">,
 ) {

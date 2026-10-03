@@ -3,33 +3,33 @@
         <module name="intellij.platform.frontend"/>
         <plugin id="org.jetbrains.plugins.terminal"/>
         <module name="intellij.terminal.frontend"/>
-        <module name="kilo.jetbrains.shared"/>
+        <module name="tavern.jetbrains.shared"/>
     </dependencies>
 
-    <resource-bundle>messages.KiloBundle</resource-bundle>
+    <resource-bundle>messages.TavernBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="ai.taverncode.client.onboarding.providers.v5migration.KiloMigrationService"/>
-        <applicationService serviceImplementation="ai.taverncode.client.onboarding.KiloOnboardingService"/>
-        <applicationService serviceImplementation="ai.taverncode.client.autocomplete.KiloAutocompleteSettingsService"/>
+        <applicationService serviceImplementation="ai.taverncode.client.onboarding.providers.v5migration.TavernMigrationService"/>
+        <applicationService serviceImplementation="ai.taverncode.client.onboarding.TavernOnboardingService"/>
+        <applicationService serviceImplementation="ai.taverncode.client.autocomplete.TavernAutocompleteSettingsService"/>
         <customPasteProvider implementation="ai.taverncode.client.session.ui.prompt.PromptAttachmentPasteProvider"/>
         <customPasteProvider implementation="ai.taverncode.client.session.ui.prompt.PromptTextPasteProvider"/>
 
-        <notificationGroup id="Kilo Code"
+        <notificationGroup id="Tavern Code"
                            displayType="BALLOON"
-                           bundle="messages.KiloBundle"
-                           key="notification.group.kilo"/>
+                           bundle="messages.TavernBundle"
+                           key="notification.group.tavern"/>
 
-        <toolWindow id="Kilo Code"
+        <toolWindow id="Tavern Code"
                     anchor="left"
-                    icon="/icons/kilo.svg"
-                    factoryClass="ai.taverncode.client.KiloToolWindowFactory"/>
+                    icon="/icons/tavern.svg"
+                    factoryClass="ai.taverncode.client.TavernToolWindowFactory"/>
 
-        <fileEditorProvider id="KiloVfsEditor" implementation="ai.taverncode.client.vfs.KiloFileEditorProvider"/>
-        <fileEditorProvider id="KiloVfsSourceEditor"
-                            order="after KiloVfsEditor"
-                            implementation="ai.taverncode.client.vfs.KiloSourceEditorProvider"/>
-        <fileIconProvider implementation="ai.taverncode.client.vfs.KiloFileIconProvider"/>
+        <fileEditorProvider id="TavernVfsEditor" implementation="ai.taverncode.client.vfs.TavernFileEditorProvider"/>
+        <fileEditorProvider id="TavernVfsSourceEditor"
+                            order="after TavernVfsEditor"
+                            implementation="ai.taverncode.client.vfs.TavernSourceEditorProvider"/>
+        <fileIconProvider implementation="ai.taverncode.client.vfs.TavernFileIconProvider"/>
         <fileType name="TAVERN_WORKTREE_SESSION"
                   implementationClass="ai.taverncode.client.agentManager.worktree.WorktreeSessionFileType"
                   fieldName="INSTANCE"/>
@@ -37,16 +37,16 @@
         <applicationConfigurable
                 parentId="tools"
                 id="ai.taverncode.jetbrains.settings"
-                instance="ai.taverncode.client.settings.KiloSettingsConfigurable"
-                bundle="messages.KiloBundle"
-                key="settings.kilo.displayName"/>
+                instance="ai.taverncode.client.settings.TavernSettingsConfigurable"
+                bundle="messages.TavernBundle"
+                key="settings.tavern.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings"
                 id="ai.taverncode.jetbrains.settings.profile"
                 groupWeight="5"
                 instance="ai.taverncode.client.settings.profile.UserProfileConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.profile.displayName"/>
 
         <applicationConfigurable
@@ -54,7 +54,7 @@
                 id="ai.taverncode.jetbrains.settings.models"
                 groupWeight="4"
                 instance="ai.taverncode.client.settings.models.ModelsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.models.displayName"/>
 
         <applicationConfigurable
@@ -62,7 +62,7 @@
                 id="ai.taverncode.jetbrains.settings.providers"
                 groupWeight="3"
                 instance="ai.taverncode.client.settings.providers.ProvidersConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.providers.displayName"/>
 
         <applicationConfigurable
@@ -70,7 +70,7 @@
                 id="ai.taverncode.jetbrains.settings.marketplace"
                 groupWeight="2"
                 instance="ai.taverncode.client.settings.marketplace.MarketplaceConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.marketplace.displayName"/>
 
         <applicationConfigurable
@@ -78,7 +78,7 @@
                 id="ai.taverncode.jetbrains.settings.agentBehavior"
                 groupWeight="1"
                 instance="ai.taverncode.client.settings.agents.AgentBehaviorConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.displayName"/>
 
         <applicationConfigurable
@@ -86,7 +86,7 @@
                 id="ai.taverncode.jetbrains.settings.context"
                 groupWeight="-1"
                 instance="ai.taverncode.client.settings.context.ContextConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.context.displayName"/>
 
         <applicationConfigurable
@@ -94,7 +94,7 @@
                 id="ai.taverncode.jetbrains.settings.autoApprove"
                 groupWeight="0"
                 instance="ai.taverncode.client.settings.autoapprove.AutoApproveConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.autoApprove.displayName"/>
 
         <applicationConfigurable
@@ -102,7 +102,7 @@
                 id="ai.taverncode.jetbrains.settings.checkpoints"
                 groupWeight="-2"
                 instance="ai.taverncode.client.settings.checkpoints.CheckpointsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.checkpoints.displayName"/>
 
         <applicationConfigurable
@@ -110,7 +110,7 @@
                 id="ai.taverncode.jetbrains.settings.integrations"
                 groupWeight="-3"
                 instance="ai.taverncode.client.settings.integrations.IntegrationsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.integrations.displayName"/>
 
         <applicationConfigurable
@@ -118,70 +118,70 @@
                 id="ai.taverncode.jetbrains.settings.advanced"
                 groupWeight="-4"
                 instance="ai.taverncode.client.settings.AdvancedConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.advanced.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings.agentBehavior"
                 id="ai.taverncode.jetbrains.settings.agentBehavior.agents"
                 instance="ai.taverncode.client.settings.agents.AgentsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.agents.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings.agentBehavior"
                 id="ai.taverncode.jetbrains.settings.agentBehavior.mcp"
                 instance="ai.taverncode.client.settings.agents.McpConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.mcp.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings.agentBehavior"
                 id="ai.taverncode.jetbrains.settings.agentBehavior.skills"
                 instance="ai.taverncode.client.settings.agents.SkillsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.skills.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings.agentBehavior"
                 id="ai.taverncode.jetbrains.settings.agentBehavior.commands"
                 instance="ai.taverncode.client.settings.agents.CommandsConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.commands.displayName"/>
 
         <applicationConfigurable
                 parentId="ai.taverncode.jetbrains.settings.agentBehavior"
                 id="ai.taverncode.jetbrains.settings.agentBehavior.rules"
                 instance="ai.taverncode.client.settings.rules.RulesConfigurable"
-                bundle="messages.KiloBundle"
+                bundle="messages.TavernBundle"
                 key="settings.agentBehavior.rules.displayName"/>
 
-        <registryKey key="kilo.session.condense"
+        <registryKey key="tavern.session.condense"
                      description="Enable event condensing in the session update queue (merges redundant snapshots before model delivery)."
                      defaultValue="true"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.session.flushMs"
+        <registryKey key="tavern.session.flushMs"
                      description="Session update queue flush cadence in milliseconds."
                      defaultValue="150"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.session.inactive.disposeTimeoutMs"
+        <registryKey key="tavern.session.inactive.disposeTimeoutMs"
                      description="Milliseconds before hidden session UI is disposed after switching away."
                      defaultValue="180000"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.session.validateRoots"
+        <registryKey key="tavern.session.validateRoots"
                       description="Treat settled (non-streaming) transcript turns as Swing validate roots so their internal repaints do not relayout the whole transcript."
                       defaultValue="true"
                       restartRequired="false"
                       overrides="false"/>
-        <registryKey key="kilo.diagram.inline.enabled"
+        <registryKey key="tavern.diagram.inline.enabled"
                      description="Render Mermaid diagram fences inline in markdown session views."
                      defaultValue="true"
                      restartRequired="false"
                      overrides="false"/>
-        <registryKey key="kilo.list.fade"
+        <registryKey key="tavern.list.fade"
                      description="Fade list row titles and descriptions into the row background where they do not fit, instead of leaving a bare cut."
                      defaultValue="true"
                      restartRequired="false"
@@ -189,107 +189,107 @@
     </extensions>
 
     <applicationListeners>
-        <listener class="ai.taverncode.client.plugin.KiloFrontendDynamicPluginListener"
+        <listener class="ai.taverncode.client.plugin.TavernFrontendDynamicPluginListener"
                   topic="com.intellij.ide.plugins.DynamicPluginListener"/>
     </applicationListeners>
 
     <actions>
-        <action id="Kilo.Restart"
-                class="ai.taverncode.client.actions.RestartKiloAction"/>
+        <action id="Tavern.Restart"
+                class="ai.taverncode.client.actions.RestartTavernAction"/>
 
-        <action id="Kilo.ReloadCoreSettings"
+        <action id="Tavern.ReloadCoreSettings"
                 class="ai.taverncode.client.actions.ReloadCoreSettingsAction"/>
 
-        <action id="Kilo.Reinstall"
-                class="ai.taverncode.client.actions.ReinstallKiloAction"/>
+        <action id="Tavern.Reinstall"
+                class="ai.taverncode.client.actions.ReinstallTavernAction"/>
 
-        <action id="Kilo.CoreInfo"
+        <action id="Tavern.CoreInfo"
                 class="ai.taverncode.client.actions.CoreInfoAction"/>
 
-        <action id="Kilo.OpenSettings"
+        <action id="Tavern.OpenSettings"
                 class="ai.taverncode.client.actions.OpenSettingsAction"
                 icon="AllIcons.General.GearPlain"/>
 
-        <action id="Kilo.OpenUserProfileSettings"
+        <action id="Tavern.OpenUserProfileSettings"
                 class="ai.taverncode.client.actions.OpenUserProfileSettingsAction"/>
 
-        <action id="Kilo.OpenMarketplaceSettings"
+        <action id="Tavern.OpenMarketplaceSettings"
                 class="ai.taverncode.client.actions.OpenMarketplaceSettingsAction"/>
 
-        <action id="Kilo.OpenLocalConfig"
+        <action id="Tavern.OpenLocalConfig"
                 class="ai.taverncode.client.actions.OpenLocalConfigAction"/>
 
-        <action id="Kilo.OpenGlobalConfig"
+        <action id="Tavern.OpenGlobalConfig"
                 class="ai.taverncode.client.actions.OpenGlobalConfigAction"/>
 
-        <action id="Kilo.ForceMigration"
+        <action id="Tavern.ForceMigration"
                 class="ai.taverncode.client.actions.ForceMigrationAction"/>
 
-        <action id="Kilo.OpenSetupScript"
+        <action id="Tavern.OpenSetupScript"
                 class="ai.taverncode.client.actions.OpenSetupScriptAction"/>
 
-        <group id="Kilo.CliGroup" text="Core" popup="true">
-            <reference ref="Kilo.ReloadCoreSettings"/>
+        <group id="Tavern.CliGroup" text="Core" popup="true">
+            <reference ref="Tavern.ReloadCoreSettings"/>
             <separator/>
-            <reference ref="Kilo.Restart"/>
-            <reference ref="Kilo.Reinstall"/>
+            <reference ref="Tavern.Restart"/>
+            <reference ref="Tavern.Reinstall"/>
             <separator/>
-            <reference ref="Kilo.CoreInfo"/>
+            <reference ref="Tavern.CoreInfo"/>
         </group>
 
-        <group id="Kilo.OpenConfigGroup" text="Config Files" popup="true">
-            <reference ref="Kilo.OpenLocalConfig"/>
-            <reference ref="Kilo.OpenGlobalConfig"/>
+        <group id="Tavern.OpenConfigGroup" text="Config Files" popup="true">
+            <reference ref="Tavern.OpenLocalConfig"/>
+            <reference ref="Tavern.OpenGlobalConfig"/>
             <separator/>
-            <reference ref="Kilo.ForceMigration"/>
+            <reference ref="Tavern.ForceMigration"/>
         </group>
 
-        <group id="Kilo.SettingsGroup">
-            <reference ref="Kilo.OpenSettings"/>
+        <group id="Tavern.SettingsGroup">
+            <reference ref="Tavern.OpenSettings"/>
             <separator/>
-            <reference ref="Kilo.OpenUserProfileSettings"/>
-            <reference ref="Kilo.OpenMarketplaceSettings"/>
+            <reference ref="Tavern.OpenUserProfileSettings"/>
+            <reference ref="Tavern.OpenMarketplaceSettings"/>
             <separator/>
-            <reference ref="Kilo.OpenConfigGroup"/>
+            <reference ref="Tavern.OpenConfigGroup"/>
             <separator/>
-            <reference ref="Kilo.CliGroup"/>
+            <reference ref="Tavern.CliGroup"/>
         </group>
 
-        <action id="Kilo.Settings"
-                class="ai.taverncode.client.actions.KiloSettingsAction"
+        <action id="Tavern.Settings"
+                class="ai.taverncode.client.actions.TavernSettingsAction"
                 icon="AllIcons.General.GearPlain"/>
 
-        <action id="Kilo.NewSession"
+        <action id="Tavern.NewSession"
                 class="ai.taverncode.client.actions.NewSessionAction"/>
 
-        <action id="Kilo.NewWorktree"
+        <action id="Tavern.NewWorktree"
                 class="ai.taverncode.client.actions.NewWorktreeAction"/>
 
-        <action id="Kilo.Chat.NewWorktree"
+        <action id="Tavern.Chat.NewWorktree"
                 class="ai.taverncode.client.actions.ChatNewWorktreeAction"
                 text="New Worktree"
                 description="Create a new git worktree with its own branch and session"/>
 
-        <action id="Kilo.Chat.MoveToWorktree"
+        <action id="Tavern.Chat.MoveToWorktree"
                 class="ai.taverncode.client.actions.ChatMoveToWorktreeAction"
                 text="Move to Worktree"
                 description="Move this session into a new git worktree"/>
 
-        <action id="Kilo.History"
+        <action id="Tavern.History"
                 class="ai.taverncode.client.actions.HistoryAction"/>
 
-        <!-- Declarative toolbar group for the Kilo tool window title bar -->
-        <group id="Kilo.ToolWindowToolbar">
-            <reference ref="Kilo.NewSession"/>
-            <reference ref="Kilo.NewWorktree"/>
-            <reference ref="Kilo.History"/>
-            <reference ref="Kilo.Settings"/>
+        <!-- Declarative toolbar group for the Tavern tool window title bar -->
+        <group id="Tavern.ToolWindowToolbar">
+            <reference ref="Tavern.NewSession"/>
+            <reference ref="Tavern.NewWorktree"/>
+            <reference ref="Tavern.History"/>
+            <reference ref="Tavern.Settings"/>
         </group>
 
-        <action id="Kilo.SendPrompt"
+        <action id="Tavern.SendPrompt"
                 class="ai.taverncode.client.actions.SendPromptAction"
                 text="Send Prompt"
-                description="Send the current Kilo prompt">
+                description="Send the current Tavern prompt">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="ENTER"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+"
@@ -298,18 +298,18 @@
                                first-keystroke="control ENTER"/>
         </action>
 
-        <action id="Kilo.SubmitDialog"
+        <action id="Tavern.SubmitDialog"
                 class="ai.taverncode.client.actions.SubmitDialogAction"
                 text="Submit Dialog"
-                description="Run the default action in the current Kilo dialog">
+                description="Run the default action in the current Tavern dialog">
             <keyboard-shortcut keymap="Mac OS X 10.5+"
                                first-keystroke="meta ENTER"/>
         </action>
 
-        <action id="Kilo.StopSession"
+        <action id="Tavern.StopSession"
                 class="ai.taverncode.client.actions.StopSessionAction"
                 text="Stop Session"
-                description="Stop the current Kilo session">
+                description="Stop the current Tavern session">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="alt S"/>
         </action>
@@ -320,10 +320,10 @@
           the Project tool window), so each mac keymap re-declares the literal Ctrl shortcut with
           replace-all to drop the converted one. Same pattern the platform uses for Emmet's edit points.
         -->
-        <action id="Kilo.Session.CycleMode"
+        <action id="Tavern.Session.CycleMode"
                 class="ai.taverncode.client.actions.CycleModeAction"
                 text="Cycle Mode"
-                description="Switch to the next Kilo mode">
+                description="Switch to the next Tavern mode">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="control 1"/>
             <keyboard-shortcut keymap="Mac OS X"
@@ -334,10 +334,10 @@
                                replace-all="true"/>
         </action>
 
-        <action id="Kilo.Session.CycleModel"
+        <action id="Tavern.Session.CycleModel"
                 class="ai.taverncode.client.actions.CycleModelAction"
                 text="Cycle Model"
-                description="Switch to the next favorite or recommended Kilo model">
+                description="Switch to the next favorite or recommended Tavern model">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="control 2"/>
             <keyboard-shortcut keymap="Mac OS X"
@@ -348,10 +348,10 @@
                                replace-all="true"/>
         </action>
 
-        <action id="Kilo.Session.CycleReasoning"
+        <action id="Tavern.Session.CycleReasoning"
                 class="ai.taverncode.client.actions.CycleReasoningAction"
                 text="Cycle Reasoning Effort"
-                description="Switch to the next Kilo reasoning effort">
+                description="Switch to the next Tavern reasoning effort">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="control 3"/>
             <keyboard-shortcut keymap="Mac OS X"
@@ -362,10 +362,10 @@
                                replace-all="true"/>
         </action>
 
-        <action id="Kilo.Session.ResetModel"
+        <action id="Tavern.Session.ResetModel"
                 class="ai.taverncode.client.actions.ResetModelAction"
                 text="Reset Model"
-                description="Clear the Kilo model override for the current mode">
+                description="Clear the Tavern model override for the current mode">
             <keyboard-shortcut keymap="$default"
                                first-keystroke="control 0"/>
             <keyboard-shortcut keymap="Mac OS X"
@@ -376,117 +376,117 @@
                                replace-all="true"/>
         </action>
 
-        <action id="Kilo.Session.Open"
+        <action id="Tavern.Session.Open"
                 class="ai.taverncode.client.actions.OpenSessionAction">
             <keyboard-shortcut keymap="$default" first-keystroke="ENTER"/>
         </action>
 
-        <action id="Kilo.Session.Rename"
+        <action id="Tavern.Session.Rename"
                 class="ai.taverncode.client.actions.RenameSessionAction"
                 use-shortcut-of="RenameElement"/>
 
-        <action id="Kilo.Session.Delete"
+        <action id="Tavern.Session.Delete"
                 class="ai.taverncode.client.actions.DeleteSessionAction"
                 use-shortcut-of="$Delete"/>
 
-        <action id="Kilo.Worktree.Rename"
+        <action id="Tavern.Worktree.Rename"
                 class="ai.taverncode.client.actions.RenameWorktreeAction"/>
 
-        <action id="Kilo.Worktree.Delete"
+        <action id="Tavern.Worktree.Delete"
                 class="ai.taverncode.client.actions.DeleteWorktreeAction"/>
 
-        <action id="Kilo.Worktree.OpenPr"
+        <action id="Tavern.Worktree.OpenPr"
                 class="ai.taverncode.client.actions.OpenWorktreePrAction"/>
 
-        <action id="Kilo.Worktree.CopyPrRef"
+        <action id="Tavern.Worktree.CopyPrRef"
                 class="ai.taverncode.client.actions.CopyWorktreePrRefAction"/>
 
-        <action id="Kilo.Worktree.OpenDiff"
+        <action id="Tavern.Worktree.OpenDiff"
                 class="ai.taverncode.client.actions.OpenWorktreeDiffAction"/>
 
-        <action id="Kilo.Worktree.OpenLocalDiff"
+        <action id="Tavern.Worktree.OpenLocalDiff"
                 class="ai.taverncode.client.actions.OpenWorktreeLocalDiffAction"/>
 
-        <action id="Kilo.Worktree.CopyBranchName"
+        <action id="Tavern.Worktree.CopyBranchName"
                 class="ai.taverncode.client.actions.CopyBranchNameAction"/>
 
-        <action id="Kilo.Worktree.CopyBranchPath"
+        <action id="Tavern.Worktree.CopyBranchPath"
                 class="ai.taverncode.client.actions.CopyBranchPathAction"/>
 
-        <action id="Kilo.Worktree.RunSetupScript"
+        <action id="Tavern.Worktree.RunSetupScript"
                 class="ai.taverncode.client.actions.RunWorktreeSetupScriptAction"/>
 
-        <action id="Kilo.WorktreeSession.Rename"
+        <action id="Tavern.WorktreeSession.Rename"
                 class="ai.taverncode.client.actions.RenameWorktreeSessionAction"/>
 
-        <action id="Kilo.WorktreeSession.Delete"
+        <action id="Tavern.WorktreeSession.Delete"
                 class="ai.taverncode.client.actions.DeleteWorktreeSessionAction"/>
 
-        <action id="Kilo.WorktreeSession.MoveToWorktree"
+        <action id="Tavern.WorktreeSession.MoveToWorktree"
                 class="ai.taverncode.client.actions.MoveWorktreeSessionAction"/>
 
-        <action id="Kilo.WorktreeSession.Fork"
+        <action id="Tavern.WorktreeSession.Fork"
                 class="ai.taverncode.client.actions.ForkWorktreeSessionAction"/>
 
-        <group id="Kilo.Worktree.RowMenu">
-            <reference ref="Kilo.Worktree.Rename"/>
+        <group id="Tavern.Worktree.RowMenu">
+            <reference ref="Tavern.Worktree.Rename"/>
             <separator/>
-            <reference ref="Kilo.Worktree.OpenPr"/>
+            <reference ref="Tavern.Worktree.OpenPr"/>
             <separator/>
-            <reference ref="Kilo.Worktree.OpenDiff"/>
-            <reference ref="Kilo.Worktree.OpenLocalDiff"/>
+            <reference ref="Tavern.Worktree.OpenDiff"/>
+            <reference ref="Tavern.Worktree.OpenLocalDiff"/>
             <separator/>
-            <reference ref="Kilo.Worktree.CopyBranchName"/>
-            <reference ref="Kilo.Worktree.CopyBranchPath"/>
-            <reference ref="Kilo.Worktree.CopyPrRef"/>
+            <reference ref="Tavern.Worktree.CopyBranchName"/>
+            <reference ref="Tavern.Worktree.CopyBranchPath"/>
+            <reference ref="Tavern.Worktree.CopyPrRef"/>
             <separator/>
-            <reference ref="Kilo.OpenSetupScript"/>
-            <reference ref="Kilo.Worktree.RunSetupScript"/>
+            <reference ref="Tavern.OpenSetupScript"/>
+            <reference ref="Tavern.Worktree.RunSetupScript"/>
             <separator/>
-            <reference ref="Kilo.Worktree.Delete"/>
+            <reference ref="Tavern.Worktree.Delete"/>
         </group>
 
-        <group id="Kilo.WorktreeSession.RowMenu">
-            <reference ref="Kilo.WorktreeSession.Fork"/>
-            <reference ref="Kilo.WorktreeSession.MoveToWorktree"/>
+        <group id="Tavern.WorktreeSession.RowMenu">
+            <reference ref="Tavern.WorktreeSession.Fork"/>
+            <reference ref="Tavern.WorktreeSession.MoveToWorktree"/>
             <separator/>
-            <reference ref="Kilo.WorktreeSession.Rename"/>
-            <reference ref="Kilo.WorktreeSession.Delete"/>
+            <reference ref="Tavern.WorktreeSession.Rename"/>
+            <reference ref="Tavern.WorktreeSession.Delete"/>
         </group>
 
-        <group id="Kilo.History.ContextMenu">
-            <reference ref="Kilo.Session.Open"/>
+        <group id="Tavern.History.ContextMenu">
+            <reference ref="Tavern.Session.Open"/>
             <separator/>
-            <reference ref="Kilo.Session.Rename"/>
-            <reference ref="Kilo.Session.Delete"/>
+            <reference ref="Tavern.Session.Rename"/>
+            <reference ref="Tavern.Session.Delete"/>
         </group>
 
-        <!-- Text and descriptions come from KiloBundle via action.<id>.text / .description. -->
-        <action id="Kilo.Session.AutoApprove"
+        <!-- Text and descriptions come from TavernBundle via action.<id>.text / .description. -->
+        <action id="Tavern.Session.AutoApprove"
                 class="ai.taverncode.client.actions.SessionAutoApproveAction"/>
 
-        <action id="Kilo.Session.Fork"
+        <action id="Tavern.Session.Fork"
                 class="ai.taverncode.client.actions.ForkSessionAction"/>
 
-        <action id="Kilo.Session.Board"
+        <action id="Tavern.Session.Board"
                 class="ai.taverncode.client.actions.ShowSessionBoardAction"/>
 
-        <action id="Kilo.Session.CompareToBase"
+        <action id="Tavern.Session.CompareToBase"
                 class="ai.taverncode.client.actions.CompareToBaseAction"/>
 
-        <action id="Kilo.Session.OpenPr"
+        <action id="Tavern.Session.OpenPr"
                 class="ai.taverncode.client.actions.OpenSessionPrAction"/>
 
-        <action id="Kilo.Session.CopyPrRef"
+        <action id="Tavern.Session.CopyPrRef"
                 class="ai.taverncode.client.actions.CopySessionPrRefAction"/>
 
-        <action id="Kilo.Session.CopyId"
+        <action id="Tavern.Session.CopyId"
                 class="ai.taverncode.client.actions.CopySessionIdAction"/>
 
-        <action id="Kilo.Session.Share"
+        <action id="Tavern.Session.Share"
                 class="ai.taverncode.client.actions.ShareSessionAction"/>
 
-        <action id="Kilo.Session.CopyShareLink"
+        <action id="Tavern.Session.CopyShareLink"
                 class="ai.taverncode.client.actions.CopyShareLinkAction"/>
 
         <!--
@@ -496,48 +496,48 @@
           which keeps the menu short in the common case. New Worktree / Move to Worktree live only on
           the branch dock toolbar, not here.
         -->
-        <group id="Kilo.Session.ContextMenu">
-            <reference ref="Kilo.Session.AutoApprove"/>
+        <group id="Tavern.Session.ContextMenu">
+            <reference ref="Tavern.Session.AutoApprove"/>
             <separator/>
-            <reference ref="Kilo.Session.Fork"/>
-            <reference ref="Kilo.Session.Board"/>
+            <reference ref="Tavern.Session.Fork"/>
+            <reference ref="Tavern.Session.Board"/>
             <separator/>
-            <reference ref="Kilo.Session.CompareToBase"/>
-            <reference ref="Kilo.Session.OpenPr"/>
-            <reference ref="Kilo.Session.CopyPrRef"/>
+            <reference ref="Tavern.Session.CompareToBase"/>
+            <reference ref="Tavern.Session.OpenPr"/>
+            <reference ref="Tavern.Session.CopyPrRef"/>
             <separator/>
-            <reference ref="Kilo.OpenSettings"/>
-            <reference ref="Kilo.ReloadCoreSettings"/>
+            <reference ref="Tavern.OpenSettings"/>
+            <reference ref="Tavern.ReloadCoreSettings"/>
             <separator/>
             <reference ref="$Copy"/>
             <separator/>
-            <reference ref="Kilo.Session.CopyId"/>
-            <reference ref="Kilo.Session.CopyShareLink"/>
-            <reference ref="Kilo.Session.Share"/>
+            <reference ref="Tavern.Session.CopyId"/>
+            <reference ref="Tavern.Session.CopyShareLink"/>
+            <reference ref="Tavern.Session.Share"/>
             <separator/>
-            <reference ref="Kilo.StopSession"/>
+            <reference ref="Tavern.StopSession"/>
         </group>
 
         <!--
           Popup shown from the "more" icon in the prompt bar. Same SessionActionsKeys.ACTIONS context
           as the context menu, with Copy and Stop reserved for the right-click menu.
         -->
-        <group id="Kilo.Session.PromptMenu">
-            <reference ref="Kilo.Session.AutoApprove"/>
+        <group id="Tavern.Session.PromptMenu">
+            <reference ref="Tavern.Session.AutoApprove"/>
             <separator/>
-            <reference ref="Kilo.Session.Fork"/>
-            <reference ref="Kilo.Session.Board"/>
+            <reference ref="Tavern.Session.Fork"/>
+            <reference ref="Tavern.Session.Board"/>
             <separator/>
-            <reference ref="Kilo.Session.CompareToBase"/>
-            <reference ref="Kilo.Session.OpenPr"/>
-            <reference ref="Kilo.Session.CopyPrRef"/>
+            <reference ref="Tavern.Session.CompareToBase"/>
+            <reference ref="Tavern.Session.OpenPr"/>
+            <reference ref="Tavern.Session.CopyPrRef"/>
             <separator/>
-            <reference ref="Kilo.OpenSettings"/>
-            <reference ref="Kilo.ReloadCoreSettings"/>
+            <reference ref="Tavern.OpenSettings"/>
+            <reference ref="Tavern.ReloadCoreSettings"/>
             <separator/>
-            <reference ref="Kilo.Session.CopyId"/>
-            <reference ref="Kilo.Session.CopyShareLink"/>
-            <reference ref="Kilo.Session.Share"/>
+            <reference ref="Tavern.Session.CopyId"/>
+            <reference ref="Tavern.Session.CopyShareLink"/>
+            <reference ref="Tavern.Session.Share"/>
         </group>
     </actions>
 </idea-plugin>

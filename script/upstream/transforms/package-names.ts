@@ -47,6 +47,12 @@ const KILO_RENAME_SUBSTITUTIONS: { pattern: RegExp; replacement: string }[] = [
   { pattern: /\bKilo Code\b/g, replacement: "Tavern Code" },
   { pattern: /\bKilocode\b/g, replacement: "Taverncode" },
   { pattern: /kilocode/g, replacement: "taverncode" },
+  // Compound identifiers the bare-word rules below cannot see: UPPER_SNAKE
+  // constants/env vars (KILO_BASE_MODE -> TAVERN_BASE_MODE) and PascalCase
+  // classes/namespaces (KiloSteer -> TavernSteer). Protected tokens such as
+  // Kilo-Org are sentinelled out before these run.
+  { pattern: /\bKILO_([A-Z0-9_]+)\b/g, replacement: "TAVERN_$1" },
+  { pattern: /\bKilo(?=[A-Z])/g, replacement: "Tavern" },
   { pattern: /\bKilo\b/g, replacement: "Tavern" },
   { pattern: /\bkilo\b/g, replacement: "tavern" },
 ]

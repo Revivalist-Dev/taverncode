@@ -5,10 +5,10 @@ import os from "os"
 export namespace RulesMigrator {
   // Only support .taverncoderules (no migration for .roorules or .clinerules)
   const LEGACY_RULE_FILE = ".taverncoderules"
-  const home = () => process.env.KILO_TEST_HOME || process.env.HOME || process.env.USERPROFILE || os.homedir()
+  const home = () => process.env.TAVERN_TEST_HOME || process.env.HOME || process.env.USERPROFILE || os.homedir()
 
   // Directory-based rules (read from both .tavern and .taverncode)
-  const KILO_RULES_DIRS = [".tavern/rules", ".taverncode/rules"]
+  const TAVERN_RULES_DIRS = [".tavern/rules", ".taverncode/rules"]
   const globalRulesDirs = () => [path.join(home(), ".tavern", "rules"), path.join(home(), ".taverncode", "rules")]
 
   // Known modes for mode-specific rule discovery
@@ -65,7 +65,7 @@ export namespace RulesMigrator {
 
     // 2. Project .tavern/rules/ and .taverncode/rules/ directories
     const seen = new Set<string>()
-    for (const rulesRel of KILO_RULES_DIRS) {
+    for (const rulesRel of TAVERN_RULES_DIRS) {
       const projectRulesDir = path.join(projectDir, rulesRel)
       if (await isDirectory(projectRulesDir)) {
         const files = await findMarkdownFiles(projectRulesDir)

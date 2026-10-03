@@ -12,7 +12,7 @@ import ai.taverncode.backend.cli.TavernCliPlatform
 import ai.taverncode.backend.cli.TavernProps
 import ai.taverncode.backend.cli.TavernRepoCli
 import ai.taverncode.backend.workspace.TavernWorktreeIndexSettings
-import ai.taverncode.jetbrains.api.model.KiloProfile200Response
+import ai.taverncode.jetbrains.api.model.TavernProfile200Response
 import ai.taverncode.log.TavernLog
 import ai.taverncode.log.LogConfig
 import ai.taverncode.rpc.dto.ConfigPatchDto
@@ -188,7 +188,7 @@ internal fun appStateDto(state: TavernAppState, backgroundSubagents: Boolean = f
         )
     }
 
-internal fun profileDto(p: KiloProfile200Response): ProfileDto = ProfileDto(
+internal fun profileDto(p: TavernProfile200Response): ProfileDto = ProfileDto(
     email = p.profile.email,
     name = p.profile.name,
     organizations = p.profile.organizations.orEmpty().map { org ->
@@ -199,7 +199,7 @@ internal fun profileDto(p: KiloProfile200Response): ProfileDto = ProfileDto(
     // CLI release ships the field.
     hasPersonalAccount = true,
     balance = p.balance?.balance?.let { ProfileBalanceDto(balance = it) },
-    tavernPass = p.kiloPass?.let {
+    tavernPass = p.tavernPass?.let {
         val base = it.currentPeriodBaseCreditsUsd
         val usage = it.currentPeriodUsageUsd
         val bonus = it.currentPeriodBonusCreditsUsd

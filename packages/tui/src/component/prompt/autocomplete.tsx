@@ -20,6 +20,7 @@ import { useTerminalDimensions } from "@opentui/solid"
 import { slashDisplay } from "@/taverncode/cli/cmd/command-display" // taverncode_change
 import { createSessionPart, sessionMentionText } from "../../taverncode/session-mentions" // taverncode_change
 import { DialogSessionMention } from "../../taverncode/dialog-session-mention" // taverncode_change
+import { TavernSteer } from "../../taverncode/steer" // taverncode_change
 import { useDialog } from "../../ui/dialog" // taverncode_change
 import { Locale } from "../../util/locale"
 import type { PromptInfo } from "../../prompt/history"
@@ -683,7 +684,7 @@ export function Autocomplete(props: {
   }))
 
   function show(mode: "@" | "/") {
-    if (mode === "/" && KiloSteer.steering(sync.session.get(props.sessionID ?? ""))) return // taverncode_change
+    if (mode === "/" && TavernSteer.steering(sync.session.get(props.sessionID ?? ""))) return // taverncode_change
     setStore({
       visible: mode,
       index: props.input().cursorOffset,

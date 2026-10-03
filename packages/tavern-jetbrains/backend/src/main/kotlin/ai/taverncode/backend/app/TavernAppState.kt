@@ -1,7 +1,7 @@
 package ai.taverncode.backend.app
 
-import ai.taverncode.jetbrains.api.model.KiloNotifications200ResponseInner
-import ai.taverncode.jetbrains.api.model.KiloProfile200Response
+import ai.taverncode.jetbrains.api.model.TavernNotifications200ResponseInner
+import ai.taverncode.jetbrains.api.model.TavernProfile200Response
 import ai.taverncode.backend.migration.LegacyMigrationDetection
 import ai.taverncode.rpc.dto.ConfigDto
 
@@ -54,7 +54,7 @@ data class ConfigWarning(
  * Present only in [TavernAppState.Ready].
  */
 data class AppData(
-    val profile: KiloProfile200Response?,
+    val profile: TavernProfile200Response?,
     val config: ConfigDto,
-    val notifications: List<KiloNotifications200ResponseInner>,
+    val notifications: List<TavernNotifications200ResponseInner>,
 )

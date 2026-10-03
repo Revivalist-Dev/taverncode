@@ -9,7 +9,7 @@ import { Flag } from "@opencode-ai/core/flag/flag"
 import * as Log from "@opencode-ai/core/util/log"
 import { ConfigParse } from "@/config/parse"
 import { ConfigMarkdown } from "@/config/markdown"
-import { KilocodeConfig } from "./config"
+import { TaverncodeConfig } from "./config"
 import { BUILTIN_SKILLS } from "../skills/builtin"
 import { SkillInject } from "../skills/inject"
 
@@ -124,7 +124,7 @@ export namespace ClaudeMigration {
   }
 
   export function unsupportedContext() {
-    return ["CLAUDE_CONFIG_DIR", "KILO_CONFIG_DIR", "KILO_CONFIG", "KILO_CONFIG_CONTENT"].some(
+    return ["CLAUDE_CONFIG_DIR", "TAVERN_CONFIG_DIR", "TAVERN_CONFIG", "TAVERN_CONFIG_CONTENT"].some(
       (key) => (process.env[key] ?? "").trim() !== "",
     )
   }
@@ -206,7 +206,7 @@ export namespace ClaudeMigration {
   }
 
   export async function run(input: { enabled?: boolean; roots?: Partial<Roots> } = {}): Promise<Result> {
-    if (!(input.enabled ?? Flag.KILO_EXPERIMENTAL_CLAUDE_MIGRATION)) return { status: "disabled" }
+    if (!(input.enabled ?? Flag.TAVERN_EXPERIMENTAL_CLAUDE_MIGRATION)) return { status: "disabled" }
     if (unsupportedContext()) return { status: "unsupported-context" }
 
     const base = roots(input.roots)
@@ -566,8 +566,8 @@ export namespace ClaudeMigration {
     try {
       const current = target.exists ? await readFile(target.path, "utf8") : "{}"
       if (hash(target.path, target.exists, target.exists ? current : "") !== revision) return false
-      const { KilocodeConfigWriter } = await import("./writer")
-      const result = await KilocodeConfigWriter.write({
+      const { TaverncodeConfigWriter } = await import("./writer")
+      const result = await TaverncodeConfigWriter.write({
         directory: base.home,
         scope: "global",
         expected: { path: target.path, revision },
@@ -608,7 +608,7 @@ export namespace ClaudeMigration {
     const dirs = [base.config, path.join(base.home, ".tavern"), path.join(base.home, ".taverncode")]
     const names = new Set<string>()
     for (const dir of dirs) {
-      for (const file of KilocodeConfig.GLOBAL_CONFIG_FILES) {
+      for (const file of TaverncodeConfig.GLOBAL_CONFIG_FILES) {
         const filepath = path.join(dir, file)
         if (!(await fileExists(filepath))) continue
         const text = await readText(filepath, MAX_CONFIG)
@@ -664,7 +664,7 @@ export namespace ClaudeMigration {
     }
 
     for (const dir of [base.config, path.join(base.home, ".tavern"), path.join(base.home, ".taverncode")]) {
-      for (const file of KilocodeConfig.GLOBAL_CONFIG_FILES) {
+      for (const file of TaverncodeConfig.GLOBAL_CONFIG_FILES) {
         const filepath = path.join(dir, file)
         if (!(await fileExists(filepath))) continue
         const read = await readText(filepath, MAX_CONFIG)

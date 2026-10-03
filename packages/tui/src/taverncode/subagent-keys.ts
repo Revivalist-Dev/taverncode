@@ -5,11 +5,11 @@ import { usePromptRef } from "../context/prompt"
 import { useRouteData } from "../context/route"
 import { useSDK } from "../context/sdk"
 import { useSync } from "../context/sync"
-import { KILO_BASE_MODE, useBindings } from "../keymap"
+import { TAVERN_BASE_MODE, useBindings } from "../keymap"
 import { useToast } from "../ui/toast"
 import { running } from "../util/session"
 import { createDoublePress } from "./double-press"
-import { KiloSteer } from "./steer"
+import { TavernSteer } from "./steer"
 
 // Bare-arrow parent/sibling navigation. The session route no longer binds these: while a steer is
 // typed they must reach the prompt, and the route's layer would outrank the prompt's textarea.
@@ -50,7 +50,7 @@ export function useSubagentKeys() {
 
   // `get` (not `gather`): gather caches by name, so a second gather("session", ...) returns the first list.
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: TAVERN_BASE_MODE,
     enabled: interruptible(),
     priority: 1,
     commands: [
@@ -67,16 +67,16 @@ export function useSubagentKeys() {
 
   // Priority 1 also outranks prompt history, so up on an empty prompt goes to the parent.
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: TAVERN_BASE_MODE,
     priority: 1,
-    enabled: () => KiloSteer.idle(prompt.current),
+    enabled: () => TavernSteer.idle(prompt.current),
     bindings: tuiConfig.keybinds.gather("subagent.nav", NAV),
   }))
 
   useBindings(() => ({
-    mode: KILO_BASE_MODE,
+    mode: TAVERN_BASE_MODE,
     priority: 1,
-    enabled: () => KiloSteer.idle(prompt.current),
+    enabled: () => TavernSteer.idle(prompt.current),
     bindings: tuiConfig.keybinds.get("app.exit").map((binding) => ({
       ...binding,
       cmd: () => {

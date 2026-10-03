@@ -4,20 +4,20 @@ import os from "os"
 import type { ConfigCommandV1 } from "@opencode-ai/core/v1/config/command"
 import { InvalidError } from "@opencode-ai/core/v1/config/error"
 import { Filesystem } from "../util/filesystem"
-import { KilocodeMarkdown } from "./config/markdown"
-import { KilocodePaths } from "./paths"
+import { TaverncodeMarkdown } from "./config/markdown"
+import { TaverncodePaths } from "./paths"
 
 export namespace WorkflowsMigrator {
   const home = () => process.env.HOME || process.env.USERPROFILE || os.homedir()
 
   // .taverncode first (lower precedence), .tavern second (higher precedence / wins)
-  const KILO_WORKFLOWS_DIRS = [".taverncode/workflows", ".tavern/workflows"]
+  const TAVERN_WORKFLOWS_DIRS = [".taverncode/workflows", ".tavern/workflows"]
   const globalWorkflowsDirs = () => [
     path.join(home(), ".taverncode", "workflows"),
     path.join(home(), ".tavern", "workflows"),
   ]
 
-  export interface KilocodeWorkflow {
+  export interface TaverncodeWorkflow {
     name: string
     path: string
     content: string
@@ -60,17 +60,17 @@ export namespace WorkflowsMigrator {
     source: "global" | "project",
     root?: string,
     warnings: string[] = [],
-  ): Promise<KilocodeWorkflow[]> {
+  ): Promise<TaverncodeWorkflow[]> {
     if (!(await Filesystem.isDir(dir))) return []
     const files = await findWorkflowFiles(dir)
-    const workflows: KilocodeWorkflow[] = []
+    const workflows: TaverncodeWorkflow[] = []
     for (const file of files) {
       const options = {
         trusted: source === "global",
         fileScope: source === "project" && root ? { root, source: file } : undefined,
       }
-      const content = await KilocodeMarkdown.read(file, options)
-        .then((text) => KilocodeMarkdown.substitute(text, file, options))
+      const content = await TaverncodeMarkdown.read(file, options)
+        .then((text) => TaverncodeMarkdown.substitute(text, file, options))
         .catch((err) => {
           const message = InvalidError.isInstance(err) ? err.data.message : undefined
           warnings.push(
@@ -93,12 +93,12 @@ export namespace WorkflowsMigrator {
     projectDir: string,
     skipGlobalPaths?: boolean,
     warnings: string[] = [],
-  ): Promise<KilocodeWorkflow[]> {
-    const workflows: KilocodeWorkflow[] = []
+  ): Promise<TaverncodeWorkflow[]> {
+    const workflows: TaverncodeWorkflow[] = []
 
     if (!skipGlobalPaths) {
       // 1. VSCode extension global storage (primary location for global workflows)
-      const vscodeWorkflowsDir = path.join(KilocodePaths.vscodeGlobalStorage(), "workflows")
+      const vscodeWorkflowsDir = path.join(TaverncodePaths.vscodeGlobalStorage(), "workflows")
       workflows.push(...(await loadWorkflowsFromDir(vscodeWorkflowsDir, "global", undefined, warnings)))
 
       // 2. Home directories ~/.taverncode/workflows and ~/.tavern/workflows
@@ -108,14 +108,14 @@ export namespace WorkflowsMigrator {
     }
 
     // 3. Project workflows (.tavern/workflows/ and .taverncode/workflows/)
-    for (const dir of KILO_WORKFLOWS_DIRS) {
+    for (const dir of TAVERN_WORKFLOWS_DIRS) {
       workflows.push(...(await loadWorkflowsFromDir(path.join(projectDir, dir), "project", projectDir, warnings)))
     }
 
     return workflows
   }
 
-  export function convertToCommand(workflow: KilocodeWorkflow): ConfigCommandV1.Info {
+  export function convertToCommand(workflow: TaverncodeWorkflow): ConfigCommandV1.Info {
     return {
       template: workflow.content,
       description: extractDescription(workflow.content) ?? `Workflow: ${workflow.name}`,
@@ -133,7 +133,7 @@ export namespace WorkflowsMigrator {
     const workflows = await discoverWorkflows(options.projectDir, options.skipGlobalPaths, warnings)
 
     // Deduplicate by name (project takes precedence over global)
-    const workflowsByName = new Map<string, KilocodeWorkflow>()
+    const workflowsByName = new Map<string, TaverncodeWorkflow>()
 
     // Add global first
     for (const workflow of workflows.filter((w) => w.source === "global")) {

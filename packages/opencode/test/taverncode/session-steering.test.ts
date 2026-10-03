@@ -12,9 +12,9 @@ import { Plugin } from "../../src/plugin"
 import { Session } from "../../src/session/session"
 import { SessionPrompt } from "../../src/session/prompt"
 import { SessionSummary } from "../../src/session/summary"
-import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
+import { TavernSessions } from "../../src/tavern-sessions/tavern-sessions"
 import { BoardStore } from "../../src/taverncode/board/store"
-import { KiloSessionSteering } from "../../src/taverncode/session/steering"
+import { TavernSessionSteering } from "../../src/taverncode/session/steering"
 import { provideTmpdirServer } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 import { reply, TestLLMServer } from "../lib/llm-server"
@@ -98,7 +98,7 @@ const it = testEffect(
     [Plugin.node, plugin],
     [LSP.node, lsp],
     [MCP.node, mcp],
-    [KiloSessions.node, KiloSessions.testLayer],
+    [TavernSessions.node, TavernSessions.testLayer],
   ]),
 )
 
@@ -148,22 +148,22 @@ function config(url: string) {
   }
 }
 
-const steer = (text: string) => ({ type: "text" as const, text, metadata: { kind: KiloSessionSteering.KIND } })
+const steer = (text: string) => ({ type: "text" as const, text, metadata: { kind: TavernSessionSteering.KIND } })
 
 test("fits escape-heavy steering text inside the board message budget", () => {
   for (const text of ["\u0001".repeat(3000), '"\\'.repeat(2000), "x".repeat(9000)]) {
-    const body = KiloSessionSteering.body(text)
+    const body = TavernSessionSteering.body(text)
     expect(body.startsWith("The user steered this subagent directly:")).toBe(true)
     expect(Buffer.byteLength(JSON.stringify(body))).toBeLessThanOrEqual(3584)
   }
-  expect(KiloSessionSteering.body("short")).toBe("The user steered this subagent directly:\n\nshort")
+  expect(TavernSessionSteering.body("short")).toBe("The user steered this subagent directly:\n\nshort")
 })
 
 test("only counts marked human text as steering", () => {
   expect(
-    KiloSessionSteering.text([
+    TavernSessionSteering.text([
       { type: "text", text: "task prompt from the parent" },
-      { type: "text", text: "editor context", synthetic: true, metadata: { kind: KiloSessionSteering.KIND } },
+      { type: "text", text: "editor context", synthetic: true, metadata: { kind: TavernSessionSteering.KIND } },
       { type: "file" },
       steer("inspect the parser"),
     ]),

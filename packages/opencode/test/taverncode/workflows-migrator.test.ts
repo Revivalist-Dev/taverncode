@@ -155,7 +155,7 @@ Actual description here.`
     })
 
     test("skips environment substitutions in project workflows", async () => {
-      const name = "KILO_WORKFLOW_PROJECT_SECRET"
+      const name = "TAVERN_WORKFLOW_PROJECT_SECRET"
       const prior = process.env[name]
       process.env[name] = "environment secret"
       try {
@@ -179,7 +179,7 @@ Actual description here.`
     })
 
     test("preserves file and environment substitutions in trusted global workflows", async () => {
-      const name = "KILO_WORKFLOW_GLOBAL_SECRET"
+      const name = "TAVERN_WORKFLOW_GLOBAL_SECRET"
       const prior = process.env[name]
       process.env[name] = "environment secret"
       try {
@@ -212,7 +212,7 @@ Actual description here.`
 
   describe("convertToCommand", () => {
     test("converts workflow to command format", () => {
-      const workflow: WorkflowsMigrator.KilocodeWorkflow = {
+      const workflow: WorkflowsMigrator.TaverncodeWorkflow = {
         name: "code-review",
         path: "/path/to/code-review.md",
         content: "# Code Review\n\nReview the code changes.\n\n## Steps\n\n1. Check",
@@ -226,7 +226,7 @@ Actual description here.`
     })
 
     test("uses fallback description when none found", () => {
-      const workflow: WorkflowsMigrator.KilocodeWorkflow = {
+      const workflow: WorkflowsMigrator.TaverncodeWorkflow = {
         name: "simple",
         path: "/path/to/simple.md",
         content: "# Simple",

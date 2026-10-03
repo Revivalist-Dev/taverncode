@@ -14,8 +14,8 @@ import ai.taverncode.jetbrains.api.infrastructure.ClientError
 import ai.taverncode.jetbrains.api.infrastructure.ClientException
 import ai.taverncode.jetbrains.api.infrastructure.ServerError
 import ai.taverncode.jetbrains.api.infrastructure.ServerException
-import ai.taverncode.jetbrains.api.model.KiloNotifications200ResponseInner
-import ai.taverncode.jetbrains.api.model.KiloProfile200Response
+import ai.taverncode.jetbrains.api.model.TavernNotifications200ResponseInner
+import ai.taverncode.jetbrains.api.model.TavernProfile200Response
 import ai.taverncode.jetbrains.api.model.ProviderOauthAuthorizeRequest
 import ai.taverncode.jetbrains.api.model.ProviderOauthCallbackRequest
 import ai.taverncode.rpc.dto.ChatEventDto
@@ -151,13 +151,13 @@ class TavernBackendAppService private constructor(
     val activity = TavernBackendActivityManager(cs, log)
     val models = TavernBackendModelStateManager(log)
     val workspaces = TavernBackendWorkspaceManager(cs, sessions, log)
-    @Volatile var profile: KiloProfile200Response? = null
+    @Volatile var profile: TavernProfile200Response? = null
         private set
 
     @Volatile var config: ConfigDto? = null
         private set
 
-    @Volatile var notifications: List<KiloNotifications200ResponseInner> = emptyList()
+    @Volatile var notifications: List<TavernNotifications200ResponseInner> = emptyList()
         private set
 
     suspend fun connect() {
@@ -406,8 +406,8 @@ class TavernBackendAppService private constructor(
 
                 val errors = CopyOnWriteArrayList<LoadError>()
                 var cfg: ConfigDto? = null
-                var prof: KiloProfile200Response? = null
-                var notifs: List<KiloNotifications200ResponseInner> = emptyList()
+                var prof: TavernProfile200Response? = null
+                var notifs: List<TavernNotifications200ResponseInner> = emptyList()
 
                 try {
                     withTimeout(loadTimeoutMs) {
@@ -603,11 +603,11 @@ class TavernBackendAppService private constructor(
      * Profile is optional — 401 (not logged in), 400 (missing/corrupt local
      * auth), and 5xx (gateway/network errors) are all non-fatal.
      */
-    private suspend fun fetchProfile(): FetchResult<KiloProfile200Response?> {
+    private suspend fun fetchProfile(): FetchResult<TavernProfile200Response?> {
         val client = connection.appLoadApi
             ?: return FetchResult.ok(null)
         return try {
-            val response = client.kiloProfile()
+            val response = client.tavernProfile()
             log.info("Profile: ${response.profile.email}")
             FetchResult.ok(response)
         } catch (e: ClientException) {
@@ -669,11 +669,11 @@ class TavernBackendAppService private constructor(
         }
     }
 
-    private suspend fun fetchNotifications(): FetchResult<List<KiloNotifications200ResponseInner>> {
+    private suspend fun fetchNotifications(): FetchResult<List<TavernNotifications200ResponseInner>> {
         val client = connection.appLoadApi
             ?: return FetchResult.fail("notifications", detail = "Not connected")
         return try {
-            FetchResult.ok(client.kiloNotifications())
+            FetchResult.ok(client.tavernNotifications())
         } catch (e: Exception) {
             log.warn("Notifications fetch failed: ${e.message}", e)
             logResponseBody("notifications", e)
@@ -906,7 +906,7 @@ class TavernBackendAppService private constructor(
      * Returns the latest profile data, or null when not logged in.
      * Updates the current [TavernAppState.Ready] profile in-place if the app is ready.
      */
-    suspend fun refreshProfile(): KiloProfile200Response? {
+    suspend fun refreshProfile(): TavernProfile200Response? {
         val result = fetchProfile()
         val fresh = result.value
         val current = _appState.value
@@ -938,7 +938,7 @@ class TavernBackendAppService private constructor(
      * Blocks until the user completes authentication on the browser side.
      * Returns the user profile on success, or null if the login could not be completed.
      */
-    suspend fun completeLogin(directory: String?): KiloProfile200Response? {
+    suspend fun completeLogin(directory: String?): TavernProfile200Response? {
         val client = connection.api ?: throw IllegalStateException("Not connected")
         client.providerOauthCallback(providerID = "tavern", directory = directory, providerOauthCallbackRequest = ProviderOauthCallbackRequest(method = 0.0))
         return refreshProfile()
@@ -964,7 +964,7 @@ class TavernBackendAppService private constructor(
      * Pass null for personal account, an organization ID for org context.
      * Returns the updated profile after the switch.
      */
-    suspend fun setOrganization(organizationId: String?): KiloProfile200Response? {
+    suspend fun setOrganization(organizationId: String?): TavernProfile200Response? {
         val http = connection.apiClient ?: throw IllegalStateException("Not connected")
         val body = JsonObject(
             mapOf("organizationId" to (organizationId?.let { JsonPrimitive(it) } ?: JsonNull)),

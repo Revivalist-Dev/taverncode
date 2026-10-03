@@ -1,11 +1,11 @@
-import { createKilo, KILO_OPENROUTER_BASE } from "@taverncode/tavern-gateway" // taverncode_change
+import { createTavern, TAVERN_OPENROUTER_BASE } from "@taverncode/tavern-gateway" // taverncode_change
 import { Effect } from "effect"
 import { ProviderV2 } from "../../provider" // taverncode_change
 import { define } from "../internal"
 
 const id = ProviderV2.ID.tavern // taverncode_change
 
-export const KiloPlugin = define({
+export const TavernPlugin = define({
   id: "tavern",
   effect: Effect.fn(function* (ctx) {
     yield* ctx.catalog.transform(
@@ -15,13 +15,13 @@ export const KiloPlugin = define({
           evt.provider.update(item.provider.id, (provider) => {
             // taverncode_change start
             const options = provider.request.body
-            const token = options.taverncodeToken ?? options.apiKey ?? process.env.KILO_API_KEY
-            const org = process.env.KILO_ORG_ID ?? options.taverncodeOrganizationId
+            const token = options.taverncodeToken ?? options.apiKey ?? process.env.TAVERN_API_KEY
+            const org = process.env.TAVERN_ORG_ID ?? options.taverncodeOrganizationId
 
             provider.api = {
               type: "aisdk",
               package: "@taverncode/tavern-gateway",
-              url: KILO_OPENROUTER_BASE,
+              url: TAVERN_OPENROUTER_BASE,
             }
             // taverncode_change end
             provider.request.headers["HTTP-Referer"] = "https://tavern.ai/"
@@ -39,7 +39,7 @@ export const KiloPlugin = define({
     yield* ctx.aisdk.sdk(
       Effect.fn(function* (evt) {
         if (evt.model.providerID !== id) return
-        evt.sdk = createKilo(evt.options)
+        evt.sdk = createTavern(evt.options)
       }),
     )
     // taverncode_change end

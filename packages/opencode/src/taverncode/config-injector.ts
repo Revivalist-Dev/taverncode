@@ -5,7 +5,7 @@ import { RulesMigrator } from "./rules-migrator"
 import { WorkflowsMigrator } from "./workflows-migrator"
 import { IgnoreMigrator } from "./ignore-migrator"
 
-export namespace KilocodeConfigInjector {
+export namespace TaverncodeConfigInjector {
   export interface InjectionResult {
     configJson: string
     warnings: string[]
@@ -110,7 +110,7 @@ export namespace KilocodeConfigInjector {
       return {}
     }
     return {
-      KILO_CONFIG_CONTENT: configJson,
+      TAVERN_CONFIG_CONTENT: configJson,
     }
   }
 }
