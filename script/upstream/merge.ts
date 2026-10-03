@@ -429,11 +429,13 @@ async function main() {
 
   // Create backup branch
   await git.checkout(config.baseBranch)
-  if (options.baseBranch !== "HEAD") {
-    await git.pull(config.originRemote)
-  }
   if (options.baseBranch === "HEAD") {
+    // --base-branch HEAD means "use the current checkout as-is". Do not pull:
+    // it may track a different remote (e.g. fork/main), and the caller has
+    // already fetched the intended upstream.
     logger.info("Using the checked-out HEAD as the merge base without pulling")
+  } else {
+    await git.pull(config.originRemote)
   }
   const baseSha = await git.getCommitHash("HEAD")
   const backupBranch = await createBackupBranch(config.baseBranch)
