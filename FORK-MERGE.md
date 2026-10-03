@@ -13,9 +13,10 @@ This document exists because the fork's baseline was imported as a **squashed sn
 | Fork parent commit | `a377550fac` — a real upstream commit, dated 2026-10-02 |
 | Baseline commit | `659f720767` "chore: import Tavern Code fork baseline" |
 | Shape of baseline | **One squashed commit**, 9,034 files changed vs its parent |
-| Upstream head at time of writing | `76bcfd40be` (`origin/main`) |
-| Commits behind | 32,848 |
-| Upstream stable tags | `v7.x` (latest `v7.8.3`) — **not** `v1.x` |
+| First real merge | `5780cf829c` "merge: upstream 76bcfd40be (post-v7.8.2)" — two parents, establishes incremental lineage |
+| Upstream head at merge time | `76bcfd40be` (`origin/main`) |
+| Commits behind before merge | 32,848 (now reachable via the merge commit) |
+| Upstream stable tags | `v7.x` (latest reachable ancestor of `origin/main`: `v7.8.2`; `v7.8.3` was cut from a release branch and is not an ancestor) |
 
 `a377550fac` **is an ancestor** of `659f720767`, so lineage is technically intact — the baseline is a normal child commit. The problem is not a broken parent link; it is that the fork's entire identity is collapsed into a single commit instead of a chain of incremental merge commits.
 
@@ -108,15 +109,49 @@ Run once, to replace the squashed import with a real merge commit and correct ve
 
 1. Ensure `upstream` → `Kilo-Org/kilocode.git` (done) and `mergiraf` is installed.
 2. Extend `script/upstream/utils/config.ts` and `transforms/package-names.ts` with the §4 rename surface.
-3. Correct `.opencode-version` to the kilocode tag matching the merge target (`v7.8.3` for the `v7.8.x` line), or delete it so `merge.ts` discovers the ancestor tag.
+3. Correct `.opencode-version` to the kilocode tag matching the merge target (`v7.8.2` for the `v7.8.x` line), or delete it so `merge.ts` discovers the ancestor tag.
 4. Run the pipeline against the target upstream commit:
    ```bash
-   bun run script/upstream/merge.ts --commit <target> --base-branch HEAD --no-push
+   bun run script/upstream/merge.ts --commit <target> --base-branch HEAD --no-push --no-worktrees
    ```
 5. Resolve the small set of genuine conflicts (files with real code diffs), commit the merge.
 6. Verify: `bun turbo typecheck` + affected tests; the merge commit should read `merge: upstream vX.Y.Z`.
 
 After this, every future sync is incremental and the conflict set shrinks instead of resetting.
+
+### 6a. Conflict classes and resolution
+
+A first bootstrap merge from the squashed baseline produces conflicts in four
+classes. Three are mechanical; only the last needs judgment.
+
+| Class | Meaning | Resolution |
+|---|---|---|
+| `DU` (delete/modify) | File renamed on our side (`kilo-*`→`tavern-*`), modified upstream at the old path | Auto: `transforms/resolve-renamed-modifications.ts` reads upstream stage 3, applies the rename transforms, writes to the fork path, deletes the old path |
+| `UU` with `taverncode_change` markers | Shared upstream file both sides modified; ours carries intentional fork logic | Keep ours (`git checkout --ours`) |
+| `UU` without markers | Genuine dual edit on a shared file | 3-way merge (mergiraf / zdiff3), then manual review |
+| `UA` / fork-owned paths | Upstream added a file whose transformed path is a fork-owned `taverncode/`/`tavern-*` path | Take theirs (it is new upstream code already transformed) |
+
+`resolve-renamed-modifications.ts` is wired into `merge.ts` after the other
+post-merge transforms, so the `DU` class is auto-resolved on every future merge.
+The `translations/README.*` files are in `skipFiles` and are removed rather than
+merged.
+
+### 6b. Windows prerequisites
+
+`merge.ts` must run on Windows with:
+
+- `git config core.longpaths true` — otherwise `git add -A` fails (exit 128) on
+  deep Kotlin `.class` paths.
+- Repo-root `.gitignore` entries for `**/backend/build/` and similar, so
+  untracked Kotlin build output is never swept into a merge commit.
+- `--no-worktrees` to skip `rerere` history training, which walks the entire
+  (very large) upstream range and effectively hangs.
+
+`script/upstream/utils/version.ts` resolves its package.json path with
+`fileURLToPath` (not `URL.pathname`) because the latter yields `/C:/...`, which
+`Bun.file` rejects on Windows. `merge.ts` skips `git pull origin` when
+`--base-branch HEAD` is passed, since the branch may track a different remote.
+
 
 ## 7. In-progress: `.tavern` → `.taverncode` config directory
 

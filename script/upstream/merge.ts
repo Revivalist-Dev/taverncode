@@ -44,6 +44,7 @@ import { transformConflictedExtensions, transformAllExtensions } from "./transfo
 import { transformConflictedWeb, transformAllWeb } from "./transforms/transform-web"
 import { transformTavernWeb } from "./transforms/remove-tavern-web"
 import { resolveLockFileConflicts, regenerateLockFiles } from "./transforms/lock-files"
+import { resolveRenamedModifications } from "./transforms/resolve-renamed-modifications"
 import { writeVersion } from "./utils/upstream"
 
 interface MergeOptions {
@@ -778,6 +779,20 @@ async function main() {
             `${webFlagged.length} web/docs file(s) have taverncode_change markers — flagged for manual resolution`,
           )
           flaggedFiles.push(...webFlagged)
+        }
+      }
+
+      // Resolve "upstream modified a file we renamed away" conflicts. When the
+      // fork renames a path (kilo-* -> tavern-*, src/kilocode -> src/taverncode)
+      // and upstream later modifies the file at the old path, git reports a
+      // delete/modify (DU) conflict. Read upstream's content, apply the rename
+      // transforms, and write it to the fork path. See FORK-MERGE.md §6.
+      conflictedFiles = await git.getConflictedFiles()
+      if (conflictedFiles.length > 0) {
+        const renamedResults = await resolveRenamedModifications({ dryRun: false, verbose: options.verbose })
+        const renamedCount = renamedResults.filter((r) => r.action === "resolved").length
+        if (renamedCount > 0) {
+          logger.success(`Auto-resolved ${renamedCount} renamed-modification conflict(s)`)
         }
       }
 
