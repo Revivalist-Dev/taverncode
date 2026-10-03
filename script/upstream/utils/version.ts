@@ -4,6 +4,7 @@
  */
 
 import { $ } from "bun"
+import { fileURLToPath } from "node:url"
 import { getUpstreamTags, getCommitMessage, getTagsForCommit } from "./git"
 
 export interface VersionInfo {
@@ -125,8 +126,10 @@ export async function getAvailableUpstreamVersions(): Promise<VersionInfo[]> {
  * Get current Tavern version from package.json
  */
 export async function getCurrentTavernVersion(): Promise<string> {
-  // Resolve path relative to repo root (script is in script/upstream/)
-  const path = new URL("../../../packages/opencode/package.json", import.meta.url).pathname
+  // Resolve path relative to repo root (script is in script/upstream/).
+  // Use fileURLToPath so Windows drive paths (C:\...) resolve correctly;
+  // URL.pathname yields a leading-slash form (/C:/...) that Bun.file rejects.
+  const path = fileURLToPath(new URL("../../../packages/opencode/package.json", import.meta.url))
   const pkg = await Bun.file(path).json()
   return pkg.version
 }
