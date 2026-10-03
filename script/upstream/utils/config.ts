@@ -215,13 +215,22 @@ export const defaultConfig: MergeConfig = {
   tavernDirectories: [
     "packages/opencode/src/taverncode",
     "packages/opencode/test/taverncode",
+    "packages/core/src/taverncode",
+    "packages/core/test/taverncode",
+    // Every renamed kilo-* package. These never merge from upstream under these
+    // names; see FORK-MERGE.md §4 for the authoritative rename surface.
+    "packages/tavern-console",
     "packages/tavern-gateway",
-    "packages/tavern-telemetry",
-    "packages/tavern-vscode",
-    "packages/tavern-jetbrains",
-    "packages/tavern-ui",
-    "packages/tavern-docs",
     "packages/tavern-i18n",
+    "packages/tavern-indexing",
+    "packages/tavern-jetbrains",
+    "packages/tavern-memory",
+    "packages/tavern-sandbox",
+    "packages/tavern-telemetry",
+    "packages/tavern-ui",
+    "packages/tavern-vscode",
+    "packages/tavern-web-ui",
+    "packages/tavern-docs",
     "script/upstream",
   ],
 

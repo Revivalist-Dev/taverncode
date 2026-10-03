@@ -28,7 +28,31 @@ export interface TransformOptions {
   verbose?: boolean
 }
 
+// KILO_RENAME_SUBSTITUTIONS — see FORK-MERGE.md §4.
+//
+// The fork's baseline renamed the upstream kilocode surface wholesale. These
+// substitutions reproduce that rename against upstream so rename-only files
+// merge without conflict. Order matters: path-scoped and longer tokens run
+// before bare identifiers to avoid partial matches.
+const KILO_RENAME_SUBSTITUTIONS: { pattern: RegExp; replacement: string }[] = [
+  // Path segments (packages + source trees). Most specific first.
+  { pattern: /packages\/kilo-/g, replacement: "packages/tavern-" },
+  { pattern: /\/ai\/kilocode\//g, replacement: "/ai/taverncode/" },
+  { pattern: /\/src\/kilocode\//g, replacement: "/src/taverncode/" },
+  { pattern: /\/test\/kilocode\//g, replacement: "/test/taverncode/" },
+  { pattern: /kilo-provider/g, replacement: "tavern-provider" },
+  // Brand strings and identifiers. Order matters: longer/cased forms first so a
+  // bare `kilo` rule cannot consume a `KiloCode` match first.
+  { pattern: /\bKiloCode\b/g, replacement: "TavernCode" },
+  { pattern: /\bKilo Code\b/g, replacement: "Tavern Code" },
+  { pattern: /\bKilocode\b/g, replacement: "Taverncode" },
+  { pattern: /kilocode/g, replacement: "taverncode" },
+  { pattern: /\bKilo\b/g, replacement: "Tavern" },
+  { pattern: /\bkilo\b/g, replacement: "tavern" },
+]
+
 const PACKAGE_PATTERNS = [
+  ...KILO_RENAME_SUBSTITUTIONS,
   // In package.json name field
   { pattern: /"name":\s*"opencode-ai"/, replacement: '"name": "@taverncode/cli"' },
   { pattern: /"name":\s*"@opencode-ai\/cli"/, replacement: '"name": "@taverncode/cli"' },
@@ -92,10 +116,34 @@ const PACKAGE_PATTERNS = [
 ]
 
 /**
+ * Tokens that must survive the kilo->tavern rename unchanged: external GitHub
+ * org/repo references, protected CLI paths, and real URLs. Protected with
+ * sentinels across the transform, then restored, so the broad brand rules
+ * below cannot rewrite them. Keep in sync with FORK-MERGE.md §4.
+ */
+const PROTECTED_TOKENS = [
+  "Kilo-Org/kilocode",
+  "Kilo-Org",
+  "kilocode.git",
+  "bin/.tavern",
+  ".tavern/worktrees",
+  ".tavern.ai",
+]
+
+/**
  * Apply package name and branding transforms to content.
  */
 export function applyPackageNameTransforms(input: string): { result: string; changes: number } {
-  return PACKAGE_PATTERNS.reduce(
+  const restored: string[] = []
+  let guarded = input
+  for (const token of PROTECTED_TOKENS) {
+    if (!guarded.includes(token)) continue
+    const sentinel = `\0PROTECTED${restored.length}\0`
+    restored.push(token)
+    guarded = guarded.split(token).join(sentinel)
+  }
+
+  const { result, changes } = PACKAGE_PATTERNS.reduce(
     (state, { pattern, replacement }) => {
       const regex = typeof pattern === "string" ? new RegExp(pattern, "g") : pattern
       regex.lastIndex = 0
@@ -105,8 +153,14 @@ export function applyPackageNameTransforms(input: string): { result: string; cha
       if (result === state.result) return state
       return { result, changes: state.changes + count }
     },
-    { result: input, changes: 0 },
+    { result: guarded, changes: 0 },
   )
+
+  let final = result
+  for (let i = 0; i < restored.length; i++) {
+    final = final.split(`\0PROTECTED${i}\0`).join(restored[i])
+  }
+  return { result: final, changes }
 }
 
 /**
