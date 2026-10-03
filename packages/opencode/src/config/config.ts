@@ -8,16 +8,16 @@ import { mergeDeep } from "remeda"
 import { Global } from "@opencode-ai/core/global"
 import fsNode from "fs/promises"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { notices } from "@opencode-ai/core/kilocode/fff" // kilocode_change
+import { notices } from "@opencode-ai/core/taverncode/fff" // taverncode_change
 import { Auth } from "../auth"
 import { Env } from "../env"
-import { applyEdits, findNodeAtLocation, modify, parseTree } from "jsonc-parser" // kilocode_change - parseTree/findNodeAtLocation used in patchJsonc
+import { applyEdits, findNodeAtLocation, modify, parseTree } from "jsonc-parser" // taverncode_change - parseTree/findNodeAtLocation used in patchJsonc
 import { InstallationLocal, InstallationVersion } from "@opencode-ai/core/installation/version"
 import { existsSync } from "fs"
-// kilocode_change start
+// taverncode_change start
 import { GlobalBus } from "@/bus/global"
 import { Event } from "../server/event"
-// kilocode_change end
+// taverncode_change end
 import { Account } from "@/account/account"
 import { isRecord } from "@/util/record"
 import type { ConsoleState } from "@opencode-ai/core/v1/config/console-state"
@@ -40,31 +40,31 @@ import { ConfigPlugin } from "./plugin"
 import { ConfigVariable } from "./variable"
 import { ConfigV2Compat } from "./v2-compat"
 import { Npm } from "@opencode-ai/core/npm"
-import z from "zod" // kilocode_change - Kilo config compatibility schemas
-// kilocode_change start
+import z from "zod" // taverncode_change - Tavern config compatibility schemas
+// taverncode_change start
 import { ZodOverride } from "@opencode-ai/core/effect-zod"
-import { KilocodeConfig } from "../kilocode/config/config"
-import { Excess } from "../kilocode/config/excess"
-import { sanitizeProjectMcpHeaders } from "../kilocode/config/mcp-headers"
-import { primaryPaths } from "../kilocode/primary-worktree"
+import { KilocodeConfig } from "../taverncode/config/config"
+import { Excess } from "../taverncode/config/excess"
+import { sanitizeProjectMcpHeaders } from "../taverncode/config/mcp-headers"
+import { primaryPaths } from "../taverncode/primary-worktree"
 import { Git } from "@/git"
-import { KilocodeDefaultPlugins } from "@/kilocode/config/default-plugins"
-import { KilocodeGlobalConfigStamp } from "@/kilocode/config/global-stamp"
-import { SandboxConfig } from "@/kilocode/sandbox/config"
-import { ExternalMarkdown } from "@/kilocode/config/external-markdown"
-import { ClaudeMigration } from "@/kilocode/config/claude-migration" // kilocode_change
-import type { KilocodeMarkdown } from "@/kilocode/config/markdown"
+import { KilocodeDefaultPlugins } from "@/taverncode/config/default-plugins"
+import { KilocodeGlobalConfigStamp } from "@/taverncode/config/global-stamp"
+import { SandboxConfig } from "@/taverncode/sandbox/config"
+import { ExternalMarkdown } from "@/taverncode/config/external-markdown"
+import { ClaudeMigration } from "@/taverncode/config/claude-migration" // taverncode_change
+import type { KilocodeMarkdown } from "@/taverncode/config/markdown"
 import {
   IndexingConfig as KiloIndexingConfig,
   IndexingSchema as KiloIndexingSchema,
-} from "@kilocode/kilo-indexing/config"
+} from "@taverncode/tavern-indexing/config"
 import { unique } from "remeda"
-import { installLocalPluginDependency, needsLocalPluginDependency } from "@/kilocode/config/plugin-deps"
-// kilocode_change end
+import { installLocalPluginDependency, needsLocalPluginDependency } from "@/taverncode/config/plugin-deps"
+// taverncode_change end
 import { withTransientReadRetry } from "@/util/effect-http-client"
-import * as Log from "@opencode-ai/core/util/log" // kilocode_change
+import * as Log from "@opencode-ai/core/util/log" // taverncode_change
 
-const log = Log.create({ service: "config" }) // kilocode_change
+const log = Log.create({ service: "config" }) // taverncode_change
 
 // Custom merge function that concatenates array fields instead of replacing them
 // Keep remeda's deep conditional merge type out of hot config-loading paths; TS profiling showed it dominates here.
@@ -73,7 +73,7 @@ function mergeConfig(target: Info, source: Info): Info {
 }
 
 function mergeConfigConcatArrays(target: Info, source: Info, trusted = true): Info {
-  // kilocode_change
+  // taverncode_change
   const merged = trusted ? mergeConfig(target, source) : KilocodeConfig.mergeProject(target, source)
   if (target.instructions && source.instructions) {
     merged.instructions = Array.from(new Set([...target.instructions, ...source.instructions]))
@@ -83,17 +83,17 @@ function mergeConfigConcatArrays(target: Info, source: Info, trusted = true): In
 
 function normalizeLoadedConfig(data: unknown, source: string) {
   if (!isRecord(data)) return data
-  const copy = KilocodeConfig.retireExperimentalFlags({ ...data }, source) // kilocode_change
+  const copy = KilocodeConfig.retireExperimentalFlags({ ...data }, source) // taverncode_change
   const hadLegacy = "theme" in copy || "keybinds" in copy || "tui" in copy
   if (!hadLegacy) return copy
   delete copy.theme
   delete copy.keybinds
   delete copy.tui
-  log.warn("tui keys in the main config are deprecated; move them to tui.json", { path: source }) // kilocode_change
+  log.warn("tui keys in the main config are deprecated; move them to tui.json", { path: source }) // taverncode_change
   return copy
 }
 
-// kilocode_change start
+// taverncode_change start
 export const Warning = z.object({
   path: z.string(),
   message: z.string(),
@@ -102,7 +102,7 @@ export const Warning = z.object({
 export type Warning = z.infer<typeof Warning>
 
 const { caught: caughtWarning } = KilocodeConfig
-// kilocode_change end
+// taverncode_change end
 
 async function substituteWellKnownRemoteConfig(input: {
   value: unknown
@@ -118,7 +118,7 @@ async function substituteWellKnownRemoteConfig(input: {
     dir: input.dir,
     source: input.source,
     env: input.env,
-    trusted: true, // kilocode_change - well-known org config is a trusted source
+    trusted: true, // taverncode_change - well-known org config is a trusted source
   })
   const headers = isRecord(input.value.headers)
     ? Object.fromEntries(
@@ -133,7 +133,7 @@ async function substituteWellKnownRemoteConfig(input: {
                 dir: input.dir,
                 source: input.source,
                 env: input.env,
-                trusted: true, // kilocode_change - well-known org config is a trusted source
+                trusted: true, // taverncode_change - well-known org config is a trusted source
               }),
             ]),
         ),
@@ -154,11 +154,11 @@ async function resolveLoadedPlugins<T extends { plugin?: ConfigPluginV1.Spec[] }
 }
 
 export type Info = ConfigV1.Info & {
-  // kilocode_change - keep exported so existing Config.Info call sites don't need repo-wide migration to ConfigV1.Info
+  // taverncode_change - keep exported so existing Config.Info call sites don't need repo-wide migration to ConfigV1.Info
   // plugin_origins is derived state, not a persisted config field. It keeps each winning plugin spec together
   // with the file and scope it came from so later runtime code can make location-sensitive decisions.
   plugin_origins?: ConfigPlugin.Origin[]
-  // kilocode_change start - derived provenance for markdown paths selected by config
+  // taverncode_change start - derived provenance for markdown paths selected by config
   instruction_origins?: Record<string, KilocodeMarkdown.Source>
   skill_path_origins?: Record<string, KilocodeMarkdown.Source>
   // derived provenance for permission patterns: which config scope (global XDG vs local project)
@@ -166,17 +166,17 @@ export type Info = ConfigV1.Info & {
   // project config can contribute different patterns under the same key. Lets the runtime explain
   // why a tool call was auto-approved.
   permission_origins?: Record<string, Record<string, "global" | "local">>
-  // kilocode_change end
+  // taverncode_change end
 }
 
-// kilocode_change - value re-export for the call sites that pass Config.Info as a schema
+// taverncode_change - value re-export for the call sites that pass Config.Info as a schema
 export const Info = ConfigV1.Info
 
 type State = {
   config: Info
   directories: string[]
   deps: Fiber.Fiber<void>[]
-  warnings: Warning[] // kilocode_change
+  warnings: Warning[] // taverncode_change
   consoleState: ConsoleState
 }
 
@@ -185,16 +185,16 @@ export interface Interface {
   readonly getGlobal: () => Effect.Effect<Info>
   readonly getConsoleState: () => Effect.Effect<ConsoleState>
   readonly update: (config: Info) => Effect.Effect<void>
-  // kilocode_change start
+  // taverncode_change start
   readonly updateGlobal: (
     config: Info,
     options?: { dispose?: boolean },
   ) => Effect.Effect<{ info: Info; changed: boolean }>
-  // kilocode_change end
+  // taverncode_change end
   readonly invalidate: () => Effect.Effect<void>
   readonly directories: () => Effect.Effect<string[]>
   readonly waitForDependencies: () => Effect.Effect<void>
-  readonly warnings: () => Effect.Effect<Warning[]> // kilocode_change
+  readonly warnings: () => Effect.Effect<Warning[]> // taverncode_change
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/Config") {}
@@ -202,9 +202,9 @@ export class Service extends Context.Service<Service, Interface>()("@opencode/Co
 export const use = serviceUse(Service)
 
 function globalConfigFile() {
-  // kilocode_change start
-  const candidates = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
-    // kilocode_change end
+  // taverncode_change start
+  const candidates = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    // taverncode_change end
     path.join(Global.Path.config, file),
   )
   for (const file of candidates) {
@@ -215,15 +215,15 @@ function globalConfigFile() {
 
 function patchJsonc(input: string, patch: unknown, path: string[] = []): string {
   if (!isRecord(patch)) {
-    // kilocode_change start - jsonc-parser throws when deleting a path whose
+    // taverncode_change start - jsonc-parser throws when deleting a path whose
     // parent does not exist in the document; absent keys are already "unset"
     if (patch === null) {
       const tree = parseTree(input)
       if (!tree || !findNodeAtLocation(tree, path)) return input
     }
-    // kilocode_change end
+    // taverncode_change end
     const edits = modify(input, path, patch === null ? undefined : patch, {
-      // kilocode_change
+      // taverncode_change
       formattingOptions: {
         insertSpaces: true,
         tabSize: 2,
@@ -232,7 +232,7 @@ function patchJsonc(input: string, patch: unknown, path: string[] = []): string 
     return applyEdits(input, edits)
   }
 
-  // kilocode_change start — when the existing JSONC node at this path is a
+  // taverncode_change start — when the existing JSONC node at this path is a
   // scalar (e.g. permission.bash is "ask" as a string), jsonc-parser cannot
   // add child keys to it. Detect this case and replace the whole node with
   // the patch object in a single modify() call instead of recursing.
@@ -250,13 +250,13 @@ function patchJsonc(input: string, patch: unknown, path: string[] = []): string 
       return applyEdits(input, edits)
     }
   }
-  // kilocode_change end
+  // taverncode_change end
 
   return Object.entries(patch).reduce((result, [key, value]) => patchJsonc(result, value, [...path, key]), input)
 }
 
 function writable(info: Info) {
-  // kilocode_change start - derived provenance is runtime-only and must never be persisted
+  // taverncode_change start - derived provenance is runtime-only and must never be persisted
   const {
     plugin_origins: _plugin_origins,
     instruction_origins: _instruction_origins,
@@ -264,7 +264,7 @@ function writable(info: Info) {
     permission_origins: _permission_origins,
     ...next
   } = info
-  // kilocode_change end
+  // taverncode_change end
   return next
 }
 
@@ -284,13 +284,13 @@ const layer = Layer.effect(
     const env = yield* Env.Service
     const npmSvc = yield* Npm.Service
     const http = yield* HttpClient.HttpClient
-    const git = yield* Git.Service // kilocode_change
-    const flock = yield* EffectFlock.Service // kilocode_change - serialize global config read-merge-write updates
+    const git = yield* Git.Service // taverncode_change
+    const flock = yield* EffectFlock.Service // taverncode_change - serialize global config read-merge-write updates
 
     const readConfigFile = (filepath: string) => fs.readFileStringSafe(filepath).pipe(Effect.orDie)
 
     const decodeConfig = Effect.fnUntraced(function* (input: unknown, source: string) {
-      const result = ConfigV2Compat.lower(normalizeLoadedConfig(input, source), source) // kilocode_change - Kilo normalizeLoadedConfig takes source
+      const result = ConfigV2Compat.lower(normalizeLoadedConfig(input, source), source) // taverncode_change - Tavern normalizeLoadedConfig takes source
       yield* Effect.forEach(result.diagnostics, (diagnostic) =>
         Effect.logWarning("configuration compatibility diagnostic", {
           source,
@@ -330,25 +330,25 @@ const layer = Layer.effect(
 
     const loadConfig = Effect.fnUntraced(function* (
       text: string,
-      options: { path: string; original?: string } | { dir: string; source: string }, // kilocode_change
+      options: { path: string; original?: string } | { dir: string; source: string }, // taverncode_change
       env?: Record<string, string>,
-      // kilocode_change start - trusted allows {env:}; fileScope confines untrusted {file:} reads to a root
+      // taverncode_change start - trusted allows {env:}; fileScope confines untrusted {file:} reads to a root
       trusted?: boolean,
       fileScope?: ConfigVariable.FileScope,
       configWarnings?: Warning[],
-      // kilocode_change end
+      // taverncode_change end
     ) {
       const source = "path" in options ? options.path : options.source
       const expanded = yield* Effect.promise(() =>
         ConfigVariable.substitute(
           "path" in options
-            ? { text, type: "path", path: options.path, env, trusted, fileScope } // kilocode_change
-            : { text, type: "virtual", ...options, env, trusted, fileScope }, // kilocode_change
+            ? { text, type: "path", path: options.path, env, trusted, fileScope } // taverncode_change
+            : { text, type: "virtual", ...options, env, trusted, fileScope }, // taverncode_change
         ),
       )
       const parsed = ConfigParse.jsonc(expanded, source)
-      const normalized = normalizeLoadedConfig(parsed, source) // kilocode_change
-      // kilocode_change start - preserve upstream excess-key compatibility while warning Kilo users about typos
+      const normalized = normalizeLoadedConfig(parsed, source) // taverncode_change
+      // taverncode_change start - preserve upstream excess-key compatibility while warning Tavern users about typos
       if (configWarnings) {
         // Warn for keys the V1 decoder drops and the V2 lowering does not consume. Probe the lowering
         // with only that key so the answer does not depend on the rest of the document, and treat a key
@@ -368,16 +368,16 @@ const layer = Layer.effect(
           })
         }
       }
-      // kilocode_change end
-      const data = yield* decodeConfig(normalized, source) // kilocode_change - upstream V2 compatibility lowering
+      // taverncode_change end
+      const data = yield* decodeConfig(normalized, source) // taverncode_change - upstream V2 compatibility lowering
       if (!("path" in options)) return data
 
       yield* Effect.promise(() => resolveLoadedPlugins(data, options.path))
       if (!data.$schema) {
-        // kilocode_change start
-        data.$schema = "https://app.kilo.ai/config.json"
+        // taverncode_change start
+        data.$schema = "https://app.tavern.ai/config.json"
         const original = options.original ?? text
-        const edits = modify(original, ["$schema"], "https://app.kilo.ai/config.json", {
+        const edits = modify(original, ["$schema"], "https://app.tavern.ai/config.json", {
           formattingOptions: { insertSpaces: true, tabSize: 2 },
           getInsertionIndex: () => 0,
         })
@@ -385,7 +385,7 @@ const layer = Layer.effect(
         if (updated !== original) {
           yield* fs.writeFileString(options.path, updated).pipe(Effect.catch(() => Effect.void))
         }
-        // kilocode_change end
+        // taverncode_change end
       }
       return data
     })
@@ -393,14 +393,14 @@ const layer = Layer.effect(
     const loadFile = Effect.fnUntraced(function* (
       filepath: string,
       env?: Record<string, string>,
-      trusted?: boolean, // kilocode_change
-      fileScope?: ConfigVariable.FileScope, // kilocode_change
-      configWarnings?: Warning[], // kilocode_change - collect MCP header expansion warnings
+      trusted?: boolean, // taverncode_change
+      fileScope?: ConfigVariable.FileScope, // taverncode_change
+      configWarnings?: Warning[], // taverncode_change - collect MCP header expansion warnings
     ) {
       yield* Effect.logInfo("loading", { path: filepath })
       const text = yield* readConfigFile(filepath)
       if (!text) return {} as Info
-      // kilocode_change start - remove variable-bearing project MCP headers before generic substitution can read them
+      // taverncode_change start - remove variable-bearing project MCP headers before generic substitution can read them
       const sanitized =
         trusted === false ? sanitizeProjectMcpHeaders(ConfigParse.jsonc(text, filepath), filepath) : undefined
       const content = sanitized ? (JSON.stringify(sanitized.config) ?? text) : text
@@ -413,17 +413,17 @@ const layer = Layer.effect(
         fileScope,
         configWarnings,
       )
-      // kilocode_change end
+      // taverncode_change end
       return data
     })
 
-    let globalStamp = "" // kilocode_change
+    let globalStamp = "" // taverncode_change
 
     const loadGlobal = Effect.fnUntraced(function* (
       env?: Record<string, string>,
-      configWarnings?: Warning[], // kilocode_change - retain excess-key diagnostics for cached trusted config
+      configWarnings?: Warning[], // taverncode_change - retain excess-key diagnostics for cached trusted config
     ) {
-      // kilocode_change start
+      // taverncode_change start
       yield* Effect.promise(() => KilocodeConfig.migrateBashPermission())
       if (Flag.KILO_EXPERIMENTAL_CLAUDE_MIGRATION && !ClaudeMigration.unsupportedContext()) {
         yield* flock
@@ -440,7 +440,7 @@ const layer = Layer.effect(
           )
       }
       globalStamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config)
-      // kilocode_change end
+      // taverncode_change end
       let result: Info = {}
       // Seed the default global config with the schema for editor completion, but avoid writing when the user
       // explicitly routes config through env-provided paths or content.
@@ -448,33 +448,33 @@ const layer = Layer.effect(
         const file = globalConfigFile()
         if (!existsSync(file)) {
           yield* fs
-            .writeWithDirs(file, JSON.stringify({ $schema: "https://app.kilo.ai/config.json" }, null, 2))
+            .writeWithDirs(file, JSON.stringify({ $schema: "https://app.tavern.ai/config.json" }, null, 2))
             .pipe(Effect.catch(() => Effect.void))
         }
       }
-      // kilocode_change - global config is user-owned and trusted to resolve {file:}/{env:} tokens
+      // taverncode_change - global config is user-owned and trusted to resolve {file:}/{env:} tokens
       result = mergeConfig(
         result,
         yield* loadFile(path.join(Global.Path.config, "config.json"), env, true, undefined, configWarnings),
       )
-      // kilocode_change start
+      // taverncode_change start
       result = mergeConfig(
         result,
-        yield* loadFile(path.join(Global.Path.config, "kilo.json"), env, true, undefined, configWarnings),
+        yield* loadFile(path.join(Global.Path.config, "tavern.json"), env, true, undefined, configWarnings),
       )
       result = mergeConfig(
         result,
-        yield* loadFile(path.join(Global.Path.config, "kilo.jsonc"), env, true, undefined, configWarnings),
+        yield* loadFile(path.join(Global.Path.config, "tavern.jsonc"), env, true, undefined, configWarnings),
       )
-      // kilocode_change end
+      // taverncode_change end
       result = mergeConfig(
         result,
         yield* loadFile(path.join(Global.Path.config, "opencode.json"), env, true, undefined, configWarnings),
-      ) // kilocode_change
+      ) // taverncode_change
       result = mergeConfig(
         result,
         yield* loadFile(path.join(Global.Path.config, "opencode.jsonc"), env, true, undefined, configWarnings),
-      ) // kilocode_change
+      ) // taverncode_change
 
       const legacy = path.join(Global.Path.config, "config")
       if (existsSync(legacy)) {
@@ -483,7 +483,7 @@ const layer = Layer.effect(
             .then(async (mod) => {
               const { provider, model, ...rest } = mod.default
               if (provider && model) result.model = `${provider}/${model}`
-              result["$schema"] = "https://app.kilo.ai/config.json" // kilocode_change
+              result["$schema"] = "https://app.tavern.ai/config.json" // taverncode_change
               result = mergeConfig(result, rest)
               await fsNode.writeFile(path.join(Global.Path.config, "config.json"), JSON.stringify(result, null, 2))
               await fsNode.unlink(legacy)
@@ -492,29 +492,29 @@ const layer = Layer.effect(
         )
       }
 
-      globalStamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config) // kilocode_change
+      globalStamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config) // taverncode_change
       return result
     })
 
-    // kilocode_change start - cache global diagnostics with the parsed config so every instance can surface them
+    // taverncode_change start - cache global diagnostics with the parsed config so every instance can surface them
     const loadGlobalState = Effect.fnUntraced(function* (env?: Record<string, string>) {
       const warnings: Warning[] = []
       const config = yield* loadGlobal(env, warnings)
       return { config, warnings }
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const [cachedGlobal, invalidateGlobal] = yield* Effect.cachedInvalidateWithTTL(
       loadGlobalState().pipe(
         Effect.tapError((error) =>
           Effect.logError("failed to load global config, using defaults", { error: String(error) }),
         ),
-        Effect.orElseSucceed(() => ({ config: {} as Info, warnings: [] as Warning[] })), // kilocode_change
+        Effect.orElseSucceed(() => ({ config: {} as Info, warnings: [] as Warning[] })), // taverncode_change
       ),
       Duration.infinity,
     )
 
-    // kilocode_change start - detect global config edits made by other Kilo processes
+    // taverncode_change start - detect global config edits made by other Tavern processes
     const refreshGlobal = Effect.fnUntraced(function* () {
       const stamp = yield* KilocodeGlobalConfigStamp.read(fs, Global.Path.config)
       if (!globalStamp || stamp === globalStamp) return false
@@ -523,30 +523,30 @@ const layer = Layer.effect(
       yield* invalidateGlobal
       return true
     })
-    // kilocode_change end
+    // taverncode_change end
 
-    // kilocode_change start - instance loading also consumes cached global warnings
+    // taverncode_change start - instance loading also consumes cached global warnings
     const getGlobalState = Effect.fnUntraced(function* () {
-      yield* refreshGlobal() // kilocode_change
+      yield* refreshGlobal() // taverncode_change
       return yield* cachedGlobal
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const getGlobal = Effect.fn("Config.getGlobal")(function* () {
-      return (yield* getGlobalState()).config // kilocode_change
+      return (yield* getGlobalState()).config // taverncode_change
     })
 
     const ensureGitignore = Effect.fn("Config.ensureGitignore")(function* (dir: string) {
-      // kilocode_change start - optional config setup must not abort tools after entering filesystem confinement or read-only locations
+      // taverncode_change start - optional config setup must not abort tools after entering filesystem confinement or read-only locations
       yield* fs.ensureDir(dir).pipe(Effect.catchTag("PlatformError", () => Effect.void))
-      // kilocode_change end
+      // taverncode_change end
       const gitignore = path.join(dir, ".gitignore")
       const hasIgnore = yield* fs.existsSafe(gitignore)
       if (!hasIgnore) {
         yield* fs
           .writeFileString(
             gitignore,
-            // kilocode_change start - added pnpm-lock.yaml, yarn.lock, agent-manager.json (not in upstream)
+            // taverncode_change start - added pnpm-lock.yaml, yarn.lock, agent-manager.json (not in upstream)
             [
               "node_modules",
               "package.json",
@@ -557,15 +557,15 @@ const layer = Layer.effect(
               ".gitignore",
               "agent-manager.json",
             ].join("\n"),
-            // kilocode_change end
+            // taverncode_change end
           )
-          .pipe(Effect.catchTag("PlatformError", () => Effect.void)) // kilocode_change - optional gitignore write failure must not fail config load
+          .pipe(Effect.catchTag("PlatformError", () => Effect.void)) // taverncode_change - optional gitignore write failure must not fail config load
       }
     })
 
     const loadInstanceState = Effect.fn("Config.loadInstanceState")(
       function* (ctx: InstanceContext) {
-        // kilocode_change start - warning accumulator and legacy Kilo config
+        // taverncode_change start - warning accumulator and legacy Tavern config
         const warnings: Warning[] = notices(ctx.directory)
         // Untrusted project config may only read files inside this root (worktree, or directory for non-git projects).
         const projectRoot = ctx.worktree === "/" ? ctx.directory : ctx.worktree
@@ -595,7 +595,7 @@ const layer = Layer.effect(
         }
         warnings.push(...orgModes.warnings)
         let configuredAgents = { ...(result.agent ?? {}) }
-        // kilocode_change end
+        // taverncode_change end
 
         const authEnv: Record<string, string> = {}
         const consoleManagedProviders = new Set<string>()
@@ -629,7 +629,7 @@ const layer = Layer.effect(
           result.plugin_origins = plugins
         })
 
-        // kilocode_change start
+        // taverncode_change start
         const origins = (
           prev: Record<string, KilocodeMarkdown.Source> | undefined,
           values: readonly string[],
@@ -653,7 +653,7 @@ const layer = Layer.effect(
           const scope = kind ?? (yield* pluginScopeForSource(source))
           const trusted = sourceTrusted ?? scope === "global"
           const scoped = KilocodeConfig.scopeIndexing(SandboxConfig.scope(next, scope), scope)
-          result = mergeConfigConcatArrays(result, scoped, trusted) // kilocode_change
+          result = mergeConfigConcatArrays(result, scoped, trusted) // taverncode_change
           if (scoped.agent) configuredAgents = mergeDeep(configuredAgents, scoped.agent)
           if (next.instructions?.length) {
             result.instruction_origins = origins(result.instruction_origins, next.instructions, trusted, source)
@@ -680,14 +680,14 @@ const layer = Layer.effect(
           }
           return yield* mergePluginOrigins(source, scoped.plugin, scope)
         })
-        // kilocode_change end
+        // taverncode_change end
 
         for (const [key, value] of Object.entries(auth)) {
           if (value.type === "wellknown") {
             const url = key.replace(/\/+$/, "")
             authEnv[value.key] = value.token
             const wellknownURL = `${url}/.well-known/opencode`
-            // kilocode_change start
+            // taverncode_change start
             const source = wellknownURL
             yield* Effect.gen(function* () {
               yield* Effect.logDebug("fetching remote config", { url: wellknownURL })
@@ -712,7 +712,7 @@ const layer = Layer.effect(
                   })
                 : {}
               const remoteConfig = mergeConfig(isRecord(wellknown.config) ? wellknown.config : {}, fetchedConfig)
-              if (!remoteConfig.$schema) remoteConfig.$schema = "https://app.kilo.ai/config.json"
+              if (!remoteConfig.$schema) remoteConfig.$schema = "https://app.tavern.ai/config.json"
               const next = yield* loadConfig(
                 JSON.stringify(remoteConfig),
                 {
@@ -720,9 +720,9 @@ const layer = Layer.effect(
                   source,
                 },
                 authEnv,
-                true, // kilocode_change - well-known org config is a trusted source
+                true, // taverncode_change - well-known org config is a trusted source
                 undefined,
-                warnings, // kilocode_change - retain excess-key diagnostics from trusted org config
+                warnings, // taverncode_change - retain excess-key diagnostics from trusted org config
               )
               yield* merge(source, next, "global")
               yield* Effect.logDebug("loaded remote config from well-known", { url })
@@ -736,11 +736,11 @@ const layer = Layer.effect(
                 return Effect.logWarning("skipped remote config due to error", { url, err })
               }),
             )
-            // kilocode_change end
+            // taverncode_change end
           }
         }
 
-        // kilocode_change start - capture global config failures as warnings
+        // taverncode_change start - capture global config failures as warnings
         const global = yield* (
           Object.keys(authEnv).length
             ? loadGlobal(authEnv, warnings)
@@ -755,15 +755,15 @@ const layer = Layer.effect(
             return Effect.succeed({} as Info)
           }),
         )
-        // kilocode_change end
+        // taverncode_change end
 
         yield* merge(Global.Path.config, global, "global")
 
         if (Flag.KILO_CONFIG) {
-          // kilocode_change start - capture KILO_CONFIG failures as warnings
+          // taverncode_change start - capture KILO_CONFIG failures as warnings
           yield* merge(
             Flag.KILO_CONFIG,
-            // kilocode_change - KILO_CONFIG is an explicit user-provided path, trusted for {file:}/{env:}
+            // taverncode_change - KILO_CONFIG is an explicit user-provided path, trusted for {file:}/{env:}
             yield* loadFile(Flag.KILO_CONFIG, authEnv, true, undefined, warnings).pipe(
               Effect.catchDefect((err: unknown) => {
                 caughtWarning(warnings, Flag.KILO_CONFIG!, err)
@@ -773,17 +773,17 @@ const layer = Layer.effect(
             undefined,
             true,
           )
-          // kilocode_change end
+          // taverncode_change end
           yield* Effect.logDebug("loaded custom config", { path: Flag.KILO_CONFIG })
         }
 
         if (!Flag.KILO_DISABLE_PROJECT_CONFIG) {
-          // kilocode_change start - also discover kilo.json project files
-          for (const name of ["kilo", "opencode"] as const) {
+          // taverncode_change start - also discover tavern.json project files
+          for (const name of ["tavern", "opencode"] as const) {
             for (const file of yield* ConfigPaths.files(name, ctx.directory, ctx.worktree).pipe(Effect.orDie)) {
               yield* merge(
                 file,
-                // kilocode_change - project config is untrusted: {env:} rejected by substitution; MCP entries with variable-bearing headers dropped pre-substitution, {file:} confined to projectRoot
+                // taverncode_change - project config is untrusted: {env:} rejected by substitution; MCP entries with variable-bearing headers dropped pre-substitution, {file:} confined to projectRoot
                 yield* loadFile(file, authEnv, false, { root: projectRoot, source: file }, warnings).pipe(
                   Effect.catchDefect((err: unknown) => {
                     caughtWarning(warnings, file, err)
@@ -794,22 +794,22 @@ const layer = Layer.effect(
               )
             }
           }
-          // kilocode_change end
+          // taverncode_change end
         }
 
         result.agent = result.agent || {}
         result.mode = result.mode || {}
         result.plugin = result.plugin || []
 
-        // kilocode_change start - include config directories from the primary checkout
+        // taverncode_change start - include config directories from the primary checkout
         const directories = yield* ConfigPaths.directories(ctx.directory, ctx.worktree)
         const primary = Flag.KILO_DISABLE_PROJECT_CONFIG
           ? []
-          : yield* primaryPaths(ctx.directory, ctx.worktree, [".kilocode", ".kilo"])
+          : yield* primaryPaths(ctx.directory, ctx.worktree, [".taverncode", ".tavern"])
         // Load primary fallbacks before active-worktree config, then track them as local.
         directories.splice(1, 0, ...primary)
         const primarySet = new Set(primary)
-        // kilocode_change end
+        // taverncode_change end
 
         if (Flag.KILO_CONFIG_DIR) {
           yield* Effect.logDebug("loading config from KILO_CONFIG_DIR", { path: Flag.KILO_CONFIG_DIR })
@@ -817,14 +817,14 @@ const layer = Layer.effect(
 
         const deps: Fiber.Fiber<void>[] = []
 
-        // kilocode_change start
+        // taverncode_change start
         for (const dir of unique(directories)) {
-          const plugins: ConfigPluginV1.Spec[] = [] // kilocode_change - track file plugins contributed by this directory
+          const plugins: ConfigPluginV1.Spec[] = [] // taverncode_change - track file plugins contributed by this directory
           const scope = primarySet.has(dir) ? "local" : undefined
-          // kilocode_change - trust {file:}/{env:} only for global-scoped config dirs, never project ones
+          // taverncode_change - trust {file:}/{env:} only for global-scoped config dirs, never project ones
           const dirScope = scope ?? (yield* pluginScopeForSource(dir))
           const dirTrusted = dir === Flag.KILO_CONFIG_DIR || dirScope === "global"
-          // kilocode_change - untrusted config dirs confine {file:} reads to projectRoot
+          // taverncode_change - untrusted config dirs confine {file:} reads to projectRoot
           const dirFileScope = dirTrusted ? undefined : { root: projectRoot, source: dir }
           const dirSourceScope = dirTrusted
             ? undefined
@@ -833,7 +833,7 @@ const layer = Layer.effect(
             for (const file of KilocodeConfig.ALL_CONFIG_FILES) {
               const source = path.join(dir, file)
               yield* Effect.logDebug(`loading config from ${source}`)
-              // kilocode_change - untrusted config dirs confine {file:} reads to projectRoot
+              // taverncode_change - untrusted config dirs confine {file:} reads to projectRoot
               const fileScope = dirTrusted ? undefined : { root: projectRoot, source }
               const next = yield* loadFile(source, authEnv, dirTrusted, fileScope, warnings).pipe(
                 Effect.catchDefect((err: unknown) => {
@@ -848,11 +848,11 @@ const layer = Layer.effect(
               result.plugin ??= []
             }
           }
-          // kilocode_change end
+          // taverncode_change end
 
           yield* ensureGitignore(dir).pipe(Effect.orDie)
 
-          // kilocode_change start - propagate parse errors to the Warning accumulator
+          // taverncode_change start - propagate parse errors to the Warning accumulator
           const sourceScopes = (names: readonly string[]) => [
             ...(dirSourceScope ? [dirSourceScope] : []),
             ...ExternalMarkdown.scopes({
@@ -880,22 +880,22 @@ const layer = Layer.effect(
             yield* Effect.promise(() => ConfigAgent.loadMode(dir, warnings, dirTrusted, dirFileScope, dirSourceScope)),
             configuredAgents,
           )
-          // kilocode_change end
-          // kilocode_change - Auto-discovered plugins under config directories are already local files, so ConfigPlugin.load
+          // taverncode_change end
+          // taverncode_change - Auto-discovered plugins under config directories are already local files, so ConfigPlugin.load
           // returns normalized Specs and we only need to attach origin metadata here.
           const list = yield* Effect.promise(() => ConfigPlugin.load(dir))
-          plugins.push(...list) // kilocode_change
-          yield* mergePluginOrigins(dir, list, dirScope) // kilocode_change
+          plugins.push(...list) // taverncode_change
+          yield* mergePluginOrigins(dir, list, dirScope) // taverncode_change
 
-          // kilocode_change start
+          // taverncode_change start
           if (needsLocalPluginDependency(plugins)) {
             deps.push(yield* installLocalPluginDependency(npmSvc, dir, InstallationVersion, InstallationLocal))
           }
-          // kilocode_change end
+          // taverncode_change end
         }
 
         if (process.env.KILO_CONFIG_CONTENT) {
-          // kilocode_change start - capture KILO_CONFIG_CONTENT parse failures as warnings
+          // taverncode_change start - capture KILO_CONFIG_CONTENT parse failures as warnings
           const source = "KILO_CONFIG_CONTENT"
           yield* merge(
             source,
@@ -906,9 +906,9 @@ const layer = Layer.effect(
                 source,
               },
               undefined,
-              true, // kilocode_change - KILO_CONFIG_CONTENT is user-provided, trusted for {file:}/{env:}
+              true, // taverncode_change - KILO_CONFIG_CONTENT is user-provided, trusted for {file:}/{env:}
               undefined,
-              warnings, // kilocode_change - retain excess-key diagnostics from inline config
+              warnings, // taverncode_change - retain excess-key diagnostics from inline config
             ).pipe(
               Effect.tap(() => Effect.logDebug("loaded custom config from KILO_CONFIG_CONTENT")),
               Effect.catchDefect((err: unknown) => {
@@ -919,7 +919,7 @@ const layer = Layer.effect(
             "local",
             true,
           )
-          // kilocode_change end
+          // taverncode_change end
         }
 
         const activeAccount = Option.getOrUndefined(
@@ -948,9 +948,9 @@ const layer = Layer.effect(
                   source,
                 },
                 undefined,
-                true, // kilocode_change - console-managed org config is a trusted source
+                true, // taverncode_change - console-managed org config is a trusted source
                 undefined,
-                warnings, // kilocode_change - retain excess-key diagnostics from console-managed config
+                warnings, // taverncode_change - retain excess-key diagnostics from console-managed config
               )
               for (const providerID of Object.keys(next.provider ?? {})) {
                 consoleManagedProviders.add(providerID)
@@ -968,18 +968,18 @@ const layer = Layer.effect(
         }
 
         const managedDir = ConfigManaged.managedConfigDir()
-        // kilocode_change start - include kilo.json/kilo.jsonc in managed dir loading
+        // taverncode_change start - include tavern.json/tavern.jsonc in managed dir loading
         if (existsSync(managedDir)) {
           for (const file of KilocodeConfig.ALL_CONFIG_FILES) {
             const source = path.join(managedDir, file)
-            // kilocode_change - MDM/enterprise-managed config is a trusted source
+            // taverncode_change - MDM/enterprise-managed config is a trusted source
             yield* merge(source, yield* loadFile(source, undefined, true, undefined, warnings), "global")
           }
         }
-        // kilocode_change end
+        // taverncode_change end
 
         // macOS managed preferences (.mobileconfig deployed via MDM) override everything
-        // kilocode_change start
+        // taverncode_change start
         const managed = yield* Effect.promise(() => ConfigManaged.readManagedPreferences())
         if (managed) {
           yield* merge(
@@ -991,14 +991,14 @@ const layer = Layer.effect(
                 source: managed.source,
               },
               undefined,
-              true, // kilocode_change - MDM-managed preferences are a trusted source
+              true, // taverncode_change - MDM-managed preferences are a trusted source
               undefined,
-              warnings, // kilocode_change - retain excess-key diagnostics from managed preferences
+              warnings, // taverncode_change - retain excess-key diagnostics from managed preferences
             ),
             "global",
           )
         }
-        // kilocode_change end
+        // taverncode_change end
 
         for (const [name, mode] of Object.entries(result.mode ?? {})) {
           result.agent = mergeDeep(result.agent ?? {}, {
@@ -1049,15 +1049,15 @@ const layer = Layer.effect(
         if (Flag.KILO_DISABLE_PRUNE) {
           result.compaction = { ...result.compaction, prune: false }
         }
-        // kilocode_change start — inject Kilo default plugins into both plugin list and origins
+        // taverncode_change start — inject Tavern default plugins into both plugin list and origins
         KilocodeDefaultPlugins.apply(result, { disabled: Flag.KILO_DISABLE_DEFAULT_PLUGINS, log })
-        // kilocode_change end
+        // taverncode_change end
 
         return {
           config: result,
           directories,
           deps,
-          warnings, // kilocode_change
+          warnings, // taverncode_change
           consoleState: {
             consoleManagedProviders: Array.from(consoleManagedProviders),
             activeOrgName,
@@ -1070,16 +1070,16 @@ const layer = Layer.effect(
 
     const state = yield* InstanceState.make<State>(
       Effect.fn("Config.state")(function* (ctx) {
-        return yield* loadInstanceState(ctx).pipe(Effect.provideService(Git.Service, git), Effect.orDie) // kilocode_change
+        return yield* loadInstanceState(ctx).pipe(Effect.provideService(Git.Service, git), Effect.orDie) // taverncode_change
       }),
     )
 
     const get = Effect.fn("Config.get")(function* () {
-      // kilocode_change start - reload instance config when global config changed elsewhere
+      // taverncode_change start - reload instance config when global config changed elsewhere
       if (yield* refreshGlobal()) {
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
       }
-      // kilocode_change end
+      // taverncode_change end
       return yield* InstanceState.use(state, (s) => s.config)
     })
 
@@ -1098,8 +1098,8 @@ const layer = Layer.effect(
     })
 
     const update = Effect.fn("Config.update")(function* (config: Info) {
-      // kilocode_change start - delegate Kilo project config update behavior.
-      // Kilo's updateProjectConfig already reads the raw file (read: readConfigFile)
+      // taverncode_change start - delegate Tavern project config update behavior.
+      // Tavern's updateProjectConfig already reads the raw file (read: readConfigFile)
       // and patches JSONC in place, so upstream's raw-text merge fix is covered.
       const ctx = yield* InstanceState.context
       yield* KilocodeConfig.updateProjectConfig({
@@ -1132,19 +1132,19 @@ const layer = Layer.effect(
     const warnings = Effect.fn("Config.warnings")(function* () {
       return yield* InstanceState.use(state, (s) => s.warnings)
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const invalidate = Effect.fn("Config.invalidate")(function* () {
       yield* invalidateGlobal
-      yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void)) // kilocode_change
+      yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void)) // taverncode_change
     })
 
-    // kilocode_change start - add dispose option to skip Instance.disposeAll for permission-only changes
+    // taverncode_change start - add dispose option to skip Instance.disposeAll for permission-only changes
     const updateGlobal = Effect.fn("Config.updateGlobal")(function* (config: Info, options?: { dispose?: boolean }) {
       const dispose = options?.dispose ?? true
-      // kilocode_change end
+      // taverncode_change end
       const file = globalConfigFile()
-      // kilocode_change start - serialize read-merge-write so concurrent approvals cannot lose rules
+      // taverncode_change start - serialize read-merge-write so concurrent approvals cannot lose rules
       const result = yield* flock
         .withLock(
           Effect.gen(function* () {
@@ -1160,7 +1160,7 @@ const layer = Layer.effect(
             })
 
             if (!file.endsWith(".jsonc")) {
-              // Lower V2 native settings while keeping Kilo read-merge-write behavior.
+              // Lower V2 native settings while keeping Tavern read-merge-write behavior.
               const existing = normalizeLoadedConfig(ConfigParse.jsonc(before, file), file)
               const merged = KilocodeConfig.preserve(existing, patch, file)
               const next = yield* decodeConfig(merged, file)
@@ -1182,9 +1182,9 @@ const layer = Layer.effect(
       const next = result.next
       const changed = result.changed
       const sandboxChanged = changed && Object.hasOwn(config, "sandbox")
-      // kilocode_change end
+      // taverncode_change end
 
-      // kilocode_change start - skip dispose when caller opts out
+      // taverncode_change start - skip dispose when caller opts out
       if (!dispose) {
         yield* invalidateGlobal
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
@@ -1199,10 +1199,10 @@ const layer = Layer.effect(
         ).pipe(Effect.catchCause(() => Effect.void))
         return { info: next, changed }
       }
-      // kilocode_change end
+      // taverncode_change end
 
       if (changed) yield* invalidate()
-      // kilocode_change start - hot-reload global config changes in the active instance
+      // taverncode_change start - hot-reload global config changes in the active instance
       if (changed) {
         yield* InstanceState.invalidate(state).pipe(Effect.catchCause(() => Effect.void))
         yield* Effect.sync(() =>
@@ -1215,7 +1215,7 @@ const layer = Layer.effect(
           }),
         ).pipe(Effect.catchCause(() => Effect.void))
       }
-      // kilocode_change end
+      // taverncode_change end
       return { info: next, changed }
     })
 
@@ -1228,7 +1228,7 @@ const layer = Layer.effect(
       invalidate,
       directories,
       waitForDependencies,
-      warnings, // kilocode_change
+      warnings, // taverncode_change
     })
   }),
 )
@@ -1236,7 +1236,7 @@ const layer = Layer.effect(
 export const node = LayerNode.make({
   service: Service,
   layer: layer,
-  deps: [FSUtil.node, Auth.node, Account.node, Env.node, Npm.node, httpClient, Git.node, EffectFlock.node], // kilocode_change
+  deps: [FSUtil.node, Auth.node, Account.node, Env.node, Npm.node, httpClient, Git.node, EffectFlock.node], // taverncode_change
 })
 
 export * as Config from "./config"

@@ -31,14 +31,14 @@ if (!existsSync(cliDistDir)) {
 }
 
 const targets = [
-  { target: "linux-x64", cliDir: "@kilocode/cli-linux-x64", binary: "kilo" },
-  { target: "linux-arm64", cliDir: "@kilocode/cli-linux-arm64", binary: "kilo" },
-  { target: "alpine-x64", cliDir: "@kilocode/cli-linux-x64-musl", binary: "kilo" },
-  { target: "alpine-arm64", cliDir: "@kilocode/cli-linux-arm64-musl", binary: "kilo" },
-  { target: "darwin-x64", cliDir: "@kilocode/cli-darwin-x64", binary: "kilo" },
-  { target: "darwin-arm64", cliDir: "@kilocode/cli-darwin-arm64", binary: "kilo" },
-  { target: "win32-x64", cliDir: "@kilocode/cli-windows-x64", binary: "kilo.exe" },
-  { target: "win32-arm64", cliDir: "@kilocode/cli-windows-arm64", binary: "kilo.exe" },
+  { target: "linux-x64", cliDir: "@taverncode/cli-linux-x64", binary: "tavern" },
+  { target: "linux-arm64", cliDir: "@taverncode/cli-linux-arm64", binary: "tavern" },
+  { target: "alpine-x64", cliDir: "@taverncode/cli-linux-x64-musl", binary: "tavern" },
+  { target: "alpine-arm64", cliDir: "@taverncode/cli-linux-arm64-musl", binary: "tavern" },
+  { target: "darwin-x64", cliDir: "@taverncode/cli-darwin-x64", binary: "tavern" },
+  { target: "darwin-arm64", cliDir: "@taverncode/cli-darwin-arm64", binary: "tavern" },
+  { target: "win32-x64", cliDir: "@taverncode/cli-windows-x64", binary: "tavern.exe" },
+  { target: "win32-arm64", cliDir: "@taverncode/cli-windows-arm64", binary: "tavern.exe" },
 ]
 
 const binDir = join(import.meta.dir, "..", "bin")
@@ -85,7 +85,7 @@ for (const config of targets) {
   await copySandboxResources(sourceBinary, targetBinary)
   await copyKiloSandboxWorker(sourceBinary, targetBinary)
 
-  if (config.binary !== "kilo.exe") {
+  if (config.binary !== "tavern.exe") {
     chmodSync(targetBinary, 0o755)
   }
 
@@ -95,7 +95,7 @@ for (const config of targets) {
   await ensureFfmpegForTarget(config.target, binDir)
 
   console.log(`  📦 Packaging .vsix for ${config.target}${prerelease ? " (pre-release)" : ""}...`)
-  const vsixPath = join(outDir, `kilo-vscode-${config.target}.vsix`)
+  const vsixPath = join(outDir, `tavern-vscode-${config.target}.vsix`)
   const args = ["--no-dependencies", "--skip-license", "--target", config.target, "-o", vsixPath]
   if (prerelease) args.push("--pre-release")
   await $`vsce package ${args}`.env({

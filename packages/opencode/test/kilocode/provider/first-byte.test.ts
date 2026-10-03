@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { requestTimeout, wrapFirstByte, REQUEST_TIMEOUT_MS } from "../../../src/kilocode/provider/provider"
+import { requestTimeout, wrapFirstByte, REQUEST_TIMEOUT_MS } from "../../../src/taverncode/provider/provider"
 import { ProviderError } from "../../../src/provider/error"
 
 const sse = (body: BodyInit | null) =>

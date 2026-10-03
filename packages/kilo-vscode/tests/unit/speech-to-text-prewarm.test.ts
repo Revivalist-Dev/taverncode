@@ -42,7 +42,7 @@ const SCRIPT = `
     process.exit(2)
   }
 
-  const [config, setConfig] = createSignal({ disabled_providers: ["kilo"] })
+  const [config, setConfig] = createSignal({ disabled_providers: ["tavern"] })
   const [auth, setAuth] = createSignal({})
   const [capture, setCapture] = createSignal(false)
   const features = () => ({
@@ -68,23 +68,23 @@ const SCRIPT = `
     root,
   )
 
-  if (sent.length !== 0) fail("prewarmed without Kilo access")
-  setAuth({ kilo: "api" })
-  if (sent.length !== 0) fail("prewarmed while Kilo was disabled")
+  if (sent.length !== 0) fail("prewarmed without Tavern access")
+  setAuth({ tavern: "api" })
+  if (sent.length !== 0) fail("prewarmed while Tavern was disabled")
   setConfig({})
   if (sent.length !== 0) fail("prewarmed without capture support")
   setCapture(true)
   if (sent.length !== 1 || sent[0]?.type !== "speechToTextPrewarm") {
     fail("did not prewarm after capture became available")
   }
-  setAuth({ kilo: "oauth" })
+  setAuth({ tavern: "oauth" })
   if (sent.length !== 1) fail("prewarmed more than once")
   dispose()
   console.log("${PASS}")
 `
 
 describe("speech-to-text prewarm", () => {
-  it("starts only after Kilo speech access becomes available", () => {
+  it("starts only after Tavern speech access becomes available", () => {
     const attempts = 3
     const failures: string[] = []
 

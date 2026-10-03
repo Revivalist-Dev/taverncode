@@ -3,7 +3,7 @@ import { Deferred, Effect, Exit, Fiber, Scheduler } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import { InstanceRef } from "@/effect/instance-ref"
 import { disposeInstance, registerDisposer } from "@/effect/instance-registry"
-import { SessionDrain } from "@/kilocode/session/drain"
+import { SessionDrain } from "@/taverncode/session/drain"
 import { SessionID } from "@/session/schema"
 import { testEffect } from "../lib/effect"
 

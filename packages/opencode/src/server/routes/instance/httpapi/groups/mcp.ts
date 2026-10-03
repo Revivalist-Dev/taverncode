@@ -7,7 +7,7 @@ import { Authorization } from "../middleware/authorization"
 import { InstanceContextMiddleware } from "../middleware/instance-context"
 import { WorkspaceRoutingMiddleware, WorkspaceRoutingQuery } from "../middleware/workspace-routing"
 import { described } from "./metadata"
-import { McpApps } from "@/kilocode/mcp/apps" // kilocode_change - MCP Apps schemas live in Kilo-owned code
+import { McpApps } from "@/taverncode/mcp/apps" // taverncode_change - MCP Apps schemas live in Tavern-owned code
 
 export const AddPayload = Schema.Struct({
   name: Schema.String,
@@ -37,8 +37,8 @@ export const McpPaths = {
   authAuthenticate: "/mcp/:name/auth/authenticate",
   connect: "/mcp/:name/connect",
   disconnect: "/mcp/:name/disconnect",
-  readResource: "/experimental/resource/read", // kilocode_change
-  callTool: "/experimental/mcp/call-tool", // kilocode_change
+  readResource: "/experimental/resource/read", // taverncode_change
+  callTool: "/experimental/mcp/call-tool", // taverncode_change
 } as const
 
 export const McpApi = HttpApi.make("mcp")
@@ -139,7 +139,7 @@ export const McpApi = HttpApi.make("mcp")
             description: "Disconnect an MCP server.",
           }),
         ),
-        // kilocode_change start - MCP Apps experimental endpoints
+        // taverncode_change start - MCP Apps experimental endpoints
         HttpApiEndpoint.post("readResource", McpPaths.readResource, {
           query: WorkspaceRoutingQuery,
           payload: McpApps.ReadResourcePayload,
@@ -166,7 +166,7 @@ export const McpApi = HttpApi.make("mcp")
               "Call a tool on a connected MCP server. Used by MCP Apps for widget-initiated tool calls.",
           }),
         ),
-        // kilocode_change end
+        // taverncode_change end
       )
       .annotateMerge(
         OpenApi.annotations({

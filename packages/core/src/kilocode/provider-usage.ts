@@ -2,7 +2,7 @@ export * as ProviderUsage from "./provider-usage"
 
 import { Context, Effect, Layer, Schema } from "effect"
 import { createHash } from "node:crypto"
-import { ProviderUsage as Contract } from "@opencode-ai/schema/kilocode/provider-usage"
+import { ProviderUsage as Contract } from "@opencode-ai/schema/taverncode/provider-usage"
 import { Catalog } from "../catalog"
 import { makeGlobalNode, makeLocationNode } from "../effect/app-node"
 import { Integration } from "../integration"
@@ -44,24 +44,24 @@ export interface Adapter {
 }
 
 const managed: Adapter = {
-  cachePrefixes: ["kilo-managed:"],
+  cachePrefixes: ["tavern-managed:"],
   cloudScoped: true,
   async run(ctx) {
     if (!ctx.cloud || !ctx.token || !ctx.cloudIdentity) {
-      return { items: ctx.cloudReliable ? [] : ctx.preserve("kilo-managed:") }
+      return { items: ctx.cloudReliable ? [] : ctx.preserve("tavern-managed:") }
     }
     const state = await ctx.cloud()
     if (!ctx.identityCurrent(ctx.cloudIdentity)) return { items: [] }
-    if (!state.plans.ok || !state.byok.ok) return { items: ctx.preserve("kilo-managed:", ctx.cloudIdentity) }
+    if (!state.plans.ok || !state.byok.ok) return { items: ctx.preserve("tavern-managed:", ctx.cloudIdentity) }
     const token = ctx.token
     const identity = ctx.cloudIdentity
     const detected = Cloud.plans(state)
-    const ids = detected.map((subscription) => `kilo-managed:${subscription.id}`)
-    ctx.prune("kilo-managed:", ids)
+    const ids = detected.map((subscription) => `tavern-managed:${subscription.id}`)
+    ctx.prune("tavern-managed:", ids)
     return {
       items: await Promise.all(
         detected.map((subscription) =>
-          ctx.source(`kilo-managed:${subscription.id}`, () => Cloud.managed(token, subscription, ctx.usage), identity),
+          ctx.source(`tavern-managed:${subscription.id}`, () => Cloud.managed(token, subscription, ctx.usage), identity),
         ),
       ),
     }
@@ -117,7 +117,7 @@ function scopeCloudCache(state: State, token: string | undefined) {
   if (state.cloudIdentity === identity) return identity
   state.cloudIdentity = identity
   state.cloud = { expires: 0 }
-  prune(state, "kilo-managed:", [])
+  prune(state, "tavern-managed:", [])
   return identity
 }
 
@@ -228,7 +228,7 @@ export interface Interface {
   readonly refresh: () => Effect.Effect<Contract.Info, ServiceError>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@kilocode/ProviderUsage") {}
+export class Service extends Context.Service<Service, Interface>()("@taverncode/ProviderUsage") {}
 
 export interface TransportInterface {
   readonly fetch: typeof fetch
@@ -237,7 +237,7 @@ export interface TransportInterface {
   readonly usage: typeof Cloud.fetchCodingPlanUsage
 }
 
-export class Transport extends Context.Service<Transport, TransportInterface>()("@kilocode/ProviderUsageTransport") {}
+export class Transport extends Context.Service<Transport, TransportInterface>()("@taverncode/ProviderUsageTransport") {}
 
 const transportLayer = Layer.succeed(Transport, {
   fetch,
@@ -303,15 +303,15 @@ const inputs = Effect.fn("ProviderUsage.inputs")(function* (
       return { providerID, label: provider.name, key: value.trim() } satisfies Candidate
     }),
   )
-  const kilo = yield* resolve(integrations, Integration.ID.make("kilo"))
-  const kiloProvider = byID.get(ProviderV2.ID.kilo)
-  const configuredOrg = nonempty(process.env.KILO_ORG_ID) ?? nonempty(kiloProvider?.request.body.kilocodeOrganizationId)
+  const tavern = yield* resolve(integrations, Integration.ID.make("tavern"))
+  const kiloProvider = byID.get(ProviderV2.ID.tavern)
+  const configuredOrg = nonempty(process.env.KILO_ORG_ID) ?? nonempty(kiloProvider?.request.body.taverncodeOrganizationId)
   const organization =
     configuredOrg !== undefined ||
-    (kilo.ok && kilo.value?.type === "oauth" && nonempty(kilo.value.metadata?.accountID) !== undefined)
-  const cloudReliable = organization || kilo.ok
+    (tavern.ok && tavern.value?.type === "oauth" && nonempty(tavern.value.metadata?.accountID) !== undefined)
+  const cloudReliable = organization || tavern.ok
   const token =
-    kilo.ok && kilo.value?.type === "oauth" && !organization && kilo.value.access ? kilo.value.access : undefined
+    tavern.ok && tavern.value?.type === "oauth" && !organization && tavern.value.access ? tavern.value.access : undefined
   return {
     providers,
     candidates: candidates.filter((item): item is Candidate => item !== undefined),

@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { ScriptTerminalManager } from "./ScriptTerminalManager"
 import type { SessionTerminalManager } from "./SessionTerminalManager"
 import type { TerminalRouter } from "./terminal-routing"
@@ -30,7 +30,7 @@ export async function teardown(
 ): Promise<void> {
   if (!root) throw new Error(`No project root to tear down ${directory}`)
   const client = await getClient(root)
-  const result = await client.kilocode.teardownWorktree({ directory: root, worktree: directory })
+  const result = await client.taverncode.teardownWorktree({ directory: root, worktree: directory })
   if (result.error) throw result.error
 }
 

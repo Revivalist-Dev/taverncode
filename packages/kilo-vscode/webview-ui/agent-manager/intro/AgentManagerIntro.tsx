@@ -1,6 +1,6 @@
 import { Show, createSignal, type JSX } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Popover } from "@kilocode/kilo-ui/popover"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Popover } from "@taverncode/tavern-ui/popover"
 import { useLanguage } from "../../src/context/language"
 import { useVSCode } from "../../src/context/vscode"
 import { WelcomeEmptyState, KiloLogo } from "../../src/components/chat/WelcomeEmptyState"
@@ -161,7 +161,7 @@ function Introduction(props: IntroProps) {
           size="small"
           icon="link"
           onClick={() => {
-            vscode.postMessage({ type: "openExternal", url: "https://kilo.ai/docs/automate/agent-manager-workflows" })
+            vscode.postMessage({ type: "openExternal", url: "https://tavern.ai/docs/automate/agent-manager-workflows" })
           }}
         >
           {t("agentManager.intro.guide")}

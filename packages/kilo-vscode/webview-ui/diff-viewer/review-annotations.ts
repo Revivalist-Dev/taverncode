@@ -1,5 +1,5 @@
 import type { AnnotationSide, DiffLineAnnotation } from "@pierre/diffs"
-import type { UiI18nParams } from "@kilocode/kilo-ui/context"
+import type { UiI18nParams } from "@taverncode/tavern-ui/context"
 import type { WorktreeFileDiff } from "../src/types/messages"
 import { extractLines, type ReviewComment } from "./review-comments"
 import type { ReviewCommentEntry } from "../src/types/messages"
@@ -290,9 +290,9 @@ export function buildReviewAnnotation(
       const submit = () => {
         // Speech-to-text confirms with the local action. GitHub publication stays
         // on an explicit button click so a voice command cannot post by accident.
-        const kilo = host.querySelector<HTMLButtonElement>('[data-action="send-kilo"], [data-action="send"]')
-        if (kilo && !kilo.disabled) {
-          kilo.click()
+        const tavern = host.querySelector<HTMLButtonElement>('[data-action="send-tavern"], [data-action="send"]')
+        if (tavern && !tavern.disabled) {
+          tavern.click()
           return
         }
         const primary = host.querySelector<HTMLButtonElement>('[data-action="send-primary"]')

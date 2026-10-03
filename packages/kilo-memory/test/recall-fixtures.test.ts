@@ -7,7 +7,7 @@ import { MemoryRecall } from "../src/recall/recall"
 import { MemoryTopics } from "../src/recall/topics"
 
 async function tmp() {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kilo-memory-recall-"))
+  const dir = await mkdtemp(path.join(os.tmpdir(), "tavern-memory-recall-"))
   return {
     dir,
     root: path.join(dir, "memory"),
@@ -89,7 +89,7 @@ describe("memory recall lexical fixtures", () => {
         file: "environment.md",
         section: "Commands",
         key: "opencode_memory_tests",
-        text: "Run bun test ./test/kilocode/memory from packages/opencode.",
+        text: "Run bun test ./test/taverncode/memory from packages/opencode.",
       })
 
       const result = await MemoryRecall.search({ root: t.root, query: "bun packages/opencode memory" })
@@ -105,7 +105,7 @@ describe("memory recall lexical fixtures", () => {
       await Memory.remember({
         root: t.root,
         key: "設定",
-        text: "日本語の設定は packages/kilo-vscode に保存します。",
+        text: "日本語の設定は packages/tavern-vscode に保存します。",
       })
 
       const result = await MemoryRecall.search({ root: t.root, query: "日本語 設定" })
@@ -223,7 +223,7 @@ describe("memory recall lexical fixtures", () => {
       await Memory.remember({ root: t.root, key: "unit_tests", text: "Run the unit tests before merge." })
       await Memory.remember({ root: t.root, key: "the_the_note", text: "The the the the the config value." })
       await Memory.remember({ root: t.root, key: "the_deploy", text: "The deploy command uses staging." })
-      await Memory.remember({ root: t.root, key: "the_docs", text: "The docs live in packages/kilo-docs." })
+      await Memory.remember({ root: t.root, key: "the_docs", text: "The docs live in packages/tavern-docs." })
       await Memory.remember({ root: t.root, key: "the_api", text: "The API base is configured locally." })
       await Memory.remember({ root: t.root, key: "the_ui", text: "The UI package owns shared components." })
       await Memory.remember({ root: t.root, key: "the_auth", text: "The auth token comes from the gateway." })
@@ -242,7 +242,7 @@ describe("memory recall lexical fixtures", () => {
       await Memory.remember({ root: t.root, key: "unit_tests", text: "Run the unit tests before merge." })
       await Memory.remember({ root: t.root, key: "the_the_note", text: "The the the the the config value." })
       await Memory.remember({ root: t.root, key: "the_deploy", text: "The deploy command uses staging." })
-      await Memory.remember({ root: t.root, key: "the_docs", text: "The docs live in packages/kilo-docs." })
+      await Memory.remember({ root: t.root, key: "the_docs", text: "The docs live in packages/tavern-docs." })
 
       const result = await MemoryRecall.search({ root: t.root, query: "the tests" })
 
@@ -271,7 +271,7 @@ describe("memory recall lexical fixtures", () => {
       await Memory.remember({ root: t.root, key: "pruebas_cli", text: "El comando de pruebas usa bun test." })
       await Memory.remember({ root: t.root, key: "nota_de_de", text: "De de de de config local." })
       await Memory.remember({ root: t.root, key: "deploy_es", text: "El flujo de deploy usa staging." })
-      await Memory.remember({ root: t.root, key: "docs_es", text: "La ruta de docs vive en packages/kilo-docs." })
+      await Memory.remember({ root: t.root, key: "docs_es", text: "La ruta de docs vive en packages/tavern-docs." })
       await Memory.remember({ root: t.root, key: "api_es", text: "La base de API se configura localmente." })
       await Memory.remember({ root: t.root, key: "ui_es", text: "El paquete de UI contiene componentes." })
       await Memory.remember({ root: t.root, key: "auth_es", text: "El token de auth viene del gateway." })

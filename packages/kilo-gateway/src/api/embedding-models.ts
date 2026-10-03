@@ -79,7 +79,7 @@ export async function fetchKiloEmbeddingModelCatalog(options: Options = {}): Pro
       if (!response.ok) {
         issue.current = {
           code: "http",
-          message: `Unable to load Kilo embedding models (HTTP ${response.status}).`,
+          message: `Unable to load Tavern embedding models (HTTP ${response.status}).`,
           status: response.status,
         }
         if (!retryable(response.status) || attempt === attempts - 1) break
@@ -91,14 +91,14 @@ export async function fetchKiloEmbeddingModelCatalog(options: Options = {}): Pro
       if (parsed.success) return parsed.data
       issue.current = {
         code: "invalid-response",
-        message: "Kilo returned an invalid embedding model catalog.",
+        message: "Tavern returned an invalid embedding model catalog.",
       }
       break
     } catch (err) {
       if (options.signal?.aborted) throw options.signal.reason
       issue.current = {
         code: "network",
-        message: "Unable to connect to Kilo to load embedding models. Check your network connection and try again.",
+        message: "Unable to connect to Tavern to load embedding models. Check your network connection and try again.",
       }
       if (attempt === attempts - 1) break
       await wait(200 * 2 ** attempt, options.signal)

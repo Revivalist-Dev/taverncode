@@ -2,7 +2,7 @@
 
 ## How parity works here
 
-Both clients edit the **same shared `kilo.json`** through the CLI. So any setting whose
+Both clients edit the **same shared `tavern.json`** through the CLI. So any setting whose
 behavior lives entirely in the CLI is an "easy win" for JetBrains: the CLI already does the
 work, JetBrains just needs a UI row that writes the config key. No CLI changes, no new feature.
 
@@ -12,7 +12,7 @@ The lift for most easy wins is:
 
 1. Add a new `Configurable` page (using existing `settings/base/` primitives —
    `BaseSettingsUi`, `SettingsRow`, `SettingsToggle`, `SettingsListPanel`), register it in
-   `kilo.jetbrains.frontend.xml`.
+   `tavern.jetbrains.frontend.xml`.
 2. Extend the `buildConfigPatch` allowlist in `KiloCliDataParser.kt` (currently only
    `model`, `small_model`, `subagent_model`, `subagent_variant`, `default_agent`) and add
    boolean/number JSON serialization — it currently only emits strings.

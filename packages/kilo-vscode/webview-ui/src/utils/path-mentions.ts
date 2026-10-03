@@ -25,7 +25,7 @@ export function convertToMentionPath(path: string, cwd: string): string {
       cleaned = cleaned.substring(1)
     }
   } catch (err) {
-    console.error("[Kilo New] Failed to decode dropped URI:", err, cleaned)
+    console.error("[Tavern New] Failed to decode dropped URI:", err, cleaned)
   }
 
   const normalized = cleaned.replace(/\\/g, "/")
@@ -67,12 +67,12 @@ function isFilePath(line: string): boolean {
  * (e.g. from diff panel file headers). Unlike VS Code's URI list, these
  * are workspace-relative paths that can be used directly as @mentions.
  */
-export const KILO_FILE_PATH_MIME = "application/x-kilo-file-path"
+export const KILO_FILE_PATH_MIME = "application/x-tavern-file-path"
 
 /**
  * Extract file paths from a drop's DataTransfer.
  * Checks (in order):
- * 1. Internal relative-path drag (application/x-kilo-file-path)
+ * 1. Internal relative-path drag (application/x-tavern-file-path)
  * 2. VS Code URI-list (application/vnd.code.uri-list)
  * 3. text/plain — only when every line looks like an absolute file path
  *
@@ -80,9 +80,9 @@ export const KILO_FILE_PATH_MIME = "application/x-kilo-file-path"
  */
 export function extractDropPaths(dt: DataTransfer): string[] | null {
   // Internal relative-path drag from diff file headers etc.
-  const kilo = dt.getData(KILO_FILE_PATH_MIME)
-  if (kilo) {
-    const paths = kilo.split(/\r?\n/).filter((line) => line.trim() !== "")
+  const tavern = dt.getData(KILO_FILE_PATH_MIME)
+  if (tavern) {
+    const paths = tavern.split(/\r?\n/).filter((line) => line.trim() !== "")
     if (paths.length > 0) return paths
   }
 

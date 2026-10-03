@@ -1,41 +1,41 @@
 ---
-title: "Using OpenAI with Kilo Code | Setup & Models"
-description: "Connect the official OpenAI API to Kilo Code. Step-by-step guide to creating an API key and configuring GPT models in VS Code and the CLI."
+title: "Using OpenAI with Tavern Code | Setup & Models"
+description: "Connect the official OpenAI API to Tavern Code. Step-by-step guide to creating an API key and configuring GPT models in VS Code and the CLI."
 sidebar_label: OpenAI
 ---
 
-# Using OpenAI With Kilo Code
+# Using OpenAI With Tavern Code
 
-Kilo Code supports accessing models directly through the official OpenAI API.
+Tavern Code supports accessing models directly through the official OpenAI API.
 
 **Website:** [https://openai.com/](https://openai.com/)
 
 {% callout type="tip" %}
-**Want to use your ChatGPT subscription instead?** Connect **OpenAI (ChatGPT subscription)** on Kilo's BYOK page, or sign in to OpenAI directly in VS Code or the CLI. These are separate from the API-key setup below. See [ChatGPT subscription setup](/docs/ai-providers/openai-chatgpt-plus-pro) for supported usage, limits, and billing details.
+**Want to use your ChatGPT subscription instead?** Connect **OpenAI (ChatGPT subscription)** on Tavern's BYOK page, or sign in to OpenAI directly in VS Code or the CLI. These are separate from the API-key setup below. See [ChatGPT subscription setup](/docs/ai-providers/openai-chatgpt-plus-pro) for supported usage, limits, and billing details.
 {% /callout %}
 
-An OpenAI API key uses your OpenAI Platform billing account, not your ChatGPT subscription. Signing in to Kilo with ChatGPT also does not automatically connect your subscription for model usage.
+An OpenAI API key uses your OpenAI Platform billing account, not your ChatGPT subscription. Signing in to Tavern with ChatGPT also does not automatically connect your subscription for model usage.
 
 ## Getting an API Key
 
 1.  **Sign Up/Sign In:** Go to the [OpenAI Platform](https://platform.openai.com/). Create an account or sign in.
 2.  **Navigate to API Keys:** Go to the [API keys](https://platform.openai.com/api-keys) page.
-3.  **Create a Key:** Click "Create new secret key". Give your key a descriptive name (e.g., "Kilo Code").
+3.  **Create a Key:** Click "Create new secret key". Give your key a descriptive name (e.g., "Tavern Code").
 4.  **Copy the Key:** **Important:** Copy the API key _immediately_. You will not be able to see it again. Store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add OpenAI and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -43,7 +43,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export OPENAI_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {
@@ -69,4 +69,4 @@ Then set your default model:
 ## Tips and Notes
 
 - **Pricing:** Refer to the [OpenAI Pricing](https://openai.com/pricing) page for details on model costs.
-- **Azure OpenAI Service:** Use Kilo Code's native `azure` provider for Azure OpenAI, especially GPT-5 deployments. Do not configure Azure GPT-5 through a generic [OpenAI-compatible](/docs/ai-providers/openai-compatible) custom provider.
+- **Azure OpenAI Service:** Use Tavern Code's native `azure` provider for Azure OpenAI, especially GPT-5 deployments. Do not configure Azure GPT-5 through a generic [OpenAI-compatible](/docs/ai-providers/openai-compatible) custom provider.

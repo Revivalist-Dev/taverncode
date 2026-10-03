@@ -96,12 +96,12 @@ describe("CodeIndexConfigManager", () => {
     expect(IndexingConfig.safeParse({ fileExtensions: [".d.ts"] }).success).toBe(false)
   })
 
-  test("configures Kilo with hosted auth options and explicit model metadata", () => {
+  test("configures Tavern with hosted auth options and explicit model metadata", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "tavern",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
+        kiloApiKey: "tavern-token",
         kiloBaseUrl: "https://example.test/api/gateway/",
         kiloOrganizationId: "org_123",
         modelId: "mistralai/mistral-embed-2312",
@@ -111,7 +111,7 @@ describe("CodeIndexConfigManager", () => {
 
     expect(cfg.isFeatureConfigured).toBe(true)
     expect(cfg.getConfig().kiloOptions).toEqual({
-      apiKey: "kilo-token",
+      apiKey: "tavern-token",
       baseUrl: "https://example.test/api/gateway/",
       organizationId: "org_123",
     })
@@ -119,12 +119,12 @@ describe("CodeIndexConfigManager", () => {
     expect(cfg.currentModelDimension).toBe(1024)
   })
 
-  test("requires Kilo model metadata from Cloud config", () => {
+  test("requires Tavern model metadata from Cloud config", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "tavern",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
+        kiloApiKey: "tavern-token",
       }),
     )
 
@@ -133,12 +133,12 @@ describe("CodeIndexConfigManager", () => {
     expect(cfg.currentModelDimension).toBeUndefined()
   })
 
-  test("uses configured dimension for Kilo models outside the fallback catalog", () => {
+  test("uses configured dimension for Tavern models outside the fallback catalog", () => {
     const cfg = new CodeIndexConfigManager(
       createInput({
-        embedderProvider: "kilo",
+        embedderProvider: "tavern",
         openAiKey: undefined,
-        kiloApiKey: "kilo-token",
+        kiloApiKey: "tavern-token",
         modelId: "custom/model",
         modelDimension: 2048,
       }),
@@ -207,10 +207,10 @@ describe("CodeIndexConfigManager", () => {
       expect(cfg.loadConfiguration(input).requiresRestart).toBe(false)
     })
 
-    test("requires restart when Kilo auth changes", () => {
+    test("requires restart when Tavern auth changes", () => {
       const cfg = new CodeIndexConfigManager(
         createInput({
-          embedderProvider: "kilo",
+          embedderProvider: "tavern",
           openAiKey: undefined,
           kiloApiKey: "old-token",
           modelId: "mistralai/mistral-embed-2312",
@@ -220,7 +220,7 @@ describe("CodeIndexConfigManager", () => {
 
       const result = cfg.loadConfiguration(
         createInput({
-          embedderProvider: "kilo",
+          embedderProvider: "tavern",
           openAiKey: undefined,
           kiloApiKey: "new-token",
           modelId: "mistralai/mistral-embed-2312",

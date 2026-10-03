@@ -30,7 +30,7 @@ export function staticEnvLines(ctx?: EditorContext): string[] {
  * Always includes at least the supplied message timestamp.
  * The leading blank lines separate the block from the user's own text when
  * the block is appended as an adjacent content part, so models do not treat
- * it as a continuation of the user's content (kilocode#13110).
+ * it as a continuation of the user's content (taverncode#13110).
  */
 function timestamp(now: Date): string {
   return now.toISOString().replace(/\.\d+Z$/, "Z")

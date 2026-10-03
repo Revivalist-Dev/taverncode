@@ -1,13 +1,13 @@
 /**
- * Kilo Gateway Team Selection Dialog
+ * Tavern Gateway Team Selection Dialog
  *
  * Allows switching between organizations and personal account.
  * Marks the current team with "→ (current)" indicator.
  */
 
 import { DialogSelect } from "@tui/ui/dialog-select"
-import type { Organization } from "@kilocode/kilo-gateway"
-import { getOrganizationOptions } from "@kilocode/kilo-gateway/tui"
+import type { Organization } from "@taverncode/tavern-gateway"
+import { getOrganizationOptions } from "@taverncode/tavern-gateway/tui"
 
 interface DialogKiloTeamSelectProps {
   organizations: Organization[]

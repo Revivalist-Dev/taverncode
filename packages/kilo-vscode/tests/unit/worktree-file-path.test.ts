@@ -13,7 +13,7 @@ function state(worktree: { id: string; path: string }) {
 }
 
 function repo() {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "kilo-worktree-")))
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "tavern-worktree-")))
   fs.writeFileSync(path.join(root, "file.ts"), "")
   return root
 }

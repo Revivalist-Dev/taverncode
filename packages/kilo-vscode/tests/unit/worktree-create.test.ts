@@ -18,7 +18,7 @@ afterEach(async () => {
 
 describe("createWorktreeOnDisk", () => {
   it("reports no-commit failures to multi-version callers and the webview", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-empty-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-empty-"))
     tempDirs.push(root)
     const result = Bun.spawnSync(["git", "init", "-b", "main", root], { stdout: "ignore", stderr: "pipe" })
     if (result.exitCode !== 0) throw new Error(Buffer.from(result.stderr).toString("utf8"))

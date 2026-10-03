@@ -1,27 +1,27 @@
-import { lazy } from "@/kilocode/cli/lazy-commands"
+import { lazy } from "@/taverncode/cli/lazy-commands"
 
 export const KiloConsoleCommand = lazy({
   command: "console",
-  describe: "open or stop the local Kilo Console (deprecated)",
-  load: async () => (await import("@/kilocode/cli/cmd/console")).KiloConsoleCommand,
+  describe: "open or stop the local Tavern Console (deprecated)",
+  load: async () => (await import("@/taverncode/cli/cmd/console")).KiloConsoleCommand,
 })
 
 export const CloudCommand = lazy({
   command: "cloud",
   describe: "run Cloud Agent tasks",
-  load: async () => (await import("@/kilocode/cli/cmd/cloud")).CloudCommand,
+  load: async () => (await import("@/taverncode/cli/cmd/cloud")).CloudCommand,
 })
 
 export const RollCallCommand = lazy({
   command: "roll-call <filter>",
   describe: "batch-test text models matching a filter for connectivity and latency",
-  load: async () => (await import("@/kilocode/cli/cmd/roll-call")).RollCallCommand,
+  load: async () => (await import("@/taverncode/cli/cmd/roll-call")).RollCallCommand,
 })
 
 export const ProfileCommand = lazy({
   command: "profile",
-  describe: "show Kilo account profile",
-  load: async () => (await import("@/kilocode/cli/cmd/profile")).ProfileCommand,
+  describe: "show Tavern account profile",
+  load: async () => (await import("@/taverncode/cli/cmd/profile")).ProfileCommand,
 })
 
 export const RemoteCommand = lazy({
@@ -32,8 +32,8 @@ export const RemoteCommand = lazy({
 
 export const DaemonCommand = lazy({
   command: "daemon",
-  describe: "manage the local kilo daemon",
-  load: async () => (await import("@/kilocode/cli/cmd/daemon")).DaemonCommand,
+  describe: "manage the local tavern daemon",
+  load: async () => (await import("@/taverncode/cli/cmd/daemon")).DaemonCommand,
 })
 
 export const ConfigCLICommand = lazy({
@@ -45,23 +45,23 @@ export const ConfigCLICommand = lazy({
 export const WorktreeCommand = lazy({
   command: "worktree",
   describe: "manage git worktrees",
-  load: async () => (await import("@/kilocode/cli/cmd/worktree")).WorktreeCommand,
+  load: async () => (await import("@/taverncode/cli/cmd/worktree")).WorktreeCommand,
 })
 
 export const PtySmokeCommand = lazy({
   command: "__pty-smoke",
   describe: false,
-  load: async () => (await import("@/kilocode/cli/cmd/pty-smoke")).PtySmokeCommand,
+  load: async () => (await import("@/taverncode/cli/cmd/pty-smoke")).PtySmokeCommand,
 })
 
 export const DevSetupCommand = lazy({
   command: "dev-setup",
   describe: "install a `kilodev` shell alias for this checkout",
-  load: async () => (await import("@/kilocode/cli/dev-setup")).DevSetupCommand,
+  load: async () => (await import("@/taverncode/cli/dev-setup")).DevSetupCommand,
 })
 
 export const DevAliasCommand = lazy({
   command: "dev-alias [shell]",
   describe: false,
-  load: async () => (await import("@/kilocode/cli/dev-setup")).DevAliasCommand,
+  load: async () => (await import("@/taverncode/cli/dev-setup")).DevAliasCommand,
 })

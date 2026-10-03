@@ -1,9 +1,9 @@
 import { Cause, Effect, Scope } from "effect"
 import { NamedError } from "@opencode-ai/core/util/error"
 import { EventV2Bridge } from "@/event-v2-bridge"
-import { KiloSessionContinuation } from "@/kilocode/session/continuation"
-import { KiloSessionRetention } from "@/kilocode/session/retention"
-import { Suggestion } from "@/kilocode/suggestion"
+import { KiloSessionContinuation } from "@/taverncode/session/continuation"
+import { KiloSessionRetention } from "@/taverncode/session/retention"
+import { Suggestion } from "@/taverncode/suggestion"
 import { Permission } from "@/permission"
 import { Question } from "@/question"
 import { Session } from "@/session/session"
@@ -11,29 +11,29 @@ import { SessionPrompt } from "@/session/prompt"
 import { SessionStatus } from "@/session/status"
 import { mapStorageNotFound } from "@/server/routes/instance/httpapi/handlers/session-errors"
 import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi"
-import * as KiloAgent from "@/kilocode/agent"
-import { CommandFiles } from "@/kilocode/command-files"
-import * as KiloSkill from "@/kilocode/skill-remove"
+import * as KiloAgent from "@/taverncode/agent"
+import { CommandFiles } from "@/taverncode/command-files"
+import * as KiloSkill from "@/taverncode/skill-remove"
 import { Agent } from "@/agent/agent"
 import { Command } from "@/command"
 import { Config } from "@/config/config"
 import { WorkspaceRef } from "@/effect/instance-ref"
 import { InstanceState } from "@/effect/instance-state"
-import { HeapSnapshot } from "@/kilocode/cli/heap-snapshot"
-import type { RequestID as AgentManagerRequestID } from "@/kilocode/agent-manager/protocol"
-import { AgentManager } from "@/kilocode/agent-manager/service"
-import type { RequestID as NotebookRequestID } from "@/kilocode/notebook/protocol"
-import { Notebook } from "@/kilocode/notebook/service"
-import { ModelUsage } from "@/kilocode/session/model-usage"
-import * as MarketplaceApi from "@/kilocode/marketplace/api"
-import * as MarketplaceDetection from "@/kilocode/marketplace/detection"
-import * as MarketplaceInstaller from "@/kilocode/marketplace/installer"
+import { HeapSnapshot } from "@/taverncode/cli/heap-snapshot"
+import type { RequestID as AgentManagerRequestID } from "@/taverncode/agent-manager/protocol"
+import { AgentManager } from "@/taverncode/agent-manager/service"
+import type { RequestID as NotebookRequestID } from "@/taverncode/notebook/protocol"
+import { Notebook } from "@/taverncode/notebook/service"
+import { ModelUsage } from "@/taverncode/session/model-usage"
+import * as MarketplaceApi from "@/taverncode/marketplace/api"
+import * as MarketplaceDetection from "@/taverncode/marketplace/detection"
+import * as MarketplaceInstaller from "@/taverncode/marketplace/installer"
 import {
   MarketplaceInstallPayload,
   MarketplaceRemovePayload,
   type MarketplaceRemoveResult,
-} from "@/kilocode/marketplace/schema"
-import { ProviderUsage } from "@opencode-ai/core/kilocode/provider-usage"
+} from "@/taverncode/marketplace/schema"
+import { ProviderUsage } from "@opencode-ai/core/taverncode/provider-usage"
 import { Location } from "@opencode-ai/core/location"
 import { LocationServiceMap } from "@opencode-ai/core/location-services"
 import { AbsolutePath } from "@opencode-ai/core/schema"
@@ -41,19 +41,19 @@ import { InstanceStore } from "@/project/instance-store"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { ConflictError, InvalidRequestError, UnknownError } from "@/server/routes/instance/httpapi/errors"
 import { Database } from "@opencode-ai/core/database/database"
-import { BoardStore } from "@/kilocode/board/store"
+import { BoardStore } from "@/taverncode/board/store"
 import { Skill } from "@/skill"
 import { BackgroundJob } from "@/background/job"
 import { SessionRunState } from "@/session/run-state"
-import { SessionDrain } from "@/kilocode/session/drain"
-import { Wakeup } from "@/kilocode/wakeup"
-import { Drained } from "@opencode-ai/schema/kilocode/session-drain"
+import { SessionDrain } from "@/taverncode/session/drain"
+import { Wakeup } from "@/taverncode/wakeup"
+import { Drained } from "@opencode-ai/schema/taverncode/session-drain"
 import { SessionID } from "@/session/schema"
 import { RuntimeFlags } from "@/effect/runtime-flags"
-import { KiloSnapshotCleanup } from "@/kilocode/snapshot/cleanup"
-import { clearPtys } from "@/kilocode/worktree/pty-cleanup"
+import { KiloSnapshotCleanup } from "@/taverncode/snapshot/cleanup"
+import { clearPtys } from "@/taverncode/worktree/pty-cleanup"
 import { Snapshot } from "@/snapshot"
-import { KiloSnapshotPrepare } from "@/kilocode/snapshot/prepare"
+import { KiloSnapshotPrepare } from "@/taverncode/snapshot/prepare"
 import { Global } from "@opencode-ai/core/global"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { EffectFlock } from "@opencode-ai/core/util/effect-flock"
@@ -75,9 +75,9 @@ import {
   SessionBoardQuery,
   ResetSessionBoardPayload,
   RetentionRunPayload,
-} from "../groups/kilocode"
+} from "../groups/taverncode"
 
-export const kilocodeHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilocode", (handlers) =>
+export const taverncodeHandlers = HttpApiBuilder.group(InstanceHttpApi, "taverncode", (handlers) =>
   Effect.gen(function* () {
     const agents = yield* Agent.Service
     const commands = yield* Command.Service
@@ -413,15 +413,15 @@ export const kilocodeHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilocode"
       payload: typeof TeardownWorktreePayload.Type
     }) {
       const instance = yield* InstanceState.context
-      // Lexical checks only, like KiloSnapshotCleanup.remove: a symlinked `.kilo/worktrees` in an
+      // Lexical checks only, like KiloSnapshotCleanup.remove: a symlinked `.tavern/worktrees` in an
       // untrusted repository must not widen the directories this endpoint can tear down.
       // `contains` rejects `..` and absolute escapes; one component rejects nested paths.
-      const managed = path.resolve(instance.worktree, ".kilo", "worktrees")
+      const managed = path.resolve(instance.worktree, ".tavern", "worktrees")
       const worktree = path.resolve(ctx.payload.worktree)
       const child = path.relative(managed, worktree).split(path.sep).filter(Boolean)
       if (!path.isAbsolute(ctx.payload.worktree) || !FSUtil.contains(managed, worktree) || child.length !== 1)
         return yield* Effect.fail(new HttpApiError.BadRequest({}))
-      // disposeDirectory follows symlinks, so a symlinked `.kilo`, `.kilo/worktrees`, or worktree
+      // disposeDirectory follows symlinks, so a symlinked `.tavern`, `.tavern/worktrees`, or worktree
       // could reach an instance outside the project. The project root itself is already canonical.
       const links = yield* Effect.forEach([path.dirname(managed), managed, worktree], (target) =>
         fs.readLink(target).pipe(

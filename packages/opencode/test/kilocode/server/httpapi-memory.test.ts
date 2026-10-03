@@ -2,8 +2,8 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { ConfigProvider, Effect, Layer } from "effect"
 import { HttpRouter } from "effect/unstable/http"
 import * as Log from "@opencode-ai/core/util/log"
-import { MemoryPaths } from "../../../src/kilocode/server/httpapi/groups/memory"
-import { KiloToolRegistry } from "../../../src/kilocode/tool/registry"
+import { MemoryPaths } from "../../../src/taverncode/server/httpapi/groups/memory"
+import { KiloToolRegistry } from "../../../src/taverncode/tool/registry"
 import * as HttpApiServer from "../../../src/server/routes/instance/httpapi/server"
 import { resetDatabase } from "../../fixture/db"
 import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
@@ -14,7 +14,7 @@ type Json = Record<string, unknown>
 
 function app() {
   const handler = HttpRouter.toWebHandler(
-    // kilocode_change - keep the filewatcher-disable flag visible (see httpapi-instance-route-auth.test.ts)
+    // taverncode_change - keep the filewatcher-disable flag visible (see httpapi-instance-route-auth.test.ts)
     HttpApiServer.routes.pipe(
       Layer.provide(
         ConfigProvider.layer(
@@ -82,7 +82,7 @@ describe("HttpApi memory", () => {
     const send = (method: string, route: string, body?: unknown) =>
       api.request(route, {
         method,
-        headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+        headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       })
     const json = async (method: string, route: string, body?: unknown) => {
@@ -185,7 +185,7 @@ describe("HttpApi memory", () => {
     const send = (method: string, route: string) =>
       api.request(route, {
         method,
-        headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+        headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
       })
 
     expect(await Effect.runPromise(KiloToolRegistry.memoryToolsEnabled({ ctx }))).toBe(false)
@@ -206,7 +206,7 @@ describe("HttpApi memory", () => {
     const send = (dir: string, method: string, route: string, body?: unknown) =>
       api.request(route, {
         method,
-        headers: { "content-type": "application/json", "x-kilo-directory": dir },
+        headers: { "content-type": "application/json", "x-tavern-directory": dir },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       })
     const json = async (dir: string, method: string, route: string, body?: unknown) => {
@@ -247,7 +247,7 @@ describe("HttpApi memory", () => {
     const send = (method: string, route: string, body?: unknown) =>
       api.request(route, {
         method,
-        headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+        headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       })
 
@@ -276,7 +276,7 @@ describe("HttpApi memory", () => {
     const send = (method: string, route: string, body?: unknown) =>
       api.request(route, {
         method,
-        headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+        headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       })
     const json = async (method: string, route: string, body?: unknown) => {

@@ -1,7 +1,7 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
 
-// TODO: Remove the legacy .kilocode -> .kilo migration helpers below after the
+// TODO: Remove the legacy .taverncode -> .tavern migration helpers below after the
 // GA release cleanup tracked in https://github.com/Kilo-Org/kilocode/issues/6986.
 
 /**
@@ -16,13 +16,13 @@ export const PLATFORM = "agent-manager" as const
 /** Keep baseline snapshots without interrupting concurrently started agents. */
 export const SNAPSHOT_INITIALIZATION = "wait" as const
 
-/** Kilo config directory name (project-level and inside worktrees). */
-export const KILO_DIR = ".kilo"
+/** Tavern config directory name (project-level and inside worktrees). */
+export const KILO_DIR = ".tavern"
 
 /** Legacy config directory name for backward compatibility reads. */
-export const LEGACY_DIR = ".kilocode"
+export const LEGACY_DIR = ".taverncode"
 
-/** Agent Manager files that should be migrated from .kilocode/ to .kilo/. */
+/** Agent Manager files that should be migrated from .taverncode/ to .tavern/. */
 const AGENT_MANAGER_ITEMS = [
   "agent-manager.json",
   "worktrees",
@@ -35,20 +35,20 @@ const AGENT_MANAGER_ITEMS = [
 
 /** Result of the migration so callers can react (e.g. refresh VS Code git). */
 export interface MigrationResult {
-  /** Number of git worktree refs that were rewritten from .kilocode → .kilo. */
+  /** Number of git worktree refs that were rewritten from .taverncode → .tavern. */
   refsFixed: number
 }
 
 /**
- * Migrate Agent Manager data from .kilocode/ to .kilo/.
+ * Migrate Agent Manager data from .taverncode/ to .tavern/.
  *
  * Moves individual Agent Manager files/directories (worktrees, state,
- * setup scripts) from the legacy .kilocode/ into .kilo/. Skips items
- * that already exist in .kilo/ (the new location wins). This is safe
+ * setup scripts) from the legacy .taverncode/ into .tavern/. Skips items
+ * that already exist in .tavern/ (the new location wins). This is safe
  * because Agent Manager exclusively owns these files.
  *
  * Fixes git worktree internal references (.git/worktrees/{name}/gitdir)
- * whenever .kilo/worktrees/ exists so partially migrated repos recover too.
+ * whenever .tavern/worktrees/ exists so partially migrated repos recover too.
  *
  * Idempotent: safe to call on every startup.
  */
@@ -57,7 +57,7 @@ export async function migrateAgentManagerData(root: string, log: (msg: string) =
   const target = path.join(root, KILO_DIR)
 
   if (await isDirectory(legacy)) {
-    // Ensure .kilo/ exists
+    // Ensure .tavern/ exists
     try {
       await fs.promises.mkdir(target, { recursive: true })
     } catch {
@@ -131,11 +131,11 @@ export async function resolveGitDir(root: string): Promise<string> {
 }
 
 /**
- * After moving worktrees from .kilocode/ to .kilo/, fix git internal refs.
+ * After moving worktrees from .taverncode/ to .tavern/, fix git internal refs.
  *
  * Git stores absolute paths in .git/worktrees/{name}/gitdir. When the
  * worktree directory moves, those paths become stale. This rewrites any
- * gitdir files that reference the old .kilocode path.
+ * gitdir files that reference the old .taverncode path.
  *
  * Returns the number of refs that were successfully fixed so callers can
  * tell whether a VS Code git refresh is warranted.

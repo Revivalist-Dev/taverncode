@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@taverncode/plugin/tui"
 import type { SSEPayload } from "../cli-backend/sdk-sse-adapter"
 import type { KiloConnectionService } from "../cli-backend/connection-service"
 import { playSound, resolveSoundID } from "./sound"
@@ -80,7 +80,7 @@ export class AttentionService implements vscode.Disposable {
     if (event.name === "session.deleted.1") return this.remove(event.data.sessionID)
     if (event.name !== "session.updated.1" && event.name !== "session.created.1") return
     if (!("metadata" in event.data.info)) return
-    const goal = event.data.info.metadata?.["kilo.goal"]
+    const goal = event.data.info.metadata?.["tavern.goal"]
     if (goal && typeof goal === "object" && "active" in goal && goal.active === true) {
       this.goals.add(event.data.sessionID)
       return
@@ -164,7 +164,7 @@ export class AttentionService implements vscode.Disposable {
   }
 
   private sound(sound: TuiAttentionSoundName) {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.attention")
+    const config = vscode.workspace.getConfiguration("tavern-code.new.attention")
     if (!config.get<boolean>("enabled", false)) return
     void playSound(sound, resolveSoundID(config.get<string>("sound", "default")))
   }
@@ -203,7 +203,7 @@ export class AttentionService implements vscode.Disposable {
 
   /** Picks which delivery channels should fire; independently, both, one, or neither. */
   private channels(sessionID: string) {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.attention")
+    const config = vscode.workspace.getConfiguration("tavern-code.new.attention")
     const focused = this.opts.focused?.() ?? vscode.window.state.focused
     // `os` is only wired up on hosts that can deliver a native notification, so other platforms fall through.
     const os = Boolean(this.opts.os) && config.get<boolean>("OSNotifications", false) && !focused
@@ -216,19 +216,19 @@ export class AttentionService implements vscode.Disposable {
   private text(sound: TuiAttentionSoundName) {
     const key =
       sound === "done"
-        ? "kilocode:attention.done"
+        ? "taverncode:attention.done"
         : sound === "question"
-          ? "kilocode:attention.question"
+          ? "taverncode:attention.question"
           : sound === "permission"
-            ? "kilocode:attention.permission"
+            ? "taverncode:attention.permission"
             : sound === "error"
-              ? "kilocode:attention.error"
+              ? "taverncode:attention.error"
               : undefined
     return key ? t(key) : undefined
   }
 
   private message(sound: TuiAttentionSoundName, notice: AttentionNotice, sessionID: string, directory?: string) {
-    const show = t("kilocode:attention.show")
+    const show = t("taverncode:attention.show")
     // Same fields as the native toast; a workbench notification is plaintext,
     // so they are joined inline instead of on their own rows.
     const [head, ...rest] = lines(notice)

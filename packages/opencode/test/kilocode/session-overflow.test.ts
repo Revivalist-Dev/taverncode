@@ -3,8 +3,8 @@ import { Schema } from "effect"
 import type { ModelMessage } from "ai"
 import { Config } from "@/config/config"
 import type { Provider } from "@/provider/provider"
-import { KiloLLM } from "@/kilocode/session/llm"
-import { KiloSessionOverflow } from "@/kilocode/session/overflow"
+import { KiloLLM } from "@/taverncode/session/llm"
+import { KiloSessionOverflow } from "@/taverncode/session/overflow"
 import type { MessageV2 } from "@/session/message-v2"
 import { isOverflow, usable } from "@/session/overflow"
 
@@ -47,7 +47,7 @@ function tokens(count: number): MessageV2.Assistant["tokens"] {
   return { input: count, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }
 }
 
-describe("Kilo post-step compaction safety", () => {
+describe("Tavern post-step compaction safety", () => {
   test("ignores the configured threshold after a provider step", () => {
     const conf = cfg({ threshold_percent: 75 })
     const mdl = model({ context: 200_000, output: 32_000 })
@@ -139,7 +139,7 @@ describe("Kilo post-step compaction safety", () => {
   })
 })
 
-describe("Kilo request estimation", () => {
+describe("Tavern request estimation", () => {
   test("skips output estimation when no output cap can use it", () => {
     const mdl = model({ context: 200_000, output: 32_000 })
 
@@ -256,7 +256,7 @@ describe("Kilo request estimation", () => {
   })
 })
 
-describe("Kilo preflight compaction", () => {
+describe("Tavern preflight compaction", () => {
   test("triggers from estimated outgoing context without provider usage", () => {
     const conf = cfg({ threshold_percent: 75 })
     const mdl = model({ context: 200_000, output: 32_000 })

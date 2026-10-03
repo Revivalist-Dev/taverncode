@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Slow-repo guard for Snapshot.track.
 //
@@ -15,7 +15,7 @@
 //          finishes eventually and undo/redo stays functional. Future turns
 //          are fast because the snapshot index is built.
 //        - "Disable for this project": interrupt the in-flight snapshot,
-//          persist `"snapshot": false` to `.kilo/kilo.json`, and skip. All
+//          persist `"snapshot": false` to `.tavern/tavern.json`, and skip. All
 //          future sessions on this project load with snapshots off.
 //        - Dismissed / no sessionID: interrupt and skip. Mark the active
 //          Snapshot.Service guard so later calls through it do not prompt again.
@@ -37,7 +37,7 @@
 //     and return its value. Any error during the in-flight snapshot is logged
 //     and swallowed so the turn can proceed.
 //
-// All of this is Kilo-specific — the upstream snapshot module remains a thin
+// All of this is Tavern-specific — the upstream snapshot module remains a thin
 // shim that calls into here.
 
 import { Duration, Effect, Fiber, Option } from "effect"
@@ -47,9 +47,9 @@ import { Question } from "@/question"
 import type { MessageID, PartID, SessionID } from "@/session/schema"
 import { PartID as PartIDSchema } from "@/session/schema"
 import type { MessageV2 } from "@/session/message-v2"
-import { KiloPartLifecycle } from "@/kilocode/session/part-lifecycle"
-import { KilocodeConfig } from "@/kilocode/config/config"
-import { capture } from "@/kilocode/instance"
+import { KiloPartLifecycle } from "@/taverncode/session/part-lifecycle"
+import { KilocodeConfig } from "@/taverncode/config/config"
+import { capture } from "@/taverncode/instance"
 import { ConfigParse } from "@/config/parse"
 import * as Log from "@opencode-ai/core/util/log"
 import { iife } from "@/util/iife"
@@ -613,7 +613,7 @@ export namespace KiloSnapshotTrack {
                       label: ANSWER_DISABLE,
                       labelKey: "snapshot.slowRepo.answer.disable",
                       description:
-                        "Turn off Kilo's snapshots for this project. You will lose undo/redo of Kilo file changes, but git still tracks everything.",
+                        "Turn off Tavern's snapshots for this project. You will lose undo/redo of Tavern file changes, but git still tracks everything.",
                       descriptionKey: "snapshot.slowRepo.answer.disable.description",
                     },
                   ],

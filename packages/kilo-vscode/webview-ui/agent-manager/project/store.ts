@@ -22,7 +22,7 @@ export interface WorktreeBusyState {
 /** Why a worktree cannot be polled, as classified by the extension's health reconcile. */
 export type WorktreeHealthState = NonNullable<AgentManagerStateMessage["worktreeHealth"]>[string]
 
-/** A directory under `.kilo/worktrees/` that no worktree claims, and whether it still holds a checkout. */
+/** A directory under `.tavern/worktrees/` that no worktree claims, and whether it still holds a checkout. */
 export type OrphanDirectory = NonNullable<AgentManagerStateMessage["orphanDirectories"]>[number]
 
 /** Local session tab ids owned by one project. */

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import path from "path"
-import { ConfigValidation } from "../../src/kilocode/config-validation"
+import { ConfigValidation } from "../../src/taverncode/config-validation"
 import { provideTestInstance } from "../fixture/fixture"
 import { Config } from "../../src/config/config"
 import { AppRuntime } from "../../src/effect/app-runtime"
@@ -28,7 +28,7 @@ describe("ConfigValidation.check", () => {
 
   test("validates valid JSONC config", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, "kilo.json")
+    const filepath = path.join(tmp.path, "tavern.json")
     await Filesystem.write(filepath, JSON.stringify({ model: "anthropic/claude-sonnet-4-20250514" }))
 
     const result = await provideTestInstance({
@@ -41,7 +41,7 @@ describe("ConfigValidation.check", () => {
 
   test("reports JSONC syntax errors", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, "kilo.json")
+    const filepath = path.join(tmp.path, "tavern.json")
     await Filesystem.write(filepath, '{ "model": "test/model" "extra": true }')
 
     const result = await provideTestInstance({
@@ -55,7 +55,7 @@ describe("ConfigValidation.check", () => {
 
   test("reports schema validation errors for unknown fields", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, "kilo.json")
+    const filepath = path.join(tmp.path, "tavern.json")
     await Filesystem.write(filepath, JSON.stringify({ notAField: true }))
 
     const result = await provideTestInstance({
@@ -70,7 +70,7 @@ describe("ConfigValidation.check", () => {
 
   test("validates valid markdown command", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, ".kilo", "command", "test-cmd.md")
+    const filepath = path.join(tmp.path, ".tavern", "command", "test-cmd.md")
     await Filesystem.write(
       filepath,
       `---
@@ -89,7 +89,7 @@ Do something useful`,
 
   test("reports schema error for command with invalid field types", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, ".kilo", "command", "bad.md")
+    const filepath = path.join(tmp.path, ".tavern", "command", "bad.md")
     // agent expects string but gets number — schema validation fails
     await Filesystem.write(
       filepath,
@@ -111,7 +111,7 @@ Do something`,
 
   test("validates valid markdown agent", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, ".kilo", "agent", "helper.md")
+    const filepath = path.join(tmp.path, ".tavern", "agent", "helper.md")
     await Filesystem.write(
       filepath,
       `---
@@ -143,7 +143,7 @@ You are a helpful agent.`,
 
   test("skips plan files (excluded subdir)", async () => {
     await using tmp = await tmpdir({ git: true })
-    const filepath = path.join(tmp.path, ".kilo", "plans", "plan.md")
+    const filepath = path.join(tmp.path, ".tavern", "plans", "plan.md")
     await Filesystem.write(filepath, "# Plan")
 
     const result = await provideTestInstance({
@@ -159,7 +159,7 @@ You are a helpful agent.`,
       init: async (dir) => {
         // Create a broken agent config that produces a warning at session start
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "broken.md"),
+          path.join(dir, ".tavern", "agent", "broken.md"),
           `---
 mode: "banana"
 ---
@@ -168,7 +168,7 @@ Broken agent`,
       },
     })
 
-    const filepath = path.join(tmp.path, "kilo.json")
+    const filepath = path.join(tmp.path, "tavern.json")
     await Filesystem.write(filepath, JSON.stringify({ model: "anthropic/claude-sonnet-4-20250514" }))
 
     const result = await provideTestInstance({

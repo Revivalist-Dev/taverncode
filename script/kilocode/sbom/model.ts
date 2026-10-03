@@ -1,7 +1,7 @@
 /**
  * CycloneDX 1.6 document model and composer.
  *
- * Kilo publishes one SBOM per shipped artifact (CLI archive, npm tarball, OCI
+ * Tavern publishes one SBOM per shipped artifact (CLI archive, npm tarball, OCI
  * manifest, VSIX, JetBrains plugin ZIP). Every document is composed here so the
  * shape, property namespace, and determinism rules stay identical across
  * products instead of drifting per build script.
@@ -12,7 +12,7 @@ import { Contrib, Models } from "@cyclonedx/cyclonedx-library"
 import spdxExpressionParse from "spdx-expression-parse"
 
 export const SPEC_VERSION = "1.6"
-export const PROPERTY_NAMESPACE = "kilocode"
+export const PROPERTY_NAMESPACE = "taverncode"
 
 /**
  * How a component reaches the user.
@@ -20,7 +20,7 @@ export const PROPERTY_NAMESPACE = "kilocode"
  * - `contained` is physically inside the artifact bytes.
  * - `provided` is supplied by the host (IDE platform modules, JNA, coroutines)
  *   and must not be claimed as part of the artifact.
- * - `runtime` is downloaded or installed later by Kilo against a pinned
+ * - `runtime` is downloaded or installed later by Tavern against a pinned
  *   version (JetBrains lean CLI assets, optional LanceDB, ripgrep).
  */
 export type Delivery = "contained" | "provided" | "runtime"
@@ -45,7 +45,7 @@ export type Component = {
 }
 
 export type Subject = {
-  /** Release asset filename as published, e.g. `kilo-linux-x64.tar.gz`. */
+  /** Release asset filename as published, e.g. `tavern-linux-x64.tar.gz`. */
   name: string
   sha256: string
   size?: number
@@ -118,7 +118,7 @@ export type Bom = {
   dependencies: { ref: string; dependsOn: string[] }[]
 }
 
-const SUPPLIER = { name: "Kilo Code", url: ["https://kilo.ai"] }
+const SUPPLIER = { name: "Tavern Code", url: ["https://tavern.ai"] }
 
 /**
  * Deterministic serial number.
@@ -228,7 +228,7 @@ function strongest(a?: Delivery, b?: Delivery): Delivery {
 /**
  * Merge components from several generators into one list.
  *
- * Kilo composes each SBOM from a bundler graph, a physical artifact scan, and
+ * Tavern composes each SBOM from a bundler graph, a physical artifact scan, and
  * explicitly modelled native components, so the same package routinely arrives
  * more than once. Identity is the purl (or explicit ref); conflicting delivery
  * claims resolve to the strongest one rather than producing two components that
@@ -325,7 +325,7 @@ export function compose(input: Compose): Bom {
       .flatMap((item) => (declared.has(item) ? [] : [{ ref: item, dependsOn: [] }])),
   ].sort((a, b) => (a.ref === root ? -1 : b.ref === root ? 1 : a.ref.localeCompare(b.ref)))
 
-  const tools = [{ name: "kilo-sbom", version: input.product.version }, ...(input.tools ?? [])]
+  const tools = [{ name: "tavern-sbom", version: input.product.version }, ...(input.tools ?? [])]
 
   return {
     bomFormat: "CycloneDX",

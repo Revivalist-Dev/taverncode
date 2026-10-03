@@ -3,14 +3,14 @@ import { UI } from "@/cli/ui"
 import { errorMessage } from "@opencode-ai/tui/util/error"
 import { validateSession } from "../tui/validate-session"
 import { ServerAuth } from "@/server/auth"
-// kilocode_change start - Kilo implementations (sdk client, cloud-session) are
+// taverncode_change start - Tavern implementations (sdk client, cloud-session) are
 // dynamically imported inside the handler so other CLI commands don't pay their
 // module cost at startup.
-// kilocode_change end
+// taverncode_change end
 
 export const AttachCommand = cmd({
   command: "attach <url>",
-  describe: "attach to a running kilo server", // kilocode_change
+  describe: "attach to a running tavern server", // taverncode_change
   builder: (yargs) =>
 
     yargs
@@ -49,7 +49,7 @@ export const AttachCommand = cmd({
       .option("username", {
         alias: ["u"],
         type: "string",
-        describe: "basic auth username (defaults to KILO_SERVER_USERNAME or 'kilo')", // kilocode_change
+        describe: "basic auth username (defaults to KILO_SERVER_USERNAME or 'tavern')", // taverncode_change
       })
       .option("mini", {
         type: "boolean",
@@ -76,15 +76,15 @@ export const AttachCommand = cmd({
     }
     const noReplay = args.replay === false || args.noReplay === true
 
-    // kilocode_change start
-    const { importCloudSession, validateCloudFork, reportCloudImportError } = await import("@/kilocode/cloud-session")
+    // taverncode_change start
+    const { importCloudSession, validateCloudFork, reportCloudImportError } = await import("@/taverncode/cloud-session")
     const cloudForkError = validateCloudFork(args)
     if (cloudForkError) {
       UI.error(cloudForkError)
       process.exitCode = 1
       return
     }
-    // kilocode_change end
+    // taverncode_change end
 
     const directory = (() => {
       if (!args.dir) return undefined
@@ -131,10 +131,10 @@ export const AttachCommand = cmd({
     }
 
     const headers = ServerAuth.headers({ password: args.password, username: args.username })
-    // kilocode_change start - import cloud session before TUI renders
+    // taverncode_change start - import cloud session before TUI renders
     if (args.cloudFork && args.session) {
       UI.println("Importing session from cloud...")
-      const { createKiloClient } = await import("@kilocode/sdk/v2")
+      const { createKiloClient } = await import("@taverncode/sdk/v2")
       const sdk = createKiloClient({
         baseUrl: args.url,
         directory,
@@ -150,7 +150,7 @@ export const AttachCommand = cmd({
         return
       }
     }
-    // kilocode_change end
+    // taverncode_change end
     const config = await TuiConfig.get()
 
     try {

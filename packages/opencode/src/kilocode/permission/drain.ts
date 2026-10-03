@@ -1,6 +1,6 @@
 import { Deferred, Effect } from "effect"
 import { Permission } from "@/permission"
-import { ConfigProtection } from "@/kilocode/permission/config-paths"
+import { ConfigProtection } from "@/taverncode/permission/config-paths"
 
 interface PendingEntry {
   info: Permission.Request

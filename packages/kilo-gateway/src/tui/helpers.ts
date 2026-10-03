@@ -1,5 +1,5 @@
 /**
- * TUI-specific helper functions for Kilo Gateway integration
+ * TUI-specific helper functions for Tavern Gateway integration
  *
  * This module provides utilities that are consumed by the TUI layer
  * to implement organization selection, profile display, and team management.
@@ -42,8 +42,8 @@ export function formatProfileInfo(
 
   // Add usage details link
   const usageUrl = currentOrgId
-    ? `https://app.kilo.ai/organizations/${currentOrgId}/usage-details`
-    : "https://app.kilo.ai/usage"
+    ? `https://app.tavern.ai/organizations/${currentOrgId}/usage-details`
+    : "https://app.tavern.ai/usage"
   content += `\nUsage Details: ${usageUrl}`
 
   return content

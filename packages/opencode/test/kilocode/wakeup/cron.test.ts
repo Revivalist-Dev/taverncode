@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { JITTER_MS, MIN_INTERVAL_MS, isExpression, jitter, next, validate } from "@/kilocode/wakeup/cron"
+import { JITTER_MS, MIN_INTERVAL_MS, isExpression, jitter, next, validate } from "@/taverncode/wakeup/cron"
 
 const minute = MIN_INTERVAL_MS
 

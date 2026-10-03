@@ -177,14 +177,14 @@ describe("review message metadata", () => {
   const review = { version: 1 as const, comments }
 
   it("round-trips review comments and extracts the visible body", () => {
-    expect(partReview({ kilo: { review } }, content)).toEqual({
+    expect(partReview({ tavern: { review } }, content)).toEqual({
       data: review,
       body: "Please address this feedback.",
     })
   })
 
   it("extracts an empty body from a review-only message", () => {
-    expect(partReview({ kilo: { review } }, formatReviewCommentsMarkdown(comments))?.body).toBe("")
+    expect(partReview({ tavern: { review } }, formatReviewCommentsMarkdown(comments))?.body).toBe("")
   })
 
   it("rejects malformed review comments", () => {

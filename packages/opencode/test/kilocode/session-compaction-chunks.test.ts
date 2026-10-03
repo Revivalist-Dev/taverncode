@@ -19,8 +19,8 @@ import { disposeTestRuntime, provideTestInstance } from "../fixture/fixture"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { Snapshot } from "../../src/snapshot"
-import { KiloCompactionChunks } from "../../src/kilocode/session/compaction-chunks"
-import { KiloSessionCompaction } from "../../src/kilocode/session/compaction"
+import { KiloCompactionChunks } from "../../src/taverncode/session/compaction-chunks"
+import { KiloSessionCompaction } from "../../src/taverncode/session/compaction"
 import { LLM } from "../../src/session/llm"
 import { MessageV2 } from "../../src/session/message-v2"
 import { SessionCompaction } from "../../src/session/compaction"
@@ -47,7 +47,7 @@ const agents = Layer.mock(Agent.Service)({
   get: () => Effect.succeed({ name: "compaction", mode: "primary", permission: [], options: {} } satisfies Agent.Info),
 })
 const previous = Flag.KILO_DB
-const dbfile = path.join(os.tmpdir(), `kilo-compaction-chunks-${process.pid}-${crypto.randomUUID()}.db`)
+const dbfile = path.join(os.tmpdir(), `tavern-compaction-chunks-${process.pid}-${crypto.randomUUID()}.db`)
 const layer = LayerNode.compile(LayerNode.group([SessionNs.node, SessionProjector.node]))
 const runtime = makeRuntime(SessionNs.Service, layer)
 

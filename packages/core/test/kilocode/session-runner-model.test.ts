@@ -7,18 +7,18 @@ import { ProviderV2 } from "@opencode-ai/core/provider"
 import { SessionRunnerModel } from "@opencode-ai/core/session/runner/model"
 import { it } from "../lib/effect"
 
-describe("SessionRunnerModel Kilo credentials", () => {
-  it.effect("maps OAuth account IDs to Kilo organization routing", () =>
+describe("SessionRunnerModel Tavern credentials", () => {
+  it.effect("maps OAuth account IDs to Tavern organization routing", () =>
     Effect.gen(function* () {
       const model = ModelV2.Info.make({
         id: ModelV2.ID.make("test-model"),
-        providerID: ProviderV2.ID.make("kilo"),
+        providerID: ProviderV2.ID.make("tavern"),
         name: "Test model",
         api: {
           id: ModelV2.ID.make("api-test-model"),
           type: "aisdk",
           package: "@ai-sdk/openai-compatible",
-          url: "https://api.kilo.ai/openrouter",
+          url: "https://api.tavern.ai/openrouter",
         },
         capabilities: { tools: true, input: ["text"], output: ["text"] },
         request: { headers: {}, body: {} },
@@ -31,7 +31,7 @@ describe("SessionRunnerModel Kilo credentials", () => {
       })
       const credential = Credential.Info.make({
         id: Credential.ID.create(),
-        integrationID: Integration.ID.make("kilo"),
+        integrationID: Integration.ID.make("tavern"),
         label: "Work",
         value: Credential.OAuth.make({
           type: "oauth",
@@ -45,7 +45,7 @@ describe("SessionRunnerModel Kilo credentials", () => {
 
       const resolved = yield* SessionRunnerModel.fromCatalogModel(model, credential.value)
 
-      expect(resolved.route.defaults.http?.body).toMatchObject({ kilocodeOrganizationId: "org-enterprise" })
+      expect(resolved.route.defaults.http?.body).toMatchObject({ taverncodeOrganizationId: "org-enterprise" })
       expect(resolved.route.defaults.http?.body).not.toHaveProperty("accountID")
     }),
   )

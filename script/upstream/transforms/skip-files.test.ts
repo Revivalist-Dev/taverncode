@@ -28,11 +28,11 @@ test("matches upstream-only translation automation", () => {
   expect(shouldSkip("script/translate-app.md", defaultConfig.skipFiles)).toBe(true)
 })
 
-test("matches the unsupported Kilo web command", () => {
+test("matches the unsupported Tavern web command", () => {
   expect(shouldSkip("packages/opencode/src/cli/cmd/web.ts", defaultConfig.skipFiles)).toBe(true)
 })
 
-test("transforms the Muse Spark prompt for Kilo branding", () => {
+test("transforms the Muse Spark prompt for Tavern branding", () => {
   expect(defaultConfig.takeTheirsAndTransform).toContain("packages/opencode/src/session/prompt/meta.txt")
 })
 

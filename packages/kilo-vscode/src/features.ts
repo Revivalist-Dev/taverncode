@@ -1,5 +1,5 @@
-import { hasIndexingPlugin } from "@kilocode/kilo-indexing/detect"
-import type { KiloClient } from "@kilocode/sdk/v2"
+import { hasIndexingPlugin } from "@taverncode/tavern-indexing/detect"
+import type { KiloClient } from "@taverncode/sdk/v2"
 import * as vscode from "vscode"
 
 type PluginSpec = string | [string, Record<string, unknown>]
@@ -34,7 +34,7 @@ export async function serverFeatures(client: Pick<KiloClient, "experimental">, d
     const { data } = await client.experimental.capabilities.get({ directory: dir }, { throwOnError: true })
     return data?.backgroundSubagents === true
   } catch (error) {
-    console.warn("[Kilo New] Failed to fetch server capabilities:", error)
+    console.warn("[Tavern New] Failed to fetch server capabilities:", error)
     return false
   }
 }

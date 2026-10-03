@@ -106,7 +106,7 @@ it.each([false, true])("shares startup, waits for a full ack, and awaits stop (a
 })
 
 it.each([
-  [/ENOENT/, () => spawn("/kilo-missing-inhibitor", [])],
+  [/ENOENT/, () => spawn("/tavern-missing-inhibitor", [])],
   [
     /code 7: x+acquisition denied$/,
     "process.stderr.write('x'.repeat(20000) + 'acquisition denied', () => process.exit(7))",

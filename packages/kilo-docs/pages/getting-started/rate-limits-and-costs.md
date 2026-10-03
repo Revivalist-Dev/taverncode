@@ -1,29 +1,29 @@
 ---
 title: "Cost Efficiency & Model Selection"
-description: "How to choose the right Auto Model tier and reduce token spend in Kilo Code"
+description: "How to choose the right Auto Model tier and reduce token spend in Tavern Code"
 ---
 
 # Cost Efficiency & Model Selection
 
-Kilo routes your requests through its gateway, and your costs primarily depend on the model you use. The single most effective way to control spend is to pick the right Auto Model tier for each job — and to keep your context lean.
+Tavern routes your requests through its gateway, and your costs primarily depend on the model you use. The single most effective way to control spend is to pick the right Auto Model tier for each job — and to keep your context lean.
 
 ## Understanding Auto Models
 
-Auto Model is Kilo's smart routing system. Instead of selecting a specific provider model yourself, you choose a tier that matches your performance and budget needs. Each tier uses its own routing strategy under the hood.
+Auto Model is Tavern's smart routing system. Instead of selecting a specific provider model yourself, you choose a tier that matches your performance and budget needs. Each tier uses its own routing strategy under the hood.
 
 | Tier | Name | Best For | Cost |
 |---|---|---|---|
-| `kilo-auto/frontier` | Auto Frontier | Maximum capability — routes to top-tier models for planning/architect/debug and high-quality models for coding | Paid (highest) |
-| `kilo-auto/efficient` | Auto Efficient | Lowest cost per task — classifies each request by difficulty and routes to the cheapest benchmark-proven model for that task | Paid (lowest) |
-| `kilo-auto/free` | Auto Free | No credits required — rotates through available free models | Free |
+| `tavern-auto/frontier` | Auto Frontier | Maximum capability — routes to top-tier models for planning/architect/debug and high-quality models for coding | Paid (highest) |
+| `tavern-auto/efficient` | Auto Efficient | Lowest cost per task — classifies each request by difficulty and routes to the cheapest benchmark-proven model for that task | Paid (lowest) |
+| `tavern-auto/free` | Auto Free | No credits required — rotates through available free models | Free |
 
 {% callout type="info" title="Live model assignments" %}
-The underlying models behind each tier are updated server-side as better options become available or as providers change pricing. See [kilo.ai/models](https://kilo.ai/models) for current model assignments and live pricing.
+The underlying models behind each tier are updated server-side as better options become available or as providers change pricing. See [tavern.ai/models](https://tavern.ai/models) for current model assignments and live pricing.
 {% /callout %}
 
 ## What Makes Auto Efficient Efficient?
 
-**Auto Efficient** observes your coding session in context, classifies the difficulty of each request in real time, and routes it to the *cheapest model proven accurate enough* for that specific task, based on Kilo's continuously running benchmarks. Routine tasks (small edits, lookups, quick explanations) are handled by leaner models; harder tasks (architecture, debugging, complex refactors) automatically get a more capable model.
+**Auto Efficient** observes your coding session in context, classifies the difficulty of each request in real time, and routes it to the *cheapest model proven accurate enough* for that specific task, based on Tavern's continuously running benchmarks. Routine tasks (small edits, lookups, quick explanations) are handled by leaner models; harder tasks (architecture, debugging, complex refactors) automatically get a more capable model.
 
 Efficient is also session-aware: it stays with a model across related turns and only switches when a cheaper option is clearly worth it. If it cannot make a routing decision with confidence, it falls back to a fixed, high-quality baseline model — so quality never drops below that baseline. You get consistent, strong results with predictable cost, plus an intelligent cost optimizer layered on top.
 
@@ -33,7 +33,7 @@ For everyday coding tasks, start with **Auto Efficient**. Switch to **Auto Front
 
 ## How to Switch Auto Models
 
-Open the model selector dropdown in the Kilo Code chat interface and choose the tier you want. No other configuration is needed; routing happens automatically from that point forward.
+Open the model selector dropdown in the Tavern Code chat interface and choose the tier you want. No other configuration is needed; routing happens automatically from that point forward.
 
 ## Tips for Optimizing Token Usage
 
@@ -51,7 +51,7 @@ Open the model selector dropdown in the Kilo Code chat interface and choose the 
 
 ### Context condensing
 
-When a conversation grows long, use `/compact` (also searchable as `smol` or `condense`) to summarize the history and free up context space. You can also enable **auto-compaction** in **Settings → Context** so Kilo compacts automatically when approaching the context limit, without any manual intervention.
+When a conversation grows long, use `/compact` (also searchable as `smol` or `condense`) to summarize the history and free up context space. You can also enable **auto-compaction** in **Settings → Context** so Tavern compacts automatically when approaching the context limit, without any manual intervention.
 
 ### Max tokens for thinking models
 
@@ -63,27 +63,27 @@ If you are not using MCP (Model Context Protocol) features, consider [disabling 
 
 ### Prompt caching
 
-Kilo automatically applies prompt caching on supported providers. Repeated context, such as your system prompt and stable file contents, is reused from cache at a discounted rate. No action is required to benefit from this.
+Tavern automatically applies prompt caching on supported providers. Repeated context, such as your system prompt and stable file contents, is reused from cache at a discounted rate. No action is required to benefit from this.
 
 ## Rate Limits
 
-- **Free models** (`kilo-auto/free`): 200 requests per hour per IP.
-- **Paid models**: Kilo does not impose gateway-level rate limits on paid traffic. However, [org-level per-user daily spending limits](/docs/gateway/usage-and-billing) and upstream provider rate limits can still apply.
+- **Free models** (`tavern-auto/free`): 200 requests per hour per IP.
+- **Paid models**: Tavern does not impose gateway-level rate limits on paid traffic. However, [org-level per-user daily spending limits](/docs/gateway/usage-and-billing) and upstream provider rate limits can still apply.
 
 
 ## How Costs Are Calculated
 
-- Inference costs are a pass-through of provider pricing with no markup. A separate 5% payment-processing fee applies when you purchase Kilo credits.
-- Kilo calculates an estimated cost for each request based on configured pricing. This estimate is shown per-request in the chat history.
+- Inference costs are a pass-through of provider pricing with no markup. A separate 5% payment-processing fee applies when you purchase Tavern credits.
+- Tavern calculates an estimated cost for each request based on configured pricing. This estimate is shown per-request in the chat history.
 - Cache hits are billed at a discounted rate compared to regular input tokens.
-- Requests using **Auto Free** models are billed at $0 on Kilo's side.
-- **BYOK (Bring Your Own Key)** requests are billed at $0 on Kilo's side — you pay the provider directly.
+- Requests using **Auto Free** models are billed at $0 on Tavern's side.
+- **BYOK (Bring Your Own Key)** requests are billed at $0 on Tavern's side — you pay the provider directly.
 
-For current pricing, visit [kilo.ai/models](https://kilo.ai/models).
+For current pricing, visit [tavern.ai/models](https://tavern.ai/models).
 
 ## Related
 
 - [Auto Model](/docs/code-with-ai/agents/auto-model) — Full details on each Auto Model tier
 - [Context Condensing](/docs/customize/context/context-condensing) — How compaction works and how to configure it
-- [Using Kilo for Free](/docs/getting-started/using-kilo-for-free) — Getting started without spending credits
+- [Using Tavern for Free](/docs/getting-started/using-tavern-for-free) — Getting started without spending credits
 - [Bring Your Own Key (BYOK)](/docs/getting-started/byok) — Use your own provider API keys

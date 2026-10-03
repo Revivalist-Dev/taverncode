@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import fs from "node:fs"
 import path from "node:path"
-import { indicator } from "@/kilocode/plugins/sandbox"
+import { indicator } from "@/taverncode/plugins/sandbox"
 
-const source = path.resolve(import.meta.dir, "../../../src/kilocode/plugins/sandbox.tsx")
+const source = path.resolve(import.meta.dir, "../../../src/taverncode/plugins/sandbox.tsx")
 
 describe("sandbox TUI", () => {
   test("shows an indicator only for an active available sandbox", () => {

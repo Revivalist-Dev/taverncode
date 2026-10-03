@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
 import {
   parseImageResponse,
@@ -6,7 +6,7 @@ import {
   ensureExtension,
   IMAGE_MODELS,
   DEFAULT_MODEL,
-} from "../../../src/kilocode/tool/generate-image"
+} from "../../../src/taverncode/tool/generate-image"
 
 describe("generate-image response parser", () => {
   test("extracts PNG from data URL in choices[0].message.images[0]", () => {
@@ -58,22 +58,22 @@ describe("generate-image response parser", () => {
 })
 
 describe("generate-image provider resolver", () => {
-  test("uses Kilo cloud when Kilo auth is present", () => {
-    const result = resolveProvider({ type: "oauth", access: "kilo-token", accountId: "org-123" }, undefined)
+  test("uses Tavern cloud when Tavern auth is present", () => {
+    const result = resolveProvider({ type: "oauth", access: "tavern-token", accountId: "org-123" }, undefined)
     expect(result).not.toBeNull()
-    expect(result!.token).toBe("kilo-token")
+    expect(result!.token).toBe("tavern-token")
     expect(result!.organizationId).toBe("org-123")
-    expect(result!.provider).toBe("kilo")
+    expect(result!.provider).toBe("tavern")
     expect(result!.url).toContain("openrouter")
   })
 
-  test("uses Kilo cloud with API key auth", () => {
-    const result = resolveProvider({ type: "api", key: "kilo-api-key" }, undefined)
-    expect(result!.token).toBe("kilo-api-key")
-    expect(result!.provider).toBe("kilo")
+  test("uses Tavern cloud with API key auth", () => {
+    const result = resolveProvider({ type: "api", key: "tavern-api-key" }, undefined)
+    expect(result!.token).toBe("tavern-api-key")
+    expect(result!.provider).toBe("tavern")
   })
 
-  test("falls back to OpenRouter with BYO key when no Kilo auth", () => {
+  test("falls back to OpenRouter with BYO key when no Tavern auth", () => {
     const result = resolveProvider(undefined, "or-key-123")
     expect(result!.provider).toBe("openrouter")
     expect(result!.token).toBe("or-key-123")
@@ -84,10 +84,10 @@ describe("generate-image provider resolver", () => {
     expect(resolveProvider(undefined, undefined)).toBeNull()
   })
 
-  test("prefers Kilo auth over OpenRouter key", () => {
-    const result = resolveProvider({ type: "oauth", access: "kilo-token" }, "or-key")
-    expect(result!.provider).toBe("kilo")
-    expect(result!.token).toBe("kilo-token")
+  test("prefers Tavern auth over OpenRouter key", () => {
+    const result = resolveProvider({ type: "oauth", access: "tavern-token" }, "or-key")
+    expect(result!.provider).toBe("tavern")
+    expect(result!.token).toBe("tavern-token")
   })
 })
 

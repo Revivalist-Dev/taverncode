@@ -1,5 +1,5 @@
 import { For, Show, createMemo, createSignal, type Component } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import {
   DragDropProvider,
   DragDropSensors,
@@ -28,7 +28,7 @@ import { beginPromptMentionDrop, endPromptMentionDrop } from "../src/utils/promp
 import { outsideSidebar, sectionAwareDetector } from "./section-dnd"
 import { ConstrainDragXAxis } from "./constrain-drag-x"
 import { useVSCode } from "../src/context/vscode"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { OrphanNotice } from "./orphans/OrphanNotice"
 import { OrphanDialog } from "./orphans/OrphanDialog"
 import type { OrphanDirectory } from "./project/store"
@@ -91,7 +91,7 @@ export interface SidebarBodyProps {
   isStaleWorktree: (id: string) => boolean
   /** Why an unhealthy worktree is unhealthy, when known. */
   worktreeHealth?: (id: string) => "absent-restorable" | "absent-gone" | "unregistered" | "unavailable" | undefined
-  /** Leftover folders under `.kilo/worktrees/` that no worktree claims. */
+  /** Leftover folders under `.tavern/worktrees/` that no worktree claims. */
   orphanDirectories?: () => OrphanDirectory[]
   /** Restore a deleted worktree folder from its branch. */
   onRestoreWorktree?: (id: string) => void

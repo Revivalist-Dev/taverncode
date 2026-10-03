@@ -1,9 +1,9 @@
-import { isIpAddress, isPublicAddress } from "@kilocode/sandbox/destination"
+import { isIpAddress, isPublicAddress } from "@taverncode/sandbox/destination"
 import { HttpClient } from "effect/unstable/http"
 import { Effect, Schema } from "effect"
 import { Env } from "@/env"
 import { InstanceState } from "@/effect/instance-state"
-import * as Network from "@/kilocode/sandbox/network"
+import * as Network from "@/taverncode/sandbox/network"
 import { Tool } from "@/tool/tool"
 import DESCRIPTION from "./browser-open.txt"
 

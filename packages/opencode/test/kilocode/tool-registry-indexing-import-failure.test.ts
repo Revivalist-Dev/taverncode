@@ -1,15 +1,15 @@
 import { describe, expect, spyOn, test } from "bun:test"
 import { Effect, Schema } from "effect"
 import * as Log from "@opencode-ai/core/util/log"
-import { KiloToolRegistry } from "../../src/kilocode/tool/registry"
+import { KiloToolRegistry } from "../../src/taverncode/tool/registry"
 import { Agent } from "../../src/agent/agent"
 import * as Truncate from "../../src/tool/truncate"
 import type * as Tool from "../../src/tool/tool"
 
-const logger = Log.create({ service: "kilocode-tool-registry" })
+const logger = Log.create({ service: "taverncode-tool-registry" })
 const deps = { agent: {} as Agent.Interface, truncate: {} as Truncate.Interface }
 
-describe("kilocode tool registry indexing import failure", () => {
+describe("taverncode tool registry indexing import failure", () => {
   test("omits semantic_search when the indexing module cannot load", async () => {
     const err = new Error("indexing import failed")
     const warn = spyOn(logger, "warn").mockImplementation(() => {})

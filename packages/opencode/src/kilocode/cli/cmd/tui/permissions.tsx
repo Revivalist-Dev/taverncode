@@ -1,6 +1,6 @@
-import type { PermissionRequest } from "@kilocode/sdk/v2"
+import type { PermissionRequest } from "@taverncode/sdk/v2"
 import { useTheme } from "@tui/context/theme"
-import { MemoryPermissionRegistry } from "@/kilocode/cli/cmd/tui/routes/session/memory-permission"
+import { MemoryPermissionRegistry } from "@/taverncode/cli/cmd/tui/routes/session/memory-permission"
 
 function MemoryBody(props: { request: PermissionRequest }) {
   const { theme } = useTheme()

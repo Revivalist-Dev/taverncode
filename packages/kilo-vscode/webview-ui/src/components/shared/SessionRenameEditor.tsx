@@ -1,6 +1,6 @@
 import { Component, createSignal } from "solid-js"
-import { InlineInput } from "@kilocode/kilo-ui/inline-input"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { InlineInput } from "@taverncode/tavern-ui/inline-input"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { useLanguage } from "../../context/language"
 import { parseSessionTitle, SESSION_TITLE_LIMIT } from "../../../../src/shared/session-title"
 

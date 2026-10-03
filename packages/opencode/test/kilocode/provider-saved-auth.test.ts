@@ -114,8 +114,8 @@ const oauth = {
 } satisfies Auth.Info
 const configured = {
   apiKey: "configured-key",
-  kilocodeToken: "configured-token",
-  kilocodeOrganizationId: "configured-org",
+  taverncodeToken: "configured-token",
+  taverncodeOrganizationId: "configured-org",
 }
 const scenarios: {
   name: string
@@ -172,7 +172,7 @@ const scenarios: {
   },
   {
     name: "configured apiKey",
-    options: { apiKey: "configured-key", kilocodeOrganizationId: "configured-org" },
+    options: { apiKey: "configured-key", taverncodeOrganizationId: "configured-org" },
     key: "configured-key",
     org: "configured-org",
     token: "configured-key",
@@ -205,7 +205,7 @@ const scenarios: {
   },
   {
     name: "empty configured token overrides apiKey",
-    options: { ...configured, kilocodeToken: "" },
+    options: { ...configured, taverncodeToken: "" },
     key: "",
     org: "configured-org",
     token: "",
@@ -246,7 +246,7 @@ const scenarios: {
   },
   {
     name: "token URL Org fallback",
-    options: { kilocodeToken: "https://gateway.test/api/organizations/token-org:configured-token" },
+    options: { taverncodeToken: "https://gateway.test/api/organizations/token-org:configured-token" },
     key: "https://gateway.test/api/organizations/token-org:configured-token",
     org: "token-org",
     token: "https://gateway.test/api/organizations/token-org:configured-token",
@@ -260,16 +260,16 @@ const scenarios: {
     token: "env-token",
   },
   { name: "anonymous without credentials", key: "anonymous" },
-  { name: "empty Org stays personal", options: { kilocodeOrganizationId: "" }, key: "anonymous", org: "" },
+  { name: "empty Org stays personal", options: { taverncodeOrganizationId: "" }, key: "anonymous", org: "" },
 ]
 
 for (const scenario of scenarios) {
-  inference.instance(`Kilo inference uses ${scenario.name}`, () =>
+  inference.instance(`Tavern inference uses ${scenario.name}`, () =>
     Effect.gen(function* () {
       yield* environment({
         KILO_API_KEY: scenario.env,
         KILO_ORG_ID: scenario.organization,
-        KILO_AUTH_CONTENT: JSON.stringify(scenario.info ? { kilo: scenario.info } : {}),
+        KILO_AUTH_CONTENT: JSON.stringify(scenario.info ? { tavern: scenario.info } : {}),
       })
       const calls: Headers[] = []
       const fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
@@ -278,8 +278,8 @@ for (const scenario of scenarios) {
       }
       const config: Config.Info = {
         provider: {
-          kilo: {
-            npm: "@kilocode/kilo-gateway",
+          tavern: {
+            npm: "@taverncode/tavern-gateway",
             env: ["KILO_API_KEY"],
             options: { ...scenario.options, headers: { "x-custom": "preserved" }, fetch },
             models: { "test-model": { name: "Test Model", limit: { context: 128000, output: 4096 } } },
@@ -288,18 +288,18 @@ for (const scenario of scenarios) {
       }
       yield* Effect.gen(function* () {
         const provider = yield* Provider.Service
-        const item = yield* provider.getProvider(ProviderV2.ID.kilo)
-        expect(item.options.kilocodeToken).toBe(scenario.token)
-        expect(item.options.kilocodeOrganizationId).toBe(scenario.org)
+        const item = yield* provider.getProvider(ProviderV2.ID.tavern)
+        expect(item.options.taverncodeToken).toBe(scenario.token)
+        expect(item.options.taverncodeOrganizationId).toBe(scenario.org)
         expect(item.options.fetch).toBe(fetch)
         expect(item.options.headers).toEqual({ "x-custom": "preserved" })
         const output = Provider.toPublicInfo(item)
         expect(output.key).toBeUndefined()
         expect(output.options.apiKey).toBeUndefined()
-        expect(output.options.kilocodeToken).toBeUndefined()
+        expect(output.options.taverncodeToken).toBeUndefined()
         expect(output.options.headers).toEqual({ "x-custom": "preserved" })
-        expect(item.options.kilocodeToken).toBe(scenario.token)
-        const model = yield* provider.getModel(ProviderV2.ID.kilo, ModelV2.ID.make("test-model"))
+        expect(item.options.taverncodeToken).toBe(scenario.token)
+        const model = yield* provider.getModel(ProviderV2.ID.tavern, ModelV2.ID.make("test-model"))
         const language = yield* provider.getLanguage(model)
         const error = yield* Effect.tryPromise(() =>
           language.doGenerate({ prompt: [{ role: "user", content: [{ type: "text", text: "test" }] }] }),
@@ -307,7 +307,7 @@ for (const scenario of scenarios) {
         expect(error.cause).toMatchObject({ message: "test inference response" })
         expect(calls).toHaveLength(1)
         expect(calls.at(0)?.get("authorization")).toBe(`Bearer ${scenario.key}`.trim())
-        expect(calls.at(0)?.get("x-kilocode-organizationid")).toBe(scenario.org || null)
+        expect(calls.at(0)?.get("x-taverncode-organizationid")).toBe(scenario.org || null)
         expect(calls.at(0)?.get("x-custom")).toBe("preserved")
       }).pipe(
         Effect.provide(
@@ -321,11 +321,11 @@ for (const scenario of scenarios) {
   )
 }
 
-inference.instance("non-Kilo inference keeps OAuth over environment and configured API keys", () =>
+inference.instance("non-Tavern inference keeps OAuth over environment and configured API keys", () =>
   Effect.gen(function* () {
     yield* environment({
-      KILO_API_KEY: "kilo-env-token",
-      KILO_ORG_ID: "kilo-env-org",
+      KILO_API_KEY: "tavern-env-token",
+      KILO_ORG_ID: "tavern-env-org",
       OPENAI_API_KEY: "openai-env-token",
       KILO_AUTH_CONTENT: JSON.stringify({ openai: oauth }),
     })
@@ -361,8 +361,8 @@ inference.instance("non-Kilo inference keeps OAuth over environment and configur
       const provider = yield* Provider.Service
       const item = yield* provider.getProvider(ProviderV2.ID.openai)
       expect(item.key).toBeUndefined()
-      expect(item.options.kilocodeToken).toBeUndefined()
-      expect(item.options.kilocodeOrganizationId).toBeUndefined()
+      expect(item.options.taverncodeToken).toBeUndefined()
+      expect(item.options.taverncodeOrganizationId).toBeUndefined()
       expect(item.options.apiKey).toBe("configured-openai-key")
       expect(typeof item.options.fetch).toBe("function")
       expect(Provider.toPublicInfo(item).options.apiKey).toBe("configured-openai-key")
@@ -375,7 +375,7 @@ inference.instance("non-Kilo inference keeps OAuth over environment and configur
       expect(calls).toHaveLength(1)
       expect(calls.at(0)?.get("authorization")).toBe("Bearer stored-token")
       expect(calls.at(0)?.get("chatgpt-account-id")).toBe("stored-org")
-      expect(calls.at(0)?.get("x-kilocode-organizationid")).toBeNull()
+      expect(calls.at(0)?.get("x-taverncode-organizationid")).toBeNull()
       expect(calls.at(0)?.get("x-custom")).toBe("preserved")
     }).pipe(
       Effect.provide(

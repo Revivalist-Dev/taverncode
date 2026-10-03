@@ -7,10 +7,10 @@ import { Bus } from "../../src/bus"
 import { AppRuntime } from "../../src/effect/app-runtime"
 import { makeRuntime } from "../../src/effect/run-service"
 import { InstanceRef } from "../../src/effect/instance-ref"
-import { KiloSessionCompaction } from "@/kilocode/session/compaction"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
-import { KiloSession } from "@/kilocode/session"
-import { Suggestion } from "../../src/kilocode/suggestion"
+import { KiloSessionCompaction } from "@/taverncode/session/compaction"
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
+import { KiloSession } from "@/taverncode/session"
+import { Suggestion } from "../../src/taverncode/suggestion"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
@@ -32,7 +32,7 @@ Log.init({ print: false })
 setDefaultTimeout(15_000)
 
 const previous = Flag.KILO_DB
-const dbfile = path.join(os.tmpdir(), `kilo-prompt-queue-${process.pid}-${crypto.randomUUID()}.db`)
+const dbfile = path.join(os.tmpdir(), `tavern-prompt-queue-${process.pid}-${crypto.randomUUID()}.db`)
 const layer = LayerNode.compile(LayerNode.group([Session.node, SessionProjector.node]))
 const prompt = LayerNode.compile(LayerNode.group([SessionPrompt.node, SessionProjector.node]))
 const runtime = makeRuntime(Session.Service, layer)

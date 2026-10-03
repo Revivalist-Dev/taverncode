@@ -1,4 +1,4 @@
-import type { CodeIndexManager } from "@kilocode/kilo-indexing/engine"
+import type { CodeIndexManager } from "@taverncode/tavern-indexing/engine"
 import { AsyncLocalStorage } from "node:async_hooks"
 import { format } from "node:util"
 import type { Request, Result, Event, Log } from "./indexing-worker-protocol"
@@ -46,8 +46,8 @@ async function init(request: Extract<Request, { method: "init" }>) {
   await dispose(request.key)
   if (request.input.lancedbPath) process.env.KILO_LANCEDB_PATH = request.input.lancedbPath
   const [engine, status] = await Promise.all([
-    import("@kilocode/kilo-indexing/engine"),
-    import("@kilocode/kilo-indexing/status"),
+    import("@taverncode/tavern-indexing/engine"),
+    import("@taverncode/tavern-indexing/status"),
   ])
   const manager = new engine.CodeIndexManager(
     request.input.directory,

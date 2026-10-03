@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test"
-import { SyncSubscriber } from "@/kilocode/session-export/sync-subscriber"
+import { SyncSubscriber } from "@/taverncode/session-export/sync-subscriber"
 
 describe("SyncSubscriber", () => {
   test("emits tool_executed for tool completion events on eligible sessions", () => {

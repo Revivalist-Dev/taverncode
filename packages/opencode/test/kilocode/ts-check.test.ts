@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { watch } from "node:fs"
 import fs from "fs/promises"
 import path from "path"
-import { TsCheck } from "../../src/kilocode/ts-check"
+import { TsCheck } from "../../src/taverncode/ts-check"
 import { Filesystem } from "../../src/util/filesystem"
 import { tmpdir } from "../fixture/fixture"
 

@@ -10,11 +10,11 @@ import { MessageID, SessionID } from "@/session/schema"
 import * as Truncate from "@/tool/truncate"
 import type { Tool } from "@/tool/tool"
 import type { InstanceContext } from "@/project/instance-context"
-import type { SessionPrLink } from "@/kilo-sessions/pr-link"
+import type { SessionPrLink } from "@/tavern-sessions/pr-link"
 
 // Replace the session-link recorder before the tool module loads, keeping the
 // real `parsePrUrl` so the tool still parses the URL for real.
-const realPrLink = await import("@/kilo-sessions/pr-link")
+const realPrLink = await import("@/tavern-sessions/pr-link")
 
 const writes: { sessionId: string; record: unknown; worktree: string }[] = []
 let writeError: unknown
@@ -29,7 +29,7 @@ const recordSessionLink = mock(async (sessionId: string, record: SessionPrLink, 
 
 const recorder = spyOn(realPrLink, "recordSessionLink").mockImplementation(recordSessionLink)
 
-const { LinkPrTool } = await import("@/kilocode/tool/link-pr")
+const { LinkPrTool } = await import("@/taverncode/tool/link-pr")
 
 const agentInfo = {
   name: "code",
@@ -264,10 +264,10 @@ describe("link_pr tool", () => {
   })
 
   test("the built registry contains link_pr", async () => {
-    // Imported lazily: the registry pulls the kilo-sessions module, whose own
+    // Imported lazily: the registry pulls the tavern-sessions module, whose own
     // migration is owned by another slice, so this import must not stop the
     // session-scoped link_pr tests above from running.
-    const { KiloToolRegistry } = await import("@/kilocode/tool/registry")
+    const { KiloToolRegistry } = await import("@/taverncode/tool/registry")
     const built = await Effect.runPromise(
       Effect.gen(function* () {
         const linkPr = yield* LinkPrTool

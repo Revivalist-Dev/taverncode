@@ -1,7 +1,7 @@
 import type { Component } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { useLanguage } from "../../context/language"
 
 interface RunningMigrationDialogProps {

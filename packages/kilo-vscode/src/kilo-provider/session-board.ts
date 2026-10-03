@@ -1,6 +1,6 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { KiloClient, Session } from "@taverncode/sdk/v2/client"
 import type { ProjectRouteService } from "../agent-manager/project/route"
-import { getErrorMessage, sameDirectory } from "../kilo-provider-utils"
+import { getErrorMessage, sameDirectory } from "../tavern-provider-utils"
 import type {
   RequestSessionBoardMessage,
   ResetSessionBoardMessage,
@@ -76,7 +76,7 @@ export async function handle(input: Record<string, unknown>, ctx: Context): Prom
     const target = scope(input, ctx)
     const { data } =
       input.type === "requestSessionBoard"
-        ? await client.kilocode.sessionBoard(
+        ? await client.taverncode.sessionBoard(
             {
               sessionID: input.sessionID,
               directory: target.directory,
@@ -85,7 +85,7 @@ export async function handle(input: Record<string, unknown>, ctx: Context): Prom
             },
             { throwOnError: true },
           )
-        : await client.kilocode.resetSessionBoard(
+        : await client.taverncode.resetSessionBoard(
             { sessionID: input.sessionID, directory: target.directory, revision: input.revision },
             { throwOnError: true },
           )

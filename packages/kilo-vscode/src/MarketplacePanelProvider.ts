@@ -1,9 +1,9 @@
 import * as os from "os"
 import * as vscode from "vscode"
-import type { GlobalEvent, SessionStatus } from "@kilocode/sdk/v2/client"
+import type { GlobalEvent, SessionStatus } from "@taverncode/sdk/v2/client"
 import { buildWebviewHtml, getWebviewFontSize } from "./utils"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
-import { mapSSEEventToWebviewMessage } from "./kilo-provider-utils"
+import { watchFontSizeConfig } from "./tavern-provider/font-size"
+import { mapSSEEventToWebviewMessage } from "./tavern-provider-utils"
 import { resolvePanelProjectDirectory } from "./project-directory"
 import { seedSessionStatuses } from "./session-status"
 import { type KiloConnectionService, ServerStartupError } from "./services/cli-backend"
@@ -28,7 +28,7 @@ interface MarketplaceMessage {
 }
 
 export class MarketplacePanelProvider implements vscode.Disposable {
-  public static readonly viewType = "kilo-code.new.marketplacePanel"
+  public static readonly viewType = "tavern-code.new.marketplacePanel"
 
   private panel: vscode.WebviewPanel | undefined
   private project: string | null = null
@@ -42,7 +42,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
   private subscriptions: Array<() => void> = []
   private readonly marketplace = new MarketplaceService()
   private readonly extensionVersion =
-    vscode.extensions.getExtension("kilocode.kilo-code")?.packageJSON?.version ?? "unknown"
+    vscode.extensions.getExtension("taverncode.tavern-code")?.packageJSON?.version ?? "unknown"
 
   constructor(
     private readonly extensionUri: vscode.Uri,
@@ -71,7 +71,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
 
     const panel = vscode.window.createWebviewPanel(
       MarketplacePanelProvider.viewType,
-      "Kilo Marketplace",
+      "Tavern Marketplace",
       vscode.ViewColumn.One,
       {
         enableScripts: true,
@@ -112,8 +112,8 @@ export class MarketplacePanelProvider implements vscode.Disposable {
     this.project = project
     this.ready = false
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-dark.svg"),
     }
     panel.webview.options = {
       enableScripts: true,
@@ -190,7 +190,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
     if (!this.ready) return
     const info = this.connection.getServerInfo()
     if (info) {
-      const cfg = vscode.workspace.getConfiguration("kilo-code.new")
+      const cfg = vscode.workspace.getConfiguration("tavern-code.new")
       this.post({
         type: "ready",
         serverInfo: info,
@@ -207,7 +207,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
       const client = this.connection.getClient()
       await seedSessionStatuses(client, this.directory(), this.statuses, (msg) => this.post(msg), reconcile)
     } catch (err) {
-      console.warn("[Kilo New] Marketplace session status sync failed:", err)
+      console.warn("[Tavern New] Marketplace session status sync failed:", err)
     }
   }
 
@@ -234,7 +234,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
         if (msg.mpItem) await this.remove(msg.mpItem, msg.mpInstallOptions?.target ?? "project")
         return
       case "dismissAgentMigrationBanner":
-        await this.context.globalState.update("kilo.agentMigrationBannerDismissed", true)
+        await this.context.globalState.update("tavern.agentMigrationBannerDismissed", true)
         return
       case "openExternal":
         this.openExternal(msg.url)
@@ -276,12 +276,12 @@ export class MarketplacePanelProvider implements vscode.Disposable {
       const project = this.project ?? undefined
       const data = await fetchMarketplaceData(this.marketplaceCtx, project, this.directory(), this.relevanceRoots())
       if (generation !== this.generation) return
-      const dismissed = this.context.globalState.get<boolean>("kilo.agentMigrationBannerDismissed") ?? false
+      const dismissed = this.context.globalState.get<boolean>("tavern.agentMigrationBannerDismissed") ?? false
       this.post({ type: "marketplaceData", ...data, showAgentMigrationBanner: !dismissed })
     } catch (err) {
       if (generation !== this.generation) return
       const error = err instanceof Error ? err.message : String(err)
-      console.warn("[Kilo New] Marketplace data fetch failed:", err)
+      console.warn("[Tavern New] Marketplace data fetch failed:", err)
       this.post({
         type: "marketplaceData",
         marketplaceItems: [],
@@ -359,7 +359,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
   private post(msg: unknown): void {
     if (!this.panel || !this.ready) return
     void this.panel.webview.postMessage(msg).then(undefined, (err) => {
-      console.warn("[Kilo New] Marketplace panel postMessage failed:", err)
+      console.warn("[Tavern New] Marketplace panel postMessage failed:", err)
     })
   }
 
@@ -369,7 +369,7 @@ export class MarketplacePanelProvider implements vscode.Disposable {
       styleUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "marketplace.css")),
       iconsBaseUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "assets", "icons")),
       workerUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "shiki-worker.js")),
-      title: "Kilo Marketplace",
+      title: "Tavern Marketplace",
       port: this.connection.getServerInfo()?.port,
     })
   }

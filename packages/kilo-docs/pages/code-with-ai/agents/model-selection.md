@@ -7,40 +7,40 @@ description: "Guide to choosing the right AI model for your tasks"
 
 Here's the honest truth about AI model recommendations: by the time I write them down, they're probably already outdated. New models drop every few weeks, existing ones get updated, prices shift, and yesterday's champion becomes today's budget option.
 
-Instead of maintaining a static list that's perpetually behind, we built something better — a real-time leaderboard showing which models Kilo Code users are actually having success with right now.
+Instead of maintaining a static list that's perpetually behind, we built something better — a real-time leaderboard showing which models Tavern Code users are actually having success with right now.
 
 ## Model Routing and Configuration
 
-You can configure models separately for different tasks in the VS Code extension and kilo CLI:
+You can configure models separately for different tasks in the VS Code extension and tavern CLI:
 
-- **Main model** — the primary model your agent uses for coding tasks, chat, and reasoning. This is what you pick with the model selector, `/models`, or the `model` key in `kilo.jsonc`. See [How to Select and Switch Models](#how-to-select-and-switch-models) for the full precedence order and per-agent config.
+- **Main model** — the primary model your agent uses for coding tasks, chat, and reasoning. This is what you pick with the model selector, `/models`, or the `model` key in `tavern.jsonc`. See [How to Select and Switch Models](#how-to-select-and-switch-models) for the full precedence order and per-agent config.
   - The main model is also used for todo-list generation, and for context compaction when no compaction model is set.
-- **Small model** — a lightweight model used for session title generation, commit message generation, and prompt enhancement. Configured with the `small_model` key in `kilo.jsonc`, or the **Small Model** field on the **Settings → Models** tab.
-  - If left unset, Kilo resolves it according to the following logic: 
+- **Small model** — a lightweight model used for session title generation, commit message generation, and prompt enhancement. Configured with the `small_model` key in `tavern.jsonc`, or the **Small Model** field on the **Settings → Models** tab.
+  - If left unset, Tavern resolves it according to the following logic: 
     1. Find a small/cheap variant on your current provider (e.g. Haiku on Anthropic, Flash on Gemini).
-    2. Fall back to [`kilo-auto/small`](/docs/gateway/models-and-providers#kilo-autosmall) if the Kilo Gateway provider is authenticated in your session.
-    3. Reuse your main model if you're not authenticated to the Kilo Gateway.
-- **Subagent model** — the default model for subagents launched by the `task` tool. Configured with the `subagent_model` key in `kilo.jsonc`, or the **Subagent Model** field on the **Settings → Models** tab.
+    2. Fall back to [`tavern-auto/small`](/docs/gateway/models-and-providers#tavern-autosmall) if the Tavern Gateway provider is authenticated in your session.
+    3. Reuse your main model if you're not authenticated to the Tavern Gateway.
+- **Subagent model** — the default model for subagents launched by the `task` tool. Configured with the `subagent_model` key in `tavern.jsonc`, or the **Subagent Model** field on the **Settings → Models** tab.
   - If left unset, inherits whichever model the parent agent session is currently using.
 - **Autocomplete model** — the model used for inline code completions as you type. See [Autocomplete: Provider and Model](/docs/code-with-ai/features/autocomplete#provider-and-model) for how to configure it.
-- **Compaction model** - the model used to summarize context. Set `agent.compaction.model` in `kilo.jsonc`, or choose **Compaction model** under **Settings → Models**. If unset, compaction uses the current session's model. See [Context Condensing](/docs/customize/context/context-condensing#use-a-different-model-for-compaction).
+- **Compaction model** - the model used to summarize context. Set `agent.compaction.model` in `tavern.jsonc`, or choose **Compaction model** under **Settings → Models**. If unset, compaction uses the current session's model. See [Context Condensing](/docs/customize/context/context-condensing#use-a-different-model-for-compaction).
 
 ### Configuring Local Usage
 
 If you want to use a private/local inference source, you can:
 
-1. Set your **main model** to a non-`kilo-auto` provider — a local model (Ollama, LM Studio) or a direct BYOK provider key.
-2. Explicitly set **`small_model`** to a model on that same provider. If you leave it unset while signed in to Kilo Gateway, it falls back to [`kilo-auto/small`](/docs/gateway/models-and-providers#kilo-autosmall) rather than reusing your main model.
-3. Leave **`subagent_model`** unset — it always inherits your main model rather than defaulting to Kilo Gateway, whether or not you're signed in.
+1. Set your **main model** to a non-`tavern-auto` provider — a local model (Ollama, LM Studio) or a direct BYOK provider key.
+2. Explicitly set **`small_model`** to a model on that same provider. If you leave it unset while signed in to Tavern Gateway, it falls back to [`tavern-auto/small`](/docs/gateway/models-and-providers#tavern-autosmall) rather than reusing your main model.
+3. Leave **`subagent_model`** unset — it always inherits your main model rather than defaulting to Tavern Gateway, whether or not you're signed in.
 4. For **autocomplete**, switch the provider to a direct Mistral or Inception BYOK key or disable autocomplete.
 
 {% callout type="note" %}
-You can ensure no inference will go through the Kilo Gateway by logging out of the Kilo Gateway in the IDE extension or TUI.
+You can ensure no inference will go through the Tavern Gateway by logging out of the Tavern Gateway in the IDE extension or TUI.
 {% /callout %}
 
 ## Check the Live Models List
 
-**[👉 See what's working today at kilo.ai/models](https://kilo.ai/models)**
+**[👉 See what's working today at tavern.ai/models](https://tavern.ai/models)**
 
 This isn't benchmarks from some lab. It's real usage data from developers like you, updated continuously. You'll see which models people are choosing for different tasks, what's delivering results, and how the landscape is shifting in real-time.
 
@@ -55,8 +55,8 @@ While the specifics change constantly, some principles stay consistent:
 
 - Use the **model selector** in the chat prompt area to pick a model for the current session. You can also type `/models` to open the model picker.
 - When the selected model supports variants, type `/variant` to open the reasoning effort selector.
-- Press `Shift+Tab` in the prompt input to cycle to the next reasoning effort variant, wrapping after the last one. This works in the sidebar chat, the Agent Manager prompt, and the New Worktree dialog, and the variant selector tooltip shows the shortcut on hover. To keep `Shift+Tab` for keyboard focus navigation instead, disable the `kilo-code.new.chat.shiftTabCyclesVariant` setting (also available under **Settings → Display**).
-- Set per-agent defaults and a global default in the **Settings** panel (Models tab), or directly in the `kilo.jsonc` config file.
+- Press `Shift+Tab` in the prompt input to cycle to the next reasoning effort variant, wrapping after the last one. This works in the sidebar chat, the Agent Manager prompt, and the New Worktree dialog, and the variant selector tooltip shows the shortcut on hover. To keep `Shift+Tab` for keyboard focus navigation instead, disable the `tavern-code.new.chat.shiftTabCyclesVariant` setting (also available under **Settings → Display**).
+- Set per-agent defaults and a global default in the **Settings** panel (Models tab), or directly in the `tavern.jsonc` config file.
 - **Model precedence:** Session override → Last picked per agent → Per-agent config → Global config → [Auto Free](/docs/code-with-ai/agents/auto-model#tiers) (note: Auto Free may route to providers that log prompts — see the Auto Model page for details).
 - The model selector remembers the last model you picked for each agent, so switching agents restores your previous choice. A manual pick always beats config settings.
 
@@ -64,8 +64,8 @@ While the specifics change constantly, some principles stay consistent:
 {% tab label="CLI" %}
 
 - In the TUI, use the **model picker** (`Ctrl+X m` or `/models`) to switch models.
-- For non-interactive use, pass `--model` flag to `kilo run` (e.g., `kilo run --model claude-sonnet-4-20250514`).
-- Set the global default with the `model` key in `kilo.jsonc`, or configure per-agent models in the `agent` section.
+- For non-interactive use, pass `--model` flag to `tavern run` (e.g., `tavern run --model claude-sonnet-4-20250514`).
+- Set the global default with the `model` key in `tavern.jsonc`, or configure per-agent models in the `agent` section.
 - **Model precedence:** `--model` flag → Per-agent config → Last used in session → Global config → Recent models → First available.
 
 {% /tab %}
@@ -83,12 +83,12 @@ While the specifics change constantly, some principles stay consistent:
 
 ## Free and Budget Model Picks
 
-You don't need a paid API key to use Kilo Code productively. For the lowest cost on paid work, [Auto Efficient](/docs/code-with-ai/agents/auto-model#tiers) (`kilo-auto/efficient`) routes each request to the cheapest model proven accurate enough for that task. The fastest way to start for free is [Auto Model Free](/docs/code-with-ai/agents/auto-model) (`kilo-auto/free`), which routes to the best available free models automatically. See [Using Kilo for Free](/docs/getting-started/using-kilo-for-free) for the full zero-cost setup.
+You don't need a paid API key to use Tavern Code productively. For the lowest cost on paid work, [Auto Efficient](/docs/code-with-ai/agents/auto-model#tiers) (`tavern-auto/efficient`) routes each request to the cheapest model proven accurate enough for that task. The fastest way to start for free is [Auto Model Free](/docs/code-with-ai/agents/auto-model) (`tavern-auto/free`), which routes to the best available free models automatically. See [Using Tavern for Free](/docs/getting-started/using-tavern-for-free) for the full zero-cost setup.
 
-If you prefer to pick models yourself, type `free` in the model picker to filter by free models, or browse the full list at [kilo.ai/models](https://kilo.ai/models).
+If you prefer to pick models yourself, type `free` in the model picker to filter by free models, or browse the full list at [tavern.ai/models](https://tavern.ai/models).
 
 {% callout type="info" %}
-Free model availability changes as providers adjust promotional periods. Check [kilo.ai/models](https://kilo.ai/models) for the live list.
+Free model availability changes as providers adjust promotional periods. Check [tavern.ai/models](https://tavern.ai/models) for the live list.
 {% /callout %}
 
 ## Context Windows Matter
@@ -135,7 +135,7 @@ This sets the `explore` subagent to always use Haiku regardless of the parent's 
 Subagents inherit the model currently active in the primary agent session — the model shown in the selector at the bottom of the chat. To bypass inheritance and pin a specific model for a subagent:
 
 - **Via Settings** — open **Settings → Models → Model per Mode**, find the subagent, and pick its model.
-- **Via config file** — edit `kilo.jsonc`:
+- **Via config file** — edit `tavern.jsonc`:
 
 ```json
 {
@@ -169,31 +169,31 @@ The VS Code extension supports a `vscode://` protocol handler that lets you open
 Include at least one of the `model` or `agent` parameters:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=<modelID>
-vscode://kilocode.kilo-code/kilocode/switch?agent=<agentName>
-vscode://kilocode.kilo-code/kilocode/switch?model=<modelID>&agent=<agentName>
+vscode://taverncode.tavern-code/taverncode/switch?model=<modelID>
+vscode://taverncode.tavern-code/taverncode/switch?agent=<agentName>
+vscode://taverncode.tavern-code/taverncode/switch?model=<modelID>&agent=<agentName>
 ```
 
-Replace `<modelID>` with a Kilo Gateway model ID such as `kilo-auto/free`. Replace `<agentName>` with a visible primary agent ID such as `code` or `plan`, rather than its display name.
+Replace `<modelID>` with a Tavern Gateway model ID such as `tavern-auto/free`. Replace `<agentName>` with a visible primary agent ID such as `code` or `plan`, rather than its display name.
 
 ### Example: Auto Free
 
-To open Kilo Code and switch to the [Auto Free](/docs/code-with-ai/agents/auto-model) tier (`kilo-auto/free`), use:
+To open Tavern Code and switch to the [Auto Free](/docs/code-with-ai/agents/auto-model) tier (`tavern-auto/free`), use:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree
+vscode://taverncode.tavern-code/taverncode/switch?model=tavern-auto%2Ffree
 ```
 
 To switch only to Plan and use its normal model selection, specify the agent without a model:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?agent=plan
+vscode://taverncode.tavern-code/taverncode/switch?agent=plan
 ```
 
 To select both at the same time, include both parameters:
 
 ```
-vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree&agent=plan
+vscode://taverncode.tavern-code/taverncode/switch?model=tavern-auto%2Ffree&agent=plan
 ```
 
 {% callout type="tip" %}
@@ -202,9 +202,9 @@ URL-encode the `/` in model IDs as `%2F` when embedding this URL in HTML links o
 
 ### How It Works
 
-- **VS Code open**: the Kilo sidebar is focused and the linked selection is applied to the active session immediately.
+- **VS Code open**: the Tavern sidebar is focused and the linked selection is applied to the active session immediately.
 - **VS Code closed**: VS Code launches, then applies the selection once the extension is ready.
-- When `model` is provided, it must identify a model in the current Kilo Gateway catalog. Invalid or unavailable models cause the deep link to be ignored.
+- When `model` is provided, it must identify a model in the current Tavern Gateway catalog. Invalid or unavailable models cause the deep link to be ignored.
 - When `agent` is provided, it must identify a visible primary agent. Invalid or unavailable agents cause the deep link to be ignored.
 - An agent-only link uses the model that would normally be selected for that agent. When both parameters are present, the agent is selected first so the linked model applies to it.
 - The selection follows the same precedence as using the pickers: it updates the active session, or the next session when no session is active. It does **not** change your configured defaults in settings.
@@ -214,8 +214,8 @@ URL-encode the `/` in model IDs as `%2F` when embedding this URL in HTML links o
 You can embed these links in a web page:
 
 ```html
-<a href="vscode://kilocode.kilo-code/kilocode/switch?model=kilo-auto%2Ffree&amp;agent=plan">
-  Open Kilo Code with Auto Free in Plan
+<a href="vscode://taverncode.tavern-code/taverncode/switch?model=tavern-auto%2Ffree&amp;agent=plan">
+  Open Tavern Code with Auto Free in Plan
 </a>
 ```
 
@@ -223,4 +223,4 @@ Or share as a plain URL that users can paste into their browser's address bar.
 
 ## Stay Current
 
-The AI model space moves fast. Bookmark [kilo.ai/models](https://kilo.ai/models) and check back when you're evaluating options. What's best today might not be best next month — and that's actually exciting.
+The AI model space moves fast. Bookmark [tavern.ai/models](https://tavern.ai/models) and check back when you're evaluating options. What's best today might not be best next month — and that's actually exciting.

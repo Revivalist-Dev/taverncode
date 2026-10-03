@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
-import { KiloRunAuto } from "../../src/kilocode/cli/run-auto"
+import { KiloRunAuto } from "../../src/taverncode/cli/run-auto"
 
 describe("KiloRunAuto", () => {
   test("tracks task child sessions without allowing unrelated sessions", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import path from "node:path"
-import { SessionResume } from "../../../src/kilocode/session-resume"
+import { SessionResume } from "../../../src/taverncode/session-resume"
 import { ProviderTransform } from "../../../src/provider/transform"
 import { MessageV2 } from "../../../src/session/message-v2"
 import { ProviderV2 } from "@opencode-ai/core/provider"

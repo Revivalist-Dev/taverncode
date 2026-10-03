@@ -3,12 +3,12 @@
  * Extracted from AgentManagerApp for reuse and visual-regression testing via Storybook.
  */
 import { Component, For, Match, Show, Switch, createEffect, createSignal, onCleanup, type ParentProps } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip, TooltipKeybind } from "@kilocode/kilo-ui/tooltip"
-import { HoverCard } from "@kilocode/kilo-ui/hover-card"
-import { ContextMenu } from "@kilocode/kilo-ui/context-menu"
-import { Button } from "@kilocode/kilo-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip, TooltipKeybind } from "@taverncode/tavern-ui/tooltip"
+import { HoverCard } from "@taverncode/tavern-ui/hover-card"
+import { ContextMenu } from "@taverncode/tavern-ui/context-menu"
+import { Button } from "@taverncode/tavern-ui/button"
 import type { WorktreeState, WorktreeGitStats, SectionState, RunStatus } from "../src/types/messages"
 import type { PRStatus } from "../src/types/messages"
 import { ActivityIcon } from "../src/components/shared/ActivityIcon"

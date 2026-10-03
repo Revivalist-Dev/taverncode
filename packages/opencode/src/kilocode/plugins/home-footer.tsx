@@ -1,20 +1,20 @@
-// kilocode_change - new file
+// taverncode_change - new file
 /**
- * Kilo-specific home footer plugin.
+ * Tavern-specific home footer plugin.
  *
  * Replaces the upstream `home_footer` slot (order 101 > upstream 100)
  * to inject the RemoteIndicator alongside the standard directory, MCP,
  * and version information.
  */
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@taverncode/plugin/tui"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { Global } from "@opencode-ai/core/global"
-import { RemoteIndicator } from "@/kilocode/remote-tui"
+import { RemoteIndicator } from "@/taverncode/remote-tui"
 
-const id = "internal:kilo-home-footer"
+const id = "internal:tavern-home-footer"
 
 // ---------------------------------------------------------------------------
-// Sub-components (mirror upstream home/footer with kilo additions)
+// Sub-components (mirror upstream home/footer with tavern additions)
 // ---------------------------------------------------------------------------
 
 function Directory(props: { api: TuiPluginApi }) {
@@ -72,7 +72,7 @@ function Version(props: { api: TuiPluginApi }) {
 // ---------------------------------------------------------------------------
 
 function View(props: { api: TuiPluginApi }) {
-  const kilo = createMemo(() => props.api.state.provider.some((p) => p.id === "kilo"))
+  const tavern = createMemo(() => props.api.state.provider.some((p) => p.id === "tavern"))
   const sdk = { client: props.api.client }
 
   return (
@@ -91,7 +91,7 @@ function View(props: { api: TuiPluginApi }) {
         <RemoteIndicator
           sdk={sdk}
           theme={props.api.theme.current}
-          kilo={kilo()}
+          tavern={tavern()}
           event={props.api.event}
         />
         <Mcp api={props.api} />

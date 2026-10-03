@@ -1,16 +1,16 @@
 import { describe, expect, test } from "bun:test"
 import { Result, Schema as EffectSchema } from "effect"
 import { OpenApi } from "effect/unstable/httpapi"
-import { AgentBuilderPaths } from "../../../src/kilocode/server/httpapi/groups/agent-builder"
-import { BackgroundProcessPaths } from "../../../src/kilocode/server/httpapi/groups/background-process"
-import { BranchNamePaths } from "../../../src/kilocode/server/httpapi/groups/branch-name"
-import { ConfigConsolePaths } from "../../../src/kilocode/server/httpapi/groups/config-console"
-import { IndexingPaths, KiloEmbeddingModel } from "../../../src/kilocode/server/httpapi/groups/indexing"
-import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/kilo-gateway"
-import { KilocodePaths } from "../../../src/kilocode/server/httpapi/groups/kilocode"
-import { MemoryPaths } from "../../../src/kilocode/server/httpapi/groups/memory"
-import { NetworkPaths } from "../../../src/kilocode/server/httpapi/groups/network"
-import { TelemetryPaths } from "../../../src/kilocode/server/httpapi/groups/telemetry"
+import { AgentBuilderPaths } from "../../../src/taverncode/server/httpapi/groups/agent-builder"
+import { BackgroundProcessPaths } from "../../../src/taverncode/server/httpapi/groups/background-process"
+import { BranchNamePaths } from "../../../src/taverncode/server/httpapi/groups/branch-name"
+import { ConfigConsolePaths } from "../../../src/taverncode/server/httpapi/groups/config-console"
+import { IndexingPaths, KiloEmbeddingModel } from "../../../src/taverncode/server/httpapi/groups/indexing"
+import { KiloGatewayPaths } from "../../../src/taverncode/server/httpapi/groups/tavern-gateway"
+import { KilocodePaths } from "../../../src/taverncode/server/httpapi/groups/taverncode"
+import { MemoryPaths } from "../../../src/taverncode/server/httpapi/groups/memory"
+import { NetworkPaths } from "../../../src/taverncode/server/httpapi/groups/network"
+import { TelemetryPaths } from "../../../src/taverncode/server/httpapi/groups/telemetry"
 import { ExperimentalPaths } from "../../../src/server/routes/instance/httpapi/groups/experimental"
 import { SessionPaths } from "../../../src/server/routes/instance/httpapi/groups/session"
 import { PublicApi } from "../../../src/server/routes/instance/httpapi/public"
@@ -38,14 +38,14 @@ type Body = {
   content?: Record<string, { schema?: Schema }>
 }
 
-describe("Kilo PublicApi OpenAPI contract", () => {
+describe("Tavern PublicApi OpenAPI contract", () => {
   test("exposes board paging and reset with a minimal snapshot", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const path = KilocodePaths.sessionBoard.replace(":sessionID", "{sessionID}")
     const reset = KilocodePaths.resetSessionBoard.replace(":sessionID", "{sessionID}")
     const query = spec.paths[path]?.get?.parameters as Parameter[] | undefined
-    expect(spec.paths[path]?.get?.operationId).toBe("kilocode.sessionBoard")
-    expect(spec.paths[reset]?.post?.operationId).toBe("kilocode.resetSessionBoard")
+    expect(spec.paths[path]?.get?.operationId).toBe("taverncode.sessionBoard")
+    expect(spec.paths[reset]?.post?.operationId).toBe("taverncode.resetSessionBoard")
     expect(query?.find((field) => field.name === "limit")?.schema).toMatchObject({
       type: "integer",
       minimum: 1,
@@ -60,13 +60,13 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     ])
   })
 
-  test("uses Kilo branding", () => {
+  test("uses Tavern branding", () => {
     const spec = OpenApi.fromApi(PublicApi)
-    expect(spec.info.title).toBe("kilo")
-    expect(spec.info.description).toBe("kilo api")
+    expect(spec.info.title).toBe("tavern")
+    expect(spec.info.description).toBe("tavern api")
   })
 
-  test("includes legacy Kilo events in the generated SDK contract", () => {
+  test("includes legacy Tavern events in the generated SDK contract", () => {
     const spec = JSON.stringify(OpenApi.fromApi(PublicApi))
     for (const type of [
       "suggestion.shown",
@@ -140,7 +140,7 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     }
   })
 
-  test("keeps directory routing queries on Kilo Console routes", () => {
+  test("keeps directory routing queries on Tavern Console routes", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const routes = [
       { method: "get", path: ExperimentalPaths.worktreeDiff },
@@ -161,7 +161,7 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     }
   })
 
-  test("keeps workspace routing queries on all Kilo-owned routed endpoints", () => {
+  test("keeps workspace routing queries on all Tavern-owned routed endpoints", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const routes = [
       { method: "post", path: AgentBuilderPaths.preview },
@@ -224,7 +224,7 @@ describe("Kilo PublicApi OpenAPI contract", () => {
     expect(branch).toEqual({ anyOf: [{ type: "string" }, { type: "null" }] })
   })
 
-  test("keeps Kilo gateway responses nullable", () => {
+  test("keeps Tavern gateway responses nullable", () => {
     const spec = OpenApi.fromApi(PublicApi)
     const response = (path: string) => {
       const body = spec.paths[path]?.get?.responses?.["200"] as Body | undefined

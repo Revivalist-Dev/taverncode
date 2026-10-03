@@ -1,6 +1,6 @@
 import { expect } from "bun:test"
 import { Effect, Fiber } from "effect"
-import { createKiloClient, type Event, type KiloClient } from "@kilocode/sdk/v2"
+import { createKiloClient, type Event, type KiloClient } from "@taverncode/sdk/v2"
 import path from "node:path"
 import { mkdir } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
@@ -59,7 +59,7 @@ function environment(home: string, url: string, opts: { plugin?: string; resume?
     KILO_DB: opts.resume ? path.join(home, "resume.db") : ":memory:",
     KILO_AUTH_CONTENT: "{}",
     KILO_SERVER_PASSWORD: "",
-    KILO_SERVER_USERNAME: "kilo",
+    KILO_SERVER_USERNAME: "tavern",
     KILO_PURE: "false",
     KILO_DISABLE_DEFAULT_PLUGINS: "true",
     KILO_EXPERIMENTAL_BACKGROUND_SUBAGENTS: "true",
@@ -73,7 +73,7 @@ function environment(home: string, url: string, opts: { plugin?: string; resume?
 }
 
 function drain(client: KiloClient, id: string, timeout = 30_000) {
-  return client.kilocode.drainSession(
+  return client.taverncode.drainSession(
     { sessionID: id, token: crypto.randomUUID() },
     { throwOnError: true, signal: AbortSignal.timeout(timeout) },
   )
@@ -315,7 +315,7 @@ function scenario(
         child.open()
       }
       yield* Effect.promise(() =>
-        client.kilocode.drainSession({ sessionID: session.data.id, token }, { throwOnError: true }),
+        client.taverncode.drainSession({ sessionID: session.data.id, token }, { throwOnError: true }),
       )
       expect(yield* awaitWithTimeout(Fiber.join(received), "Cancellation barrier was not delivered")).toEqual([
         "session.drain.interrupted",
@@ -450,7 +450,7 @@ cliIt.live(
       const directory = path.join(home, "caller")
       yield* Effect.promise(() => mkdir(directory))
       const server = yield* opencode.serve({
-        env: { KILO_SERVER_PASSWORD: "", KILO_SERVER_USERNAME: "kilo" },
+        env: { KILO_SERVER_PASSWORD: "", KILO_SERVER_USERNAME: "tavern" },
         readyTimeoutMs: 30_000,
       })
       const sdk = createKiloClient({ baseUrl: server.url, directory: home })
@@ -472,15 +472,15 @@ cliIt.live(
         throw new Error("Drain acknowledgment was not delivered")
       }).pipe(Effect.forkChild)
       yield* ready.wait("Event stream did not connect")
-      const result = yield* Effect.promise(() => sdk.kilocode.drainSession({ sessionID: id, directory, token }))
+      const result = yield* Effect.promise(() => sdk.taverncode.drainSession({ sessionID: id, directory, token }))
       expect(result.data).toBe(true)
       expect(yield* awaitWithTimeout(Fiber.join(received), "Drain acknowledged the wrong directory")).toEqual({
         sessionID: id,
         token,
       })
-      const invalid = yield* Effect.promise(() => sdk.kilocode.drainSession({ sessionID: id, token: "" }))
+      const invalid = yield* Effect.promise(() => sdk.taverncode.drainSession({ sessionID: id, token: "" }))
       expect(invalid.response?.status).toBe(400)
-      const missing = yield* Effect.promise(() => sdk.kilocode.drainSession({ sessionID: "ses_missing_drain", token }))
+      const missing = yield* Effect.promise(() => sdk.taverncode.drainSession({ sessionID: "ses_missing_drain", token }))
       expect(missing.response?.status).toBe(404)
     }),
   90_000,

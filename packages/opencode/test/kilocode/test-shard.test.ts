@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { TestShard } from "../../script/kilocode/test-shard"
+import { TestShard } from "../../script/taverncode/test-shard"
 
 describe("test shard", () => {
   test("parses valid shard specifications", () => {

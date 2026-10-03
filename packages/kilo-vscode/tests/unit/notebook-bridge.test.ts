@@ -1,5 +1,5 @@
 import { describe, expect, it, mock } from "bun:test"
-import type { NotebookRequest } from "@kilocode/sdk/v2/client"
+import type { NotebookRequest } from "@taverncode/sdk/v2/client"
 import * as vscode from "vscode"
 import { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
 import type { SSEPayload } from "../../src/services/cli-backend/sdk-sse-adapter"
@@ -38,7 +38,7 @@ function harness(context: NotebookBridgeContext, dirs = ["/repo"]) {
     state?: (state: "connecting" | "connected" | "disconnected" | "error") => void
   } = {}
   const client = {
-    kilocode: {
+    taverncode: {
       notebook: {
         list: async ({ directory }: { directory?: string }) => ({ data: lists.get(directory ?? "") ?? [] }),
         reply: async (input: unknown) => {
@@ -72,14 +72,14 @@ function harness(context: NotebookBridgeContext, dirs = ["/repo"]) {
   const bridge = new NotebookBridge(connection as never, { create, canonical: async (directory) => directory })
   const request = (value: NotebookRequest = read, directory = "/repo") =>
     handlers.event?.(
-      { id: `event-${value.id}`, type: "kilocode.notebook.requested", properties: value } as SSEPayload,
+      { id: `event-${value.id}`, type: "taverncode.notebook.requested", properties: value } as SSEPayload,
       directory,
     )
   const cancel = (id = read.id, directory = "/repo") =>
     handlers.event?.(
       {
         id: `cancel-${id}`,
-        type: "kilocode.notebook.cancelled",
+        type: "taverncode.notebook.cancelled",
         properties: { requestID: id, sessionID: "session-1", reason: "cancelled" },
       } as SSEPayload,
       directory,

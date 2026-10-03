@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2"
-import { memoryRow } from "@/kilocode/cli/cmd/tui/component/memory-status"
-import { runMemoryCommand } from "@/kilocode/cli/cmd/tui/memory-command"
-import { MemoryTuiEvents } from "@/kilocode/cli/cmd/tui/memory-events"
-import { MemoryTuiState } from "@/kilocode/cli/cmd/tui/memory-state"
+import type { KiloClient } from "@taverncode/sdk/v2"
+import { memoryRow } from "@/taverncode/cli/cmd/tui/component/memory-status"
+import { runMemoryCommand } from "@/taverncode/cli/cmd/tui/memory-command"
+import { MemoryTuiEvents } from "@/taverncode/cli/cmd/tui/memory-events"
+import { MemoryTuiState } from "@/taverncode/cli/cmd/tui/memory-state"
 
 type Handler = (event: {
   properties: { sessionID?: string; detail?: unknown; reason?: string }
@@ -135,7 +135,7 @@ describe("memory TUI command parser", () => {
     const shown: string[] = []
     const client = {
       memory: {
-        status: async () => ({ data: { root: "/tmp/kilo-memory", state: { enabled: true } } }),
+        status: async () => ({ data: { root: "/tmp/tavern-memory", state: { enabled: true } } }),
       },
     } as unknown as KiloClient
 
@@ -151,8 +151,8 @@ describe("memory TUI command parser", () => {
       usage() {},
     })
 
-    expect(opened).toEqual(["/tmp/kilo-memory"])
-    expect(shown).toEqual(["Memory folder: /tmp/kilo-memory"])
+    expect(opened).toEqual(["/tmp/tavern-memory"])
+    expect(shown).toEqual(["Memory folder: /tmp/tavern-memory"])
   })
 
   test("bare memory command opens help", async () => {
@@ -185,7 +185,7 @@ describe("memory TUI command parser", () => {
       memory: {
         enable: async () => {
           calls.push("enable")
-          return { data: { root: "/tmp/kilo-data/memory/repo-abc123", index: { tokens: 42 } } }
+          return { data: { root: "/tmp/tavern-data/memory/repo-abc123", index: { tokens: 42 } } }
         },
         disable: async () => {
           calls.push("disable")

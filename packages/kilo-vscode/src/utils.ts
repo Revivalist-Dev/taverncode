@@ -14,7 +14,7 @@ function clamp(size: number) {
 }
 
 export function getWebviewFontSize(): number {
-  const raw = vscode.workspace.getConfiguration("kilo-code.new").get<number>("fontSize", 13)
+  const raw = vscode.workspace.getConfiguration("tavern-code.new").get<number>("fontSize", 13)
   return clamp(raw)
 }
 
@@ -41,14 +41,14 @@ export function isCursorHost(): boolean {
 
 function fontStyle(): string {
   const base = getWebviewFontSize()
-  const vars = SIZES.map((size) => `--kilo-font-size-${size}: ${(base * size) / 13}px;`).join("\n      ")
+  const vars = SIZES.map((size) => `--tavern-font-size-${size}: ${(base * size) / 13}px;`).join("\n      ")
   return `:root {
       ${vars}
-      --kilo-font-scale: ${base / 13};
-      --font-size-x-small: var(--kilo-font-size-10);
-      --font-size-small: var(--kilo-font-size-11);
-      --font-size-base: var(--kilo-font-size-13);
-      --font-size-large: var(--kilo-font-size-16);
+      --tavern-font-scale: ${base / 13};
+      --font-size-x-small: var(--tavern-font-size-10);
+      --font-size-small: var(--tavern-font-size-11);
+      --font-size-base: var(--tavern-font-size-13);
+      --font-size-large: var(--tavern-font-size-16);
     }`
 }
 
@@ -77,7 +77,7 @@ export function buildWebviewHtml(
   const markdownWorkerUri = opts.workerUri.toString().replace(/shiki-worker\.js$/, "markdown-shiki-worker.js")
 
   return `<!DOCTYPE html>
-<html lang="en" data-theme="kilo-vscode" data-sidebar="${opts.sidebar ?? ""}">
+<html lang="en" data-theme="tavern-vscode" data-sidebar="${opts.sidebar ?? ""}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

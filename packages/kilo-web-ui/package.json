@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/kilo-web-ui",
+  "name": "@taverncode/tavern-web-ui",
   "version": "7.8.3",
   "type": "module",
   "license": "MIT",
@@ -136,7 +136,7 @@
   },
   "dependencies": {
     "@kobalte/core": "catalog:",
-    "@kilocode/kilo-ui": "workspace:*",
+    "@taverncode/tavern-ui": "workspace:*",
     "@opencode-ai/ui": "workspace:*",
     "@pierre/diffs": "catalog:",
     "solid-js": "catalog:"

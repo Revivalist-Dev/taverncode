@@ -72,7 +72,7 @@ function loadParcelWatcher(): typeof import("@parcel/watcher") | undefined {
   if (parcelModule !== undefined) return parcelModule ?? undefined
   try {
     // The platform binding stays a dynamic require so bun-compiled multi-platform
-    // binaries resolve the right prebuild at runtime (mirrors @kilocode/core).
+    // binaries resolve the right prebuild at runtime (mirrors @taverncode/core).
     const libc = typeof KILO_LIBC === "undefined" ? undefined : KILO_LIBC
     const suffix = process.platform === "linux" ? `-${libc || "glibc"}` : ""
     const binding = require(`@parcel/watcher-${process.platform}-${process.arch}${suffix}`)
@@ -85,8 +85,8 @@ function loadParcelWatcher(): typeof import("@parcel/watcher") | undefined {
   return parcelModule ?? undefined
 }
 
-// Kilo's always-ignored infrastructure dirs as globs the native watcher prunes.
-// Per-repo .gitignore/.kilocodeignore dirs are unioned in initialize() from the
+// Tavern's always-ignored infrastructure dirs as globs the native watcher prunes.
+// Per-repo .gitignore/.taverncodeignore dirs are unioned in initialize() from the
 // ignore matcher; correctness for indexed files stays in shouldIndex().
 function watcherIgnoreGlobs(): string[] {
   return FileIgnore.PATTERNS.map((pattern) => (pattern.includes("/") ? pattern : `**/${pattern}`))
@@ -251,7 +251,7 @@ export class FileWatcher implements IFileWatcher {
 
     log.info("initializing file watcher", { workspacePath: this.workspacePath })
 
-    // Prune Kilo's infra dirs plus (best-effort) the per-repo gitignored dirs
+    // Prune Tavern's infra dirs plus (best-effort) the per-repo gitignored dirs
     // from the native watch, so a large repo doesn't exhaust inotify descriptors
     // (ENOSPC) watching trees we never index.
     const ignore = [...new Set([...watcherIgnoreGlobs(), ...(this.ignoreInstance?.watchIgnoreGlobs?.() ?? [])])]
@@ -871,12 +871,12 @@ export class FileWatcher implements IFileWatcher {
         }
       }
 
-      // Check if file should be ignored by root .gitignore / .kilocodeignore rules.
+      // Check if file should be ignored by root .gitignore / .taverncodeignore rules.
       if (this.ignoreInstance && this.ignoreInstance.ignores(relativeFilePath)) {
         return {
           path: filePath,
           status: "skipped" as const,
-          reason: "File is ignored by .gitignore or .kilocodeignore",
+          reason: "File is ignored by .gitignore or .taverncodeignore",
         }
       }
 

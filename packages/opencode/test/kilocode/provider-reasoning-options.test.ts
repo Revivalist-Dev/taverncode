@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { ProviderTransform } from "../../src/provider/transform"
 import { Provider } from "../../src/provider/provider"
-import { customProviderVariants } from "../../src/kilocode/provider/provider"
+import { customProviderVariants } from "../../src/taverncode/provider/provider"
 import type * as ModelsDev from "@opencode-ai/core/models-dev"
 
 function mockModel(overrides: Partial<any> = {}): any {

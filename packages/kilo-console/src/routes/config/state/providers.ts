@@ -1,10 +1,10 @@
 import { createMemo, createSignal } from "solid-js"
-import type { Provider, ProviderAuthAuthorization, ProviderAuthMethod, ProviderConfig } from "@kilocode/sdk/v2/client"
+import type { Provider, ProviderAuthAuthorization, ProviderAuthMethod, ProviderConfig } from "@taverncode/sdk/v2/client"
 import { useConfig } from "../../../context/config"
 import { clean, csv, errMsg } from "../../../shared/utils"
 import { authorizeProvider, completeProvider, connectProvider } from "../../../client"
 
-const priority = ["kilo", "anthropic", "github-copilot", "openai", "google", "openrouter", "vercel"]
+const priority = ["tavern", "anthropic", "github-copilot", "openai", "google", "openrouter", "vercel"]
 const pattern = /^[a-z0-9][a-z0-9-_]*$/
 
 type Dict = Record<string, unknown>

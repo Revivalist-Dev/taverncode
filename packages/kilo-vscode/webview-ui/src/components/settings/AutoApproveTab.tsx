@@ -1,6 +1,6 @@
 import { Component, createMemo } from "solid-js"
-import { Card } from "@kilocode/kilo-ui/card"
-import { TextField } from "@kilocode/kilo-ui/text-field"
+import { Card } from "@taverncode/tavern-ui/card"
+import { TextField } from "@taverncode/tavern-ui/text-field"
 
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"

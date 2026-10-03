@@ -58,7 +58,7 @@ for (const scheme of ["light", "dark"] as const) {
 for (const [theme] of Object.entries(VSCODE_THEMES)) {
   for (const width of [420, 1000]) {
     test(`neutral deleted numbers in VS Code ${theme} at ${width}px`, async ({ page }) => {
-      await check(page, width, `theme:kilo-vscode;vscodeTheme:${theme}`)
+      await check(page, width, `theme:tavern-vscode;vscodeTheme:${theme}`)
     })
   }
 }

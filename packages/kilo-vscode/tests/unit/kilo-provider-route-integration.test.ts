@@ -15,7 +15,7 @@ type SessionGetParams = { sessionID: string; directory: string }
 /**
  * Minimal connection service mock: exposes a controllable client whose
  * session.get records every call so tests can assert which directory was
- * queried. Mirrors the shape used by kilo-provider-session-refresh.test.ts.
+ * queried. Mirrors the shape used by tavern-provider-session-refresh.test.ts.
  */
 function mockConnection(getImpl?: (p: SessionGetParams) => Promise<unknown>, vcs = "git") {
   const calls: SessionGetParams[] = []
@@ -53,7 +53,7 @@ function mockConnection(getImpl?: (p: SessionGetParams) => Promise<unknown>, vcs
     },
     config: { get: async () => ({ data: {} }) },
     indexing: { status: async () => ({ data: { state: "disabled" } }) },
-    kilo: {
+    tavern: {
       notifications: async () => ({ data: [] }),
       profile: async () => ({ data: {} }),
     },
@@ -95,7 +95,7 @@ function mockConnection(getImpl?: (p: SessionGetParams) => Promise<unknown>, vcs
 }
 
 async function withNestedRepo(run: (root: string) => Promise<void>): Promise<void> {
-  const base = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-nested-repo-"))
+  const base = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-nested-repo-"))
   const root = path.join(base, "frontend")
   await fs.mkdir(root)
   const result = Bun.spawnSync({ cmd: ["git", "init"], cwd: root, stdout: "pipe", stderr: "pipe" })
@@ -427,8 +427,8 @@ describe("KiloProvider route integration", () => {
   it("resolves a unique worktree session route to its exact worktree directory", async () => {
     const routes = new ProjectRouteService()
     routes.registerProject("a", "/repo/a", 1)
-    routes.registerWorktree({ projectId: "a", worktreeId: "wt" }, "/repo/a/.kilo/wt", 1)
-    routes.registerSession({ projectId: "a", sessionId: "ses-wt" }, "/repo/a/.kilo/wt", 1)
+    routes.registerWorktree({ projectId: "a", worktreeId: "wt" }, "/repo/a/.tavern/wt", 1)
+    routes.registerSession({ projectId: "a", sessionId: "ses-wt" }, "/repo/a/.tavern/wt", 1)
     const { connection, calls } = mockConnection()
     const provider = new KiloProvider({} as never, connection, undefined, {
       routeService: routes,
@@ -440,7 +440,7 @@ describe("KiloProvider route integration", () => {
     await provider.getSessionInfo("ses-wt")
 
     expect(calls).toHaveLength(1)
-    expect(calls[0]!.directory).toBe("/repo/a/.kilo/wt")
+    expect(calls[0]!.directory).toBe("/repo/a/.tavern/wt")
   })
 
   it("does NOT query the active root for an ambiguous raw session id", async () => {
@@ -533,11 +533,11 @@ describe("KiloProvider route integration", () => {
     })
 
     provider.registerProjectRoute({ projectId: "a" }, "/repo/a", 1)
-    provider.registerWorktreeRoute({ projectId: "a", worktreeId: "wt" }, "/repo/a/.kilo/wt", 1)
-    provider.registerSessionRoute({ projectId: "a", sessionId: "s" }, "/repo/a/.kilo/wt", 1)
+    provider.registerWorktreeRoute({ projectId: "a", worktreeId: "wt" }, "/repo/a/.tavern/wt", 1)
+    provider.registerSessionRoute({ projectId: "a", sessionId: "s" }, "/repo/a/.tavern/wt", 1)
 
     expect(provider.isSessionRouteAmbiguous("s")).toBe(false)
-    expect(provider.routeSessionDirectoryFor({ projectId: "a", sessionId: "s" })).toBe("/repo/a/.kilo/wt")
+    expect(provider.routeSessionDirectoryFor({ projectId: "a", sessionId: "s" })).toBe("/repo/a/.tavern/wt")
 
     provider.unregisterSessionRoute({ projectId: "a", sessionId: "s" })
     expect(provider.routeSessionDirectoryFor({ projectId: "a", sessionId: "s" })).toBeUndefined()
@@ -687,8 +687,8 @@ describe("KiloProvider route integration", () => {
   it("runs a share command on a unique session route against its exact directory", async () => {
     const routes = new ProjectRouteService()
     routes.registerProject("a", "/repo/a", 1)
-    routes.registerWorktree({ projectId: "a", worktreeId: "wt" }, "/repo/a/.kilo/wt", 1)
-    routes.registerSession({ projectId: "a", sessionId: "ses-wt" }, "/repo/a/.kilo/wt", 1)
+    routes.registerWorktree({ projectId: "a", worktreeId: "wt" }, "/repo/a/.tavern/wt", 1)
+    routes.registerSession({ projectId: "a", sessionId: "ses-wt" }, "/repo/a/.tavern/wt", 1)
     const { connection, calls } = mockConnection()
     // Extend the mock client with session.command to record the directory.
     const commandCalls: { sessionID: string; directory: string; command: string }[] = []
@@ -722,7 +722,7 @@ describe("KiloProvider route integration", () => {
     // session.get is called by refreshSessionDetails; the command itself
     // must target the exact worktree directory, never /active/root.
     expect(commandCalls).toHaveLength(1)
-    expect(commandCalls[0]!.directory).toBe("/repo/a/.kilo/wt")
+    expect(commandCalls[0]!.directory).toBe("/repo/a/.tavern/wt")
     expect(commandCalls[0]!.command).toBe("share")
     // No fallback to the active root anywhere.
     expect(calls.every((c) => c.directory !== "/active/root")).toBe(true)

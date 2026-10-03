@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import type { IndexingStatus } from "@kilocode/kilo-indexing/status"
-import { empty, reason, scope } from "@/kilocode/tool/semantic-search-output"
+import type { IndexingStatus } from "@taverncode/tavern-indexing/status"
+import { empty, reason, scope } from "@/taverncode/tool/semantic-search-output"
 
 function status(over: Partial<IndexingStatus>): IndexingStatus {
   return { state: "Complete", message: "", processedFiles: 0, totalFiles: 0, percent: 0, ...over }
@@ -33,10 +33,10 @@ describe("reason", () => {
   })
 
   test("says nothing was searched when indexing is disabled", () => {
-    const text = reason(status({ state: "Disabled", message: "Enable it in Kilo Settings." }))
+    const text = reason(status({ state: "Disabled", message: "Enable it in Tavern Settings." }))
     expect(text).toContain("disabled for this project")
     expect(text).toContain("nothing was searched")
-    expect(text).toContain("Enable it in Kilo Settings.")
+    expect(text).toContain("Enable it in Tavern Settings.")
   })
 
   test("says nothing was searched when indexing failed", () => {

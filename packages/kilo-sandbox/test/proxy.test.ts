@@ -106,7 +106,7 @@ async function tunnel(proxy: ProxyRuntime, authority: string) {
   close.push(() => {
     socket.destroy()
   })
-  const auth = Buffer.from(`kilo:${proxy.token}`).toString("base64")
+  const auth = Buffer.from(`tavern:${proxy.token}`).toString("base64")
   await new Promise<void>((resolve, reject) => {
     let response = Buffer.alloc(0)
     const error = (cause: Error) => reject(cause)
@@ -181,7 +181,7 @@ describe("sandbox trusted proxy", () => {
     const allowed = await fetch(`http://allowed.test:${port}/allowed`, { proxy: proxy.url })
     const denied = await fetch(`http://blocked.allowed.test:${port}/blocked`, { proxy: proxy.url })
     const unauthenticated = await fetch(`http://allowed.test:${port}/unauthenticated`, {
-      proxy: proxy.url.replace(/kilo:[^@]+@/, ""),
+      proxy: proxy.url.replace(/tavern:[^@]+@/, ""),
     })
 
     expect(allowed.status).toBe(200)
@@ -345,7 +345,7 @@ describe("sandbox trusted proxy", () => {
     const port = target.port!
     const proxy = await startProxy([`allowed.test:${port}`], "linux", resolver(port, []))
     close.push(proxy.close)
-    expect(proxy.socket).toContain("kilo-sandbox-proxy-")
+    expect(proxy.socket).toContain("tavern-sandbox-proxy-")
     expect(proxy.port).toBeGreaterThan(0)
     expect((await lstat(proxy.socket!)).isSocket()).toBe(true)
   })

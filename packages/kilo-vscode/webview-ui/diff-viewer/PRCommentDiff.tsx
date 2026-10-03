@@ -1,7 +1,7 @@
 import { Show, createMemo, type JSXElement } from "solid-js"
 import { Portal } from "solid-js/web"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { normalizeHunk } from "@kilocode/kilo-ui/session-diff"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { normalizeHunk } from "@taverncode/tavern-ui/session-diff"
 import { displayHunk } from "../agent-manager/pr/pr-comment-payload"
 
 export function PRCommentDiff(props: {

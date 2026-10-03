@@ -1,5 +1,5 @@
 import * as Log from "@opencode-ai/core/util/log"
-import { generate, messages } from "@/kilocode/branch-name"
+import { generate, messages } from "@/taverncode/branch-name"
 import { Session } from "@/session/session"
 import { SessionID } from "@/session/schema"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"

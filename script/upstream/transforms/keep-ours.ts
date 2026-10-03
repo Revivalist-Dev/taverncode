@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 /**
- * Keep Kilo's version of specific files during merge
+ * Keep Tavern's version of specific files during merge
  *
- * This script handles files that should always keep Kilo's version
+ * This script handles files that should always keep Tavern's version
  * and not be overwritten by upstream changes.
  */
 
@@ -33,7 +33,7 @@ export function shouldKeepOurs(filePath: string, patterns: string[]): boolean {
 }
 
 /**
- * Keep Kilo's version of conflicted files
+ * Keep Tavern's version of conflicted files
  */
 export async function keepOursFiles(options: KeepOursOptions = {}): Promise<KeepOursResult[]> {
   const results: KeepOursResult[] = []
@@ -76,7 +76,7 @@ export async function keepOursFiles(options: KeepOursOptions = {}): Promise<Keep
 }
 
 /**
- * Reset specific files to Kilo's version (even if not conflicted)
+ * Reset specific files to Tavern's version (even if not conflicted)
  */
 export async function resetToOurs(files: string[], options: KeepOursOptions = {}): Promise<KeepOursResult[]> {
   const results: KeepOursResult[] = []
@@ -87,7 +87,7 @@ export async function resetToOurs(files: string[], options: KeepOursOptions = {}
       results.push({ file, action: "kept", dryRun: true })
     } else {
       try {
-        // Get the file from HEAD (Kilo's version)
+        // Get the file from HEAD (Tavern's version)
         await $`git checkout HEAD -- ${file}`
         success(`Reset to ours: ${file}`)
         results.push({ file, action: "kept", dryRun: false })
@@ -119,7 +119,7 @@ if (import.meta.main) {
 
   const kept = results.filter((r) => r.action === "kept")
   console.log()
-  success(`Kept Kilo's version for ${kept.length} files`)
+  success(`Kept Tavern's version for ${kept.length} files`)
 
   if (dryRun) {
     info("Run without --dry-run to apply changes")

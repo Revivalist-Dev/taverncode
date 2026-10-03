@@ -8,7 +8,7 @@
  * files listed in the architecture test allowlist.
  */
 
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import type { ProjectRef, SessionRef, WorktreeRef } from "./project/route"
 import type { PRMergeMethod } from "./types"
 
@@ -220,7 +220,7 @@ export interface Host {
   /** Open a URL in the user's default browser. */
   openExternal(url: string): void
 
-  /** Open Kilo Settings, optionally focused on a tab and project. */
+  /** Open Tavern Settings, optionally focused on a tab and project. */
   openSettings(tab?: string, projectId?: string): void
 
   /** Ask VS Code's git extension to re-scan repositories (e.g. after worktree ref migration). */

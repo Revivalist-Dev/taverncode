@@ -3,7 +3,7 @@ import { mockEmbeddingsCreate, openAIMockFactory, setOpenAIConstructorHook } fro
 
 mock.module("openai", openAIMockFactory)
 
-import { KiloEmbedder, KILO_INDEXING_FEATURE } from "../../../../src/indexing/embedders/kilo"
+import { KiloEmbedder, KILO_INDEXING_FEATURE } from "../../../../src/indexing/embedders/tavern"
 
 describe("KiloEmbedder", () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe("KiloEmbedder", () => {
     setOpenAIConstructorHook(undefined)
   })
 
-  test("uses Kilo Gateway headers and configured embedding model", async () => {
+  test("uses Tavern Gateway headers and configured embedding model", async () => {
     const seen: unknown[] = []
     setOpenAIConstructorHook((cfg) => seen.push(cfg))
     mockEmbeddingsCreate.mockResolvedValue({
@@ -20,7 +20,7 @@ describe("KiloEmbedder", () => {
     })
 
     const embedder = new KiloEmbedder({
-      apiKey: "kilo-token",
+      apiKey: "tavern-token",
       organizationId: "org_123",
       modelId: "mistralai/mistral-embed-2312",
     })
@@ -28,8 +28,8 @@ describe("KiloEmbedder", () => {
     await embedder.createEmbeddings(["hello"])
 
     expect(seen[0]).toEqual({
-      baseURL: "https://api.kilo.ai/api/gateway/",
-      apiKey: "kilo-token",
+      baseURL: "https://api.tavern.ai/api/gateway/",
+      apiKey: "tavern-token",
       defaultHeaders: {
         "X-KILOCODE-FEATURE": KILO_INDEXING_FEATURE,
         "X-KILOCODE-ORGANIZATIONID": "org_123",
@@ -47,7 +47,7 @@ describe("KiloEmbedder", () => {
     setOpenAIConstructorHook((cfg) => seen.push(cfg))
 
     new KiloEmbedder({
-      apiKey: "kilo-token",
+      apiKey: "tavern-token",
       baseUrl: "https://example.test/api/openrouter/",
       modelId: "mistralai/mistral-embed-2312",
     })

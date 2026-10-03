@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-ui/lucide"
+export * from "@taverncode/tavern-ui/lucide"

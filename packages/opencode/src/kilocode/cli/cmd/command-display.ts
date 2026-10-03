@@ -1,4 +1,4 @@
-import { reviewCommandName } from "@/kilocode/review/command"
+import { reviewCommandName } from "@/taverncode/review/command"
 
 type Command = {
   name: string

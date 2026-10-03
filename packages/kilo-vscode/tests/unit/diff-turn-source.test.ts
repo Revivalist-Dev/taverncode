@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test"
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
+import type { SnapshotFileDiff } from "@taverncode/sdk/v2/client"
 import {
   createTurnDiffSource,
   turnDescriptor,

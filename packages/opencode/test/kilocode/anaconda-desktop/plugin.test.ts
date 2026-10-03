@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
-import type { Provider } from "@kilocode/sdk/v2"
+import type { Provider } from "@taverncode/sdk/v2"
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible"
 import { generateText } from "ai"
-import { encodeMetadata, PROVIDER_ID, type Metadata } from "../../../src/kilocode/anaconda-desktop/domain"
-import { CatalogProvider, hooks, PLACEHOLDER_MODEL_ID } from "../../../src/kilocode/anaconda-desktop/provider"
+import { encodeMetadata, PROVIDER_ID, type Metadata } from "../../../src/taverncode/anaconda-desktop/domain"
+import { CatalogProvider, hooks, PLACEHOLDER_MODEL_ID } from "../../../src/taverncode/anaconda-desktop/provider"
 
 const metadata: Metadata = {
   version: "1",

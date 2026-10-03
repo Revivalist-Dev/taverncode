@@ -5,9 +5,9 @@
  * flow that clones a cloud session locally on first message. No vscode dependency.
  */
 
-import type { KiloClient, Session, TextPartInput, FilePartInput } from "@kilocode/sdk/v2/client"
+import type { KiloClient, Session, TextPartInput, FilePartInput } from "@taverncode/sdk/v2/client"
 import type { CloudSessionData, EditorContext } from "../../services/cli-backend/types"
-import { getErrorMessage, sessionToWebview, mapCloudSessionMessageToWebviewMessage } from "../../kilo-provider-utils"
+import { getErrorMessage, sessionToWebview, mapCloudSessionMessageToWebviewMessage } from "../../tavern-provider-utils"
 import type { MessageFile } from "../message-files"
 import { type ReviewMessageData } from "../../shared/review-comments"
 import { feedbackMetadata, type BrowserFeedbackData } from "../../shared/browser-feedback"
@@ -45,7 +45,7 @@ export async function handleRequestCloudSessions(
   }
 
   try {
-    const result = await ctx.client.kilo.cloudSessions({
+    const result = await ctx.client.tavern.cloudSessions({
       cursor: message.cursor,
       limit: message.limit,
       gitUrl: message.gitUrl,
@@ -57,7 +57,7 @@ export async function handleRequestCloudSessions(
       nextCursor: result.data?.nextCursor ?? null,
     })
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch cloud sessions:", error)
+    console.error("[Tavern New] KiloProvider: Failed to fetch cloud sessions:", error)
     ctx.postMessage({
       type: "error",
       message: error instanceof Error ? error.message : "Failed to fetch cloud sessions",
@@ -80,7 +80,7 @@ export async function handleRequestCloudSessionData(ctx: CloudSessionContext, se
   }
 
   try {
-    const result = await ctx.client.kilo.cloud.session.get({ id: sessionId }, { signal: AbortSignal.timeout(TIMEOUT) })
+    const result = await ctx.client.tavern.cloud.session.get({ id: sessionId }, { signal: AbortSignal.timeout(TIMEOUT) })
     const data = result.data as CloudSessionData | undefined
     if (!data) {
       ctx.postMessage({
@@ -100,7 +100,7 @@ export async function handleRequestCloudSessionData(ctx: CloudSessionContext, se
       messages,
     })
   } catch (err) {
-    console.error("[Kilo New] Failed to load cloud session data:", err)
+    console.error("[Tavern New] Failed to load cloud session data:", err)
     ctx.postMessage({
       type: "cloudSessionImportFailed",
       cloudSessionId: sessionId,
@@ -145,7 +145,7 @@ export async function handleImportAndSend(
   // Step 1: Import the cloud session with fresh IDs
   let session: Session | undefined
   try {
-    const result = await ctx.client.kilo.cloud.session.import(
+    const result = await ctx.client.tavern.cloud.session.import(
       {
         sessionId: cloudSessionId,
         directory: dir,
@@ -154,7 +154,7 @@ export async function handleImportAndSend(
     )
     session = result.data as Session | undefined
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: ❌ Cloud session import failed:", error)
+    console.error("[Tavern New] KiloProvider: ❌ Cloud session import failed:", error)
     ctx.postMessage({
       type: "cloudSessionImportFailed",
       cloudSessionId,
@@ -253,7 +253,7 @@ export async function handleImportAndSend(
       ctx.postMessage({ type: "sessionCommandCompleted", messageID })
     }
   } catch (err) {
-    console.error("[Kilo New] Failed to send message after cloud import:", err)
+    console.error("[Tavern New] Failed to send message after cloud import:", err)
     ctx.postMessage({
       type: "sendMessageFailed",
       error: err instanceof Error ? err.message : "Failed to send message after import",

@@ -34,7 +34,7 @@ export {
   getKiloDefaultModel,
   promptOrganizationSelection,
 } from "./api/profile.js"
-export { fetchKiloPassState } from "./api/kilo-pass.js"
+export { fetchKiloPassState } from "./api/tavern-pass.js"
 export {
   fetchKiloModels,
   type KiloModelsResult,
@@ -105,7 +105,7 @@ export {
 // ============================================================================
 // Note: TUI exports moved to separate entry point
 // ============================================================================
-// For TUI components and commands, import from "@kilocode/kilo-gateway/tui"
+// For TUI components and commands, import from "@taverncode/tavern-gateway/tui"
 // This avoids circular dependencies with opencode TUI infrastructure
 
 // ============================================================================

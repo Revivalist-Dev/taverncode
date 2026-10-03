@@ -7,7 +7,7 @@ import {
   mergeScheduled,
   resolveDerivedSessionStatus,
   scheduledInfo,
-} from "@/kilocode/session/scheduled"
+} from "@/taverncode/session/scheduled"
 
 const id = (value: string) => SessionID.make(value)
 

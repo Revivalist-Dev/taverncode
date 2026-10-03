@@ -9,7 +9,7 @@ import {
 
 export { KILO_GATEWAY_ID, PROVIDER_ORDER }
 
-export const KILO_AUTO_SMALL_IDS = new Set(["kilo-auto/small", "auto-small"])
+export const KILO_AUTO_SMALL_IDS = new Set(["tavern-auto/small", "auto-small"])
 const AUTO_FALLBACK = "Routes requests automatically."
 
 interface Choice {
@@ -19,7 +19,7 @@ interface Choice {
 
 export function isAuto(model: Pick<EnrichedModel, "providerID" | "id">): boolean {
   return (
-    model.providerID === KILO_GATEWAY_ID && (model.id.startsWith("kilo-auto/") || KILO_AUTO_SMALL_IDS.has(model.id))
+    model.providerID === KILO_GATEWAY_ID && (model.id.startsWith("tavern-auto/") || KILO_AUTO_SMALL_IDS.has(model.id))
   )
 }
 
@@ -202,7 +202,7 @@ export function mostUsedModels(
 
 // Strips trailing "(free)" parenthesized suffix from model display names, e.g.
 // "Llama 3 (free)" → "Llama 3". A separate "Free" label/tag is rendered
-// elsewhere, so preserve bare trailing "Free" words (e.g. "Kilo Auto Free").
+// elsewhere, so preserve bare trailing "Free" words (e.g. "Tavern Auto Free").
 export function sanitizeName(name: string): string {
   return name.replace(/[\s:_-]*\(free\)\s*$/i, "").trim()
 }

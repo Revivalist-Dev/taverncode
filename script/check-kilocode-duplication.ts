@@ -5,18 +5,18 @@ import { fileURLToPath } from "node:url"
 
 const scanner = "jscpd@5.0.16"
 const root = resolve(import.meta.dir, "..")
-const filename = "script/kilocode-duplication-allowlist.json"
+const filename = "script/taverncode-duplication-allowlist.json"
 const roots = [
-  "packages/kilo-*/src",
-  "packages/kilo-vscode/webview-ui",
+  "packages/tavern-*/src",
+  "packages/tavern-vscode/webview-ui",
   "packages/plugin-atomic-chat/src",
-  "packages/*/src/kilocode",
-  "packages/*/src/kilo-*",
+  "packages/*/src/taverncode",
+  "packages/*/src/tavern-*",
 ]
 const excluded = {
-  "packages/kilo-jetbrains/**": "Outside the VS Code scope",
-  "packages/kilo-i18n/**": "Locale dictionaries",
-  "packages/kilo-docs/**": "Documentation",
+  "packages/tavern-jetbrains/**": "Outside the VS Code scope",
+  "packages/tavern-i18n/**": "Locale dictionaries",
+  "packages/tavern-docs/**": "Documentation",
   "**/node_modules/**": "Dependencies",
   "**/dist/**": "Build output",
   "**/build/**": "Build output",
@@ -40,7 +40,7 @@ const excluded = {
   "**/i18n/**": "Locale dictionaries",
   "**/locales/**": "Locale dictionaries",
   "**/translations/**": "Locale dictionaries",
-  "packages/kilo-vscode/src/services/autocomplete/continuedev/**": "Vendored Continue implementation",
+  "packages/tavern-vscode/src/services/autocomplete/continuedev/**": "Vendored Continue implementation",
   "**/examples/**": "Examples",
 }
 const ignored = Object.keys(excluded).map((pattern) => new Bun.Glob(pattern))
@@ -162,8 +162,8 @@ export async function scan(cwd: string) {
     }
     files.push(absolute)
   }
-  if (files.length === 0) throw new Error("No Kilo-owned source files found for duplication analysis")
-  const temporary = await mkdtemp(join(tmpdir(), "kilo-duplication-"))
+  if (files.length === 0) throw new Error("No Tavern-owned source files found for duplication analysis")
+  const temporary = await mkdtemp(join(tmpdir(), "tavern-duplication-"))
   try {
     const config = join(temporary, "config.json")
     await Bun.write(
@@ -303,7 +303,7 @@ async function main() {
   }
   if (mode === "--help") {
     console.log(
-      "Check Kilo-owned production code for copied blocks of at least 10 lines and 100 tokens.\n" +
+      "Check Tavern-owned production code for copied blocks of at least 10 lines and 100 tokens.\n" +
         "--report prints findings without changing the allowlist.\n" +
         "--prune only removes stale exceptions and lowers existing limits; new findings still fail.\n" +
         "--init creates the initial legacy baseline and refuses to overwrite an existing allowlist.\n" +
@@ -325,7 +325,7 @@ async function main() {
     maxMatches: finding.matches,
     maxTokens: finding.tokens,
     kind: "legacy",
-    owner: finding.files.at(0)?.split("/").at(1) ?? "kilo",
+    owner: finding.files.at(0)?.split("/").at(1) ?? "tavern",
     reason: "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction.",
   }))
   const previous = mode === "--init" ? initial : parse(await file.json())

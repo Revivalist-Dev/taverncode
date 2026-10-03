@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { matchFollowup, recordFollowup } from "../../src/kilo-provider/followup-session"
+import { matchFollowup, recordFollowup } from "../../src/tavern-provider/followup-session"
 
 describe("followup-session", () => {
   it("records a pending follow-up for Start new session replies", () => {
@@ -27,13 +27,13 @@ describe("followup-session", () => {
 
   it("matches pending follow-ups by normalized directory before expiry", () => {
     const pending = {
-      dir: "c:/repo/.kilo/worktrees/feature",
+      dir: "c:/repo/.tavern/worktrees/feature",
       time: 1,
     }
 
-    expect(matchFollowup({ pending, dir: "C:\\repo\\.kilo\\worktrees\\feature\\", now: 2 })).toBe(true)
-    expect(matchFollowup({ pending, dir: "c:/repo/.kilo/worktrees/other", now: 2 })).toBe(false)
-    expect(matchFollowup({ pending, dir: "c:/repo/.kilo/worktrees/feature", now: 30_002 })).toBe(false)
+    expect(matchFollowup({ pending, dir: "C:\\repo\\.tavern\\worktrees\\feature\\", now: 2 })).toBe(true)
+    expect(matchFollowup({ pending, dir: "c:/repo/.tavern/worktrees/other", now: 2 })).toBe(false)
+    expect(matchFollowup({ pending, dir: "c:/repo/.tavern/worktrees/feature", now: 30_002 })).toBe(false)
   })
 
   it("never matches a subagent session", () => {

@@ -279,7 +279,7 @@ export const dict = {
   "agentManager.review.sendToChat": "Enviar al chat",
   "agentManager.pr.comment.title": "Comentarios",
   "agentManager.pr.copyLink": "Copiar enlace del PR",
-  "agentManager.pr.checks.fix": "Corregir con Kilo",
+  "agentManager.pr.checks.fix": "Corregir con Tavern",
   "agentManager.pr.checks.terminal": "Enviar fallos al terminal",
   "agentManager.pr.checks.feedback": "Comentarios de CI",
   "agentManager.pr.checks.title": "Comprobaciones",
@@ -310,8 +310,8 @@ export const dict = {
   "agentManager.pr.checks.tally.skipped.other": "{{count}} omitidas",
   "agentManager.pr.checks.tally.success.one": "{{count}} superada",
   "agentManager.pr.checks.tally.success.other": "{{count}} superadas",
-  "agentManager.pr.fixWithKilo": "Corregir con Kilo",
-  "agentManager.pr.fixWithKiloCount": "Corregir {{count}} con Kilo",
+  "agentManager.pr.fixWithKilo": "Corregir con Tavern",
+  "agentManager.pr.fixWithKiloCount": "Corregir {{count}} con Tavern",
   "agentManager.pr.comment.unresolvedCount": "{{count}} sin resolver",
   "agentManager.pr.comment.unresolvedThread": "{{count}} hilo de revisión sin resolver",
   "agentManager.pr.comment.unresolvedThreads": "{{count}} hilos de revisión sin resolver",
@@ -365,7 +365,7 @@ export const dict = {
   "agentManager.pr.timeline.earlier": "Show earlier activity",
   "agentManager.pr.conversation.dismiss": "Descartar",
   "agentManager.pr.conversation.restore": "Restaurar",
-  "agentManager.pr.conversation.sendAll": "Corregir {{count}} con Kilo",
+  "agentManager.pr.conversation.sendAll": "Corregir {{count}} con Tavern",
   "agentManager.pr.conversation.sendAllToTerminal": "Enviar {{count}} al terminal",
   "agentManager.pr.summary.title": "PR Summary",
   "agentManager.pr.summary.checksPassing": "All checks passing",
@@ -382,7 +382,7 @@ export const dict = {
   "agentManager.pr.merge.draft": "Pull request en borrador",
   "agentManager.pr.merge.checking": "Comprobando si se puede fusionar",
   "agentManager.pr.merge.ready": "Lista para fusionar",
-  "agentManager.pr.merge.fix": "Corregir con Kilo",
+  "agentManager.pr.merge.fix": "Corregir con Tavern",
   "agentManager.pr.merge.update": "Actualizar rama",
   "agentManager.pr.merge.button": "{{method}}",
   "agentManager.pr.merge.autoButton": "Activar auto-merge",
@@ -450,10 +450,10 @@ export const dict = {
   "agentManager.import.noBranchesFound": "No se encontraron branches.",
   "agentManager.import.noBranchesHint": "Pega una URL de PR arriba o crea un nuevo Worktree.",
   "agentManager.import.failed": "Error en la importación",
-  "agentManager.caffeination.toggle": "Mantener el equipo activo mientras trabajan los agentes de Kilo",
+  "agentManager.caffeination.toggle": "Mantener el equipo activo mientras trabajan los agentes de Tavern",
   "agentManager.caffeination.armed":
-    "Modo para mantener el equipo activo habilitado para los agentes de Kilo; haz clic para desactivar",
-  "agentManager.caffeination.active": "Manteniendo el equipo activo mientras trabajan los agentes de Kilo",
+    "Modo para mantener el equipo activo habilitado para los agentes de Tavern; haz clic para desactivar",
+  "agentManager.caffeination.active": "Manteniendo el equipo activo mientras trabajan los agentes de Tavern",
   "agentManager.caffeination.unavailable":
     "El modo para mantener el equipo activo no está disponible en esta plataforma",
   "agentManager.browser.title": "Navegador integrado",
@@ -491,7 +491,7 @@ export const dict = {
   "agentManager.intro.title": "Tareas paralelas. Worktrees separados.",
   "agentManager.intro.subtitle":
     "Un worktree es una carpeta y una rama separadas para una tarea. Tus agentes pueden trabajar juntos sin modificar los mismos archivos.",
-  "agentManager.intro.graph.agent": "Agente de Kilo",
+  "agentManager.intro.graph.agent": "Agente de Tavern",
   "agentManager.intro.graph.pr": "Pull request",
   "agentManager.intro.stage1.title": "Tu repositorio",
   "agentManager.intro.stage1.text": "Los archivos locales no cambian",
@@ -503,9 +503,9 @@ export const dict = {
   "agentManager.intro.stage4.title": "Devuelve los cambios cuando estés listo",
   "agentManager.intro.stage4.text":
     "Pide al agente de cada worktree que abra un pull request. O usa Apply en el panel de diff para copiar los cambios a Local.",
-  "agentManager.intro.updateTitle": "Resuelve los conflictos con Kilo",
+  "agentManager.intro.updateTitle": "Resuelve los conflictos con Tavern",
   "agentManager.intro.updateText":
-    "Antes de aplicar cambios a Local o fusionar una pull request, ejecuta /update-from-base en la sesión de ese worktree. Kilo fusiona los últimos cambios de la rama base y resuelve primero los conflictos dentro de ese worktree.",
+    "Antes de aplicar cambios a Local o fusionar una pull request, ejecuta /update-from-base en la sesión de ese worktree. Tavern fusiona los últimos cambios de la rama base y resuelve primero los conflictos dentro de ese worktree.",
   "agentManager.intro.prDetection":
     "Las insignias de PR se actualizan automáticamente para cada rama de worktree (se requiere iniciar sesión en GitHub CLI).",
   "agentManager.intro.checksRunning": "Comprobaciones en curso",
@@ -535,11 +535,11 @@ export const dict = {
   "agentManager.orphans.sizeUnknown": "desconocido",
   "agentManager.orphans.dialogTitle": "Carpetas de worktree sobrantes",
   "agentManager.orphans.helpIntro":
-    "Kilo guarda cada worktree que crea dentro de la carpeta .kilo/worktrees de este repositorio. Las carpetas siguientes están en esa carpeta, pero git no incluye ninguna de ellas como worktree, así que ya no se usan.",
+    "Tavern guarda cada worktree que crea dentro de la carpeta .tavern/worktrees de este repositorio. Las carpetas siguientes están en esa carpeta, pero git no incluye ninguna de ellas como worktree, así que ya no se usan.",
   "agentManager.orphans.helpCheckout":
     "Una carpeta marcada como que contiene un checkout de git todavía tiene una entrada .git en su interior y puede guardar trabajo sin confirmar. Esas carpetas quedan sin seleccionar, así que abre una y revísala antes de eliminarla.",
   "agentManager.orphans.helpCauses":
-    "Los restos suelen provenir de una eliminación que se interrumpió, de un worktree eliminado fuera de Kilo o de una herramienta que escribió en la carpeta después de que se eliminara. Las eliminaciones que aún están en curso no aparecen aquí.",
+    "Los restos suelen provenir de una eliminación que se interrumpió, de un worktree eliminado fuera de Tavern o de una herramienta que escribió en la carpeta después de que se eliminara. Las eliminaciones que aún están en curso no aparecen aquí.",
   "agentManager.orphans.helpDelete":
     "Al eliminar, las carpetas seleccionadas se borran del disco de forma definitiva, sin pasar por la Papelera. No se toca ninguna rama ni ningún worktree activo. Los tamaños son el espacio que cada carpeta ocupa en el disco ahora mismo.",
   "agentManager.orphans.helpMore": "Mostrar más",

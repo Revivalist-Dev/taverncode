@@ -13,21 +13,21 @@ export namespace TestProfile {
       groups: {
         filesystem: [
           "filesystem/*.test.ts",
-          "kilocode/{external-directory-boundary,read-directory}.test.ts",
+          "taverncode/{external-directory-boundary,read-directory}.test.ts",
           "util/filesystem.test.ts",
         ],
         pty: ["server/httpapi-pty.test.ts", "server/httpapi-v2-pty.test.ts"],
         runtime: [
           "cli/serve/*.test.ts",
-          "kilocode/background-process.test.ts",
-          "kilocode/cli/install-artifact.test.ts",
-          "kilocode/cli/tui/thread.test.ts",
-          "kilocode/core-watcher.test.ts",
-          "kilocode/startup-speed.test.ts",
+          "taverncode/background-process.test.ts",
+          "taverncode/cli/install-artifact.test.ts",
+          "taverncode/cli/tui/thread.test.ts",
+          "taverncode/core-watcher.test.ts",
+          "taverncode/startup-speed.test.ts",
           "tool/shell.test.ts",
           "util/{process,which}.test.ts",
         ],
-        sandbox: ["kilocode/sandbox/*.test.ts"],
+        sandbox: ["taverncode/sandbox/*.test.ts"],
       },
     },
   } as const

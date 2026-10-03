@@ -1,5 +1,5 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
-import { sameDirectory } from "../kilo-provider-utils"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
+import { sameDirectory } from "../tavern-provider-utils"
 
 type State = {
   directory: string

@@ -1,4 +1,4 @@
-import type { AssistantMessage, Part } from "@kilocode/sdk/v2"
+import type { AssistantMessage, Part } from "@taverncode/sdk/v2"
 
 export const previewDuration = 3500
 

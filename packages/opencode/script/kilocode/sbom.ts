@@ -1,5 +1,5 @@
 /**
- * SBOM generation for Kilo CLI artifacts.
+ * SBOM generation for Tavern CLI artifacts.
  *
  * The CLI is a Bun single-file executable plus a set of staged native and
  * static resources, so neither the lockfile nor a scan of the archive describes
@@ -17,20 +17,20 @@
 
 import fs from "node:fs"
 import path from "node:path"
-import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../../script/kilocode/sbom/index"
-import type { Component, Gap, Tool } from "../../../../script/kilocode/sbom/index"
-import { LanceDBRuntime } from "../../src/kilocode/lancedb"
+import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../../script/taverncode/sbom/index"
+import type { Component, Gap, Tool } from "../../../../script/taverncode/sbom/index"
+import { LanceDBRuntime } from "../../src/taverncode/lancedb"
 
 const root = path.resolve(import.meta.dir, "../..")
 const repo = path.resolve(root, "../..")
 
 /** Pinned, runtime-downloaded search binary. Not in any lockfile or archive. */
 const RIPGREP = "15.1.0"
-/** Must track `packages/opencode/script/kilocode/bubblewrap.ts`. */
+/** Must track `packages/opencode/script/taverncode/bubblewrap.ts`. */
 const BUBBLEWRAP = "0.11.2"
 
 export type Target = {
-  /** npm package name, e.g. `@kilocode/cli-linux-x64-musl`. */
+  /** npm package name, e.g. `@taverncode/cli-linux-x64-musl`. */
   name: string
   os: string
   arch: string
@@ -48,11 +48,11 @@ export type Graph = { components: Component[]; dependencies: Record<string, stri
  * identity instead of the archive claiming a nonexistent `pkg:npm/linux-x64`.
  */
 export function target(input: string): Target {
-  const slug = input.replace(/^@kilocode\/cli-/, "")
+  const slug = input.replace(/^@taverncode\/cli-/, "")
   const parts = slug.split("-")
   const os = parts[0] === "windows" ? "win32" : parts[0]
   return {
-    name: `@kilocode/cli-${slug}`,
+    name: `@taverncode/cli-${slug}`,
     os,
     arch: parts[1],
     abi: parts.includes("musl") ? "musl" : undefined,
@@ -84,7 +84,7 @@ function explicit(input: Target): Component[] {
       supplier: "Oven",
       licenses: ["MIT"],
       delivery: "contained",
-      description: "Bun runtime compiled into the Kilo CLI executable",
+      description: "Bun runtime compiled into the Tavern CLI executable",
     },
     ...(linux
       ? [
@@ -147,16 +147,16 @@ export async function graph(input: { target: Target; subject: string; lock?: Dep
   const constraint = { os: input.target.os, arch: input.target.arch, libc: input.target.abi ?? "glibc" }
 
   const cli = Deps.closure({ lock, workspace: "packages/opencode", platform: constraint, root: input.subject })
-  // The Kilo Console ships as static assets under bin/console and is not a
+  // The Tavern Console ships as static assets under bin/console and is not a
   // dependency of the CLI package, so its own closure has to be added.
-  const console_ = Deps.closure({ lock, workspace: "packages/kilo-console", platform: constraint, root: input.subject })
+  const console_ = Deps.closure({ lock, workspace: "packages/tavern-console", platform: constraint, root: input.subject })
 
   const enriched = await Deps.enrich(
     [...cli.components, ...console_.components],
     [
       path.join(repo, "node_modules"),
       path.join(root, "node_modules"),
-      path.join(repo, "packages/kilo-console/node_modules"),
+      path.join(repo, "packages/tavern-console/node_modules"),
     ],
   )
 
@@ -202,7 +202,7 @@ function build(input: Release) {
  */
 export async function archive(input: { file: string; target: Target; release: Release; lock?: Deps.Lock }) {
   const subject = await Artifact.subject(input.file)
-  const rootRef = `kilocode:artifact:${subject.name}`
+  const rootRef = `taverncode:artifact:${subject.name}`
   const [component, scan] = await Promise.all([
     graph({ target: input.target, subject: rootRef, lock: input.lock }),
     Scan.scan(`file:${input.file}`),
@@ -215,7 +215,7 @@ export async function archive(input: { file: string; target: Target; release: Re
       version: input.release.version,
       type: "application",
       purl: Deps.purl(input.target.name, input.release.version),
-      description: `Kilo CLI for ${platform(input.target)}`,
+      description: `Tavern CLI for ${platform(input.target)}`,
     },
     target: {
       platform: platform(input.target),
@@ -255,11 +255,11 @@ export async function archive(input: { file: string; target: Target; release: Re
  */
 export async function archives(input: { dir: string; release: Release; expected: number }) {
   const lock = await Deps.load(path.join(repo, "bun.lock"))
-  const files = (await fs.promises.readdir(input.dir)).filter((file) => /^kilo-.*\.(?:tar\.gz|zip)$/.test(file)).sort()
+  const files = (await fs.promises.readdir(input.dir)).filter((file) => /^tavern-.*\.(?:tar\.gz|zip)$/.test(file)).sort()
 
   const entries: Manifest.Entry[] = []
   for (const file of files) {
-    const name = file.replace(/\.(?:tar\.gz|zip)$/, "").replace(/^kilo-/, "")
+    const name = file.replace(/\.(?:tar\.gz|zip)$/, "").replace(/^tavern-/, "")
     try {
       const result = await archive({
         file: path.join(input.dir, file),
@@ -306,8 +306,8 @@ export async function npmPackage(input: {
   out?: string
 }) {
   const subject = await Artifact.subject(input.file)
-  const rootRef = `kilocode:artifact:${subject.name}`
-  const binary = input.name.startsWith("@kilocode/cli-")
+  const rootRef = `taverncode:artifact:${subject.name}`
+  const binary = input.name.startsWith("@taverncode/cli-")
 
   const [component, scan] = await Promise.all([
     binary
@@ -323,7 +323,7 @@ export async function npmPackage(input: {
       version: input.release.version,
       type: "application",
       purl: Deps.purl(input.name, input.release.version),
-      description: binary ? `Kilo CLI npm package for ${platform(target(input.name))}` : "Kilo CLI launcher package",
+      description: binary ? `Tavern CLI npm package for ${platform(target(input.name))}` : "Tavern CLI launcher package",
     },
     ...(binary
       ? {
@@ -378,7 +378,7 @@ async function wrapper(input: { version: string; subject: string }): Promise<Gra
     "windows-arm64",
     "windows-x64",
     "windows-x64-baseline",
-  ].map((item) => `@kilocode/cli-${item}`)
+  ].map((item) => `@taverncode/cli-${item}`)
 
   return {
     components: names.map((name) => ({
@@ -386,7 +386,7 @@ async function wrapper(input: { version: string; subject: string }): Promise<Gra
       name,
       version: input.version,
       purl: Deps.purl(name, input.version),
-      supplier: "Kilo Code",
+      supplier: "Tavern Code",
       delivery: "runtime",
       description: "Platform binary resolved through optionalDependencies at install time",
     })),
@@ -402,7 +402,7 @@ async function wrapper(input: { version: string; subject: string }): Promise<Gra
  */
 export function ociName(digest: string, platform?: string) {
   const label = platform ? platform.replace("/", "-") : "index"
-  return `kilo-oci-${label}@${digest.replace(/^sha256:/, "").slice(0, 12)}`
+  return `tavern-oci-${label}@${digest.replace(/^sha256:/, "").slice(0, 12)}`
 }
 
 /**
@@ -426,11 +426,11 @@ export async function ociImage(input: {
   const bom = compose({
     subject,
     product: {
-      name: "ghcr.io/kilo-org/kilocode",
+      name: "ghcr.io/tavern-org/taverncode",
       version: input.release.version,
       type: "container",
-      purl: `pkg:oci/kilocode@${input.digest}`,
-      description: `Kilo CLI container image (${input.platform ?? "multi-arch index"})`,
+      purl: `pkg:oci/taverncode@${input.digest}`,
+      description: `Tavern CLI container image (${input.platform ?? "multi-arch index"})`,
     },
     ...(input.platform ? { target: { platform: input.platform } } : {}),
     build: { ...build(input.release), properties: { "oci:reference": input.reference, distribution: "oci" } },
@@ -466,7 +466,7 @@ export async function ociImage(input: {
   }
 }
 
-export const DISTRIBUTION_CHECKSUMS = "kilo-cli-distribution-SHA256SUMS"
+export const DISTRIBUTION_CHECKSUMS = "tavern-cli-distribution-SHA256SUMS"
 
 /**
  * Record evidence for the npm and container distributions of a release.
@@ -508,7 +508,7 @@ export async function distribution(input: {
   }
 }
 
-export const CHECKSUMS = "kilo-cli-SHA256SUMS"
+export const CHECKSUMS = "tavern-cli-SHA256SUMS"
 
 /**
  * Produce the full evidence set for a CLI release and report its completeness.

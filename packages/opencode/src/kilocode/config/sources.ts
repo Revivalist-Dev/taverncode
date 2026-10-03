@@ -56,8 +56,8 @@ export namespace KilocodeConfigSources {
 
   type Pending = Omit<Source, "order">
 
-  const roots = [".kilocode", ".kilo"] as const
-  const global = ["config.json", "kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc"] as const
+  const roots = [".taverncode", ".tavern"] as const
+  const global = ["config.json", "tavern.json", "tavern.jsonc", "opencode.json", "opencode.jsonc"] as const
 
   export async function list(input: Input): Promise<Result> {
     const project = Flag.KILO_DISABLE_PROJECT_CONFIG ? [] : await projectSources(input)
@@ -119,10 +119,10 @@ export namespace KilocodeConfigSources {
   }
 
   async function projectSources(input: Input): Promise<Pending[]> {
-    const kilo = await projectFiles("kilo", input)
+    const tavern = await projectFiles("tavern", input)
     const opencode = await projectFiles("opencode", input)
     return Promise.all(
-      [...kilo, ...opencode].map((file) =>
+      [...tavern, ...opencode].map((file) =>
         fileSource({ kind: "project-file", scope: "project", label: "Project config", file }),
       ),
     )
@@ -213,11 +213,11 @@ export namespace KilocodeConfigSources {
       {
         kind: "cloud-org",
         scope: "cloud",
-        label: "Kilo Cloud organization config",
+        label: "Tavern Cloud organization config",
         source: `${account.url}/api/config`,
         exists: true,
         editable: false,
-        reason: "Active organization config is managed by Kilo Cloud; values are not exposed here.",
+        reason: "Active organization config is managed by Tavern Cloud; values are not exposed here.",
       },
     ]
   }

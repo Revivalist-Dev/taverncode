@@ -3,9 +3,9 @@ import { expect } from "bun:test"
 import { Agent } from "@/agent/agent"
 import { Auth } from "@/auth"
 import { Config } from "@/config/config"
-import type { AgentSendRequest, AgentStartRequest, MessageResult } from "@/kilocode/cloud/contracts"
-import { CloudCommands } from "@/kilocode/cloud/commands"
-import { CloudError } from "@/kilocode/cloud/errors"
+import type { AgentSendRequest, AgentStartRequest, MessageResult } from "@/taverncode/cloud/contracts"
+import { CloudCommands } from "@/taverncode/cloud/commands"
+import { CloudError } from "@/taverncode/cloud/errors"
 import { Git } from "@/git"
 import { Effect, Layer } from "effect"
 import { TestInstance } from "../../fixture/fixture"
@@ -19,7 +19,7 @@ const ORG = "11111111-1111-4111-8111-111111111111"
 const auth = Layer.mock(Auth.Service)({
   get: (id) =>
     Effect.succeed(
-      id === "kilo"
+      id === "tavern"
         ? new Auth.Oauth({
             type: "oauth",
             access: TOKEN,
@@ -41,7 +41,7 @@ const run = Effect.fn("CloudCommandTest.git")(function* (cwd: string, ...args: s
 })
 
 it.instance(
-  "assembles the default start request from Kilo state and the current repository",
+  "assembles the default start request from Tavern state and the current repository",
   () =>
     Effect.acquireUseRelease(
       Effect.sync(() =>
@@ -109,8 +109,8 @@ it.instance(
             agent: { mode: "plan", model: "anthropic/command-model" },
             repository: { type: "github", repo: "Kilo-Org/kilocode" },
             options: {
-              createdOnPlatform: "kilo-cli",
-              kilocodeOrganizationId: ORG,
+              createdOnPlatform: "tavern-cli",
+              taverncodeOrganizationId: ORG,
             },
           })
           expect(requests[0]?.repository).not.toHaveProperty("branch")
@@ -122,7 +122,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -211,7 +211,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -294,7 +294,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -374,7 +374,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -450,7 +450,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )

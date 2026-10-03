@@ -142,7 +142,7 @@ const stories = IS_DARWIN ? [] : (await fetchStories()).filter((s) => !SKIP.has(
 
 for (const story of stories) {
   test(`${story.title} / ${story.name}`, async ({ page }) => {
-    await page.goto(`/iframe.html?id=${story.id}&viewMode=story&globals=colorScheme:dark;theme:kilo`, {
+    await page.goto(`/iframe.html?id=${story.id}&viewMode=story&globals=colorScheme:dark;theme:tavern`, {
       waitUntil: "load",
     })
     await disableAnimations(page)

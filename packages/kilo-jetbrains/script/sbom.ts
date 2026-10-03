@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 /**
- * SBOM generation for the Kilo JetBrains plugin.
+ * SBOM generation for the Tavern JetBrains plugin.
  *
  * Two artifacts ship from one source tree and they make different claims:
  *
@@ -21,9 +21,9 @@
 
 import fs from "node:fs"
 import path from "node:path"
-import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../script/kilocode/sbom/index"
-import type { Component, Gap, Manifest as ManifestType } from "../../../script/kilocode/sbom/index"
-import * as Cli from "../../opencode/script/kilocode/sbom"
+import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../script/taverncode/sbom/index"
+import type { Component, Gap, Manifest as ManifestType } from "../../../script/taverncode/sbom/index"
+import * as Cli from "../../opencode/script/taverncode/sbom"
 
 const root = path.resolve(import.meta.dir, "..")
 const repo = path.resolve(root, "../..")
@@ -122,9 +122,9 @@ function provided(text: string): Component[] {
   ]
 }
 
-/** `kilo-cli-checksums.properties`, generated for the runtime-download build. */
+/** `tavern-cli-checksums.properties`, generated for the runtime-download build. */
 async function checksums(file?: string) {
-  const candidate = file ?? path.join(root, "backend/build/generated/kilo-cli-checksums/kilo-cli-checksums.properties")
+  const candidate = file ?? path.join(root, "backend/build/generated/tavern-cli-checksums/tavern-cli-checksums.properties")
   if (!fs.existsSync(candidate)) return new Map<string, string>()
   const text = await Bun.file(candidate).text()
   const out = new Map<string, string>()
@@ -136,7 +136,7 @@ async function checksums(file?: string) {
 }
 
 /**
- * The embedded or downloadable Kilo CLI for each supported platform.
+ * The embedded or downloadable Tavern CLI for each supported platform.
  *
  * Reuses the CLI component graphs, so the plugin cannot describe a CLI build
  * differently from the CLI release that produced it.
@@ -157,25 +157,25 @@ async function clis(input: {
     const digest = input.digests.get(platform)
     if (!digest) {
       gaps.push({
-        component: `kilo-${platform}`,
+        component: `tavern-${platform}`,
         reason: "CLI asset digest unavailable at SBOM generation time",
       })
     }
-    const ref = `kilocode:cli:${platform}@${input.version}`
+    const ref = `taverncode:cli:${platform}@${input.version}`
     components.push({
       type: "application",
-      name: `kilo-cli-${platform}`,
+      name: `tavern-cli-${platform}`,
       version: input.version,
       ref,
-      purl: Deps.purl(`@kilocode/cli-${platform}`, input.version),
+      purl: Deps.purl(`@taverncode/cli-${platform}`, input.version),
       platform,
       delivery,
-      supplier: "Kilo Code",
+      supplier: "Tavern Code",
       ...(digest ? { hashes: [{ alg: "SHA-256" as const, content: digest }] } : {}),
       description:
         delivery === "contained"
-          ? "Kilo CLI embedded in kilo-cli.zip and extracted for the current platform"
-          : "Kilo CLI release asset downloaded on first connect",
+          ? "Tavern CLI embedded in tavern-cli.zip and extracted for the current platform"
+          : "Tavern CLI release asset downloaded on first connect",
     })
 
     const graph = await Cli.graph({ target: Cli.target(platform), subject: ref, lock: input.lock })
@@ -203,7 +203,7 @@ export type Options = {
   file: string
   variant: Variant
   version: string
-  /** CLI version pinned by packages/kilo-jetbrains/package.json. */
+  /** CLI version pinned by packages/tavern-jetbrains/package.json. */
   cli: string
   channel?: string
   commit?: string
@@ -215,7 +215,7 @@ export type Options = {
 
 export async function plugin(input: Options) {
   const subject = await Artifact.subject(input.file)
-  const rootRef = `kilocode:artifact:${subject.name}`
+  const rootRef = `taverncode:artifact:${subject.name}`
   const text = await Bun.file(path.join(root, "gradle/libs.versions.toml")).text()
   const lock = await Deps.load(path.join(repo, "bun.lock"))
   const libraries = declared(text)
@@ -234,10 +234,10 @@ export async function plugin(input: Options) {
   const bom = compose({
     subject,
     product: {
-      name: "kilo-code-jetbrains",
+      name: "tavern-code-jetbrains",
       version: input.version,
       type: "application",
-      description: `Kilo Code JetBrains plugin (${input.variant})`,
+      description: `Tavern Code JetBrains plugin (${input.variant})`,
     },
     target: { platform: input.variant === "bundled" ? "all" : "any" },
     build: {
@@ -275,7 +275,7 @@ export async function plugin(input: Options) {
   }
 }
 
-export const CHECKSUMS = "kilo-jetbrains-SHA256SUMS"
+export const CHECKSUMS = "tavern-jetbrains-SHA256SUMS"
 
 /**
  * Describe one plugin ZIP and record it in the release manifest.

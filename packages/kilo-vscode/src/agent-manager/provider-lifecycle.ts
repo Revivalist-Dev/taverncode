@@ -1,5 +1,5 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { KiloClient, Session } from "@taverncode/sdk/v2/client"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { isRunningStatus } from "../session-status"
 import type { AgentManagerOutMessage } from "./types"
 import { PLATFORM } from "./constants"
@@ -9,7 +9,7 @@ import type { ManagedSession } from "./WorktreeStateManager"
 import type { CreateWorktreeResult, WorktreeManager } from "./WorktreeManager"
 import type { CreateWorktreeOnDiskOptions, CreateWorktreeOnDiskResult } from "./worktree-create"
 import { recordPromotionHandoff } from "./promotion-handoff"
-import { stopSessionProcesses } from "../kilo-provider/background-process"
+import { stopSessionProcesses } from "../tavern-provider/background-process"
 import { routeProjectSession } from "./project/messages"
 import { Timing } from "./creation-timing"
 import { plan, type Start } from "./creation-plan"
@@ -242,7 +242,7 @@ export async function createLifecycleWorktree(
 /** Remove a worktree's snapshot repository. Teardown must still complete if removal fails. */
 export async function removeWorktreeSnapshot(host: LifecycleHost, root: string, dir: string): Promise<boolean> {
   try {
-    await host.client().kilocode.removeSnapshot({ directory: root, worktree: dir }, { throwOnError: true })
+    await host.client().taverncode.removeSnapshot({ directory: root, worktree: dir }, { throwOnError: true })
     return true
   } catch (error) {
     host.log(`Failed to remove worktree snapshots: ${error}`)

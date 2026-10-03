@@ -1,6 +1,6 @@
 import { createHash } from "crypto"
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
-import { normalize, text } from "@kilocode/kilo-ui/session-diff"
+import type { SnapshotFileDiff } from "@taverncode/sdk/v2/client"
+import { normalize, text } from "@taverncode/tavern-ui/session-diff"
 import { encodeImageSide, imageMime } from "../shared/image"
 import { classifyGenerated, type GeneratedAttributes, type GeneratedFiles } from "../shared/git-attributes"
 import type { DiffFile } from "../types"
@@ -91,7 +91,7 @@ export function toSessionDiffFile(raw: SnapshotFileDiff, generated?: GeneratedAt
     try {
       return normalize(raw)
     } catch (err) {
-      console.warn("[Kilo New] Failed to parse session diff", { file, err })
+      console.warn("[Tavern New] Failed to parse session diff", { file, err })
       return null
     }
   })()

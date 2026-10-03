@@ -3,27 +3,27 @@ import os from "node:os"
 import path from "node:path"
 
 export namespace KiloSandboxWorker {
-  export const filename = "kilo-sandbox-mutation-worker.js"
+  export const filename = "tavern-sandbox-mutation-worker.js"
 
   export async function bundle() {
     const result = await Bun.build({
-      entrypoints: ["../kilo-sandbox/src/kilo-sandbox-mutation-worker.ts"],
+      entrypoints: ["../tavern-sandbox/src/tavern-sandbox-mutation-worker.ts"],
       target: "bun",
       format: "esm",
       minify: true,
     })
-    if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Kilo sandbox mutation worker")
+    if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Tavern sandbox mutation worker")
     return result.outputs[0]
   }
 
   export async function copy(worker: Blob, dir: string) {
     const target = path.join(dir, filename)
     await Bun.write(target, worker)
-    console.log(`copied Kilo sandbox mutation worker to ${target}`)
+    console.log(`copied Tavern sandbox mutation worker to ${target}`)
   }
 
   export async function smoke(binary: string) {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-sandbox-worker-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-sandbox-worker-"))
     const target = path.join(root, "value.txt")
     const worker = path.join(path.dirname(binary), filename)
     try {
@@ -49,7 +49,7 @@ export namespace KiloSandboxWorker {
         new Response(proc.stderr).text(),
         proc.exited,
       ])
-      if (code !== 0) throw new Error(stderr || `Kilo sandbox mutation worker exited ${code}`)
+      if (code !== 0) throw new Error(stderr || `Tavern sandbox mutation worker exited ${code}`)
       const response: unknown = JSON.parse(stdout)
       if (
         typeof response !== "object" ||
@@ -58,12 +58,12 @@ export namespace KiloSandboxWorker {
         response.ok !== true ||
         (await Bun.file(target).text()) !== "worker"
       ) {
-        throw new Error("Packaged Kilo sandbox mutation worker did not write the expected content")
+        throw new Error("Packaged Tavern sandbox mutation worker did not write the expected content")
       }
     } finally {
       await fs
         .rm(root, { recursive: true, force: true })
-        .catch((err) => console.warn(`Failed to remove Kilo sandbox worker smoke test directory ${root}`, err))
+        .catch((err) => console.warn(`Failed to remove Tavern sandbox worker smoke test directory ${root}`, err))
     }
   }
 }

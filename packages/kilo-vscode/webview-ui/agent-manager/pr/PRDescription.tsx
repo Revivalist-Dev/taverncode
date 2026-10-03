@@ -1,5 +1,5 @@
 /** @jsxImportSource solid-js */
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { useLanguage } from "../../src/context/language"
 import { PRCommentMarkdown } from "./PRCommentMarkdown"
 import { PRCommentTime } from "./PRCommentTime"

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { RemoteWS } from "../../../src/kilo-sessions/remote-ws"
+import { RemoteWS } from "../../../src/tavern-sessions/remote-ws"
 import type { ServerWebSocket } from "bun"
 
 function nolog() {
@@ -417,7 +417,7 @@ describe("RemoteWS", () => {
 
       expect(received).toEqual([])
       expect(conn.connected).toBe(true)
-      // kilocode_change - K1 W1: with the immediate heartbeat on FIRST open,
+      // taverncode_change - K1 W1: with the immediate heartbeat on FIRST open,
       // the second socket (a reconnect, not the first connect) only
       // receives the explicit event send — no immediate heartbeat.
       expect(second?.sent).toEqual([JSON.stringify({ type: "event", sessionId: "active", event: "test", data: {} })])
@@ -1996,14 +1996,14 @@ describe("RemoteWS", () => {
     })
   })
 
-  // kilocode_change - K1 W1: instance advertisement flows through the
+  // taverncode_change - K1 W1: instance advertisement flows through the
   // gatherer's getSessions() return value to the heartbeat payload. The
   // K1 W1 immediate heartbeat on first open was removed because it
   // regressed the existing AC4/AC5/AC6 test suite's send-count
   // assertions; the out-of-band `setInstanceAdvertisement` path in
-  // kilo-sessions.ts (see `setInstanceAdvertisement`) still fires one
+  // tavern-sessions.ts (see `setInstanceAdvertisement`) still fires one
   // immediate heartbeat when the flag is flipped, which is the practical
-  // point at which a user runs `kilo remote` and wants the cloud picker
+  // point at which a user runs `tavern remote` and wants the cloud picker
   // to see the instance. The periodic 10s timer is the fallback for
   // other code paths.
 
@@ -2080,7 +2080,7 @@ describe("RemoteWS", () => {
 
   // K1 W1: setInstanceAdvertisement's out-of-band heartbeat fires one
   // immediate heartbeat when called against an existing connection. This
-  // is the practical "advertise on `kilo remote` command" path — the
+  // is the practical "advertise on `tavern remote` command" path — the
   // setter flips the module-level flag and the connection fires one
   // fresh-gather heartbeat, which the relay sees without waiting for the
   // next periodic tick.
@@ -2105,7 +2105,7 @@ describe("RemoteWS", () => {
       expect(socket.sent.length).toBe(0)
 
       // Out-of-band heartbeat (simulating the `setInstanceAdvertisement`
-      // out-of-band path in kilo-sessions.ts that calls
+      // out-of-band path in tavern-sessions.ts that calls
       // `remote.conn.heartbeat()` once after flipping the flag).
       fireHeartbeat()
       await flushLong()

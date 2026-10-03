@@ -1,7 +1,7 @@
 import * as path from "path"
 import { existsSync } from "fs"
 import * as vscode from "vscode"
-import { TRANSIENT as MEMORY_TRANSIENT } from "@kilocode/kilo-memory/schema"
+import { TRANSIENT as MEMORY_TRANSIENT } from "@taverncode/tavern-memory/schema"
 import type {
   KiloClient,
   ProviderUsage,
@@ -11,8 +11,8 @@ import type {
   TextPartInput,
   FilePartInput,
   Config,
-} from "@kilocode/sdk/v2/client"
-import { MaxCostNudge, type MaxCostChoice } from "@opencode-ai/core/kilocode/cost/max-cost-nudge"
+} from "@taverncode/sdk/v2/client"
+import { MaxCostNudge, type MaxCostChoice } from "@opencode-ai/core/taverncode/cost/max-cost-nudge"
 import { type KiloConnectionService, ServerStartupError } from "./services/cli-backend"
 import { previewSound, testOSNotification } from "./services/attention"
 import type { EditorContext, IndexingStatus } from "./services/cli-backend/types"
@@ -20,9 +20,9 @@ import { FileIgnoreController } from "./services/autocomplete/shims/FileIgnoreCo
 import { ChatTextAreaAutocomplete } from "./services/autocomplete/chat-autocomplete/ChatTextAreaAutocomplete"
 import { notebookUri } from "./services/autocomplete/continuedev/core/autocomplete/notebook"
 import { buildWebviewHtml, getWebviewFontSize, isCursorHost } from "./utils"
-import { saveImage } from "./kilo-provider/save-image"
-import { handleEditorAction } from "./kilo-provider/editor-actions"
-import { exportTranscript } from "./kilo-provider/export-transcript"
+import { saveImage } from "./tavern-provider/save-image"
+import { handleEditorAction } from "./tavern-provider/editor-actions"
+import { exportTranscript } from "./tavern-provider/export-transcript"
 import {
   TelemetryProxy,
   type TelemetryPropertiesProvider,
@@ -49,10 +49,10 @@ import {
   SessionStreamScheduler,
   buildSettingPath,
   type SessionRefreshContext,
-} from "./kilo-provider-utils"
+} from "./tavern-provider-utils"
 import { GitOps } from "./agent-manager/GitOps"
 import { GitStatsPoller, type LocalStats } from "./agent-manager/GitStatsPoller"
-import { removeMcp } from "./kilo-provider/remove-config-item"
+import { removeMcp } from "./tavern-provider/remove-config-item"
 import { MarketplaceService } from "./services/marketplace"
 import type { RemoteStatusService } from "./services/RemoteStatusService"
 import { resolveProjectDirectory } from "./project-directory"
@@ -62,60 +62,60 @@ import { retry } from "./services/cli-backend/retry"
 import { integratedBrowserUseSystemChrome } from "./services/browser-automation/chrome-setting"
 import { removeAgent } from "./services/agent-removal"
 import { normalize, type SSEPayload, type SyncPayload, type WirePayload } from "./services/cli-backend/sdk-sse-adapter"
-import { slimInfo, slimPart, slimParts } from "./kilo-provider/slim-metadata"
-import { ToolInputStream } from "./kilo-provider/tool-input-stream"
-import { handleSidebarWorktreeMessage } from "./kilo-provider/sidebar-worktree"
-import { parseMessageFiles, type MessageFile } from "./kilo-provider/message-files"
-import { renameSession } from "./kilo-provider/rename-session"
-import { handleFileSearch, type SearchRoot } from "./kilo-provider/file-search"
-import { handleSessionSearch } from "./kilo-provider/session-search"
-import { handleFilePicker } from "./kilo-provider/file-picker"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
+import { slimInfo, slimPart, slimParts } from "./tavern-provider/slim-metadata"
+import { ToolInputStream } from "./tavern-provider/tool-input-stream"
+import { handleSidebarWorktreeMessage } from "./tavern-provider/sidebar-worktree"
+import { parseMessageFiles, type MessageFile } from "./tavern-provider/message-files"
+import { renameSession } from "./tavern-provider/rename-session"
+import { handleFileSearch, type SearchRoot } from "./tavern-provider/file-search"
+import { handleSessionSearch } from "./tavern-provider/session-search"
+import { handleFilePicker } from "./tavern-provider/file-picker"
+import { watchFontSizeConfig } from "./tavern-provider/font-size"
 import { getTerminalContents } from "./services/terminal/context"
-import { disposeGitChangesTarget } from "./kilo-provider/git-changes-target"
-import { interceptMessage } from "./kilo-provider/git-changes-request"
-import { matchFollowup, recordFollowup, type Followup } from "./kilo-provider/followup-session"
-import { clearCommandsCache, loadCommands } from "./kilo-provider/commands"
-import { fetchMessagePage, MESSAGE_PAGE_LIMIT } from "./kilo-provider/message-page"
-import { createSessionPageState, fetchSessionPage } from "./kilo-provider/session-page"
-import { editPaths } from "./kilo-provider/session-edits"
+import { disposeGitChangesTarget } from "./tavern-provider/git-changes-target"
+import { interceptMessage } from "./tavern-provider/git-changes-request"
+import { matchFollowup, recordFollowup, type Followup } from "./tavern-provider/followup-session"
+import { clearCommandsCache, loadCommands } from "./tavern-provider/commands"
+import { fetchMessagePage, MESSAGE_PAGE_LIMIT } from "./tavern-provider/message-page"
+import { createSessionPageState, fetchSessionPage } from "./tavern-provider/session-page"
+import { editPaths } from "./tavern-provider/session-edits"
 import {
   dismissNotification,
   fetchAndSendNotifications as fetchNotifications,
   resetReadNotifications,
   type NotificationsContext,
   type NotificationsMessage,
-} from "./kilo-provider/notifications"
-import { childID } from "./kilo-provider/task-session"
-import { VisibleTaskStreams } from "./kilo-provider/visible-task-streams"
-import { handleNetworkEvent, clearNetworkWaits } from "./kilo-provider/network"
-import { SessionAbort } from "./kilo-provider/abort"
+} from "./tavern-provider/notifications"
+import { childID } from "./tavern-provider/task-session"
+import { VisibleTaskStreams } from "./tavern-provider/visible-task-streams"
+import { handleNetworkEvent, clearNetworkWaits } from "./tavern-provider/network"
+import { SessionAbort } from "./tavern-provider/abort"
 import {
   buildAutocompleteSettingsMessage,
   validAutocompleteSetting,
   watchAutocompleteConfig,
 } from "./services/autocomplete/settings"
-import { routeEarlyMessage } from "./kilo-provider/early-message"
-import * as Board from "./kilo-provider/session-board"
-import * as ModelState from "./kilo-provider/model-state"
-import { handleModelUsageMessage } from "./kilo-provider/model-usage"
-import { handleForkSession } from "./kilo-provider/fork-session"
-import { openConfig } from "./kilo-provider/open-config"
+import { routeEarlyMessage } from "./tavern-provider/early-message"
+import * as Board from "./tavern-provider/session-board"
+import * as ModelState from "./tavern-provider/model-state"
+import { handleModelUsageMessage } from "./tavern-provider/model-usage"
+import { handleForkSession } from "./tavern-provider/fork-session"
+import { openConfig } from "./tavern-provider/open-config"
 import {
   getWorkStylePayload,
   handleWorkStyleMessage,
   isWorkStyleSetting,
   watchWorkStyleConfig,
-} from "./kilo-provider/work-style"
-import * as McpOAuth from "./kilo-provider/mcp-oauth"
+} from "./tavern-provider/work-style"
+import * as McpOAuth from "./tavern-provider/mcp-oauth"
 import { retryable, backoff, MAX_RETRIES } from "./util/retry"
-import { hasGit } from "./kilo-provider/git-status"
+import { hasGit } from "./tavern-provider/git-status"
 import {
   handleRequestMigrationData,
   handleStartMigration,
   type MigrationContext,
   type MigrationSource,
-} from "./kilo-provider/handlers/migration"
+} from "./tavern-provider/handlers/migration"
 import type { MigrationSelections } from "./legacy-migration/legacy-types"
 import {
   handleLogin,
@@ -123,31 +123,31 @@ import {
   handleSetOrganization,
   handleRefreshProfile,
   type AuthContext,
-} from "./kilo-provider/handlers/auth"
+} from "./tavern-provider/handlers/auth"
 import {
   handleRequestCloudSessions,
   handleRequestCloudSessionData,
   handleImportAndSend,
   type CloudSessionContext,
-} from "./kilo-provider/handlers/cloud-session"
+} from "./tavern-provider/handlers/cloud-session"
 import {
   handlePermissionResponse,
   fetchAndSendPendingPermissions,
   type PermissionContext,
-} from "./kilo-provider/handlers/permission-handler"
+} from "./tavern-provider/handlers/permission-handler"
 import {
   handleQuestionReply,
   handleQuestionReject,
   fetchAndSendPendingQuestions,
-} from "./kilo-provider/handlers/question"
-import { fetchAndSendPendingSuggestions } from "./kilo-provider/handlers/suggestion"
-import { nativeTitle } from "./kilo-provider/native-tab-title"
+} from "./tavern-provider/handlers/question"
+import { fetchAndSendPendingSuggestions } from "./tavern-provider/handlers/suggestion"
+import { nativeTitle } from "./tavern-provider/native-tab-title"
 import { isActivity, type Activity } from "../webview-ui/src/utils/session-activity"
 import type { PRReviewCommentData, ReviewMessageData } from "./shared/review-comments"
 import { feedbackMetadata, parseFeedback, type BrowserFeedbackData } from "./shared/browser-feedback"
 import { mergeInjected } from "./shared/injected-prompt"
-import { completesWithoutStatus, goalControl } from "./kilo-provider/command-completion"
-import { KiloProviderMemory } from "./kilo-provider/memory"
+import { completesWithoutStatus, goalControl } from "./tavern-provider/command-completion"
+import { KiloProviderMemory } from "./tavern-provider/memory"
 
 import {
   buildActionContext,
@@ -165,15 +165,15 @@ import {
 import type { StoredProviderKey } from "./provider-actions"
 import { AnacondaDesktopBridge } from "./anaconda-desktop/bridge"
 import { fetchOpenAIModels, FetchModelsError } from "./shared/fetch-models"
-import type { Agent } from "@kilocode/sdk/v2/client"
+import type { Agent } from "@taverncode/sdk/v2/client"
 import { configFeatures, serverFeatures } from "./features"
-import { fetchSnapshot } from "./kilo-provider/config-snapshot"
-import { createAutoApproveBridge } from "./kilo-provider/auto-approve"
-import type { KiloProviderOptions } from "./kilo-provider/options"
-import { watchRestore } from "./kilo-provider/prompt-focus"
+import { fetchSnapshot } from "./tavern-provider/config-snapshot"
+import { createAutoApproveBridge } from "./tavern-provider/auto-approve"
+import type { KiloProviderOptions } from "./tavern-provider/options"
+import { watchRestore } from "./tavern-provider/prompt-focus"
 import type { ProjectRef, SessionRef, WorktreeRef } from "./agent-manager/project/route"
 import { indexingConsentStore, registeredProjects } from "./indexing-consent"
-import { fetchKiloEmbeddingModelCatalog } from "@kilocode/kilo-gateway"
+import { fetchKiloEmbeddingModelCatalog } from "@taverncode/tavern-gateway"
 import { fetchImageModels } from "./image-generation/models"
 import { fetchSpeechToTextModels } from "./speech-to-text/catalog"
 import { SPEECH_TO_TEXT_MODELS } from "./speech-to-text/models"
@@ -184,30 +184,30 @@ import {
   type SpeechToTextConfig,
   type SpeechToTextSource,
 } from "./speech-to-text/source"
-import { stopSessionProcesses } from "./kilo-provider/background-process"
+import { stopSessionProcesses } from "./tavern-provider/background-process"
 import { sandboxDefault, sandboxSessionMetadata } from "./shared/sandbox-session"
 import { REVERT_ERROR_CODE } from "./shared/revert-error"
 import {
   buildIndexingSettingsMessage,
   validIndexingSetting,
   watchIndexingConfig,
-} from "./kilo-provider/indexing-settings"
+} from "./tavern-provider/indexing-settings"
 import {
   ConfigBindings,
   type ConfigBinding,
   type ConfigProject,
   type ConfigTarget,
-} from "./kilo-provider/config-bindings"
+} from "./tavern-provider/config-bindings"
 import { canonicalizePath, projectIdFor, samePath } from "./agent-manager/project/paths"
-import { buildTimelineSettingMessage, validChatSetting, watchChatConfig } from "./kilo-provider/chat-settings"
+import { buildTimelineSettingMessage, validChatSetting, watchChatConfig } from "./tavern-provider/chat-settings"
 import { retention } from "./services/task-cleanup/retention"
 import { failure } from "./services/task-cleanup/failure"
-import { buildThroughputSettingMessage, watchThroughputConfig } from "./kilo-provider/throughput-settings"
+import { buildThroughputSettingMessage, watchThroughputConfig } from "./tavern-provider/throughput-settings"
 import {
   buildAutoApprovalReasonSettingMessage,
   watchAutoApprovalReasonConfig,
-} from "./kilo-provider/auto-approval-reason-settings"
-import { buildPushFixesSettingMessage, pushFixes, watchPushFixesConfig } from "./kilo-provider/push-fixes-settings"
+} from "./tavern-provider/auto-approval-reason-settings"
+import { buildPushFixesSettingMessage, pushFixes, watchPushFixesConfig } from "./tavern-provider/push-fixes-settings"
 
 type ReviewCommentsHandler = (comments: unknown[], autoSend: boolean, sessionID?: string, directory?: string) => void
 
@@ -395,7 +395,7 @@ function withGlobalSpeechToTextMessage(message: unknown): unknown {
 }
 
 export class KiloProvider implements vscode.WebviewViewProvider, TelemetryPropertiesProvider {
-  public static readonly viewType = "kilo-code.SidebarProvider"
+  public static readonly viewType = "tavern-code.SidebarProvider"
   private readonly instanceId = crypto.randomUUID()
 
   private webview: vscode.Webview | null = null
@@ -407,7 +407,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private loginAttempt = 0
   private isWebviewReady = false
   private readonly extensionVersion =
-    vscode.extensions.getExtension("kilocode.kilo-code")?.packageJSON?.version ?? "unknown"
+    vscode.extensions.getExtension("taverncode.tavern-code")?.packageJSON?.version ?? "unknown"
   private cachedProvidersMessage: unknown = null
   /** Directory the cached provider payload was loaded for, so recovery is keyed to the active project. */
   private cachedProvidersDirectory: string | null = null
@@ -629,7 +629,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
     this.checkpoints.set(sid, pending)
     void pending.then(cleanup, (error) => {
-      console.error("[Kilo New] checkpoint mutation failed:", error)
+      console.error("[Tavern New] checkpoint mutation failed:", error)
       cleanup()
     })
   }
@@ -700,7 +700,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   getTelemetryProperties(): Record<string, unknown> {
     return {
-      appName: "kilo-code",
+      appName: "tavern-code",
       appVersion: this.extensionVersion,
       platform: "vscode",
       editorName: vscode.env.appName,
@@ -734,14 +734,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   private openMarketplacePanel(directory: unknown): void {
     if (typeof directory === "string" && directory) {
-      vscode.commands.executeCommand("kilo-code.new.marketplaceButtonClicked", directory)
+      vscode.commands.executeCommand("tavern-code.new.marketplaceButtonClicked", directory)
       return
     }
-    vscode.commands.executeCommand("kilo-code.new.marketplaceButtonClicked", this.projectDirectory)
+    vscode.commands.executeCommand("tavern-code.new.marketplaceButtonClicked", this.projectDirectory)
   }
 
   // Strip metadata unused by the webview to keep session switches fast.
-  // Logic in kilo-provider/slim-metadata.ts.
+  // Logic in tavern-provider/slim-metadata.ts.
   private slimInfo<T>(info: T): T {
     if (!this.slimEditMetadata) return info
     return slimInfo(info)
@@ -786,7 +786,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   private async syncWebviewState(reason: string): Promise<void> {
     const serverInfo = this.connectionService.getServerInfo()
-    console.log("[Kilo New] KiloProvider: 🔄 syncWebviewState()", {
+    console.log("[Tavern New] KiloProvider: 🔄 syncWebviewState()", {
       reason,
       isWebviewReady: this.isWebviewReady,
       connectionState: this.connectionState,
@@ -795,7 +795,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     })
 
     if (!this.isWebviewReady) {
-      console.log("[Kilo New] KiloProvider: ⏭️ syncWebviewState skipped (webview not ready)")
+      console.log("[Tavern New] KiloProvider: ⏭️ syncWebviewState skipped (webview not ready)")
       return
     }
 
@@ -805,7 +805,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     // Re-send ready so the webview can recover after refresh.
     if (serverInfo) {
-      const langConfig = vscode.workspace.getConfiguration("kilo-code.new")
+      const langConfig = vscode.workspace.getConfiguration("tavern-code.new")
       this.postMessage({
         type: "ready",
         serverInfo,
@@ -817,13 +817,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
 
     // Always attempt to fetch+push profile when connected.
-    // Profile returns 401 when user isn't logged into Kilo Gateway — that's expected.
+    // Profile returns 401 when user isn't logged into Tavern Gateway — that's expected.
     // Use fire-and-forget (no throwOnError) to match old getProfile() which returned null on error.
     if (this.connectionState === "connected" && this.client) {
-      console.log("[Kilo New] KiloProvider: 👤 syncWebviewState fetching profile...")
-      const profileResult = await retry(() => this.client!.kilo.profile())
+      console.log("[Tavern New] KiloProvider: 👤 syncWebviewState fetching profile...")
+      const profileResult = await retry(() => this.client!.tavern.profile())
       const profileData = profileResult.data ?? null
-      console.log("[Kilo New] KiloProvider: 👤 syncWebviewState profile:", profileData ? "received" : "null")
+      console.log("[Tavern New] KiloProvider: 👤 syncWebviewState profile:", profileData ? "received" : "null")
       this.postMessage({
         type: "profileData",
         data: profileData,
@@ -874,14 +874,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private setSidebarVisible(visible: boolean): void {
     this.setStatsVisible(visible)
     this.setStreamVisibility(visible)
-    vscode.commands.executeCommand("setContext", "kilo-code.new.sidebarVisible", visible)
+    vscode.commands.executeCommand("setContext", "tavern-code.new.sidebarVisible", visible)
     if (!visible) this.opts.onHidden?.()
     if (!visible && this.opts.focusContext) {
       void vscode.commands.executeCommand("setContext", this.opts.focusContext, false)
     }
   }
 
-  /** Resolve a WebviewPanel for displaying Kilo in an editor tab. */
+  /** Resolve a WebviewPanel for displaying Tavern in an editor tab. */
   public resolveWebviewPanel(panel: vscode.WebviewPanel): void {
     // WebviewPanel can be restored/reloaded; ensure we don't treat it as ready prematurely.
     this.isWebviewReady = false
@@ -1014,7 +1014,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     return retry(() => client.session.get({ sessionID: sessionId, directory }, { throwOnError: true }))
       .then((result) => result.data)
       .catch((error: unknown) => {
-        console.warn("[Kilo New] KiloProvider: Failed to resolve managed session:", error)
+        console.warn("[Tavern New] KiloProvider: Failed to resolve managed session:", error)
         return undefined
       })
   }
@@ -1213,7 +1213,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           board: (msg) => this.handleBoardMessage(msg),
           cancelBackgroundJob: (jobID, sessionID, requestID) => this.cancelBackgroundJob(jobID, sessionID, requestID),
           promoteBackgroundJob: (jobID, sessionID) => this.promoteBackgroundJob(jobID, sessionID),
-          caffeination: () => void vscode.commands.executeCommand("kilo-code.new.toggleCaffeination"),
+          caffeination: () => void vscode.commands.executeCommand("tavern-code.new.toggleCaffeination"),
         })
       ) {
         return
@@ -1233,10 +1233,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (
         await handleSidebarWorktreeMessage(message, {
           post: (msg) => this.postMessage(msg),
-          openAgentManager: () => vscode.commands.executeCommand("kilo-code.new.agentManagerOpen"),
-          openAdvancedWorktree: () => vscode.commands.executeCommand("kilo-code.new.agentManager.advancedWorktree"),
+          openAgentManager: () => vscode.commands.executeCommand("tavern-code.new.agentManagerOpen"),
+          openAdvancedWorktree: () => vscode.commands.executeCommand("tavern-code.new.agentManager.advancedWorktree"),
           openChanges: (sessionId?: string, turnId?: string) => this.openChanges(sessionId, turnId),
-          openProfile: () => vscode.commands.executeCommand("kilo-code.new.profileButtonClicked"),
+          openProfile: () => vscode.commands.executeCommand("tavern-code.new.profileButtonClicked"),
           currentSessionId: this.currentSession?.id,
           createWorktree: async (baseBranch, branchName) => {
             await this.createWorktreeHandler?.(baseBranch, branchName)
@@ -1257,7 +1257,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (this.handleNotificationSettingsMessage(message)) return
       switch (message.type) {
         case "webviewReady":
-          console.log("[Kilo New] KiloProvider: ✅ webviewReady received")
+          console.log("[Tavern New] KiloProvider: ✅ webviewReady received")
           this.isWebviewReady = true
           for (const event of this.connectionService.getPendingCompletions()) {
             this.postMessage(mapSSEEventToWebviewMessage(event, event.properties.sessionID))
@@ -1339,7 +1339,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "loadSessions":
           this.handleLoadSessions(message.more === true).catch((e) =>
-            console.error("[Kilo New] handleLoadSessions failed:", e),
+            console.error("[Tavern New] handleLoadSessions failed:", e),
           )
           break
         case "requestSessionModelUsage":
@@ -1363,7 +1363,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           }
           break
         case "openSettingsPanel":
-          vscode.commands.executeCommand("kilo-code.new.settingsButtonClicked", message.tab, message.projectId)
+          vscode.commands.executeCommand("tavern-code.new.settingsButtonClicked", message.tab, message.projectId)
           break
         case "openVSCodeSettings":
           vscode.commands.executeCommand("workbench.action.openSettings", message.query)
@@ -1376,21 +1376,21 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "forkSession":
           handleForkSession(this.forkCtx, message.sessionId, message.messageId).catch((e) =>
-            console.error("[Kilo New] handleForkSession failed:", e),
+            console.error("[Tavern New] handleForkSession failed:", e),
           )
           break
         case "retryConnection":
-          console.log("[Kilo New] KiloProvider: 🔄 Retrying connection...")
+          console.log("[Tavern New] KiloProvider: 🔄 Retrying connection...")
           this.initializeConnection().catch((e) =>
-            console.error("[Kilo New] KiloProvider: ❌ Retry connection failed:", e),
+            console.error("[Tavern New] KiloProvider: ❌ Retry connection failed:", e),
           )
           break
         case "reload":
-          this.handleReload().catch((e) => console.error("[Kilo New] KiloProvider: Reload failed:", e))
+          this.handleReload().catch((e) => console.error("[Tavern New] KiloProvider: Reload failed:", e))
           break
         case "openSubAgentViewer":
           vscode.commands.executeCommand(
-            "kilo-code.new.openSubAgentViewer",
+            "tavern-code.new.openSubAgentViewer",
             message.sessionID,
             message.title,
             this.getWorkspaceDirectory(message.parentSessionID),
@@ -1399,7 +1399,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         case "saveImage":
           return saveImage(this.getWorkspaceDirectory(this.currentSession?.id), message)
         case "requestProviders":
-          this.fetchAndSendProviders().catch((e) => console.error("[Kilo New] fetchAndSendProviders failed:", e))
+          this.fetchAndSendProviders().catch((e) => console.error("[Tavern New] fetchAndSendProviders failed:", e))
           break
         case "connectProvider":
         case "authorizeProviderOAuth":
@@ -1422,41 +1422,41 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "fetchCustomProviderModels":
           this.handleFetchCustomProviderModels(message).catch((e) =>
-            console.error("[Kilo New] fetchCustomProviderModels failed:", e),
+            console.error("[Tavern New] fetchCustomProviderModels failed:", e),
           )
           break
         case "compact":
           await this.handleCompact(message.sessionID, message.providerID, message.modelID)
           break
         case "requestAgents":
-          this.fetchAndSendAgents().catch((e) => console.error("[Kilo New] fetchAndSendAgents failed:", e))
+          this.fetchAndSendAgents().catch((e) => console.error("[Tavern New] fetchAndSendAgents failed:", e))
           break
         case "requestSkills":
-          this.fetchAndSendSkills().catch((e) => console.error("[Kilo New] fetchAndSendSkills failed:", e))
+          this.fetchAndSendSkills().catch((e) => console.error("[Tavern New] fetchAndSendSkills failed:", e))
           break
         case "requestCommands":
-          this.fetchAndSendCommands().catch((e) => console.error("[Kilo New] fetchAndSendCommands failed:", e))
+          this.fetchAndSendCommands().catch((e) => console.error("[Tavern New] fetchAndSendCommands failed:", e))
           break
         case "removeSkill":
           this.removeSkillViaCli(message.location).catch((e: unknown) =>
-            console.error("[Kilo New] removeSkill failed:", e),
+            console.error("[Tavern New] removeSkill failed:", e),
           )
           break
         case "removeAgent":
-          this.handleRemoveAgent(message.name).catch((e) => console.error("[Kilo New] handleRemoveAgent failed:", e))
+          this.handleRemoveAgent(message.name).catch((e) => console.error("[Tavern New] handleRemoveAgent failed:", e))
           break
         case "removeMcp":
-          this.handleRemoveMcp(message.name).catch((e) => console.error("[Kilo New] handleRemoveMcp failed:", e))
+          this.handleRemoveMcp(message.name).catch((e) => console.error("[Tavern New] handleRemoveMcp failed:", e))
           break
         case "requestMcpStatus":
-          this.fetchAndSendMcpStatus().catch((e) => console.error("[Kilo New] fetchAndSendMcpStatus failed:", e))
+          this.fetchAndSendMcpStatus().catch((e) => console.error("[Tavern New] fetchAndSendMcpStatus failed:", e))
           break
         case "connectMcp": {
           const c1 = this.client
           if (c1) {
             void McpOAuth.connectMcpServer(c1, message.name, this.getWorkspaceDirectory(), () =>
               this.refreshMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] connectMcpServer failed:", e))
+            ).catch((e) => console.error("[Tavern New] connectMcpServer failed:", e))
           }
           break
         }
@@ -1465,7 +1465,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (c2) {
             void McpOAuth.disconnectMcpServer(c2, message.name, this.getWorkspaceDirectory(), () =>
               this.refreshMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] disconnectMcpServer failed:", e))
+            ).catch((e) => console.error("[Tavern New] disconnectMcpServer failed:", e))
           }
           break
         }
@@ -1474,7 +1474,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (c) {
             void McpOAuth.authenticateMcpServer(c, message.name, this.getWorkspaceDirectory(), () =>
               this.refreshMcpStatus(),
-            ).catch((e) => console.error("[Kilo New] authenticateMcpServer failed:", e))
+            ).catch((e) => console.error("[Tavern New] authenticateMcpServer failed:", e))
           }
           break
         }
@@ -1505,14 +1505,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           await this.handleToggleSandbox(message)
           break
         case "requestConfig":
-          this.fetchAndSendConfig().catch((e) => console.error("[Kilo New] fetchAndSendConfig failed:", e))
+          this.fetchAndSendConfig().catch((e) => console.error("[Tavern New] fetchAndSendConfig failed:", e))
           break
         case "requestGlobalConfig":
-          this.fetchAndSendGlobalConfig().catch((e) => console.error("[Kilo New] fetchAndSendGlobalConfig failed:", e))
+          this.fetchAndSendGlobalConfig().catch((e) => console.error("[Tavern New] fetchAndSendGlobalConfig failed:", e))
           break
         case "requestIndexingStatus":
           this.fetchAndSendIndexingStatus().catch((e) =>
-            console.error("[Kilo New] fetchAndSendIndexingStatus failed:", e),
+            console.error("[Tavern New] fetchAndSendIndexingStatus failed:", e),
           )
           break
         case "requestIndexingSettings": {
@@ -1525,11 +1525,11 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "requestKiloEmbeddingModels":
           this.fetchAndSendKiloEmbeddingModels().catch((e) =>
-            console.error("[Kilo New] fetchAndSendKiloEmbeddingModels failed:", e),
+            console.error("[Tavern New] fetchAndSendKiloEmbeddingModels failed:", e),
           )
           break
         case "requestImageModels":
-          this.fetchAndSendImageModels().catch((e) => console.error("[Kilo New] fetchAndSendImageModels failed:", e))
+          this.fetchAndSendImageModels().catch((e) => console.error("[Tavern New] fetchAndSendImageModels failed:", e))
           break
         case "updateConfig":
           await this.handleUpdateConfig(
@@ -1543,12 +1543,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "openSettingsTab":
           if (message.tab === "indexing") {
-            await vscode.commands.executeCommand("kilo-code.new.openIndexingSettings")
+            await vscode.commands.executeCommand("tavern-code.new.openIndexingSettings")
           }
           break
         case "setLanguage":
           await vscode.workspace
-            .getConfiguration("kilo-code.new")
+            .getConfiguration("tavern-code.new")
             .update("language", message.locale || undefined, vscode.ConfigurationTarget.Global)
           this.connectionService.notifyLanguageChanged(message.locale as string)
           break
@@ -1582,7 +1582,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             .then((s) => {
               if (s) this.sendRemoteStatus()
             })
-            .catch((err) => console.error("[Kilo New] remote message failed:", err))
+            .catch((err) => console.error("[Tavern New] remote message failed:", err))
           break
         case "deleteSession":
           await this.handleDeleteSession(message.sessionID)
@@ -1601,7 +1601,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           break
         case "requestNotifications":
           this.fetchAndSendNotifications().catch((e) =>
-            console.error("[Kilo New] fetchAndSendNotifications failed:", e),
+            console.error("[Tavern New] fetchAndSendNotifications failed:", e),
           )
           break
         case "requestCloudSessions":
@@ -1694,7 +1694,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             .catch((err: unknown) => {
               const raw = getErrorMessage(err) || "Failed to enhance prompt"
               const msg = normalizeEnhancePromptErrorMessage(raw)
-              console.error("[Kilo New] KiloProvider: Failed to enhance prompt:", err)
+              console.error("[Tavern New] KiloProvider: Failed to enhance prompt:", err)
               vscode.window.showErrorMessage(`Enhance prompt failed: ${msg}`)
               this.postMessage({
                 type: "enhancePromptError",
@@ -1794,7 +1794,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (message.scope === "inspector") this.inspectorSessionIds.add(message.sessionID)
       const parent = typeof message.parentSessionID === "string" ? message.parentSessionID : undefined
       this.handleSyncSession(message.sessionID, parent).catch((e) =>
-        console.error("[Kilo New] handleSyncSession failed:", e),
+        console.error("[Tavern New] handleSyncSession failed:", e),
       )
       return true
     }
@@ -1840,7 +1840,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.diffViewerProvider.openFromCommand(args)
       return
     }
-    await vscode.commands.executeCommand("kilo-code.new.showChanges", args)
+    await vscode.commands.executeCommand("tavern-code.new.showChanges", args)
   }
 
   private handleEditorOpenMessage(message: Parameters<typeof handleEditorAction>[0]): boolean {
@@ -1952,7 +1952,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private async doInitializeConnection(): Promise<void> {
-    console.log("[Kilo New] KiloProvider: 🔧 Starting initializeConnection...")
+    console.log("[Tavern New] KiloProvider: 🔧 Starting initializeConnection...")
 
     this.connectionState = "connecting"
     this.connectionGeneration++
@@ -1995,7 +1995,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (!directory && isEventFromForeignProject(payload, this.projectID)) return false
 
           // Remote status events are global and should always pass through
-          if (event.type === "kilo-sessions.remote-status-changed") return true
+          if (event.type === "tavern-sessions.remote-status-changed") return true
           if (event.type === "memory.status" || event.type === "memory.updated" || event.type === "memory.error")
             return true
           const sessionId = this.resolveEventSessionId(event)
@@ -2060,14 +2060,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             // Profile fetch is best-effort — returns 401 when user isn't logged into gateway.
             const sdkClient = this.client
             if (sdkClient) {
-              const profileResult = await sdkClient.kilo.profile()
+              const profileResult = await sdkClient.tavern.profile()
               this.postMessage({ type: "profileData", data: profileResult.data ?? null })
             }
             await this.syncWebviewState("sse-connected")
             await this.flushPendingSessionRefresh("sse-connected")
             this.recoverPendingPrompts()
           } catch (error) {
-            console.error("[Kilo New] KiloProvider: ❌ Failed during connected state handling:", error)
+            console.error("[Tavern New] KiloProvider: ❌ Failed during connected state handling:", error)
             this.postMessage({
               type: "error",
               message: getErrorMessage(error) || "Failed to sync after connecting",
@@ -2116,7 +2116,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.connectionState = this.connectionService.getConnectionState()
 
       if (serverInfo) {
-        const langConfig = vscode.workspace.getConfiguration("kilo-code.new")
+        const langConfig = vscode.workspace.getConfiguration("tavern-code.new")
         this.postMessage({
           type: "ready",
           serverInfo,
@@ -2159,9 +2159,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.postMessage(buildAutoApprovalReasonSettingMessage())
       this.postMessage({ type: "extensionDataReady" })
 
-      console.log("[Kilo New] KiloProvider: ✅ initializeConnection completed successfully")
+      console.log("[Tavern New] KiloProvider: ✅ initializeConnection completed successfully")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: ❌ Failed to initialize connection:", error)
+      console.error("[Tavern New] KiloProvider: ❌ Failed to initialize connection:", error)
       this.connectionState = "error"
       this.postMessage({
         type: "connectionState",
@@ -2209,7 +2209,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         session: this.sessionToWebview(this.currentSession!),
       })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to create session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to create session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to create session",
@@ -2246,7 +2246,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         return r.data
       })
       .catch((e: unknown) => {
-        console.warn("[Kilo New] KiloProvider: getSession failed (non-critical):", e)
+        console.warn("[Tavern New] KiloProvider: getSession failed (non-critical):", e)
         return undefined
       })
     this.postMessage({ type: "workspaceDirectoryChanged", directory: this.getWorkspaceDirectory(sessionID) })
@@ -2276,20 +2276,20 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           if (this.accept(sid, status, dir, epoch)) this.publish(sid, status)
         }
       })
-      .catch((error: unknown) => console.error("[Kilo New] KiloProvider: Failed to fetch session statuses:", error))
+      .catch((error: unknown) => console.error("[Tavern New] KiloProvider: Failed to fetch session statuses:", error))
   }
 
   private fetchAndSendSessionModelUsage(sessionID: string, requestID: string): Promise<void> {
     const directory = this.getWorkspaceDirectory(sessionID)
     return this.connectionService
       .getClientAsync(directory)
-      .then((client) => client.kilocode.sessionModelUsage({ sessionID, directory }, { throwOnError: true }))
+      .then((client) => client.taverncode.sessionModelUsage({ sessionID, directory }, { throwOnError: true }))
       .then((response) => {
         this.modelUsageSessionIds = new Set(response.data.sessionIDs)
         this.postMessage({ type: "sessionModelUsageLoaded", sessionID, requestID, data: response.data })
       })
       .catch((error: unknown) => {
-        console.warn("[Kilo New] KiloProvider: Failed to load session model usage:", error)
+        console.warn("[Tavern New] KiloProvider: Failed to load session model usage:", error)
         this.postMessage({ type: "sessionModelUsageLoaded", sessionID, requestID })
       })
   }
@@ -2387,7 +2387,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.recoverPendingPrompts()
     } catch (error) {
       if (abort?.signal.aborted) return
-      console.error("[Kilo New] KiloProvider: Failed to load messages:", error)
+      console.error("[Tavern New] KiloProvider: Failed to load messages:", error)
       this.postMessage({ type: "error", message: getErrorMessage(error) || "Failed to load messages", sessionID })
     }
   }
@@ -2454,7 +2454,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.recoverPendingPrompts()
     } catch (err) {
       this.syncedChildSessions.delete(sessionID)
-      console.error("[Kilo New] KiloProvider: Failed to sync child session:", err)
+      console.error("[Tavern New] KiloProvider: Failed to sync child session:", err)
     }
   }
 
@@ -2508,7 +2508,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   private async flushPendingSessionRefresh(reason: string): Promise<void> {
     if (!this.pendingSessionRefresh) return
-    console.log("[Kilo New] KiloProvider: 🔄 Flushing deferred sessions refresh", { reason })
+    console.log("[Tavern New] KiloProvider: 🔄 Flushing deferred sessions refresh", { reason })
     const revision = ++this.sessionRefreshRevision
     const scope = this.opts.projectQualifier?.()?.projectId
     if (scope !== undefined) this.projectID = undefined
@@ -2517,7 +2517,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       const resolved = await flushPendingSessionRefreshUtil(ctx)
       if (resolved && scope === this.opts.projectQualifier?.()?.projectId) this.projectID = resolved
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to flush session refresh:", error)
+      console.error("[Tavern New] KiloProvider: Failed to flush session refresh:", error)
     }
     this.pendingSessionRefresh = ctx.pendingSessionRefresh
   }
@@ -2538,7 +2538,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         if (resolved && scope === this.opts.projectQualifier?.()?.projectId) this.projectID = resolved
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to load sessions:", error)
+      console.error("[Tavern New] KiloProvider: Failed to load sessions:", error)
       if (!more) {
         this.postMessage({
           type: "error",
@@ -2595,7 +2595,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         truncated: output.truncated,
       })
     } catch (error) {
-      console.error("[Kilo New] Failed to capture terminal context:", error)
+      console.error("[Tavern New] Failed to capture terminal context:", error)
       this.postMessage({
         type: "terminalContextError",
         requestId,
@@ -2676,7 +2676,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       }
       this.postMessage({ type: "sessionDeleted", sessionID })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to delete session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to delete session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to delete session",
@@ -2705,7 +2705,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       )
       this.postMessage({ ...result, success: response.data === true })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to delete message:", error)
+      console.error("[Tavern New] KiloProvider: Failed to delete message:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to delete message",
@@ -2729,7 +2729,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (this.currentSession?.id === sessionID) this.setCurrentSession(updated)
       this.postMessage({ type: "sessionUpdated", session: this.sessionToWebview(updated) })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to rename session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to rename session:", error)
       this.postMessage({ type: "error", message: getErrorMessage(error) || "Failed to rename session" })
     }
   }
@@ -2750,7 +2750,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       })
       if (saved) void vscode.window.showInformationMessage("Session transcript exported as Markdown.")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to export session transcript:", error)
+      console.error("[Tavern New] KiloProvider: Failed to export session transcript:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to export session transcript",
@@ -2764,10 +2764,10 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const result = await this.connectionService
       .getClientAsync(directory)
       .then((client) =>
-        force ? client.kilocode.providerUsage.refresh({ directory }) : client.kilocode.providerUsage.get({ directory }),
+        force ? client.taverncode.providerUsage.refresh({ directory }) : client.taverncode.providerUsage.get({ directory }),
       )
       .catch((error) => {
-        console.error("[Kilo New] KiloProvider: Failed to fetch provider usage:", error)
+        console.error("[Tavern New] KiloProvider: Failed to fetch provider usage:", error)
         return undefined
       })
     if (generation !== this.providerUsageGeneration) return
@@ -2827,7 +2827,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
             continue
           }
           this.storedProviderKeys = storedKeys
-          const settings = vscode.workspace.getConfiguration("kilo-code.new.model")
+          const settings = vscode.workspace.getConfiguration("tavern-code.new.model")
           const message = {
             type: "providersLoaded",
             providers: indexProvidersById(response.all),
@@ -2855,7 +2855,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           }
           // A rejected fetch leaves nothing cached, so retry on the next connect.
           if (!this.cachedProvidersMessage) this.providersRetry = true
-          console.error("[Kilo New] KiloProvider: Failed to fetch providers:", error)
+          console.error("[Tavern New] KiloProvider: Failed to fetch providers:", error)
         }
         if (!this.providersQueued) return
         generation = this.providersGeneration
@@ -2961,7 +2961,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedAgentsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch agents:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch agents:", error)
     }
   }
 
@@ -2986,7 +2986,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedSkillsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch skills:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch skills:", error)
     }
   }
 
@@ -3010,7 +3010,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedCommandsMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch commands:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch commands:", error)
     }
   }
 
@@ -3023,16 +3023,16 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     if (!this.client) return false
     try {
       const dir = this.getWorkspaceDirectory()
-      const result = await this.client.kilocode.removeSkill({ location, directory: dir })
+      const result = await this.client.taverncode.removeSkill({ location, directory: dir })
       if (result.error) {
-        console.error("[Kilo New] removeSkill returned error:", result.error)
+        console.error("[Tavern New] removeSkill returned error:", result.error)
         this.cachedSkillsMessage = null
         this.clearCommandsCache()
         await Promise.all([this.fetchAndSendSkills(), this.fetchAndSendCommands()])
         return false
       }
     } catch (error) {
-      console.error("[Kilo New] Failed to remove skill:", error)
+      console.error("[Tavern New] Failed to remove skill:", error)
       this.cachedSkillsMessage = null
       this.cachedCommandsMessage = null
       await Promise.all([this.fetchAndSendSkills(), this.fetchAndSendCommands()])
@@ -3052,7 +3052,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       name,
     })
     if (!result.success) {
-      console.error("[Kilo New] Failed to remove agent:", result.error)
+      console.error("[Tavern New] Failed to remove agent:", result.error)
       void vscode.window.showErrorMessage(result.error ?? `Failed to remove agent "${name}".`)
     }
     this.cachedAgentsMessage = null
@@ -3062,7 +3062,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private async handleRemoveMcp(name: string): Promise<void> {
     const removed = await removeMcp(this.removeConfigItemCtx, name)
     if (!removed) {
-      console.error("[Kilo New] KiloProvider: Failed to remove MCP server:", name)
+      console.error("[Tavern New] KiloProvider: Failed to remove MCP server:", name)
     }
   }
 
@@ -3087,7 +3087,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.postMessage(message)
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch MCP status:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch MCP status:", error)
     }
   }
 
@@ -3115,7 +3115,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     try {
       await this.refreshConfig("configLoaded")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch config:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch config:", error)
     }
   }
 
@@ -3127,7 +3127,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedGlobalConfig = config ?? null
       this.postMessage({ type: "globalConfigLoaded", config })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch global config:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch global config:", error)
     }
   }
 
@@ -3170,7 +3170,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       this.cachedIndexingStatusMessage = message
       this.postMessage(message)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch indexing status:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch indexing status:", error)
     }
   }
 
@@ -3196,7 +3196,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private speechToTextSource(): SpeechToTextSource | undefined {
-    // A project kilo.json must not enable or redirect voice input, so the custom
+    // A project tavern.json must not enable or redirect voice input, so the custom
     // source comes from the global layer only.
     return resolveSpeechToTextSource(this.cachedGlobalConfig ?? undefined)
   }
@@ -3256,13 +3256,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       return
     }
     try {
-      const { data } = await client.kilocode.backgroundJobs(
+      const { data } = await client.taverncode.backgroundJobs(
         { directory: this.getWorkspaceDirectory(sessionID), sessionID },
         { throwOnError: true },
       )
       this.postMessage({ type: "backgroundJobsLoaded", sessionID, requestID, jobs: data })
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch background jobs:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch background jobs:", error)
       this.postMessage({
         type: "backgroundJobsLoaded",
         sessionID,
@@ -3280,13 +3280,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       return
     }
     try {
-      await client.kilocode.backgroundJob.cancel(
+      await client.taverncode.backgroundJob.cancel(
         { jobID, directory: this.getWorkspaceDirectory(sessionID) },
         { throwOnError: true },
       )
       await this.fetchAndSendBackgroundJobs(sessionID, requestID)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to cancel background job:", error)
+      console.error("[Tavern New] KiloProvider: Failed to cancel background job:", error)
       this.postMessage({
         type: "backgroundJobsLoaded",
         sessionID,
@@ -3301,12 +3301,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const client = this.client
     if (!client || this.connectionState !== "connected") return
     try {
-      await client.kilocode.backgroundJob.promote(
+      await client.taverncode.backgroundJob.promote(
         { jobID, directory: this.getWorkspaceDirectory(sessionID) },
         { throwOnError: true },
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to promote background job:", error)
+      console.error("[Tavern New] KiloProvider: Failed to promote background job:", error)
     }
   }
 
@@ -3435,7 +3435,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.wakeupSessions = new Set([...this.wakeupSessions, ...seen])
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to seed session wakeups:", error)
+      console.error("[Tavern New] KiloProvider: Failed to seed session wakeups:", error)
     } finally {
       this.wakeupSeeding = false
     }
@@ -3450,7 +3450,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     try {
       await this.refreshConfig("configUpdated")
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to fetch config after update:", error)
+      console.error("[Tavern New] KiloProvider: Failed to fetch config after update:", error)
     }
   }
 
@@ -3461,25 +3461,25 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   private async checkConfigWarnings(from: string): Promise<void> {
     if (this.configWarningsShown) {
-      console.log("[Kilo New] KiloProvider: config warnings already shown", { from })
+      console.log("[Tavern New] KiloProvider: config warnings already shown", { from })
       return
     }
     if (!this.client) {
-      console.log("[Kilo New] KiloProvider: config warnings skipped (no client)", { from })
+      console.log("[Tavern New] KiloProvider: config warnings skipped (no client)", { from })
       return
     }
     try {
       const dir = this.getWorkspaceDirectory()
-      console.log("[Kilo New] KiloProvider: checking config warnings", { from, dir })
+      console.log("[Tavern New] KiloProvider: checking config warnings", { from, dir })
       const result = await this.client.config.warnings({ directory: dir })
       const list = result?.data ?? []
-      console.log("[Kilo New] KiloProvider: config warnings fetched", { from, count: list.length })
+      console.log("[Tavern New] KiloProvider: config warnings fetched", { from, count: list.length })
       if (list.length === 0) return
       this.configWarningsShown = true
 
       const first = list[0]!
       const summary = list.length === 1 ? first.message : `${first.message} (and ${list.length - 1} more)`
-      console.warn("[Kilo New] KiloProvider: showing config warnings", { from, count: list.length, path: first.path })
+      console.warn("[Tavern New] KiloProvider: showing config warnings", { from, count: list.length, path: first.path })
 
       const action = await vscode.window.showWarningMessage(`Config: ${summary}`, "Show Details")
       if (action === "Show Details") {
@@ -3487,13 +3487,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
           const base = `${w.path}\n  ${w.message}`
           return w.detail ? `${base}\n  ${w.detail}` : base
         })
-        const channel = vscode.window.createOutputChannel("Kilo Config Warnings")
+        const channel = vscode.window.createOutputChannel("Tavern Config Warnings")
         channel.clear()
         channel.appendLine(lines.join("\n\n"))
         channel.show()
       }
     } catch (err) {
-      console.warn("[Kilo New] KiloProvider: checkConfigWarnings failed:", { from, err })
+      console.warn("[Tavern New] KiloProvider: checkConfigWarnings failed:", { from, err })
     }
   }
 
@@ -3514,7 +3514,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     await fetchNotifications(this.notificationsContext())
   }
 
-  // Cloud session methods extracted to kilo-provider/handlers/cloud-session.ts
+  // Cloud session methods extracted to tavern-provider/handlers/cloud-session.ts
 
   private async handleDismissNotification(notificationId: string): Promise<void> {
     await dismissNotification(this.notificationsContext(), notificationId)
@@ -3522,7 +3522,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
   /** Read attention settings from VS Code config and push to webview. */
   private sendNotificationSettings(): void {
-    const attention = vscode.workspace.getConfiguration("kilo-code.new.attention")
+    const attention = vscode.workspace.getConfiguration("tavern-code.new.attention")
     this.postMessage({
       type: "notificationSettingsLoaded",
       settings: {
@@ -3556,7 +3556,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         (status) => ({ status, error: undefined }),
         (error: unknown) => {
           const diagnostic = failure(error)
-          console.warn("[Kilo New] Session cleanup status request failed:", {
+          console.warn("[Tavern New] Session cleanup status request failed:", {
             ...diagnostic,
             connection: this.connectionState,
           })
@@ -3807,7 +3807,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         .set(data.enabled)
         .then(() => true)
         .catch((error) => {
-          console.error("[Kilo New] Failed to persist sandbox default:", error)
+          console.error("[Tavern New] Failed to persist sandbox default:", error)
           return false
         })
       this.postMessage({
@@ -3967,7 +3967,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         refreshProviders ? this.fetchAndSendProviders() : Promise.resolve(),
         refreshAgents ? this.fetchAndSendAgents() : Promise.resolve(),
         refreshSpeech ? this.fetchAndSendSpeechToTextModels() : Promise.resolve(),
-      ]).catch((error) => console.error("[Kilo New] KiloProvider: Post-config refresh failed:", error))
+      ]).catch((error) => console.error("[Tavern New] KiloProvider: Post-config refresh failed:", error))
     } catch (error) {
       this.postConfigFailure(error, completed, snapshot, dir)
     } finally {
@@ -4017,7 +4017,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     snapshot?: ConfigSnapshot,
     directory?: string,
   ): void {
-    console.error("[Kilo New] KiloProvider: Failed to update config:", error)
+    console.error("[Tavern New] KiloProvider: Failed to update config:", error)
     const bindings = snapshot && directory ? this.bindingsFor(directory, snapshot.targets) : undefined
     this.postMessage({
       type: "configUpdateFailed",
@@ -4159,7 +4159,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         }
 
         const delay = backoff(attempt, result.response?.headers)
-        console.log(`[Kilo New] KiloProvider: Retry on ${status}, attempt ${attempt}/${MAX_RETRIES}, delay ${delay}ms`)
+        console.log(`[Tavern New] KiloProvider: Retry on ${status}, attempt ${attempt}/${MAX_RETRIES}, delay ${delay}ms`)
 
         this.postMessage({
           type: "sessionStatus",
@@ -4197,27 +4197,27 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private maxCostSetting(): number {
-    return this.setMaxCost(vscode.workspace.getConfiguration("kilo-code.new").get<number>("maxCost", 0))
+    return this.setMaxCost(vscode.workspace.getConfiguration("tavern-code.new").get<number>("maxCost", 0))
   }
 
   private commitMessageLanguageSetting(): string {
-    return vscode.workspace.getConfiguration("kilo-code.new").get<string>("languageCommitMessage", "sync")
+    return vscode.workspace.getConfiguration("tavern-code.new").get<string>("languageCommitMessage", "sync")
   }
 
   private multiProjectSetting(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.experimental").get<boolean>("multiProject", false)
+    return vscode.workspace.getConfiguration("tavern-code.new.experimental").get<boolean>("multiProject", false)
   }
 
   private claudeMigrationSetting(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.experimental").get<boolean>("claudeMigration", false)
+    return vscode.workspace.getConfiguration("tavern-code.new.experimental").get<boolean>("claudeMigration", false)
   }
   private conversationPromptHistorySetting(): boolean {
     return vscode.workspace
-      .getConfiguration("kilo-code.new.experimental")
+      .getConfiguration("tavern-code.new.experimental")
       .get<boolean>("conversationPromptHistory", false)
   }
   private browserAutomationSetting(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.experimental").get<boolean>("browserAutomation", false)
+    return vscode.workspace.getConfiguration("tavern-code.new.experimental").get<boolean>("browserAutomation", false)
   }
 
   private async sendIndexingSettings(projectId?: string) {
@@ -4278,13 +4278,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     enabled: boolean,
     config: { baseUrl: string; password: string },
   ): Promise<IndexingStatus> {
-    const auth = Buffer.from(`kilo:${config.password}`).toString("base64")
+    const auth = Buffer.from(`tavern:${config.password}`).toString("base64")
     const res = await fetch(`${config.baseUrl}/indexing/consent`, {
       method: "PUT",
       headers: {
         Authorization: `Basic ${auth}`,
         "Content-Type": "application/json",
-        "x-kilo-directory": encodeURIComponent(dir),
+        "x-tavern-directory": encodeURIComponent(dir),
       },
       body: JSON.stringify({ enabled }),
     })
@@ -4293,7 +4293,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   private configSettings() {
-    const naming = vscode.workspace.getConfiguration("kilo-code.new.agentManager")
+    const naming = vscode.workspace.getConfiguration("tavern-code.new.agentManager")
     return {
       maxCost: this.maxCostSetting(),
       languageCommitMessage: this.commitMessageLanguageSetting(),
@@ -4601,7 +4601,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         ),
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to send message:", error)
+      console.error("[Tavern New] KiloProvider: Failed to send message:", error)
       this.postMessage({
         type: "sendMessageFailed",
         error: getErrorMessage(error) || "Failed to send message",
@@ -4700,7 +4700,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         this.postMessage({ type: "sessionCommandCompleted", messageID })
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to send command:", error)
+      console.error("[Tavern New] KiloProvider: Failed to send command:", error)
       this.postMessage({
         type: "sendMessageFailed",
         error: getErrorMessage(error) || "Failed to send command",
@@ -4761,13 +4761,13 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       if (!this.client) throw new Error("Not connected to CLI backend")
       const directory = this.getWorkspaceDirectory(sessionID)
       await this.checkpoints.get(sessionID)
-      await this.client.kilocode.resumeSession(
+      await this.client.taverncode.resumeSession(
         { sessionID, messageID, directory, snapshotInitialization: this.opts.snapshotInitialization },
         { throwOnError: true },
       )
       this.postMessage({ type: "sessionResumeResult", sessionID, requestID })
     } catch (error) {
-      console.error("[Kilo New] Failed to resume session:", error)
+      console.error("[Tavern New] Failed to resume session:", error)
       this.postMessage({
         type: "sessionResumeResult",
         sessionID,
@@ -4789,7 +4789,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const dir = this.getWorkspaceDirectory(sessionID)
     const { data, error } = await this.client.session.revert({ sessionID, messageID, partID, directory: dir })
     if (error) {
-      console.error("[Kilo New] KiloProvider: Failed to revert session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to revert session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error),
@@ -4809,7 +4809,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const dir = this.getWorkspaceDirectory(sessionID)
     const { data, error } = await this.client.session.unrevert({ sessionID, directory: dir })
     if (error) {
-      console.error("[Kilo New] KiloProvider: Failed to unrevert session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to unrevert session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error),
@@ -4838,12 +4838,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     const target = sessionID || this.currentSession?.id
     if (!target) {
-      console.error("[Kilo New] KiloProvider: No sessionID for compact")
+      console.error("[Tavern New] KiloProvider: No sessionID for compact")
       return
     }
 
     if (!providerID || !modelID) {
-      console.error("[Kilo New] KiloProvider: No model selected for compact")
+      console.error("[Tavern New] KiloProvider: No model selected for compact")
       this.postMessage({
         type: "error",
         message: "No model selected. Connect a provider to compact this session.",
@@ -4858,7 +4858,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         { throwOnError: true },
       )
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to compact session:", error)
+      console.error("[Tavern New] KiloProvider: Failed to compact session:", error)
       this.postMessage({
         type: "error",
         message: getErrorMessage(error) || "Failed to compact session",
@@ -4866,7 +4866,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Permission + question handlers extracted to kilo-provider/handlers/permission.ts and question.ts
+  // Permission + question handlers extracted to tavern-provider/handlers/permission.ts and question.ts
 
   private get permissionCtx(): PermissionContext {
     return {
@@ -4907,7 +4907,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Cloud session handlers extracted to kilo-provider/handlers/cloud-session.ts
+  // Cloud session handlers extracted to tavern-provider/handlers/cloud-session.ts
 
   private get cloudSessionCtx(): CloudSessionContext {
     const self = this
@@ -4931,7 +4931,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     }
   }
 
-  // Auth handlers extracted to kilo-provider/handlers/auth.ts
+  // Auth handlers extracted to tavern-provider/handlers/auth.ts
 
   private get authCtx(): AuthContext {
     return {
@@ -4958,20 +4958,20 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
 
     await this.client.global
       .dispose()
-      .catch((e: unknown) => console.warn("[Kilo New] KiloProvider: global.dispose() after org switch failed:", e))
+      .catch((e: unknown) => console.warn("[Tavern New] KiloProvider: global.dispose() after org switch failed:", e))
 
     // Org switch succeeded — refresh profile and providers independently (best-effort)
     try {
-      const profileResult = await this.client!.kilo.profile()
+      const profileResult = await this.client!.tavern.profile()
       // Broadcast to all webviews (sidebar, profile tab, agent manager, etc.)
       this.connectionService.notifyProfileChanged(profileResult.data ?? null)
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to refresh profile after org switch:", error)
+      console.error("[Tavern New] KiloProvider: Failed to refresh profile after org switch:", error)
     }
     try {
       await this.fetchAndSendProviders()
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to refresh providers after org switch:", error)
+      console.error("[Tavern New] KiloProvider: Failed to refresh providers after org switch:", error)
     }
   }
 
@@ -4982,7 +4982,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     if (key === "maxCost") {
       const normalized = this.setMaxCost(value)
       await vscode.workspace
-        .getConfiguration("kilo-code.new")
+        .getConfiguration("tavern-code.new")
         .update("maxCost", normalized, vscode.ConfigurationTarget.Global)
       for (const sid of this.trackedSessionIds) {
         const oldLimit = this.activeAlerts.get(sid)
@@ -4999,7 +4999,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     if (section === "autocomplete" && !validAutocompleteSetting(leaf, value)) return
     if (section === "indexing" && !validIndexingSetting(leaf, value)) return
     if (section === "chat" && !validChatSetting(leaf, value)) return
-    const config = vscode.workspace.getConfiguration(`kilo-code.new${section ? `.${section}` : ""}`)
+    const config = vscode.workspace.getConfiguration(`tavern-code.new${section ? `.${section}` : ""}`)
     // Normalize a webview-side clear to `undefined` so VS Code removes the
     // key from settings.json rather than persisting a literal `null`. This
     // lets the runtime fall back to the resolved default.
@@ -5009,22 +5009,22 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   }
 
   /**
-   * Reset all "kilo-code.new.*" extension settings to their defaults by reading
+   * Reset all "tavern-code.new.*" extension settings to their defaults by reading
    * contributes.configuration from the extension's package.json at runtime.
-   * Only resets settings under the "kilo-code.new." namespace to avoid touching
+   * Only resets settings under the "tavern-code.new." namespace to avoid touching
    * settings from the previous version of the extension which shares the same
-   * extension ID and "kilo-code.*" namespace.
+   * extension ID and "tavern-code.*" namespace.
    */
   private async handleResetAllSettings(): Promise<void> {
     const confirmed = await vscode.window.showWarningMessage(
-      "Reset all Kilo Code extension settings to defaults?",
+      "Reset all Tavern Code extension settings to defaults?",
       { modal: true },
       "Reset",
     )
     if (confirmed !== "Reset") return
 
-    const prefix = "kilo-code.new."
-    const ext = vscode.extensions.getExtension("kilocode.kilo-code")
+    const prefix = "tavern-code.new."
+    const ext = vscode.extensions.getExtension("taverncode.tavern-code")
     const properties = ext?.packageJSON?.contributes?.configuration?.properties as Record<string, unknown> | undefined
     if (!properties) return
 
@@ -5041,9 +5041,9 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     await this.extensionContext?.globalState.update("variantSelections", undefined)
     await this.extensionContext?.globalState.update("recentModels", undefined)
     await this.extensionContext?.globalState.update("modelUsage", undefined)
-    await this.extensionContext?.globalState.update("kilo.dismissedNotificationIds", undefined)
-    await this.extensionContext?.globalState.update("kilo.agentMigrationBannerDismissed", undefined)
-    await this.extensionContext?.globalState.update("kilo.marketplace.dismissedSuggestions", undefined)
+    await this.extensionContext?.globalState.update("tavern.dismissedNotificationIds", undefined)
+    await this.extensionContext?.globalState.update("tavern.agentMigrationBannerDismissed", undefined)
+    await this.extensionContext?.globalState.update("tavern.marketplace.dismissedSuggestions", undefined)
 
     // Re-send all settings to the webview so the UI reflects the reset
     this.postMessage(buildAutocompleteSettingsMessage())
@@ -5065,14 +5065,14 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Re-fetch notifications to reflect cleared dismissed IDs
     await this.fetchAndSendNotifications()
 
-    vscode.window.showInformationMessage("Kilo Code settings have been reset to defaults.")
+    vscode.window.showInformationMessage("Tavern Code settings have been reset to defaults.")
   }
 
   /**
    * Read the current browser automation settings and push them to the webview.
    */
   private sendBrowserSettings(): void {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.browserAutomation")
+    const config = vscode.workspace.getConfiguration("tavern-code.new.browserAutomation")
     this.postMessage({
       type: "browserSettingsLoaded",
       settings: {
@@ -5087,7 +5087,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    * Read the current Claude Code compatibility setting and push it to the webview.
    */
   private sendClaudeCompatSetting(): void {
-    const enabled = vscode.workspace.getConfiguration("kilo-code.new").get<boolean>("claudeCodeCompat", false)
+    const enabled = vscode.workspace.getConfiguration("tavern-code.new").get<boolean>("claudeCodeCompat", false)
     this.postMessage({
       type: "claudeCompatSettingLoaded",
       enabled: enabled ?? false,
@@ -5115,7 +5115,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   /** Reload config, skills, agents, and commands from disk by rebooting the project's instances. */
   private async handleReload(): Promise<void> {
     if (!this.client) {
-      console.warn("[Kilo New] handleReload: no client connection")
+      console.warn("[Tavern New] handleReload: no client connection")
       return
     }
     const dir = this.getWorkspaceDirectory(this.currentSession?.id)
@@ -5132,7 +5132,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         )
         return
       }
-      console.error("[Kilo New] handleReload: reload endpoint failed:", err)
+      console.error("[Tavern New] handleReload: reload endpoint failed:", err)
       const detail = err instanceof Error && err.message ? err.message : "See extension logs for details."
       vscode.window.showErrorMessage(`Reload failed. ${detail}`)
       return
@@ -5277,7 +5277,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       return
     }
 
-    if (event.type === "kilo-sessions.remote-status-changed") {
+    if (event.type === "tavern-sessions.remote-status-changed") {
       this.remoteService?.updateFromEvent({ enabled: event.properties.enabled, connected: event.properties.connected })
       return
     }
@@ -5492,7 +5492,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       }
       const childId = childID(part)
       if (childId && !this.trackedSessionIds.has(childId)) {
-        console.log("[Kilo New] KiloProvider: 🔗 Auto-adopting child session from task tool", { childId })
+        console.log("[Tavern New] KiloProvider: 🔗 Auto-adopting child session from task tool", { childId })
         void this.handleSyncSession(childId, part.sessionID ?? sessionID)
       }
     }
@@ -5569,12 +5569,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         typeof (payload as { type?: unknown }).type === "string"
           ? (payload as { type: string }).type
           : "<unknown>"
-      console.warn("[Kilo New] KiloProvider: ⚠️ postMessage dropped (no webview)", { type })
+      console.warn("[Tavern New] KiloProvider: ⚠️ postMessage dropped (no webview)", { type })
       return
     }
 
     void this.webview.postMessage(payload).then(undefined, (error) => {
-      console.error("[Kilo New] KiloProvider: ❌ postMessage failed", error)
+      console.error("[Tavern New] KiloProvider: ❌ postMessage failed", error)
     })
   }
 
@@ -5607,7 +5607,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
         void vscode.window.showInformationMessage(`Project memory ${operation === "enable" ? "enabled" : "disabled"}.`)
       }
     } catch (error) {
-      console.error("[Kilo New] KiloProvider: Failed to toggle memory:", error)
+      console.error("[Tavern New] KiloProvider: Failed to toggle memory:", error)
       void vscode.window.showErrorMessage(getErrorMessage(error) || "Failed to toggle memory")
     }
   }
@@ -5638,7 +5638,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       const remote = repo.state?.remotes?.find((r: { name: string }) => r.name === "origin")
       return remote?.fetchUrl ?? remote?.pushUrl
     } catch (error) {
-      console.warn("[Kilo New] KiloProvider: Failed to get git remote URL:", error)
+      console.warn("[Tavern New] KiloProvider: Failed to get git remote URL:", error)
       return undefined
     }
   }
@@ -5648,7 +5648,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    */
   /**
    * Return the set of relative paths for all open text-editor tabs within the
-   * given directory, filtered through .kilocodeignore.
+   * given directory, filtered through .taverncodeignore.
    */
   private async getOpenTabPaths(dir: string): Promise<Set<string>> {
     const controller = await this.getIgnoreController(dir)
@@ -5687,7 +5687,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   /**
    * Narrow a directory's files to those its own ignore rules permit.
    *
-   * File search applies editor exclusions separately; this adds .kilocodeignore.
+   * File search applies editor exclusions separately; this adds .taverncodeignore.
    * A controller that cannot be built lets the files through rather than
    * hiding everything, since this is a relevance filter and not a permission
    * boundary.
@@ -5695,7 +5695,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
   private async filterIgnored(dir: string, files: string[]): Promise<string[]> {
     if (!dir || !files.length) return files
     const controller = await this.getIgnoreController(dir).catch((err) => {
-      console.warn("[Kilo New] Failed to read ignore rules for", dir, err)
+      console.warn("[Tavern New] Failed to read ignore rules for", dir, err)
       return undefined
     })
     if (!controller) return files
@@ -5707,12 +5707,12 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
    *
    * Keyed by directory rather than holding a single controller: multi-root file
    * search asks about several roots per keystroke, and a one-entry cache would
-   * re-read .kilocodeignore from disk on every alternating lookup. Bounded by
+   * re-read .taverncodeignore from disk on every alternating lookup. Bounded by
    * insertion order because session directories, not just workspace folders,
    * reach this cache.
    *
    * A failed init is evicted rather than cached. `initialize()` lets permission
-   * errors from reading .kilocodeignore propagate, and caching that rejection
+   * errors from reading .taverncodeignore propagate, and caching that rejection
    * would keep failing every later lookup for the same directory.
    */
   private async getIgnoreController(workspaceDir: string): Promise<FileIgnoreController> {
@@ -5750,7 +5750,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       return relative
     }
 
-    // Visible files (capped to avoid bloating context, filtered through .kilocodeignore)
+    // Visible files (capped to avoid bloating context, filtered through .taverncodeignore)
     const visibleFiles = [
       ...new Set(
         [
@@ -5768,7 +5768,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Open tabs — text and notebook files only; exclude diffs and custom editors
     const openTabs = [...(await this.getOpenTabPaths(workspaceDir))].slice(0, 20)
 
-    // Active file (also filtered through .kilocodeignore)
+    // Active file (also filtered through .taverncodeignore)
     const activeEditor = vscode.window.activeTextEditor
     const activeUri = activeEditor
       ? notebookUri(activeEditor.document.uri)
@@ -5792,7 +5792,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     // Ambiguous ids degrade to the legacy resolution instead of throwing: this
     // runs eagerly per webview message, where a throw would drop the message.
     if (routed === null)
-      console.warn(`[Kilo New] KiloProvider: session ${sessionId} is ambiguous across projects, using workspace root`)
+      console.warn(`[Tavern New] KiloProvider: session ${sessionId} is ambiguous across projects, using workspace root`)
     if (routed) return routed
     return resolveWorkspaceDirectory({
       sessionID: sessionId,
@@ -5805,7 +5805,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const routed = this.routeSessionDirectory(sessionId)
     if (routed === null)
       console.warn(
-        `[Kilo New] KiloProvider: session ${sessionId} is ambiguous across projects, using tracked directory`,
+        `[Tavern New] KiloProvider: session ${sessionId} is ambiguous across projects, using tracked directory`,
       )
     if (routed) return routed
     return this.sessionDirectories.get(sessionId) ?? session?.directory ?? this.getRootDirectory()
@@ -5913,7 +5913,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     const history = await retry(() =>
       this.client!.session.messages({ sessionID, directory, limit: 0 }, { throwOnError: true }),
     ).catch((error: unknown) => {
-      console.warn("[Kilo New] KiloProvider: Failed to recover session Git directory:", error)
+      console.warn("[Tavern New] KiloProvider: Failed to recover session Git directory:", error)
       return undefined
     })
     if (!history) {
@@ -6056,7 +6056,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
       styleUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "webview.css")),
       iconsBaseUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "assets", "icons")),
       workerUri: webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "dist", "shiki-worker.js")),
-      title: "Kilo Code",
+      title: "Tavern Code",
       port: this.connectionService.getServerInfo()?.port,
       extraStyles: `.container { height: 100vh; }`,
       // Dedicated single-purpose panels (Settings, Profile, Sub-Agent Viewer)
@@ -6179,7 +6179,7 @@ export class KiloProvider implements vscode.WebviewViewProvider, TelemetryProper
     for (const pending of this.ignoreControllers.values()) {
       void pending.then(
         (controller) => controller.dispose(),
-        (err) => console.warn("[Kilo New] Failed to dispose ignore controller:", err),
+        (err) => console.warn("[Tavern New] Failed to dispose ignore controller:", err),
       )
     }
     this.ignoreControllers.clear()

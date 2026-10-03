@@ -1,8 +1,8 @@
 import { ConfigPlugin } from "@/config/plugin"
 import { ConfigPluginV1 } from "@opencode-ai/core/v1/config/plugin"
-import { isIndexingPlugin } from "@kilocode/kilo-indexing/detect"
-import { ensureAtomicChatPlugin, isAtomicChatPlugin } from "@/kilocode/atomic-chat-feature"
-import { ensureIndexingPlugin, INDEXING_PLUGIN } from "@/kilocode/indexing-feature"
+import { isIndexingPlugin } from "@taverncode/tavern-indexing/detect"
+import { ensureAtomicChatPlugin, isAtomicChatPlugin } from "@/taverncode/atomic-chat-feature"
+import { ensureIndexingPlugin, INDEXING_PLUGIN } from "@/taverncode/indexing-feature"
 
 type Log = {
   debug: (msg: string, data?: Record<string, unknown>) => void

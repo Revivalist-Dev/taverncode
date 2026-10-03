@@ -1,4 +1,4 @@
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import type { Activity } from "../../webview-ui/src/utils/session-activity"
 import { EXTENSION_DISPLAY_NAME } from "../constants"
 

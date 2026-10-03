@@ -2,20 +2,20 @@ import { createRequire } from "node:module"
 import fs from "node:fs/promises"
 import path from "node:path"
 
-const require = createRequire(path.resolve(import.meta.dirname, "../../../kilo-sandbox/package.json"))
+const require = createRequire(path.resolve(import.meta.dirname, "../../../tavern-sandbox/package.json"))
 
 export namespace KiloSandboxNetwork {
-  export const relay = "kilo-sandbox-network-relay.js"
-  export const seccomp = "kilo-sandbox-seccomp"
+  export const relay = "tavern-sandbox-network-relay.js"
+  export const seccomp = "tavern-sandbox-seccomp"
 
   export async function bundle() {
     const result = await Bun.build({
-      entrypoints: ["../kilo-sandbox/src/kilo-sandbox-network-relay.ts"],
+      entrypoints: ["../tavern-sandbox/src/tavern-sandbox-network-relay.ts"],
       target: "bun",
       format: "esm",
       minify: true,
     })
-    if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Kilo sandbox network relay")
+    if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Tavern sandbox network relay")
     return result.outputs[0]
   }
 
@@ -32,6 +32,6 @@ export namespace KiloSandboxNetwork {
     const licenses = path.join(dir, "licenses", "sandbox-runtime")
     await fs.mkdir(licenses, { recursive: true })
     await fs.copyFile(path.join(pkg, "LICENSE"), path.join(licenses, "LICENSE"))
-    console.log(`copied Kilo sandbox network relay and seccomp helper to ${dir}`)
+    console.log(`copied Tavern sandbox network relay and seccomp helper to ${dir}`)
   }
 }

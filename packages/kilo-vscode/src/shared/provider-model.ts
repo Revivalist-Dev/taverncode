@@ -1,5 +1,5 @@
-export const KILO_PROVIDER_ID = "kilo"
-export const KILO_AUTO = { providerID: KILO_PROVIDER_ID, modelID: "kilo-auto/free" } as const
+export const KILO_PROVIDER_ID = "tavern"
+export const KILO_AUTO = { providerID: KILO_PROVIDER_ID, modelID: "tavern-auto/free" } as const
 export const CUSTOM_PROVIDER_PACKAGES = ["@ai-sdk/openai-compatible", "@ai-sdk/openai", "@ai-sdk/anthropic"] as const
 export type CustomProviderPackage = (typeof CUSTOM_PROVIDER_PACKAGES)[number]
 export const CUSTOM_PROVIDER_PACKAGE: CustomProviderPackage = "@ai-sdk/openai-compatible"
@@ -35,11 +35,11 @@ export function providerOrderIndex(providerID: string, order = PROVIDER_PRIORITY
 export function createKiloFallbackProvider() {
   return {
     id: KILO_PROVIDER_ID,
-    name: "Kilo Gateway",
+    name: "Tavern Gateway",
     source: "custom" as const,
     env: ["KILO_API_KEY"],
     metadata: {
-      noteKey: "settings.providers.note.kilo",
+      noteKey: "settings.providers.note.tavern",
       icon: KILO_PROVIDER_ID,
       priority: 0,
     },

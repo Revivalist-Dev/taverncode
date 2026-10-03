@@ -1,14 +1,14 @@
 #!/usr/bin/env bun
 
 /**
- * Build the Kilo JetBrains plugin.
+ * Build the Tavern JetBrains plugin.
  *
  * Usage:
  *   bun script/build.ts               # Local plugin build
  *   bun script/build.ts --production  # Production plugin build
  *
  * The JetBrains plugin no longer bundles CLI binaries. Runtime downloads the
- * pinned release from GitHub using packages/kilo-jetbrains/package.json version.
+ * pinned release from GitHub using packages/tavern-jetbrains/package.json version.
  */
 
 import { $ } from "bun"

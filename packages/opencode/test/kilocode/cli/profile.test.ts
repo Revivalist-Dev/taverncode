@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 
-import { format, handle, payload } from "../../../src/kilocode/cli/cmd/profile"
+import { format, handle, payload } from "../../../src/taverncode/cli/cmd/profile"
 
 describe("profile CLI formatting", () => {
   test("formats personal balance for human output", () => {

@@ -1,12 +1,12 @@
 export const dict = {
-  // Kilo Gateway provider translations
+  // Tavern Gateway provider translations
   "provider.connect.kiloGateway.byok.prefix": "Aby uzyskać więcej statystyk użycia, użyj ",
-  "provider.connect.kiloGateway.byok.link": "BYOK przez Kilo's Gateway",
+  "provider.connect.kiloGateway.byok.link": "BYOK przez Tavern's Gateway",
   "provider.connect.kiloGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Polecane",
-  "settings.providers.note.kilo": "Dostęp do ponad 500 modeli AI",
+  "settings.providers.note.tavern": "Dostęp do ponad 500 modeli AI",
   "settings.providers.note.opencode": "Wyselekcjonowane modele, w tym Claude, GPT, Gemini i inne",
   "settings.providers.note.anthropic": "Bezpośredni dostęp do modeli Claude, w tym Pro i Max",
   "settings.providers.note.deepseek": "Modele DeepSeek do zadań rozumowania i kodowania",
@@ -37,18 +37,18 @@ export const dict = {
   "marketplace.install.destination": "Miejsce instalacji",
   "marketplace.install.includedSkills": "Dołączone umiejętności",
   "marketplace.install.about.mcp":
-    "Serwer MCP zapewnia Kilo dodatkowe narzędzia do pracy z usługami zewnętrznymi lub programami lokalnymi.",
+    "Serwer MCP zapewnia Tavern dodatkowe narzędzia do pracy z usługami zewnętrznymi lub programami lokalnymi.",
   "marketplace.install.about.agent": "Agent dodaje rolę wielokrotnego użytku z własnymi instrukcjami i uprawnieniami.",
   "marketplace.install.about.skill":
-    "Umiejętność dodaje instrukcje i zasoby dotyczące określonych zadań, które Kilo może wczytać w razie potrzeby.",
+    "Umiejętność dodaje instrukcje i zasoby dotyczące określonych zadań, które Tavern może wczytać w razie potrzeby.",
   "marketplace.install.mcp.warning":
-    "Serwery MCP mogą uruchamiać lokalne polecenia lub łączyć się z usługami zewnętrznymi. Kilo poprosi o pozwolenie przed użyciem ich narzędzi, chyba że uprawnienia zezwalają na to automatycznie.",
+    "Serwery MCP mogą uruchamiać lokalne polecenia lub łączyć się z usługami zewnętrznymi. Tavern poprosi o pozwolenie przed użyciem ich narzędzi, chyba że uprawnienia zezwalają na to automatycznie.",
   "marketplace.install.project.warning":
     "Pliki projektu mogą zostać dodane do systemu kontroli wersji. Nie przechowuj tutaj sekretów, chyba że konfiguracja odwołuje się do zmiennej środowiskowej.",
   "marketplace.install.learnMore": "Dowiedz się, jak działają instalacje z Marketplace",
   "marketplace.install.learnMcp": "Dowiedz się więcej o MCP",
   "marketplace.install.about.plugin":
-    "Wtyczka dodaje niestandardowe narzędzia i integracje do Kilo. Wtyczki działają z pełnymi uprawnieniami.",
+    "Wtyczka dodaje niestandardowe narzędzia i integracje do Tavern. Wtyczki działają z pełnymi uprawnieniami.",
   "marketplace.install.plugin.warning":
     "Wtyczki wykonują kod z pełnymi uprawnieniami. Mogą odczytywać i zmieniać Twoje pliki, uruchamiać polecenia oraz uzyskiwać dostęp do Twoich danych uwierzytelniających i sieci. Instaluj tylko wtyczki, którym ufasz.",
   "marketplace.install.installedAt": "Zainstalowano w {{path}}",
@@ -119,7 +119,7 @@ export const dict = {
     "Poczekaj, aż snapshot się zakończy. Kolejne tury są szybkie, gdy początkowy snapshot jest już zbudowany.",
   "snapshot.slowRepo.answer.disable": "Wyłącz dla tego projektu",
   "snapshot.slowRepo.answer.disable.description":
-    "Wyłącz snapshoty Kilo dla tego projektu. Stracisz cofanie/przywracanie zmian Kilo, ale git nadal śledzi wszystko.",
+    "Wyłącz snapshoty Tavern dla tego projektu. Stracisz cofanie/przywracanie zmian Tavern, ale git nadal śledzi wszystko.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Otwórz w podglądzie różnic",

@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from "bun:test"
 import { createRoot, createSignal } from "solid-js"
 
 type Mod = typeof import("../../webview-ui/src/hooks/usePromptHistory")
-const KEY = "kilo.prompt-history.v2"
-const LEGACY = "kilo.prompt-history.v1"
+const KEY = "tavern.prompt-history.v2"
+const LEGACY = "tavern.prompt-history.v1"
 
 let data: Map<string, string>
 let quota = Infinity

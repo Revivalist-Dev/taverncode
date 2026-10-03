@@ -64,8 +64,8 @@ export const AgentStartRequestSchema = z
     repository: RepositoryInputSchema,
     options: z
       .object({
-        createdOnPlatform: z.literal("kilo-cli"),
-        kilocodeOrganizationId: z.string().uuid().optional(),
+        createdOnPlatform: z.literal("tavern-cli"),
+        taverncodeOrganizationId: z.string().uuid().optional(),
       })
       .strict(),
   })

@@ -4,7 +4,7 @@ import { getDefaultModelId } from "./model-registry"
 import { resolveEmbeddingProfile } from "./embedding-profile"
 
 import { OpenAiEmbedder } from "./embedders/openai"
-import { KiloEmbedder } from "./embedders/kilo"
+import { KiloEmbedder } from "./embedders/tavern"
 import { CodeIndexOllamaEmbedder } from "./embedders/ollama"
 import { OpenAICompatibleEmbedder } from "./embedders/openai-compatible"
 import { GeminiEmbedder } from "./embedders/gemini"
@@ -36,7 +36,7 @@ const policy = {
   openai: undefined,
   openrouter: undefined,
   "openai-compatible": undefined,
-  kilo: undefined,
+  tavern: undefined,
   gemini: undefined,
   mistral: undefined,
   "vercel-ai-gateway": undefined,
@@ -83,9 +83,9 @@ export class CodeIndexServiceFactory {
     const config = this.configManager.getConfig()
     const provider = config.embedderProvider
 
-    if (provider === "kilo") {
-      if (!config.kiloOptions?.apiKey) throw new Error("Kilo API key is required for embedding.")
-      if (!config.modelId) throw new Error("Kilo embedding model is required.")
+    if (provider === "tavern") {
+      if (!config.kiloOptions?.apiKey) throw new Error("Tavern API key is required for embedding.")
+      if (!config.modelId) throw new Error("Tavern embedding model is required.")
       return new KiloEmbedder({
         apiKey: config.kiloOptions.apiKey,
         baseUrl: config.kiloOptions.baseUrl,

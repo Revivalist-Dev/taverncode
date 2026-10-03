@@ -53,10 +53,10 @@ export interface WorktreeDiffSourceOptions {
  * Diffs between the local working tree and the base branch. Each fetch returns
  * a summary (one entry per changed file, no content); the viewer loads
  * `before`/`after` per file on demand via `fetchFile`. Runs entirely in the
- * extension host — no `kilo serve` round-trip.
+ * extension host — no `tavern serve` round-trip.
  */
 export function createWorktreeDiffSource(opts: WorktreeDiffSourceOptions = {}): DiffSource {
-  const output = opts.git ? undefined : vscode.window.createOutputChannel("Kilo Diff: Workspace")
+  const output = opts.git ? undefined : vscode.window.createOutputChannel("Tavern Diff: Workspace")
   const log = opts.log ?? ((...args: unknown[]) => appendOutput(output!, "WorktreeDiffSource", ...args))
   const git = opts.git ?? new GitOps({ log })
   const controller = new AbortController()

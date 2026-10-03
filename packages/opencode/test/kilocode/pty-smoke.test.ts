@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { render } from "../../src/kilocode/cli/cmd/pty-smoke"
+import { render } from "../../src/taverncode/cli/cmd/pty-smoke"
 
 const run = (source: string, timeout = 3_000) => render(process.execPath, ["-e", source], timeout)
 const raw = "process.stdin.setRawMode(true); process.stdin.resume();"

@@ -1,4 +1,4 @@
-import type { IndexingConfig } from "@kilocode/kilo-indexing/config"
+import type { IndexingConfig } from "@taverncode/tavern-indexing/config"
 
 type Auth = unknown
 
@@ -73,27 +73,27 @@ export function resolveKiloIndexingAuth(input: {
   env?: Env
 }): KiloIndexingAuth {
   const config = record(input.config)
-  const options = record(record(config.provider).kilo)
+  const options = record(record(config.provider).tavern)
   const provider = input.provider ?? record(input.provider)
   const providerOptions = record(provider.options)
   const providerConfig = record(options.options)
-  const kilo = record(record(config.indexing).kilo)
+  const tavern = record(record(config.indexing).tavern)
   const env = input.env ?? process.env
 
   return {
     apiKey:
-      text(kilo.apiKey) ??
+      text(tavern.apiKey) ??
       text(providerConfig.apiKey) ??
       token(input.auth) ??
       text(provider.key) ??
-      text(providerOptions.kilocodeToken) ??
+      text(providerOptions.taverncodeToken) ??
       text(env.KILO_API_KEY),
-    baseUrl: text(kilo.baseUrl) ?? text(providerConfig.baseURL) ?? text(providerConfig.baseUrl),
+    baseUrl: text(tavern.baseUrl) ?? text(providerConfig.baseURL) ?? text(providerConfig.baseUrl),
     organizationId:
-      text(kilo.organizationId) ??
-      text(providerConfig.kilocodeOrganizationId) ??
+      text(tavern.organizationId) ??
+      text(providerConfig.taverncodeOrganizationId) ??
       org(input.auth) ??
-      text(providerOptions.kilocodeOrganizationId) ??
+      text(providerOptions.taverncodeOrganizationId) ??
       text(env.KILO_ORG_ID),
   }
 }
@@ -113,5 +113,5 @@ export function indexingWithKiloDefault(
   auth: KiloIndexingAuth,
 ): IndexingConfig | undefined {
   if (!shouldDefaultIndexingToKilo(indexing, auth)) return indexing
-  return { ...indexing, provider: "kilo" }
+  return { ...indexing, provider: "tavern" }
 }

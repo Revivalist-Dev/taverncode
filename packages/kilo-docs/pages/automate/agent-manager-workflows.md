@@ -29,9 +29,9 @@ Use the smallest orchestration layer that matches the work:
 | Let independent research or implementation run while the current agent continues | A background `task` subagent with `background: true` |
 | Give an agent an isolated branch, checkout, terminal, and diff | An Agent Manager `worktree` session |
 | Start another conversation on the same branch | An Agent Manager Local session or `Cmd+T` / `Ctrl+T` |
-| Share material findings among one session and its task descendants | Kilo Swarm with `board_post` and `board_read` |
+| Share material findings among one session and its task descendants | Tavern Swarm with `board_post` and `board_read` |
 
-Task children are non-interactive delegates. They cannot ask the user directly and do not create worktrees. Agent Manager sessions are top-level sessions with their own prompt queues. Separate Agent Manager sessions do not share a Kilo Swarm board automatically, even when they use the same worktree.
+Task children are non-interactive delegates. They cannot ask the user directly and do not create worktrees. Agent Manager sessions are top-level sessions with their own prompt queues. Separate Agent Manager sessions do not share a Tavern Swarm board automatically, even when they use the same worktree.
 
 {% callout type="warning" %}
 Git worktrees are lightweight compared with cloning the repository several times, but they are not free. Each worktree has its own checked-out files, and any dependencies, build artifacts, caches, local databases, or generated files created inside that directory count separately on disk.
@@ -106,7 +106,7 @@ Sessions sharing a branch can see each other's commits, so write-heavy work on t
 ## Running and testing
 
 - **Worktree terminal** (`Cmd+/` / `Ctrl+/`) — rooted at the worktree directory, so all commands scope to that branch. Use it for one-off tests, `git status`, reproducing a bug by hand.
-- **Run script** — create `.kilo/run-script` (or `.ps1` / `.cmd` / `.bat` on Windows) and trigger it with `Cmd+E` / `Ctrl+E`. Runs in whichever worktree is selected. Gets `WORKTREE_PATH` and `REPO_PATH` in the environment.
+- **Run script** — create `.tavern/run-script` (or `.ps1` / `.cmd` / `.bat` on Windows) and trigger it with `Cmd+E` / `Ctrl+E`. Runs in whichever worktree is selected. Gets `WORKTREE_PATH` and `REPO_PATH` in the environment.
 - **Open in its own VS Code window** — right-click a worktree and choose **Open in VS Code** for a full editor rooted at the worktree path.
 
 ### Parallel worktrees need non-shared state
@@ -151,15 +151,15 @@ If your app or framework supports `PORT=0`, that can be even simpler for local-o
 
 ### Setup script and copied files
 
-Use `.kilo/setup-script` to make new worktrees runnable without manual setup. It runs after Kilo copies root-level `.env` and `.env.*` files, and before the agent starts in the new worktree.
+Use `.tavern/setup-script` to make new worktrees runnable without manual setup. It runs after Tavern copies root-level `.env` and `.env.*` files, and before the agent starts in the new worktree.
 
-Kilo's env copy is intentionally narrow:
+Tavern's env copy is intentionally narrow:
 
 - It copies root-level plain files named `.env` or `.env.*`
 - It skips existing files instead of overwriting them
 - It does not copy nested env files, `.envrc`, `.environment`, `.env-cmdrc`, local certificates, local databases, or ignored tool-specific config
 
-Put the remaining project-specific setup in `.kilo/setup-script`, for example copying `apps/web/.env.local`, creating a per-worktree database, or installing dependencies. The setup script receives `WORKTREE_PATH` and `REPO_PATH` in the environment.
+Put the remaining project-specific setup in `.tavern/setup-script`, for example copying `apps/web/.env.local`, creating a per-worktree database, or installing dependencies. The setup script receives `WORKTREE_PATH` and `REPO_PATH` in the environment.
 
 ## Reviewing changes
 
@@ -171,7 +171,7 @@ Layer review in before asking a teammate:
 - **`/review branch [base] [guidance]`** — review the whole branch vs. its detected or specified base, with optional guidance.
 - **`/review worktree [guidance]`** - review committed, staged, unstaged, and untracked changes against the worktree's recorded parent branch. Available only in Agent Manager managed worktree sessions.
 - **`/review <commit-hash>` or `/review <PR URL or number>`** — review a specific commit or pull request.
-- **`kilo review` in CI** — automated PR review. See [Code Reviews](/docs/automate/code-reviews/overview) for the setup.
+- **`tavern review` in CI** — automated PR review. See [Code Reviews](/docs/automate/code-reviews/overview) for the setup.
 - **Human review** — push the branch from the session terminal and `gh pr create`. The PR badge appears on the worktree and stays in sync with CI and reviews. Review, comment on, and merge the pull request from the internal PR panel; see [Reviewing a pull request](/docs/automate/agent-manager#reviewing-a-pull-request).
 
 A typical sequence: self-review in the diff panel → `/review` → push → CI review → teammate review.

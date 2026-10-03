@@ -32,7 +32,7 @@ type Internals = {
 
 function connection(online = true, custom?: unknown) {
   let listener: ((state: State, error?: Error) => void) | undefined
-  const client = custom ?? { kilo: { profile: async () => ({ data: null }) } }
+  const client = custom ?? { tavern: { profile: async () => ({ data: null }) } }
   return {
     emitState(next: State) {
       if (!listener) throw new Error("expected a connection state subscription")
@@ -95,7 +95,7 @@ describe("KiloProvider providers on reconnect", () => {
     const messages: unknown[] = []
     const internal = provider(
       connection(true, {
-        kilo: { authStatus: async () => ({ data: { authenticated: false } }) },
+        tavern: { authStatus: async () => ({ data: { authenticated: false } }) },
         provider: {
           list: async (input: { directory: string }) => {
             requests.push(input.directory)
@@ -168,7 +168,7 @@ describe("KiloProvider providers on reconnect", () => {
 
   it("marks a retry when the provider fetch rejects with a client", async () => {
     const reject = {
-      kilo: { authStatus: async () => ({ data: undefined }) },
+      tavern: { authStatus: async () => ({ data: undefined }) },
       provider: {
         list: async () => {
           throw new Error("backend gone")

@@ -25,7 +25,7 @@ await Promise.all([
   Telemetry.updateIdentity("test-token", process.env.TEST_ORG),
 ])
 if (process.env.TEST_LOGIN) {
-  Telemetry.trackAuthSuccess("kilo")
+  Telemetry.trackAuthSuccess("tavern")
   Telemetry.trackCliExit()
 } else {
   Telemetry.trackCliStart()

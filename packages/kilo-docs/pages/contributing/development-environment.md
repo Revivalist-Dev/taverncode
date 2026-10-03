@@ -6,7 +6,7 @@ description: "Set up your development environment for contributing"
 # Development Environment
 
 {% callout type="info" %}
-**New versions of the VS Code extension and CLI are being developed in [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode)** (extension at `packages/kilo-vscode`, CLI at `packages/opencode`). For extension and CLI development, please head over to that repository.
+**New versions of the VS Code extension and CLI are being developed in [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode)** (extension at `packages/tavern-vscode`, CLI at `packages/opencode`). For extension and CLI development, please head over to that repository.
 {% /callout %}
 
 This document will help you set up your development environment and understand how to work with the codebase. Whether you're fixing bugs, adding features, or just exploring the code, this guide will get you started.
@@ -18,7 +18,7 @@ Before you begin, make sure you have the following installed:
 1. **Git** - For version control
 2. **Bun 1.3.14+** - Required for installing dependencies and running scripts
 3. **Visual Studio Code** - Our recommended IDE for development
-4. **Java 21** - Required only when running JetBrains plugin checks or repo-level checks that include `@kilocode/kilo-jetbrains`
+4. **Java 21** - Required only when running JetBrains plugin checks or repo-level checks that include `@taverncode/tavern-jetbrains`
 
 ## Getting Started
 
@@ -26,12 +26,12 @@ Before you begin, make sure you have the following installed:
 
 1. **Fork and Clone the Repository**:
    - **Fork the Repository**:
-     - Visit the [Kilo Code GitHub repository](https://github.com/Kilo-Org/kilocode)
+     - Visit the [Tavern Code GitHub repository](https://github.com/Kilo-Org/kilocode)
      - Click the "Fork" button in the top-right corner to create your own copy.
    - **Clone Your Fork**:
      ```bash
      git clone https://github.com/[YOUR-USERNAME]/kilocode.git
-     cd kilocode
+     cd taverncode
      ```
      Replace `[YOUR-USERNAME]` with your actual GitHub username.
 
@@ -59,17 +59,17 @@ AI and coding agents are allowed in this repo. If you use one, start it from the
 
 You remain responsible for the submitted work. Before opening a PR, personally review the diff, test the change, make sure you can explain it, and understand how it interacts with the affected package and the rest of the repo. Do not use agents to submit batches of agent-generated, untested, or weakly reviewed PRs. Prioritize high-impact issues first. Do not use automation or agents to mass-create issues without human review and prioritization.
 
-Kilo has bug bounties. To be eligible, make sure your GitHub account is connected in your Kilo account.
+Tavern has bug bounties. To be eligible, make sure your GitHub account is connected in your Tavern account.
 
 ### Project Structure
 
 The project is organized into several key packages:
 
-- **`packages/opencode/`** - Kilo CLI, agent runtime, local HTTP server, session management, and TUI
-- **`packages/kilo-vscode/`** - VS Code extension, webview UI, Agent Manager, and extension packaging
+- **`packages/opencode/`** - Tavern CLI, agent runtime, local HTTP server, session management, and TUI
+- **`packages/tavern-vscode/`** - VS Code extension, webview UI, Agent Manager, and extension packaging
 - **`packages/sdk/js/`** - Generated TypeScript SDK for the local server API
-- **`packages/kilo-docs/`** - Documentation site
-- **`packages/kilo-jetbrains/`** - JetBrains plugin
+- **`packages/tavern-docs/`** - Documentation site
+- **`packages/tavern-jetbrains/`** - JetBrains plugin
 
 ## Development Workflow
 
@@ -81,7 +81,7 @@ To run the CLI from the repo root:
 bun dev
 ```
 
-`bun dev` and `bun run dev` are equivalent. Both run the local source in `packages/opencode/`; they do not use a globally installed `kilo` binary.
+`bun dev` and `bun run dev` are equivalent. Both run the local source in `packages/opencode/`; they do not use a globally installed `tavern` binary.
 
 ### Backend/API Validation
 
@@ -116,9 +116,9 @@ bun run extension:isolated
 bun run extension:isolated:clean
 ```
 
-`extension:isolated` launches a separate VS Code process with user data and extensions under `.kilo-dev/vscode/`, and points Kilo at isolated XDG storage under `.kilo-dev/{data,config,state,cache}`. Re-running it keeps the same isolated environment, so installed extensions, VS Code settings, Kilo auth, sessions, config, state, and cache persist.
+`extension:isolated` launches a separate VS Code process with user data and extensions under `.tavern-dev/vscode/`, and points Tavern at isolated XDG storage under `.tavern-dev/{data,config,state,cache}`. Re-running it keeps the same isolated environment, so installed extensions, VS Code settings, Tavern auth, sessions, config, state, and cache persist.
 
-`extension:isolated:clean` deletes `.kilo-dev/` before launch. Use it to simulate a fresh VS Code + Kilo install without affecting your main VS Code profile or real Kilo config.
+`extension:isolated:clean` deletes `.tavern-dev/` before launch. Use it to simulate a fresh VS Code + Tavern install without affecting your main VS Code profile or real Tavern config.
 
 The command auto-detects VS Code on macOS, Linux, and Windows. Use these options when the default launch target is not the one you need:
 
@@ -151,11 +151,11 @@ $env:VSCODE_EXEC_PATH = "C:\Users\me\AppData\Local\Programs\Microsoft VS Code\Co
 bun run extension
 ```
 
-When the Extension Development Host opens, check the Kilo Code output channel and the Developer Tools console for startup or webview errors.
+When the Extension Development Host opens, check the Tavern Code output channel and the Developer Tools console for startup or webview errors.
 
 ### Building the Extension
 
-From `packages/kilo-vscode/`:
+From `packages/tavern-vscode/`:
 
 ```bash
 bun run compile
@@ -166,7 +166,7 @@ Use `bun run compile` when you need a development build and `bun run package` wh
 
 ## Testing
 
-Kilo Code uses several types of tests to ensure quality:
+Tavern Code uses several types of tests to ensure quality:
 
 ### Repo-Level Checks
 
@@ -196,7 +196,7 @@ Use the root [TESTING.md](https://github.com/Kilo-Org/kilocode/blob/main/TESTING
 
 ### VS Code Extension Checks
 
-From `packages/kilo-vscode/`:
+From `packages/tavern-vscode/`:
 
 ```bash
 bun run typecheck
@@ -212,9 +212,9 @@ bun run package
 From the repo root:
 
 ```bash
-bun run --filter @kilocode/kilo-docs test
-bun run --filter @kilocode/kilo-docs build
-bun run --filter @kilocode/kilo-docs dev
+bun run --filter @taverncode/tavern-docs test
+bun run --filter @taverncode/tavern-docs build
+bun run --filter @taverncode/tavern-docs dev
 ```
 
 For manual documentation validation, run the docs site locally, preview the affected page, and check the changed links and rendered content.
@@ -234,7 +234,7 @@ For CLI and extension changes, useful evidence can include:
 For docs changes, useful evidence can include:
 
 - `bun run script/check-md-table-padding.ts --fix`
-- `bun run --filter @kilocode/kilo-docs test`
+- `bun run --filter @taverncode/tavern-docs test`
 - Previewing the changed docs page locally, as described in [Documentation Contributions](/docs/contributing#documentation-contributions)
 
 If you cannot complete a relevant command, include all of the following in the PR:
@@ -249,8 +249,8 @@ Agent limitations, local resource constraints, OOM constraints, or an agent prom
 
 - User-facing changes usually need a changeset. Run `bunx changeset add` or add a file under `.changeset/`.
 - After changing server endpoints, run `./script/generate.ts` from the repo root to regenerate `packages/sdk/js/`.
-- After adding or changing guarded URLs in `packages/kilo-vscode/`, `packages/kilo-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
-- When editing shared `packages/opencode/` files, keep changes small and mark Kilo-only edits with `// kilocode_change` for a single line or `// kilocode_change start` / `// kilocode_change end` for a block. Do not add these markers inside `kilocode`-named paths.
+- After adding or changing guarded URLs in `packages/tavern-vscode/`, `packages/tavern-vscode/webview-ui/`, or `packages/opencode/src/`, run `bun run script/extract-source-links.ts` from the repo root.
+- When editing shared `packages/opencode/` files, keep changes small and mark Tavern-only edits with `// taverncode_change` for a single line or `// taverncode_change start` / `// taverncode_change end` for a block. Do not add these markers inside `taverncode`-named paths.
 
 ## Git Hooks
 
@@ -268,5 +268,5 @@ This project uses [Husky](https://typicode.github.io/husky/) to manage Git hooks
 ### Debugging Tips
 
 - Use `console.log()` statements in your code for debugging
-- Check the Output panel in VSCode (View > Output) and select "Kilo Code" from the dropdown
+- Check the Output panel in VSCode (View > Output) and select "Tavern Code" from the dropdown
 - For webview issues, use the browser developer tools in the webview (right-click > "Inspect Element")

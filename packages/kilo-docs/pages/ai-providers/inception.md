@@ -1,10 +1,10 @@
 ---
-title: "Using Inception Labs with Kilo Code"
-description: "Connect Inception Labs' Mercury diffusion LLMs to Kilo Code for ultra-fast code generation. Setup guide for VS Code and the CLI."
+title: "Using Inception Labs with Tavern Code"
+description: "Connect Inception Labs' Mercury diffusion LLMs to Tavern Code for ultra-fast code generation. Setup guide for VS Code and the CLI."
 sidebar_label: Inception
 ---
 
-# Using Inception With Kilo Code
+# Using Inception With Tavern Code
 
 Inception provides access to cutting-edge AI models with a focus on performance and reliability. Their infrastructure is designed for enterprise-grade applications requiring consistent, high-quality outputs.
 
@@ -14,28 +14,28 @@ Inception provides access to cutting-edge AI models with a focus on performance 
 
 1. **Sign Up/Sign In:** Go to the [Inception website](https://www.inceptionlabs.ai) and access their developer/API dashboard.
 2. **Navigate to API Keys:** Access the API Keys section in your account settings.
-3. **Create a Key:** Click "Create new API key". Give your key a descriptive name (e.g., "Kilo Code").
+3. **Create a Key:** Click "Create new API key". Give your key a descriptive name (e.g., "Tavern Code").
 4. **Copy the Key:** **Important:** Copy the API key _immediately_. You will not be able to see it again. Store it securely.
 
 ## Supported Models
 
-Kilo Code supports Inception's available models. Model selection and capabilities may vary based on your account tier.
+Tavern Code supports Inception's available models. Model selection and capabilities may vary based on your account tier.
 
 Refer to Inception's current website and developer documentation for the most up-to-date list of supported models and capabilities.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Inception and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -43,7 +43,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export INCEPTION_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

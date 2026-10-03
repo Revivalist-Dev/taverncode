@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
-import type { KiloPassState } from "@kilocode/kilo-gateway"
-import type { Message } from "@kilocode/sdk/v2"
+import type { KiloPassState } from "@taverncode/tavern-gateway"
+import type { Message } from "@taverncode/sdk/v2"
 
-import { billable, creditLabel, format, passLine, resetLabel, scope } from "../../src/kilocode/plugins/sidebar-footer"
+import { billable, creditLabel, format, passLine, resetLabel, scope } from "../../src/taverncode/plugins/sidebar-footer"
 
 const kiloPass = {
   currentPeriodBaseCreditsUsd: 199,
@@ -17,8 +17,8 @@ const message = {
   role: "assistant",
   time: { created: 1, completed: 2 },
   parentID: "msg_0",
-  modelID: "kilo-auto/balanced",
-  providerID: "kilo",
+  modelID: "tavern-auto/balanced",
+  providerID: "tavern",
   mode: "build",
   agent: "build",
   path: { cwd: "/tmp", root: "/tmp" },
@@ -26,7 +26,7 @@ const message = {
   tokens: { input: 1, output: 1, reasoning: 0, cache: { read: 0, write: 0 } },
 } satisfies Message
 
-describe("Kilo sidebar footer", () => {
+describe("Tavern sidebar footer", () => {
   test("formats money", () => {
     expect(format(12.345)).toBe("$12.35")
     expect(format(0)).toBe("$0.00")
@@ -46,7 +46,7 @@ describe("Kilo sidebar footer", () => {
     expect(resetLabel("not-a-date")).toBeUndefined()
   })
 
-  test("refreshes only after completed billed Kilo turns", () => {
+  test("refreshes only after completed billed Tavern turns", () => {
     expect(billable(message)).toBeTrue()
     expect(billable({ ...message, providerID: "anthropic" })).toBeFalse()
     expect(billable({ ...message, cost: 0 })).toBeFalse()

@@ -7,7 +7,7 @@ const version = "0.11.2"
 const commit = "1b80120ef26a28e065e67f89bfef873f13bdd317"
 const sourceUrl = `https://codeload.github.com/containers/bubblewrap/tar.gz/${commit}`
 const sourceSha256 = "55a1f42de8f62f6cd8cc414229ce166ec6128ca4386b8c25dfca4229e44b56aa"
-const cache = process.env.KILO_BWRAP_CACHE ?? path.join(os.tmpdir(), "kilo-bubblewrap", commit)
+const cache = process.env.KILO_BWRAP_CACHE ?? path.join(os.tmpdir(), "tavern-bubblewrap", commit)
 
 const capability = `#pragma once
 #include <errno.h>
@@ -39,7 +39,7 @@ static inline int cap_from_name(const char *name, cap_value_t *cap) {
 `
 
 const config = `#pragma once
-#define PACKAGE_STRING "bubblewrap ${version} for Kilo"
+#define PACKAGE_STRING "bubblewrap ${version} for Tavern"
 #define PACKAGE_VERSION "${version}"
 `
 
@@ -48,7 +48,7 @@ const notice = `Bubblewrap ${version}
 SPDX-License-Identifier: LGPL-2.0-or-later
 Source: https://github.com/containers/bubblewrap/tree/${commit}
 
-Kilo distributes Bubblewrap as a separate executable. The complete license text is
+Tavern distributes Bubblewrap as a separate executable. The complete license text is
 in COPYING. The exact corresponding source is in bubblewrap-${commit}.tar.gz, and
 the build recipe and generated compatibility headers are in build.ts.
 

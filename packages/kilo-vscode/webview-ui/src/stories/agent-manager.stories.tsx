@@ -24,11 +24,11 @@ import { SidebarToggleButton } from "../../agent-manager/SidebarToggleButton"
 import { SideTerminalPanel, createTerminalState } from "../../agent-manager/terminal"
 import { LOCAL } from "../../agent-manager/navigate"
 import type { SidebarSearchItem } from "../../agent-manager/sidebar-search"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { TooltipKeybind } from "@kilocode/kilo-ui/tooltip"
-import { ContextMenu } from "@kilocode/kilo-ui/context-menu"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { TooltipKeybind } from "@taverncode/tavern-ui/tooltip"
+import { ContextMenu } from "@taverncode/tavern-ui/context-menu"
 import { ThinkingSelectorBase } from "../components/shared/ThinkingSelector"
 import { DeferredPopover } from "../components/shared/DeferredPopover"
 import { ProjectSelect } from "../../agent-manager/ProjectSelect"
@@ -232,7 +232,7 @@ const chatMessages = [
     createdAt: new Date(chatTime + 1000).toISOString(),
     time: { created: chatTime + 1000, completed: chatTime + 5000 },
     modelID: "anthropic/claude-sonnet-4-6",
-    providerID: "kilo",
+    providerID: "tavern",
     mode: "default",
     agent: "code",
     path: { cwd: "/project", root: "/project" },
@@ -1611,8 +1611,8 @@ export const NewWorktreeVariantDropdown1280: Story = {
 const projectPickerProjects: AgentProjectSnapshot[] = [
   {
     id: "project-main",
-    root: "/workspace/kilocode",
-    label: "kilocode",
+    root: "/workspace/taverncode",
+    label: "taverncode",
     pinned: true,
     active: true,
     expanded: true,
@@ -1666,7 +1666,7 @@ export const NewWorktreeProjectDropdown: Story = {
                           <button class="am-selector-trigger" type="button" aria-label="Select project">
                             <span class="am-selector-left">
                               <Icon name="folder" size="small" />
-                              <span class="am-selector-value">kilocode</span>
+                              <span class="am-selector-value">taverncode</span>
                             </span>
                             <span class="am-selector-right">
                               <Icon name="selector" size="small" />
@@ -1827,8 +1827,8 @@ import type { AgentManagerStateMessage, LocalGitStats, ProjectSessionInfo } from
 
 const projectA: AgentProjectSnapshot = {
   id: "prj-aaaa1111aaaa",
-  root: "/repos/kilocode",
-  label: "kilocode",
+  root: "/repos/taverncode",
+  label: "taverncode",
   pinned: true,
   active: true,
   expanded: true,
@@ -1837,8 +1837,8 @@ const projectA: AgentProjectSnapshot = {
 }
 const projectB: AgentProjectSnapshot = {
   id: "prj-bbbb2222bbbb",
-  root: "/repos/kilo-gateway",
-  label: "kilo-gateway",
+  root: "/repos/tavern-gateway",
+  label: "tavern-gateway",
   pinned: false,
   active: false,
   expanded: true,
@@ -1849,7 +1849,7 @@ const projectB: AgentProjectSnapshot = {
 const wt = (id: string, branch: string, label?: string, opts: Partial<WorktreeState> = {}): WorktreeState => ({
   id,
   branch,
-  path: `/repos/x/.kilo/worktrees/${id}`,
+  path: `/repos/x/.tavern/worktrees/${id}`,
   parentBranch: "main",
   createdAt: "2026-07-20T10:00:00Z",
   label,
@@ -2031,7 +2031,7 @@ const prComments: NonNullable<PRStatus["comments"]> = {
       threadId: "PRRT_1",
       author: "octocat",
       body: "This throws when `gh` is missing. Can we guard it and fall back to the cached status?",
-      file: "packages/kilo-vscode/src/agent-manager/gh.ts",
+      file: "packages/tavern-vscode/src/agent-manager/gh.ts",
       line: 42,
       url: "https://github.com/org/repo/pull/8594#discussion_r1",
       resolved: false,
@@ -2066,7 +2066,7 @@ const prComments: NonNullable<PRStatus["comments"]> = {
       threadId: "PRRT_2",
       author: "hubot",
       body: "The timeout should be a constant so the poller and the mutation cannot drift apart.",
-      file: "packages/kilo-vscode/src/agent-manager/pr/PRActions.ts",
+      file: "packages/tavern-vscode/src/agent-manager/pr/PRActions.ts",
       line: 8,
       url: "https://github.com/org/repo/pull/8594#discussion_r2",
       resolved: false,
@@ -2077,7 +2077,7 @@ const prComments: NonNullable<PRStatus["comments"]> = {
       threadId: "PRRT_3",
       author: "octocat",
       body: "nit: rename this variable to `threads`.\n\nIt reads better next to the loop below.",
-      file: "packages/kilo-vscode/src/agent-manager/pr/am-pr-utils.ts",
+      file: "packages/tavern-vscode/src/agent-manager/pr/am-pr-utils.ts",
       line: 71,
       url: "https://github.com/org/repo/pull/8594#discussion_r3",
       resolved: true,
@@ -2088,7 +2088,7 @@ const prComments: NonNullable<PRStatus["comments"]> = {
       threadId: "PRRT_4",
       author: "hubot",
       body: "Good catch, fixed in a9f21c3.",
-      file: "packages/kilo-vscode/webview-ui/agent-manager/pr/PRComments.tsx",
+      file: "packages/tavern-vscode/webview-ui/agent-manager/pr/PRComments.tsx",
       line: 118,
       url: "https://github.com/org/repo/pull/8594#discussion_r4",
       resolved: true,
@@ -2098,7 +2098,7 @@ const prComments: NonNullable<PRStatus["comments"]> = {
 }
 
 const prReviewers: PRReviewer[] = [
-  { login: "marius-kilocode", state: "approved" },
+  { login: "marius-taverncode", state: "approved" },
   { login: "reviewer-changes", state: "changes_requested" },
   { login: "reviewer-comment", state: "commented" },
   { login: "reviewer-pending", state: "pending" },
@@ -2166,7 +2166,7 @@ const prPanelStatus: PRStatus = {
     failed: 0,
     pending: 0,
     checks: [
-      { name: "Kilo Code Review", status: "success", duration: "2m 41s" },
+      { name: "Tavern Code Review", status: "success", duration: "2m 41s" },
       { name: "build", status: "success", duration: "1m 12s" },
       { name: "test", status: "success", duration: "4m 03s" },
     ],
@@ -2339,7 +2339,7 @@ const remoteThreads: PRComment[] = [
   {
     id: "remote-addition",
     threadId: "thread-addition",
-    author: "kilo-code-bot",
+    author: "tavern-code-bot",
     body: "Keep this value stable while the request is in progress.\n\nThe caller uses `target` to restore the previous selection.",
     file: tail.file,
     line: 1,

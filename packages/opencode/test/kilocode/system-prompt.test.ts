@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test"
 import { SystemPrompt } from "../../src/session/system"
-import { environmentDetails } from "../../src/kilocode/editor-context"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
+import { environmentDetails } from "../../src/taverncode/editor-context"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
 import { MessageV2 } from "../../src/session/message-v2"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { ProviderTest } from "../fake/provider"
-import { patchAgents } from "../../src/kilocode/agent"
+import { patchAgents } from "../../src/taverncode/agent"
 import PROMPT_ASK from "../../src/agent/prompt/ask.txt"
 
 import PROMPT_ANTHROPIC from "../../src/session/prompt/anthropic.txt"
@@ -16,7 +16,7 @@ import PROMPT_BEAST from "../../src/session/prompt/beast.txt"
 import PROMPT_CODEX from "../../src/session/prompt/codex.txt"
 import PROMPT_GEMINI from "../../src/session/prompt/gemini.txt"
 import PROMPT_GPT from "../../src/session/prompt/gpt.txt"
-import PROMPT_GPT55 from "../../src/session/prompt/kilocode-gpt-5.5.txt"
+import PROMPT_GPT55 from "../../src/session/prompt/taverncode-gpt-5.5.txt"
 import PROMPT_LING from "../../src/session/prompt/ling.txt"
 import PROMPT_TRINITY from "../../src/session/prompt/trinity.txt"
 
@@ -171,13 +171,13 @@ describe("Ask diagram guidance", () => {
 describe("environmentDetails", () => {
   test("includes cwd and worktree in dynamic context", () => {
     const result = environmentDetails({
-      directory: "/repo/.kilo/worktrees/feature",
-      worktree: "/repo/.kilo/worktrees/feature",
+      directory: "/repo/.tavern/worktrees/feature",
+      worktree: "/repo/.tavern/worktrees/feature",
       activeFile: "src/app.ts",
     })
 
-    expect(result).toContain("Working directory: /repo/.kilo/worktrees/feature")
-    expect(result).toContain("Workspace root folder: /repo/.kilo/worktrees/feature")
+    expect(result).toContain("Working directory: /repo/.tavern/worktrees/feature")
+    expect(result).toContain("Workspace root folder: /repo/.tavern/worktrees/feature")
     expect(result).toContain("Active file: src/app.ts")
   })
 

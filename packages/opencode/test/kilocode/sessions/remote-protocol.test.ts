@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { RemoteProtocol } from "../../../src/kilo-sessions/remote-protocol"
+import { RemoteProtocol } from "../../../src/tavern-sessions/remote-protocol"
 
 describe("RemoteProtocol", () => {
   // --- Outbound (CLI → DO) ---
@@ -266,7 +266,7 @@ describe("RemoteProtocol", () => {
     }
   })
 
-  // kilocode_change - K1 W1: instance advertisement + per-session platform
+  // taverncode_change - K1 W1: instance advertisement + per-session platform
 
   test("heartbeat without instance still parses (legacy compatibility)", () => {
     const msg = { type: "heartbeat", sessions: [{ id: "ses_1", status: "busy", title: "Fix auth" }] }
@@ -527,7 +527,7 @@ describe("RemoteProtocol", () => {
     }
   })
 
-  // kilocode_change - PR link advertise (plan 8.4)
+  // taverncode_change - PR link advertise (plan 8.4)
 
   test("session info accepts optional prLink", () => {
     const msg = {

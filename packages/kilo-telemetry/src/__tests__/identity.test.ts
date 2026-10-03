@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, mock, afterEach } from "bun:test"
 import { createHash } from "node:crypto"
 
 let profileCalls = 0
-mock.module("@kilocode/kilo-gateway", () => ({
+mock.module("@taverncode/tavern-gateway", () => ({
   fetchProfile: async (token: string) => {
     profileCalls++
     if (token === "bad-token") return null
@@ -23,7 +23,7 @@ let dir: string
 
 beforeEach(() => {
   profileCalls = 0
-  dir = mkdtempSync(path.join(tmpdir(), "kilo-telemetry-identity-"))
+  dir = mkdtempSync(path.join(tmpdir(), "tavern-telemetry-identity-"))
   Identity.reset()
   Identity.setDataPath(dir)
 })

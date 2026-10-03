@@ -57,7 +57,7 @@ function alive(pid: number | undefined) {
 it.instance("does not recreate a stopped process manifest during shutdown", () =>
   Effect.gen(function* () {
     if (process.platform !== "linux") return
-    const { BackgroundProcess } = yield* Effect.promise(() => import("../../src/kilocode/background-process"))
+    const { BackgroundProcess } = yield* Effect.promise(() => import("../../src/taverncode/background-process"))
     const test = yield* TestInstance
     const sessionID = SessionID.descending()
     const file = path.join(test.directory, "stopped-persistent.mjs")
@@ -93,7 +93,7 @@ it.instance("does not recreate a stopped process manifest during shutdown", () =
 it.instance("persists a process when shutdown races its initial manifest", () =>
   Effect.gen(function* () {
     if (process.platform !== "linux") return
-    const { BackgroundProcess } = yield* Effect.promise(() => import("../../src/kilocode/background-process"))
+    const { BackgroundProcess } = yield* Effect.promise(() => import("../../src/taverncode/background-process"))
     const test = yield* TestInstance
     const sessionID = SessionID.descending()
     const file = path.join(test.directory, "persistent-shutdown-race.mjs")

@@ -15,11 +15,11 @@ const inputs = [
   "packages/core",
   "packages/effect-drizzle-sqlite",
   "packages/effect-sqlite-node",
-  "packages/kilo-gateway",
-  "packages/kilo-indexing",
-  "packages/kilo-memory",
-  "packages/kilo-sandbox",
-  "packages/kilo-telemetry",
+  "packages/tavern-gateway",
+  "packages/tavern-indexing",
+  "packages/tavern-memory",
+  "packages/tavern-sandbox",
+  "packages/tavern-telemetry",
   "packages/llm",
   "packages/plugin",
   "packages/plugin-atomic-chat",
@@ -28,7 +28,7 @@ const inputs = [
   "packages/sdk/js/package.json",
   "packages/sdk/js/tsconfig.json",
   "packages/sdk/js/script",
-  "packages/kilo-vscode/script/prepare-sdk.ts",
+  "packages/tavern-vscode/script/prepare-sdk.ts",
 ]
 const outputs = ["packages/sdk/js/src"]
 

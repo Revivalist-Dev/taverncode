@@ -9,7 +9,7 @@ export function registerActivity(parser: Pick<IParser, "registerOscHandler">, re
     report("idle")
   }
   const handler = parser.registerOscHandler(777, (data) => {
-    if (!data.startsWith("kilo;activity;")) return false
+    if (!data.startsWith("tavern;activity;")) return false
     const [, , version, state, stamp, extra] = data.split(";")
     const time = Number(stamp)
     const age = Date.now() - time

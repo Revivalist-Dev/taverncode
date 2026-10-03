@@ -1,11 +1,11 @@
-// kilocode_change - new file
-import { Telemetry, type ReviewCommand } from "@kilocode/kilo-telemetry"
+// taverncode_change - new file
+import { Telemetry, type ReviewCommand } from "@taverncode/tavern-telemetry"
 import { SessionNetwork } from "@/session/network"
 import type { SessionID } from "@/session/schema"
 import type { SessionStatus } from "@/session/status"
 import { MessageV2 } from "@/session/message-v2"
 import { isRecord } from "@/util/record"
-import { parseReviewCommand, reviewCommandName } from "@/kilocode/review/command"
+import { parseReviewCommand, reviewCommandName } from "@/taverncode/review/command"
 import * as Log from "@opencode-ai/core/util/log"
 import { Cause, Duration, Effect, Exit } from "effect"
 import { Flag } from "@opencode-ai/core/flag/flag"
@@ -13,7 +13,7 @@ import { EffectBridge } from "@/effect/bridge"
 import type { LLMEvent, ProviderMetadata, Usage } from "@opencode-ai/llm"
 import type { ProviderV2 } from "@opencode-ai/core/provider"
 import { SessionRetry } from "@/session/retry"
-import { computeMetrics as computeMetricsHelper, type TokenRates } from "@/kilocode/session/metrics"
+import { computeMetrics as computeMetricsHelper, type TokenRates } from "@/taverncode/session/metrics"
 import { InvalidArgumentsError } from "@/tool/tool"
 
 export type ReviewTelemetry = {
@@ -24,7 +24,7 @@ export type ReviewTelemetry = {
 }
 
 export namespace KiloSessionProcessor {
-  const log = Log.create({ service: "session.processor.kilo" })
+  const log = Log.create({ service: "session.processor.tavern" })
   export const INCOMPLETE_RESPONSE_RETRIES = 2
   export const INCOMPLETE_RESPONSE_MESSAGE =
     "The provider repeatedly ended the response before returning usable output."
@@ -46,7 +46,7 @@ export namespace KiloSessionProcessor {
   export const REASONING_LENGTH_WARNING =
     "The model hit its output limit while reasoning and produced no actionable output. Try disabling reasoning or increasing the output limit."
   export const PROVIDER_FINISH_ERROR_MESSAGE =
-    "The provider ended the response with an error before returning details. Start a new message to retry; Kilo will compact the oversized conversation first if needed."
+    "The provider ended the response with an error before returning details. Start a new message to retry; Tavern will compact the oversized conversation first if needed."
 
   export function reviewTelemetry(command: string | undefined): ReviewTelemetry | undefined {
     const cmd = reviewCommandName(command)
@@ -77,7 +77,7 @@ export namespace KiloSessionProcessor {
    * Tag the expanded slash-command template so clients can show the user the
    * command they typed (`/review branch`) instead of the full template, while
    * keeping the template inspectable. Shape matches
-   * `packages/kilo-vscode/src/shared/injected-prompt.ts`.
+   * `packages/tavern-vscode/src/shared/injected-prompt.ts`.
    */
   export function markCommand(
     parts: Array<{ type: string; metadata?: Record<string, unknown> }>,
@@ -87,8 +87,8 @@ export namespace KiloSessionProcessor {
     const title = `/${command} ${args}`.trim()
     for (const part of parts) {
       if (part.type !== "text") continue
-      const kilo = isRecord(part.metadata?.kilo) ? part.metadata.kilo : {}
-      part.metadata = { ...part.metadata, kilo: { ...kilo, injected: { title } } }
+      const tavern = isRecord(part.metadata?.tavern) ? part.metadata.tavern : {}
+      part.metadata = { ...part.metadata, tavern: { ...tavern, injected: { title } } }
     }
   }
 
@@ -330,7 +330,7 @@ export namespace KiloSessionProcessor {
   }
 
   /**
-   * Returns the Kilo-specific retry policy options (limit + offline handler).
+   * Returns the Tavern-specific retry policy options (limit + offline handler).
    * Designed to be spread into SessionRetry.policy() opts.
    *
    * The `abort` signal is used by the offline handler to cancel the network

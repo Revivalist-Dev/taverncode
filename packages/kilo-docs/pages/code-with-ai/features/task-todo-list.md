@@ -9,7 +9,7 @@ description: "Track and manage tasks with AI-generated todo lists"
 
 **Why it matters**: Complex workflows have lots of moving parts. Without structure, it's easy to miss steps, duplicate work, or forget what comes next.
 
-{% image src="/docs/img/screenshot-tests/kilo-vscode/visual-regression/composite-webview/todo-write-docs-overview-chromium-linux.png" alt="Task Todo List overview showing interactive checklist in Kilo Code" width="420" /%}
+{% image src="/docs/img/screenshot-tests/tavern-vscode/visual-regression/composite-webview/todo-write-docs-overview-chromium-linux.png" alt="Task Todo List overview showing interactive checklist in Tavern Code" width="420" /%}
 
 ## How to trigger todo lists
 
@@ -21,10 +21,10 @@ description: "Track and manage tasks with AI-generated todo lists"
 
 **Manual triggers**:
 
-- Ask Kilo to "use the [`todowrite` tool](/docs/automate/tools)"
+- Ask Tavern to "use the [`todowrite` tool](/docs/automate/tools)"
 - Say "create a todo list"
 
-**The bottom line**: Kilo decides what goes in the list, but you can provide feedback during approval dialogs.
+**The bottom line**: Tavern decides what goes in the list, but you can provide feedback during approval dialogs.
 
 ---
 
@@ -32,7 +32,7 @@ description: "Track and manage tasks with AI-generated todo lists"
 
 Todo lists are managed with the [`todowrite` tool](/docs/automate/tools). Each update replaces the entire checklist with the latest view of the task.
 
-Kilo updates the list when:
+Tavern updates the list when:
 
 - New steps are discovered
 - Items are completed or reprioritized
@@ -44,7 +44,7 @@ Kilo updates the list when:
 
 **Before**: You juggled task steps in your head or scattered notes, constantly wondering "what's next?"
 
-**Now**: Kilo creates structured checklists that update automatically as work progresses. You see exactly where you are and what's coming up.
+**Now**: Tavern creates structured checklists that update automatically as work progresses. You see exactly where you are and what's coming up.
 
 ---
 
@@ -53,7 +53,7 @@ Kilo updates the list when:
 **1. Task Header Summary**
 Quick progress overview with your next important item
 
-{% image src="/docs/img/screenshot-tests/kilo-vscode/visual-regression/chat/task-header-with-todos-chromium-linux.png" alt="Task header summary showing todo list progress" width="420" /%}
+{% image src="/docs/img/screenshot-tests/tavern-vscode/visual-regression/chat/task-header-with-todos-chromium-linux.png" alt="Task header summary showing todo list progress" width="420" /%}
 
 Click the task header summary to expand the full list inline and jump to the current item.
 
@@ -61,11 +61,11 @@ Click the task header summary to expand the full list inline and jump to the cur
 Full todo interface in chat where you can:
 
 - See all items and their status
-- Edit descriptions when Kilo asks for approval
+- Edit descriptions when Tavern asks for approval
 - Stage changes using the "Edit" button
 
 **3. Environment Details**
-Background "REMINDERS" table that keeps Kilo informed about current progress
+Background "REMINDERS" table that keeps Tavern informed about current progress
 
 ## Task status decoded
 
@@ -89,24 +89,24 @@ Background "REMINDERS" table that keeps Kilo informed about current progress
 
 ## Editing todo lists
 
-When Kilo proposes a todo list update, you can edit the list before approving. Use the "Edit" button in the tool block to update item text, add or remove steps, or adjust status. Once approved, Kilo continues with the updated list.
+When Tavern proposes a todo list update, you can edit the list before approving. Use the "Edit" button in the tool block to update item text, add or remove steps, or adjust status. Once approved, Tavern continues with the updated list.
 
 ## Common questions
 
 **"Can I create my own todo lists?"**
-Yes, just ask Kilo to use the `todowrite` tool. Kilo stays in control of the content and workflow.
+Yes, just ask Tavern to use the `todowrite` tool. Tavern stays in control of the content and workflow.
 
 **"What about simple tasks?"**
-Kilo typically skips todo lists for simple tasks. The overhead isn't worth it.
+Tavern typically skips todo lists for simple tasks. The overhead isn't worth it.
 
 **"Why can't I directly edit the list?"**
-Design choice. Kilo maintains authority over task management to ensure consistent progress tracking. You provide input, Kilo executes.
+Design choice. Tavern maintains authority over task management to ensure consistent progress tracking. You provide input, Tavern executes.
 
 ---
 
 ## Settings
 
-You can disable todo lists in Settings -> Advanced -> **Enable todo list tool**. When disabled, Kilo won't create or update todo lists, and the REMINDERS table won't appear in Environment Details.
+You can disable todo lists in Settings -> Advanced -> **Enable todo list tool**. When disabled, Tavern won't create or update todo lists, and the REMINDERS table won't appear in Environment Details.
 
 {% callout type="tip" title="Pro tip: Auto-approval" %}
 **What it does**: Automatically approves todo list updates without confirmation prompts.

@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { Cause } from "effect"
 import { LockTimeoutError, SqlError, UnknownError } from "effect/unstable/sql/SqlError"
 import { EffectDrizzleQueryError } from "drizzle-orm/effect-core/errors"
-import { busyMessage, isBusy } from "@/kilocode/database/sqlite-error"
+import { busyMessage, isBusy } from "@/taverncode/database/sqlite-error"
 
 describe("SQLite errors", () => {
   test("recognizes lock timeouts as busy database errors", () => {

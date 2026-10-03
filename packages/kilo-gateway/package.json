@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/kilo-gateway",
+  "name": "@taverncode/tavern-gateway",
   "version": "7.8.3",
   "type": "module",
   "license": "MIT",
-  "description": "Unified Kilo Gateway package for OpenCode - authentication, provider, and API integration",
+  "description": "Unified Tavern Gateway package for OpenCode - authentication, provider, and API integration",
   "keywords": [
-    "kilo",
-    "kilocode",
+    "tavern",
+    "taverncode",
     "opencode",
     "auth",
     "plugin",
@@ -34,7 +34,7 @@
     "test:ci": "mkdir -p .artifacts/unit && bun test test --dots --reporter=junit --reporter-outfile=.artifacts/unit/junit.xml"
   },
   "dependencies": {
-    "@kilocode/plugin": "workspace:*",
+    "@taverncode/plugin": "workspace:*",
     "@ai-sdk/anthropic": "3.0.82",
     "@ai-sdk/openai": "3.0.88",
     "@ai-sdk/openai-compatible": "2.0.48",

@@ -1,10 +1,10 @@
 import { Bus } from "@/bus"
 import { InstanceState } from "@/effect/instance-state"
-import { AgentManagerEvent, type AgentManagerTask } from "@/kilocode/agent-manager/event"
-import { AgentManager, HostError } from "@/kilocode/agent-manager/service"
-import { RequestID } from "@/kilocode/agent-manager/protocol"
-import * as SandboxInheritance from "@/kilocode/sandbox/inheritance"
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order"
+import { AgentManagerEvent, type AgentManagerTask } from "@/taverncode/agent-manager/event"
+import { AgentManager, HostError } from "@/taverncode/agent-manager/service"
+import { RequestID } from "@/taverncode/agent-manager/protocol"
+import * as SandboxInheritance from "@/taverncode/sandbox/inheritance"
+import { KiloSessionMessageOrder } from "@/taverncode/session/message-order"
 import { Provider } from "@/provider/provider"
 import { SessionID } from "@/session/schema"
 import * as ToolJsonSchema from "@/tool/json-schema"
@@ -188,7 +188,7 @@ const WireParams = Schema.Struct({
   worktreeID: Schema.NullOr(StartParams.fields.worktreeID),
   action: Schema.NullOr(Schema.Literals(["list", "prompt", "stop", "move", "answer"])).annotate({
     description:
-      "Use list first to discover IDs and assignments. Use move only after list, once per worktree. Never edit .kilo/agent-manager.json for these operations. Send null when starting sessions with mode and tasks, otherwise the action is used instead of the start request.",
+      "Use list first to discover IDs and assignments. Use move only after list, once per worktree. Never edit .tavern/agent-manager.json for these operations. Send null when starting sessions with mode and tasks, otherwise the action is used instead of the start request.",
   }),
   filter: Schema.NullOr(ListParams.fields.filter),
   sessionID: Schema.NullOr(Schema.String).annotate({
@@ -294,7 +294,7 @@ export const AgentManagerTool = Tool.define<
                 output: JSON.stringify(
                   {
                     instructions:
-                      "This overview is the source of truth. Use sections[].id as sectionID and sessions[].id/session.id as sessionID for action=move. Do not edit .kilo/agent-manager.json.",
+                      "This overview is the source of truth. Use sections[].id as sectionID and sessions[].id/session.id as sessionID for action=move. Do not edit .tavern/agent-manager.json.",
                     ...result.overview,
                   },
                   null,

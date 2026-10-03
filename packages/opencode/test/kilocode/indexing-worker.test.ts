@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { IndexingWorker } from "../../src/taverncode/indexing-worker-client"
 import { tmpdir } from "../fixture/fixture"
 
 test("runs indexing engine requests in its worker", async () => {

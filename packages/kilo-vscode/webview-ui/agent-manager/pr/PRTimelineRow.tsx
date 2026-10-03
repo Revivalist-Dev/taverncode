@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import { Show, type JSX } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { PRCommentTime } from "./PRCommentTime"
 
 /**

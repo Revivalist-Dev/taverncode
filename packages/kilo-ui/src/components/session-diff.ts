@@ -1,11 +1,11 @@
-// Hunk-anchored diff normalization for the Kilo extension. Pure upstream
+// Hunk-anchored diff normalization for the Tavern extension. Pure upstream
 // `packages/ui/src/components/session-diff.ts` reconstructs full before/after
 // strings, which loses the source line numbers from the hunk header. Here we
 // instead let Pierre's `processFile` parse the patch directly so partial
 // diffs render at their real file positions.
 import { parseDiffFromFile, processFile, type FileDiffMetadata } from "@pierre/diffs"
 import { formatPatch, parsePatch, structuredPatch } from "diff"
-import type { SnapshotFileDiff, VcsFileDiff } from "@kilocode/sdk/v2"
+import type { SnapshotFileDiff, VcsFileDiff } from "@taverncode/sdk/v2"
 
 type LegacyDiff = {
   file: string

@@ -5,8 +5,8 @@ import {
   type ByokEntry,
   type CodingPlanQuotaWindow,
   type CodingPlanSubscription,
-} from "@kilocode/kilo-gateway"
-import type { ProviderUsage } from "@opencode-ai/schema/kilocode/provider-usage"
+} from "@taverncode/tavern-gateway"
+import type { ProviderUsage } from "@opencode-ai/schema/taverncode/provider-usage"
 
 export { fetchByokEntries, fetchCodingPlanSubscriptions, fetchCodingPlanUsage }
 
@@ -35,11 +35,11 @@ export async function load(
 }
 
 function base() {
-  if (!process.env.KILO_API_URL) return "https://app.kilo.ai"
+  if (!process.env.KILO_API_URL) return "https://app.tavern.ai"
   try {
     return new URL(process.env.KILO_API_URL).origin
   } catch {
-    return "https://app.kilo.ai"
+    return "https://app.tavern.ai"
   }
 }
 
@@ -99,7 +99,7 @@ export async function managed(
     : subscription.status === "past_due"
       ? "past_due"
       : "active"
-  const id = `kilo-managed:${subscription.id}`
+  const id = `tavern-managed:${subscription.id}`
   const managementUrl = `${base()}/subscriptions/coding-plans/${subscription.id}`
 
   return usage(token, subscription.id)
@@ -111,7 +111,7 @@ export async function managed(
         sourceKind: "kilo_managed",
         providerLabel: usage.subscription.providerName,
         planLabel: usage.subscription.planName,
-        sourceLabel: "via Kilo",
+        sourceLabel: "via Tavern",
         fetchState: "ready",
         planState,
         routingState: "active",
@@ -126,7 +126,7 @@ export async function managed(
       sourceKind: "kilo_managed",
       providerLabel: subscription.providerName,
       planLabel: subscription.planName,
-      sourceLabel: "via Kilo",
+      sourceLabel: "via Tavern",
       fetchState: "unavailable",
       planState,
       routingState: "active",

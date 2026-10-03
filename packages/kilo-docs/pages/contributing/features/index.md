@@ -1,6 +1,6 @@
 ---
 title: "Feature Proposals"
-description: "Design proposals and roadmaps for Kilo Code features"
+description: "Design proposals and roadmaps for Tavern Code features"
 ---
 
 # Feature Proposals

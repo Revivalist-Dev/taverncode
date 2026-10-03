@@ -1,4 +1,4 @@
-import type { KilocodeSessionModelUsageResponse, Session, StepFinishPart } from "@kilocode/sdk/v2"
+import type { KilocodeSessionModelUsageResponse, Session, StepFinishPart } from "@taverncode/sdk/v2"
 
 export type SessionModelUsage = KilocodeSessionModelUsageResponse
 export type UsageResult = { sessionID: string; data?: SessionModelUsage }
@@ -92,7 +92,7 @@ export function formatCost(input: number) {
 
 // Local aggregation of step-finish metrics for the sidebar/usage panel.
 //
-// When samples carry `elapsedMs` (kilocode_change: persisted on the
+// When samples carry `elapsedMs` (taverncode_change: persisted on the
 // step-finish part by the session processor) and matching `generated`
 // counts, the figure is the *weighted* generation rate across the
 // aggregated steps — total generated tokens over total active

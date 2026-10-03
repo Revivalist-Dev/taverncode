@@ -1,6 +1,6 @@
 import type { ProviderAuthState } from "../../types/messages"
 import type { Provider, ProviderConfig } from "../../types/messages"
-import type { ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import type { ProviderAuthMethod } from "@taverncode/sdk/v2/client"
 import {
   KILO_PROVIDER_ID,
   createKiloFallbackProvider,

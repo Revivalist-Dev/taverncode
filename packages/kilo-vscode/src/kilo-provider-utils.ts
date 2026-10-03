@@ -1,18 +1,18 @@
-import type { Session, Agent, Event, ProviderListResponse } from "@kilocode/sdk/v2/client"
+import type { Session, Agent, Event, ProviderListResponse } from "@taverncode/sdk/v2/client"
 import type { SyncPayload } from "./services/cli-backend/sdk-sse-adapter"
 import { prettifyError } from "zod/v4"
 import type { CloudSessionMessage, IndexingStatus } from "./services/cli-backend/types"
-import type { PartBatch, PartUpdate } from "./kilo-provider/session-stream-scheduler"
+import type { PartBatch, PartUpdate } from "./tavern-provider/session-stream-scheduler"
 import type { PartRemove } from "./shared/stream-messages"
 import {
   createSessionPageState,
   mergeSessions,
   type SessionPage,
   type SessionPageState,
-} from "./kilo-provider/session-page"
+} from "./tavern-provider/session-page"
 import * as path from "path"
 
-export { SessionStreamScheduler } from "./kilo-provider/session-stream-scheduler"
+export { SessionStreamScheduler } from "./tavern-provider/session-stream-scheduler"
 
 type SyncEventMessageUpdated = Extract<SyncPayload, { name: "message.updated.1" }>
 type SyncEventMessageRemoved = Extract<SyncPayload, { name: "message.removed.1" }>
@@ -62,7 +62,7 @@ function safeStringify(value: unknown): string | undefined {
     const json = JSON.stringify(value)
     if (json !== "{}" && json.length < 500) return json
   } catch (err) {
-    console.warn("[Kilo New] getErrorMessage: JSON.stringify failed", err)
+    console.warn("[Tavern New] getErrorMessage: JSON.stringify failed", err)
   }
   return undefined
 }
@@ -189,7 +189,7 @@ export async function runWithMessageConfirmation<T>(
     return await run()
   } catch (error) {
     if (await state.wait(id)) {
-      console.warn(`[Kilo New] ${label} ended after server accepted it; ignoring transport error`, {
+      console.warn(`[Tavern New] ${label} ended after server accepted it; ignoring transport error`, {
         error: getErrorMessage(error),
       })
       return undefined
@@ -203,7 +203,7 @@ export async function runWithMessageConfirmation<T>(
 export function sessionToWebview(
   session: Pick<Session, "id" | "parentID" | "title" | "time" | "summary" | "revert" | "metadata">,
 ) {
-  const goal = session.metadata?.["kilo.goal"]
+  const goal = session.metadata?.["tavern.goal"]
   return {
     id: session.id,
     parentID: session.parentID ?? null,
@@ -300,7 +300,7 @@ async function listPages(
   const results = await Promise.all(
     targets.map((target) =>
       list(target.dir, target.cursor).catch((err: unknown) => {
-        console.error(`[Kilo] Failed to list sessions for ${target.dir}:`, err)
+        console.error(`[Tavern] Failed to list sessions for ${target.dir}:`, err)
         failed.add(target.dir)
         if (target.dir === fatal) cause = err
         return undefined

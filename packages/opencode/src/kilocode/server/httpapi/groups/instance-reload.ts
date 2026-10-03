@@ -33,7 +33,7 @@ export const InstanceReloadApi = HttpApi.make("instance-reload")
       .annotateMerge(
         OpenApi.annotations({
           title: "instance-reload",
-          description: "Kilo instance reload route.",
+          description: "Tavern instance reload route.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -42,8 +42,8 @@ export const InstanceReloadApi = HttpApi.make("instance-reload")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

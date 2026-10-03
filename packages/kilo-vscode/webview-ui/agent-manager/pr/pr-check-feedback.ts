@@ -19,7 +19,7 @@ function logs(url: URL | undefined, host: string | undefined): string | undefine
   const repo = repository(url)
   const run = url.pathname.match(/^\/[\w.-]+\/[\w.-]+\/actions\/runs\/(\d+)(?:\/attempts\/(\d+))?(?:\/job\/(\d+))?\/?$/)
   if (!repo || !run) return
-  return `log=$(mktemp "\${TMPDIR:-/tmp}/kilo-ci.XXXXXX") && gh run view ${run[1]} --repo ${repo}${run[2] ? ` --attempt ${run[2]}` : ""}${run[3] ? ` --job ${run[3]}` : ""} --log-failed > "$log" 2>&1; printf '%s\\n' "$log"`
+  return `log=$(mktemp "\${TMPDIR:-/tmp}/tavern-ci.XXXXXX") && gh run view ${run[1]} --repo ${repo}${run[2] ? ` --attempt ${run[2]}` : ""}${run[3] ? ` --job ${run[3]}` : ""} --log-failed > "$log" 2>&1; printf '%s\\n' "$log"`
 }
 
 export function checkFeedback(

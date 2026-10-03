@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi"
-import { Suggestion } from "@/kilocode/suggestion"
+import { Suggestion } from "@/taverncode/suggestion"
 import { SessionID } from "@/session/schema"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { SuggestionAcceptPayload } from "../groups/suggestion"

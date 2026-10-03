@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test"
-import { startBaselineFiber, startDeltaFiber } from "@/kilocode/session-export/workspace-fiber"
+import { startBaselineFiber, startDeltaFiber } from "@/taverncode/session-export/workspace-fiber"
 
 describe("workspace fiber", () => {
   test("emits stable consistency when token arrives in time", async () => {

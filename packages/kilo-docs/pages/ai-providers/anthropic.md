@@ -1,10 +1,10 @@
 ---
-title: "Using Anthropic Claude with Kilo Code"
-description: "Configure Anthropic's Claude models in Kilo Code. Guide to getting an API key, setting up Claude Sonnet and Opus in VS Code and the CLI."
+title: "Using Anthropic Claude with Tavern Code"
+description: "Configure Anthropic's Claude models in Tavern Code. Guide to getting an API key, setting up Claude Sonnet and Opus in VS Code and the CLI."
 sidebar_label: Anthropic
 ---
 
-# Using Anthropic With Kilo Code
+# Using Anthropic With Tavern Code
 
 Anthropic is an AI safety and research company that builds reliable, interpretable, and steerable AI systems. Their Claude models are known for their strong reasoning abilities, helpfulness, and honesty.
 
@@ -14,22 +14,22 @@ Anthropic is an AI safety and research company that builds reliable, interpretab
 
 1.  **Sign Up/Sign In:** Go to the [Anthropic Console](https://console.anthropic.com/). Create an account or sign in.
 2.  **Navigate to API Keys:** Go to the [API keys](https://console.anthropic.com/settings/keys) section.
-3.  **Create a Key:** Click "Create Key". Give your key a descriptive name (e.g., "Kilo Code").
+3.  **Create a Key:** Click "Create Key". Give your key a descriptive name (e.g., "Tavern Code").
 4.  **Copy the Key:** **Important:** Copy the API key _immediately_. You will not be able to see it again. Store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Anthropic and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -37,7 +37,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export ANTHROPIC_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

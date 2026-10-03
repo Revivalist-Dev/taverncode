@@ -2,8 +2,8 @@
 
 import type { Accessor, Component } from "solid-js"
 import { Show } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip, TooltipKeybind } from "@kilocode/kilo-ui/tooltip"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip, TooltipKeybind } from "@taverncode/tavern-ui/tooltip"
 import { WorktreeCreate, type WorktreeCreateProps } from "./ProjectActions"
 import { SidebarSearchMenu, type SidebarSearchMenuRef } from "./SidebarSearchMenu"
 import type { SidebarSearchItem } from "./sidebar-search"

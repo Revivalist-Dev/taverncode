@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test"
-import { KiloShutdown } from "../../src/kilocode/cli/shutdown"
+import { KiloShutdown } from "../../src/taverncode/cli/shutdown"
 
 const calls: string[] = []
 const timeouts: Array<number | undefined> = []
@@ -8,7 +8,7 @@ let drainCalls = 0
 let exit: string | number | null | undefined
 
 mock.module("@opencode-ai/core/global", () => ({
-  Global: { Path: { data: "/tmp/kilo-test" } },
+  Global: { Path: { data: "/tmp/tavern-test" } },
 }))
 
 mock.module("@opencode-ai/core/installation/version", () => ({
@@ -16,7 +16,7 @@ mock.module("@opencode-ai/core/installation/version", () => ({
   InstallationVersion: "test",
 }))
 
-mock.module("@kilocode/kilo-telemetry", () => ({
+mock.module("@taverncode/tavern-telemetry", () => ({
   Telemetry: {
     async init() {
       calls.push("telemetry:init")
@@ -34,7 +34,7 @@ mock.module("@kilocode/kilo-telemetry", () => ({
   },
 }))
 
-mock.module("@kilocode/kilo-gateway", () => ({
+mock.module("@taverncode/tavern-gateway", () => ({
   ENV_FEATURE: "KILO_FEATURE",
   ENV_VERSION: "KILO_VERSION",
   async migrateLegacyKiloAuth() {
@@ -51,7 +51,7 @@ mock.module("@/effect/app-runtime", () => ({
   },
 }))
 
-mock.module("@/kilocode/log", () => ({
+mock.module("@/taverncode/log", () => ({
   KiloLog: {
     async init() {
       calls.push("log")
@@ -59,7 +59,7 @@ mock.module("@/kilocode/log", () => ({
   },
 }))
 
-mock.module("@/kilocode/storage/json-migration", () => ({
+mock.module("@/taverncode/storage/json-migration", () => ({
   JsonMigration: {
     async bootstrap() {
       calls.push("migration")
@@ -83,7 +83,7 @@ mock.module("@/project/instance-runtime", () => ({
   },
 }))
 
-mock.module("@/kilocode/session-export", () => ({
+mock.module("@/taverncode/session-export", () => ({
   SessionExport: {
     async shutdown() {
       calls.push("session")
@@ -91,17 +91,17 @@ mock.module("@/kilocode/session-export", () => ({
   },
 }))
 
-mock.module("@/kilocode/help-command", () => ({
+mock.module("@/taverncode/help-command", () => ({
   createHelpCommand: () => ({ command: "help", handler() {} }),
 }))
 
 for (const path of [
-  "@/kilocode/cli/cmd/console",
-  "@/kilocode/cli/cmd/cloud",
-  "@/kilocode/cli/cmd/roll-call",
-  "@/kilocode/cli/cmd/profile",
-  "@/kilocode/cli/cmd/daemon",
-  "@/kilocode/cli/dev-setup",
+  "@/taverncode/cli/cmd/console",
+  "@/taverncode/cli/cmd/cloud",
+  "@/taverncode/cli/cmd/roll-call",
+  "@/taverncode/cli/cmd/profile",
+  "@/taverncode/cli/cmd/daemon",
+  "@/taverncode/cli/dev-setup",
   "@/cli/cmd/remote",
   "@/cli/cmd/config",
 ]) {
@@ -118,7 +118,7 @@ for (const path of [
   }))
 }
 
-/** Same mock body as the kilo-sessions module mock used by setup.ts's drain task. */
+/** Same mock body as the tavern-sessions module mock used by setup.ts's drain task. */
 function registerDrain() {
   KiloShutdown.register(async () => {
     drainCalls += 1
@@ -154,7 +154,7 @@ describe("KiloCli.shutdown", () => {
 
   test("does not load unused ingest shutdown work", async () => {
     process.exitCode = 0
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { KiloCli } = await import("../../src/taverncode/cli/setup")
 
     await expect(KiloCli.shutdown()).resolves.toBeUndefined()
 
@@ -167,7 +167,7 @@ describe("KiloCli.shutdown", () => {
   test("keeps telemetry shutdown timeout best-effort and still disposes instances", async () => {
     err = "Timeout while shutting down PostHog. Some events may not have been sent."
     process.exitCode = 0
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { KiloCli } = await import("../../src/taverncode/cli/setup")
     await installDrain()
 
     await expect(KiloCli.shutdown()).resolves.toBeUndefined()
@@ -179,7 +179,7 @@ describe("KiloCli.shutdown", () => {
 
   test("preserves failing command exit status", async () => {
     process.exitCode = 1
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { KiloCli } = await import("../../src/taverncode/cli/setup")
     await installDrain()
 
     await KiloCli.shutdown()
@@ -190,7 +190,7 @@ describe("KiloCli.shutdown", () => {
   })
 
   test("skips lifecycle work for parsed informational flags", async () => {
-    const { KiloCli } = await import("../../src/kilocode/cli/setup")
+    const { KiloCli } = await import("../../src/taverncode/cli/setup")
     await installDrain()
 
     for (const flag of ["help", "version"] as const) {

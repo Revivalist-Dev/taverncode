@@ -2,9 +2,9 @@ import type {
   IndexingConfigInput,
   IndexingTelemetryEvent,
   VectorStoreSearchResult,
-} from "@kilocode/kilo-indexing/engine"
-import type { IndexingStatus } from "@kilocode/kilo-indexing/status"
-import { zeroID } from "@opencode-ai/core/kilocode/zero-id"
+} from "@taverncode/tavern-indexing/engine"
+import type { IndexingStatus } from "@taverncode/tavern-indexing/status"
+import { zeroID } from "@opencode-ai/core/taverncode/zero-id"
 import { withTimeout } from "@/util/timeout"
 import type { Event, Log, Message, Request, Result } from "./indexing-worker-protocol"
 import type { IndexingWarning } from "./indexing-warning"

@@ -43,8 +43,8 @@ export const KiloNotifications: Component<{ sessionID?: Accessor<string | undefi
   }
 
   /**
-   * Resolve suggestModelId to a kilo-provider model selection.
-   * Only the kilo provider is supported — the model must be present in the
+   * Resolve suggestModelId to a tavern-provider model selection.
+   * Only the tavern provider is supported — the model must be present in the
    * catalog and reachable (isModelValid) before the button is shown.
    */
   const suggestedModel = createMemo(() => {
@@ -88,21 +88,21 @@ export const KiloNotifications: Component<{ sessionID?: Accessor<string | undefi
 
   return (
     <Show when={total() > 0}>
-      <div class="kilo-notifications">
-        <div class="kilo-notifications-card">
-          <div class="kilo-notifications-header">
-            <span class="kilo-notifications-title">{current()?.title}</span>
+      <div class="tavern-notifications">
+        <div class="tavern-notifications-card">
+          <div class="tavern-notifications-header">
+            <span class="tavern-notifications-title">{current()?.title}</span>
             <Show when={total() > 1}>
-              <span class="kilo-notifications-nav-count">
+              <span class="tavern-notifications-nav-count">
                 {safeIndex() + 1} / {total()}
               </span>
             </Show>
           </div>
-          <p class="kilo-notifications-message">{current()?.message}</p>
-          <div class="kilo-notifications-footer">
-            <div class="kilo-notifications-cta-group">
+          <p class="tavern-notifications-message">{current()?.message}</p>
+          <div class="tavern-notifications-footer">
+            <div class="tavern-notifications-cta-group">
               <Show when={canSwitchModel()}>
-                <button class="kilo-notifications-action-btn" onClick={handleTryModel}>
+                <button class="tavern-notifications-action-btn" onClick={handleTryModel}>
                   {suggestedName()
                     ? language.t("notifications.action.tryModel", { model: suggestedName()! })
                     : language.t("notifications.action.tryModelGeneric")}
@@ -110,19 +110,19 @@ export const KiloNotifications: Component<{ sessionID?: Accessor<string | undefi
               </Show>
               <Show when={current()?.action}>
                 {(action) => (
-                  <button class="kilo-notifications-action-btn" onClick={() => handleAction(action().actionURL)}>
+                  <button class="tavern-notifications-action-btn" onClick={() => handleAction(action().actionURL)}>
                     {action().actionText}
                   </button>
                 )}
               </Show>
             </div>
-            <div class="kilo-notifications-next-group">
+            <div class="tavern-notifications-next-group">
               <Show when={safeIndex() > 0}>
-                <button class="kilo-notifications-back-link" onClick={() => setIndex(safeIndex() - 1)}>
+                <button class="tavern-notifications-back-link" onClick={() => setIndex(safeIndex() - 1)}>
                   {language.t("common.goBack")}
                 </button>
               </Show>
-              <button class="kilo-notifications-primary-btn" onClick={handleNext}>
+              <button class="tavern-notifications-primary-btn" onClick={handleNext}>
                 {isLast() ? language.t("notifications.action.close") : language.t("notifications.action.next")}
               </button>
             </div>

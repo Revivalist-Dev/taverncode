@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 function story(id: string) {
   return `/iframe.html?id=${id}&viewMode=story&globals=${GLOBALS}`
@@ -26,22 +26,22 @@ test("model selector exposes combobox relationships and active option movement",
   await expect(combobox).toHaveAttribute("aria-controls", await tree.getAttribute("id"))
   await expect(combobox).toHaveAttribute("aria-activedescendant", await alpha.getAttribute("id"))
   await expect(combobox).toHaveAccessibleDescription("Choose the model used for code review tasks.")
-  await expect(alpha.locator(".model-selector-item-provider-tag")).toHaveText("Kilo")
-  await expect(bravo.locator(".model-selector-item-provider-tag")).toHaveText("Kilo")
+  await expect(alpha.locator(".model-selector-item-provider-tag")).toHaveText("Tavern")
+  await expect(bravo.locator(".model-selector-item-provider-tag")).toHaveText("Tavern")
   await expect(alpha.locator("button")).toHaveCount(0)
   await expect(page.getByRole("button", { name: "Add to favorites: Alpha" })).toBeVisible()
   await expect(page.locator(".model-selector-group-label").nth(0)).toContainText("Auto Models")
   await expect(page.locator(".model-selector-group-label").nth(1)).toContainText("Recommended")
-  const auto = page.getByRole("treeitem", { name: /Kilo Auto Efficient/ })
+  const auto = page.getByRole("treeitem", { name: /Tavern Auto Efficient/ })
   await expect(auto).toBeVisible()
   await expect(auto.locator(".model-selector-auto-icon")).toHaveAttribute(
     "aria-label",
     "Routes each request to the cheapest model that gets the job done, based on continuously benchmarked accuracy and cost.",
   )
-  const kilo = page.getByRole("treeitem", { name: "Kilo", exact: true })
-  const legacy = page.getByRole("treeitem", { name: /Kilo Auto Legacy/ })
+  const tavern = page.getByRole("treeitem", { name: "Tavern", exact: true })
+  const legacy = page.getByRole("treeitem", { name: /Tavern Auto Legacy/ })
   await expect(legacy).toBeVisible()
-  const legacyAfterKilo = await kilo.evaluate(
+  const legacyAfterKilo = await tavern.evaluate(
     (group, id) => {
       const model = document.getElementById(id!)
       return !!model && !!(group.compareDocumentPosition(model) & Node.DOCUMENT_POSITION_FOLLOWING)
@@ -81,7 +81,7 @@ test("auto efficient details show server description and model choices", async (
   await load(page, "shared--model-selector-accessible")
 
   await page.getByRole("button", { name: "Review model: Alpha" }).click()
-  await page.getByRole("treeitem", { name: /Kilo Auto Efficient/ }).click()
+  await page.getByRole("treeitem", { name: /Tavern Auto Efficient/ }).click()
 
   const preview = page.locator(".model-selector-preview")
   await expect(preview).toContainText(
@@ -97,7 +97,7 @@ test("auto frontier details show model choices when routes are present", async (
   await load(page, "shared--model-selector-accessible")
 
   await page.getByRole("button", { name: "Review model: Alpha" }).click()
-  await page.getByRole("treeitem", { name: /Kilo Auto Frontier/ }).click()
+  await page.getByRole("treeitem", { name: /Tavern Auto Frontier/ }).click()
 
   const preview = page.locator(".model-selector-preview")
   await expect(preview).toContainText("Routes each request to the strongest available models.")
@@ -126,14 +126,14 @@ test("provider groups collapse, expand, and skip their model rows", async ({ pag
 
   await page.getByRole("button", { name: "Review model: Alpha" }).click()
   const combobox = page.getByRole("combobox", { name: "Review model: Alpha. Search models" })
-  const kilo = page.getByRole("treeitem", { name: "Kilo", exact: true })
+  const tavern = page.getByRole("treeitem", { name: "Tavern", exact: true })
   const nvidia = page.getByRole("treeitem", { name: "NVIDIA", exact: true })
 
   await combobox.press("ArrowDown")
   await combobox.press("ArrowLeft")
-  await expect(combobox).toHaveAttribute("aria-activedescendant", await kilo.getAttribute("id"))
+  await expect(combobox).toHaveAttribute("aria-activedescendant", await tavern.getAttribute("id"))
   await combobox.press("ArrowLeft")
-  await expect(kilo).toHaveAttribute("aria-expanded", "false")
+  await expect(tavern).toHaveAttribute("aria-expanded", "false")
   await expect(page.getByRole("treeitem", { name: "Bravo" })).toBeHidden()
 
   await combobox.press("ArrowDown")

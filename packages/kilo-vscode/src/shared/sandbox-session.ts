@@ -1,7 +1,7 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { SandboxPreference } from "../services/sandbox-preference"
 
-export const SANDBOX_METADATA_KEY = "kilocode.sandbox"
+export const SANDBOX_METADATA_KEY = "taverncode.sandbox"
 
 export function sandboxMetadata(enabled: boolean, metadata?: Record<string, unknown>) {
   return {

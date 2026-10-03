@@ -6,13 +6,13 @@ The published code comes from `jetbrains/v<version>`. Marketplace and GitHub rel
 
 ## Command-Assisted Release
 
-Maintainers can use the Kilo `/release-jetbrains` command to drive this process from a version request such as `next rc` or an explicit version. The command resolves and confirms the version, dispatches and watches the prepare workflow, helps produce a filtered human-readable JetBrains/CLI changelog draft, commits the reviewed changelog to the release PR, and watches publishing after the PR is merged.
+Maintainers can use the Tavern `/release-jetbrains` command to drive this process from a version request such as `next rc` or an explicit version. The command resolves and confirms the version, dispatches and watches the prepare workflow, helps produce a filtered human-readable JetBrains/CLI changelog draft, commits the reviewed changelog to the release PR, and watches publishing after the PR is merged.
 
-JetBrains plugin builds and runtime downloads use the Kilo Core version pinned in `packages/kilo-jetbrains/package.json`, so verify that pin points at a published `v<version>` release before creating the release tag.
+JetBrains plugin builds and runtime downloads use the Tavern Core version pinned in `packages/tavern-jetbrains/package.json`, so verify that pin points at a published `v<version>` release before creating the release tag.
 
-`kilo.cli.pinned=false` in `packages/kilo-jetbrains/gradle.properties` is local development mode only. It generates the client from `packages/opencode/` and bundles a locally built CLI into the plugin; production Gradle builds and release scripts fail until the property is restored to `true`.
+`tavern.cli.pinned=false` in `packages/tavern-jetbrains/gradle.properties` is local development mode only. It generates the client from `packages/opencode/` and bundles a locally built CLI into the plugin; production Gradle builds and release scripts fail until the property is restored to `true`.
 
-The command lives at `.kilo/command/release-jetbrains.md` and reuses helper scripts at `.kilo/skills/release-jetbrains/script/`. It does not move or recreate release tags, and merge permission is only required if the user explicitly asks it to merge the release PR automatically.
+The command lives at `.tavern/command/release-jetbrains.md` and reuses helper scripts at `.tavern/skills/release-jetbrains/script/`. It does not move or recreate release tags, and merge permission is only required if the user explicitly asks it to merge the release PR automatically.
 
 ## CLI Pin Review
 
@@ -20,22 +20,22 @@ The JetBrains plugin has two independent versions:
 
 | Field | Meaning |
 |---|---|
-| `packages/kilo-jetbrains/package.json` `version` | The pinned Kilo CLI release used for OpenAPI generation and runtime downloads. |
-| `packages/kilo-jetbrains/gradle.properties` `kilo.jetbrains.version` | The JetBrains Marketplace plugin version. |
+| `packages/tavern-jetbrains/package.json` `version` | The pinned Tavern CLI release used for OpenAPI generation and runtime downloads. |
+| `packages/tavern-jetbrains/gradle.properties` `tavern.jetbrains.version` | The JetBrains Marketplace plugin version. |
 
 The prepare workflow tags `origin/main`, so the CLI pin that matters is the one already merged to `main`. Before creating a release tag, run:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/check-pin.ts
+bun .tavern/skills/release-jetbrains/script/check-pin.ts
 ```
 
-The script reports the CLI that `origin/main` will lock, the latest published stable CLI release, the CLI shipped by the latest `jetbrains/v*` tag, whether `kilo.cli.pinned=true`, and whether all runtime assets exist. Stop before tagging if the pin is behind the latest CLI and you want to test the newer CLI first.
+The script reports the CLI that `origin/main` will lock, the latest published stable CLI release, the CLI shipped by the latest `jetbrains/v*` tag, whether `tavern.cli.pinned=true`, and whether all runtime assets exist. Stop before tagging if the pin is behind the latest CLI and you want to test the newer CLI first.
 
 To test a different CLI pin locally:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/set-pin.ts --latest
-cd packages/kilo-jetbrains
+bun .tavern/skills/release-jetbrains/script/set-pin.ts --latest
+cd packages/tavern-jetbrains
 ./gradlew typecheck
 ./gradlew test
 ```
@@ -43,7 +43,7 @@ cd packages/kilo-jetbrains
 To land the tested pin on `main` before releasing:
 
 ```bash
-bun .kilo/skills/release-jetbrains/script/set-pin.ts --latest --pr
+bun .tavern/skills/release-jetbrains/script/set-pin.ts --latest --pr
 ```
 
 Merge the generated pin PR first, then re-run `check-pin.ts` and dispatch prepare. Do not dispatch prepare from a local-only pin edit.
@@ -104,12 +104,12 @@ The PR updates:
 
 | File | Purpose |
 |---|---|
-| `packages/kilo-jetbrains/gradle.properties` | JetBrains plugin version in `kilo.jetbrains.version`. |
-| `packages/kilo-jetbrains/CHANGELOG.md` | Release notes packaged into the plugin. |
+| `packages/tavern-jetbrains/gradle.properties` | JetBrains plugin version in `tavern.jetbrains.version`. |
+| `packages/tavern-jetbrains/CHANGELOG.md` | Release notes packaged into the plugin. |
 
-Review `packages/kilo-jetbrains/gradle.properties` and edit `packages/kilo-jetbrains/CHANGELOG.md` before merging. This changelog entry is rendered into JetBrains `<change-notes>`, so it appears on the Marketplace and inside IntelliJ plugin UI.
+Review `packages/tavern-jetbrains/gradle.properties` and edit `packages/tavern-jetbrains/CHANGELOG.md` before merging. This changelog entry is rendered into JetBrains `<change-notes>`, so it appears on the Marketplace and inside IntelliJ plugin UI.
 
-The PR can change release metadata such as `packages/kilo-jetbrains/gradle.properties` and `packages/kilo-jetbrains/CHANGELOG.md`, but it does not change the tagged source code that will be built.
+The PR can change release metadata such as `packages/tavern-jetbrains/gradle.properties` and `packages/tavern-jetbrains/CHANGELOG.md`, but it does not change the tagged source code that will be built.
 
 ## Merge and Publish
 
@@ -130,14 +130,14 @@ Publishing behavior:
 | `x.y.z-rc.n` | `eap` | Prerelease |
 | `x.y.z` | default | Stable release |
 
-The workflow checks out `jetbrains/v<version>` for verification, signing, and Marketplace publishing. It overlays the reviewed `packages/kilo-jetbrains/gradle.properties` and `packages/kilo-jetbrains/CHANGELOG.md` from the merged PR before rendering release notes and before `publishPlugin`, so the Marketplace plugin version, Marketplace notes, and GitHub Release use the reviewed metadata.
+The workflow checks out `jetbrains/v<version>` for verification, signing, and Marketplace publishing. It overlays the reviewed `packages/tavern-jetbrains/gradle.properties` and `packages/tavern-jetbrains/CHANGELOG.md` from the merged PR before rendering release notes and before `publishPlugin`, so the Marketplace plugin version, Marketplace notes, and GitHub Release use the reviewed metadata.
 
-After Marketplace publishing succeeds, `publish-jetbrains` dispatches `publish-jetbrains-bundled`. The bundled workflow rebuilds the same `jetbrains/v<version>` tag with `-Pkilo.cli.bundled=true`, signs and verifies the all-platform plugin ZIP, then uploads `kilo-code-<version>-bundled.zip` to the same GitHub Release. Bundled builds keep `kilo.cli.pinned=true`; the build flag only embeds the pinned CLI release assets so runtime extracts the bundled current-platform CLI instead of downloading it.
+After Marketplace publishing succeeds, `publish-jetbrains` dispatches `publish-jetbrains-bundled`. The bundled workflow rebuilds the same `jetbrains/v<version>` tag with `-Pkilo.cli.bundled=true`, signs and verifies the all-platform plugin ZIP, then uploads `tavern-code-<version>-bundled.zip` to the same GitHub Release. Bundled builds keep `tavern.cli.pinned=true`; the build flag only embeds the pinned CLI release assets so runtime extracts the bundled current-platform CLI instead of downloading it.
 
 Stable bundled releases also publish the GitHub Pages custom plugin repository XML:
 
 ```text
-https://kilo-org.github.io/kilocode/jetbrains/updatePlugins.xml
+https://tavern-org.github.io/taverncode/jetbrains/updatePlugins.xml
 ```
 
 RC bundled ZIPs are attached to prereleases for install-from-disk testing, but they do not update the stable custom repository XML.
@@ -154,7 +154,7 @@ RC builds are published to the `eap` channel. To get them in IntelliJ IDEA:
 https://plugins.jetbrains.com/plugins/list?channel=eap&pluginId=28350
 ```
 
-4. Search for **Kilo Code** in the Marketplace tab.
+4. Search for **Tavern Code** in the Marketplace tab.
 
 ## Manual Recovery
 
@@ -164,7 +164,7 @@ If publish validation says the tag points to the wrong SHA, stop and inspect man
 
 If publish failed after merge, rerun the failed `publish-jetbrains` workflow if the failure happened before Marketplace accepted the version. Marketplace may reject a duplicate version after a successful publish.
 
-If Marketplace publishing succeeded but GitHub Release upload failed, manually create or edit the GitHub Release for the existing tag. Use the reviewed release notes from `packages/kilo-jetbrains/CHANGELOG.md` in the merged release PR.
+If Marketplace publishing succeeded but GitHub Release upload failed, manually create or edit the GitHub Release for the existing tag. Use the reviewed release notes from `packages/tavern-jetbrains/CHANGELOG.md` in the merged release PR.
 
 If the immediate tag must be created manually because the prepare workflow could not push it, create it at the intended locked `origin/main` commit before merging the release PR:
 

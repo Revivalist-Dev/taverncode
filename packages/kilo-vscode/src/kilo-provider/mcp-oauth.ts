@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { KiloClient, McpStatus } from "@kilocode/sdk/v2/client"
-import { getErrorMessage } from "../kilo-provider-utils"
+import type { KiloClient, McpStatus } from "@taverncode/sdk/v2/client"
+import { getErrorMessage } from "../tavern-provider-utils"
 
 let lastMcpBrowserOpen: { url: string; at: number } | null = null
 
@@ -13,13 +13,13 @@ export function openMcpOAuthUrlOnce(url: string): void {
     (opened) => {
       if (opened) return
       void vscode.window.showErrorMessage(
-        "MCP sign-in failed to open the browser. Check the Kilo logs for the authentication URL.",
+        "MCP sign-in failed to open the browser. Check the Tavern logs for the authentication URL.",
       )
     },
     (error) => {
-      console.error("[Kilo New] Failed to open MCP OAuth URL:", error)
+      console.error("[Tavern New] Failed to open MCP OAuth URL:", error)
       void vscode.window.showErrorMessage(
-        "MCP sign-in failed to open the browser. Check the Kilo logs for the authentication URL.",
+        "MCP sign-in failed to open the browser. Check the Tavern logs for the authentication URL.",
       )
     },
   )
@@ -35,7 +35,7 @@ export async function connectMcpServer(
     await client.mcp.connect({ name, directory })
     await refreshStatus()
   } catch (error) {
-    console.error("[Kilo New] Failed to connect MCP:", name, error)
+    console.error("[Tavern New] Failed to connect MCP:", name, error)
     await refreshStatus()
   }
 }
@@ -50,7 +50,7 @@ export async function disconnectMcpServer(
     await client.mcp.disconnect({ name, directory })
     await refreshStatus()
   } catch (error) {
-    console.error("[Kilo New] Failed to disconnect MCP:", name, error)
+    console.error("[Tavern New] Failed to disconnect MCP:", name, error)
     await refreshStatus()
   }
 }
@@ -74,7 +74,7 @@ export async function authenticateMcpServer(
       vscode.window.showErrorMessage(status.error || "MCP server requires client registration in config")
     }
   } catch (error) {
-    console.error("[Kilo New] Failed to authenticate MCP:", name, error)
+    console.error("[Tavern New] Failed to authenticate MCP:", name, error)
     vscode.window.showErrorMessage(getErrorMessage(error) || "MCP sign-in failed")
   } finally {
     await refreshStatus()

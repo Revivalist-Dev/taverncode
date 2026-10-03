@@ -74,7 +74,7 @@ export async function createWorktreeOnDisk(
   let result: CreateWorktreeResult
   try {
     result = await manager.createWorktree({
-      prompt: opts?.name || "kilo",
+      prompt: opts?.name || "tavern",
       baseBranch: effectiveBase ?? opts?.baseBranch,
       baseRef: opts?.baseRef,
       branchName: opts?.branchName,

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { expect } from "bun:test"
 import { createServer } from "http"
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
@@ -8,7 +8,7 @@ import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { Cause, Deferred, Effect, Exit, Layer } from "effect"
 import { Config } from "../../src/config/config"
 import { EventV2Bridge } from "../../src/event-v2-bridge"
-import * as KiloOAuthCallback from "../../src/kilocode/mcp-oauth-callback"
+import * as KiloOAuthCallback from "../../src/taverncode/mcp-oauth-callback"
 import { McpAuth } from "../../src/mcp/auth"
 import { McpBrowser } from "../../src/mcp/browser"
 import { MCP } from "../../src/mcp/index"
@@ -38,7 +38,7 @@ interface TokenAttempt {
 
 // The browser stub drives the authorization URL the same way a real browser does:
 // it follows the authorization server's redirect back to the local callback listener.
-// `onOpen` lets a test act while the browser tab is open, which is when another Kilo
+// `onOpen` lets a test act while the browser tab is open, which is when another Tavern
 // process touches the same server.
 let onOpen: ((url: string) => Effect.Effect<void>) | undefined
 
@@ -209,15 +209,15 @@ mcpTest.instance("completion redeems the flow's own PKCE verifier when another p
     const name = "test-oauth-clobber"
     const mcp = yield* addServer(name, server.url)
 
-    // While the browser tab is open, another Kilo process (the VS Code backend, or
-    // `kilo mcp list` in a second terminal) connects the same server and saves its own
+    // While the browser tab is open, another Tavern process (the VS Code backend, or
+    // `tavern mcp list` in a second terminal) connects the same server and saves its own
     // PKCE verifier for that server name, exactly as the SDK does while starting an
     // authorization flow. It must not be able to make this flow redeem its verifier.
     let clobbered: string | undefined
     yield* withBrowserHook(() =>
       Effect.promise(async () => {
         const other = new McpOAuthProvider(name, server.url, {}, { onRedirect: async () => {} }, auth)
-        await other.saveCodeVerifier("verifier-from-another-kilo-process")
+        await other.saveCodeVerifier("verifier-from-another-tavern-process")
         clobbered = (await Effect.runPromise(auth.get(name)))?.codeVerifier
       }),
     )
@@ -229,10 +229,10 @@ mcpTest.instance("completion redeems the flow's own PKCE verifier when another p
     )
 
     expect(status).toEqual({ status: "connected" })
-    expect(clobbered).toBe("verifier-from-another-kilo-process")
+    expect(clobbered).toBe("verifier-from-another-tavern-process")
     expect(server.attempts()).toHaveLength(1)
     expect(server.attempts()[0]).toMatchObject({ matched: true })
-    expect(server.attempts()[0]?.verifier).not.toBe("verifier-from-another-kilo-process")
+    expect(server.attempts()[0]?.verifier).not.toBe("verifier-from-another-tavern-process")
   }),
 )
 
@@ -335,7 +335,7 @@ mcpTest.instance("a superseded authorization attempt is rejected by name", () =>
   }),
 )
 
-mcpTest.instance("a callback listener taken over by another Kilo process is reported as replaced", () =>
+mcpTest.instance("a callback listener taken over by another Tavern process is reported as replaced", () =>
   Effect.gen(function* () {
     yield* withCallbackStop
     const server = yield* serveOAuthMcp()
@@ -347,7 +347,7 @@ mcpTest.instance("a callback listener taken over by another Kilo process is repo
     const added = yield* mcp.add(name, { type: "remote", url: server.url, oauth: { redirectUri } })
     expect(added.status).toMatchObject({ [name]: { status: "needs_auth" } })
 
-    // While this process waits for its browser tab, a second `kilo mcp auth` for the same
+    // While this process waits for its browser tab, a second `tavern mcp auth` for the same
     // server takes the callback listener over: no callback can reach this flow any more.
     let taken = false
     yield* withBrowserHook(() =>

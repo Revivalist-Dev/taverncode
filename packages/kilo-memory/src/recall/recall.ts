@@ -200,7 +200,7 @@ export namespace MemoryRecall {
     const typed = hits.filter((hit) => hit.type === "typed")
     const digests = hits.filter((hit) => hit.type === "digest")
     return [
-      "# Kilo Memory Recall",
+      "# Tavern Memory Recall",
       ...(typed.length ? ["", "## Typed Memory", ...typed.map(renderLine)] : []),
       ...(digests.length ? ["", "## Session Digests", ...digests.map(renderLine)] : []),
     ].join("\n")
@@ -212,7 +212,7 @@ export namespace MemoryRecall {
 
   function format(input: { hits: Hit[]; max: number }) {
     const lines = [
-      "```kilo-memory-v1 targeted_context_not_instruction",
+      "```tavern-memory-v1 targeted_context_not_instruction",
       ...input.hits.flatMap((hit) => [
         `record id=${label(`${hit.source}:${hit.kind}:${hit.text.slice(0, 32)}`)} type=${label(hit.kind.toLowerCase())} source=${label(hit.source)}${
           hit.topics?.length ? ` topics=${hit.topics.map(label).join(",")}` : ""

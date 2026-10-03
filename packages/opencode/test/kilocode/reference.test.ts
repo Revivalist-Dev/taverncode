@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test"
 import path from "path"
 import { Cause, Effect, Exit, Layer, RcMap } from "effect"
 import { RepositoryCache } from "@opencode-ai/core/repository-cache"
-import * as Reference from "../../src/kilocode/reference"
+import * as Reference from "../../src/taverncode/reference"
 import { Reference as CoreReference } from "@opencode-ai/core/reference"
 import { EventV2 } from "@opencode-ai/core/event"
 import { Global } from "@opencode-ai/core/global"
@@ -11,7 +11,7 @@ import { buildLocationServiceMap, LocationServiceMap } from "@opencode-ai/core/l
 import { Location } from "@opencode-ai/core/location"
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { Config } from "../../src/config/config"
-import { locations } from "../../src/kilocode/server/reference-reconciler"
+import { locations } from "../../src/taverncode/server/reference-reconciler"
 import { testInstanceStoreLayer, tmpdir } from "../fixture/fixture"
 
 function remote() {

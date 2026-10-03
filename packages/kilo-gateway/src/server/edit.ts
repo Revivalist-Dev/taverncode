@@ -23,7 +23,7 @@ async function getProviderKey(Auth: Auth, provider: DirectAutocompleteProviderID
 }
 
 async function getProxyAuth(Auth: Auth) {
-  const auth = await Auth.get("kilo")
+  const auth = await Auth.get("tavern")
   const token = auth?.type === "api" ? auth.key : auth?.type === "oauth" ? auth.access : undefined
   return {
     auth,
@@ -37,18 +37,18 @@ export function createEditHandler(Auth: Auth) {
     const { provider, model, maxTokens, ...context } = c.req.valid("json")
     const target = resolveEditTarget(provider, model)
 
-    if (target.provider === "kilo" && !target.url) {
+    if (target.provider === "tavern" && !target.url) {
       return c.json({ error: "Next Edit currently requires the Inception provider (mercury-edit-2)." }, 400 as any)
     }
 
-    const proxy = target.provider === "kilo" ? await getProxyAuth(Auth) : undefined
+    const proxy = target.provider === "tavern" ? await getProxyAuth(Auth) : undefined
     const token =
-      target.provider === "kilo"
+      target.provider === "tavern"
         ? proxy?.token
         : await getProviderKey(Auth, target.provider as DirectAutocompleteProviderID)
 
-    if (target.provider === "kilo" && !proxy?.auth) {
-      return c.json({ error: "Not authenticated with Kilo Gateway" }, 401 as any)
+    if (target.provider === "tavern" && !proxy?.auth) {
+      return c.json({ error: "Not authenticated with Tavern Gateway" }, 401 as any)
     }
 
     if (!token) {
@@ -67,10 +67,10 @@ export function createEditHandler(Auth: Auth) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          ...(target.provider === "kilo"
-            ? buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy?.organizationId })
+          ...(target.provider === "tavern"
+            ? buildKiloHeaders(undefined, { taverncodeOrganizationId: proxy?.organizationId })
             : {}),
-          ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+          ...(target.provider === "tavern" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
         },
         signal,
         body: JSON.stringify({

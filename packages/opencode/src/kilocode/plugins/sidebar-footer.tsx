@@ -1,13 +1,13 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@taverncode/plugin/tui"
 import { createMemo, createSignal, onCleanup, onMount, Show } from "solid-js"
 import { Global } from "@opencode-ai/core/global"
 import * as Log from "@opencode-ai/core/util/log"
-import type { KiloPassState } from "@kilocode/kilo-gateway"
-import type { Message } from "@kilocode/sdk/v2"
+import type { KiloPassState } from "@taverncode/tavern-gateway"
+import type { Message } from "@taverncode/sdk/v2"
 import { onBalanceRefresh } from "../balance-refresh"
 import { REDACTED_BALANCE } from "../pii"
 
-const id = "internal:kilo-sidebar-footer"
+const id = "internal:tavern-sidebar-footer"
 const TEAM_POLL_MS = 5 * 60_000
 const BILLED_REFRESH_MS = 10_000
 const REFRESH_TIMEOUT_MS = 30_000
@@ -58,10 +58,10 @@ export function resetLabel(iso?: string | null) {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" }).format(date)
 }
 
-// A billed turn: a completed Kilo assistant message with a non-zero cost.
+// A billed turn: a completed Tavern assistant message with a non-zero cost.
 export function billable(info: Message) {
   if (info.role !== "assistant") return false
-  return info.providerID === "kilo" && info.time.completed !== undefined && info.cost > 0
+  return info.providerID === "tavern" && info.time.completed !== undefined && info.cost > 0
 }
 
 function View(props: { api: TuiPluginApi }) {
@@ -73,7 +73,7 @@ function View(props: { api: TuiPluginApi }) {
   const has = createMemo(() =>
     props.api.state.provider.some(
       (item) =>
-        (item.id !== "opencode" && item.id !== "kilo") ||
+        (item.id !== "opencode" && item.id !== "tavern") ||
         Object.values(item.models).some((model) => model.cost?.input !== 0),
     ),
   )
@@ -113,7 +113,7 @@ function View(props: { api: TuiPluginApi }) {
     const controller = new AbortController()
     inflight = controller
     const timeout = setTimeout(() => controller.abort(), REFRESH_TIMEOUT_MS)
-    void props.api.client.kilo
+    void props.api.client.tavern
       .profile(undefined, { signal: controller.signal })
       .then((res) => {
         if (id !== seq) return
@@ -191,7 +191,7 @@ function View(props: { api: TuiPluginApi }) {
               {(pass) => (
                 <box gap={0}>
                   <box flexDirection="row" justifyContent="space-between" gap={1}>
-                    <text fg={theme().textMuted}>{" └ Kilo Pass"}</text>
+                    <text fg={theme().textMuted}>{" └ Tavern Pass"}</text>
                     <text fg={theme().textMuted}>{passLine(pass())}</text>
                   </box>
                   <Show when={pass().currentPeriodBonusCreditsUsd > 0}>
@@ -236,7 +236,7 @@ function View(props: { api: TuiPluginApi }) {
                 ✕
               </text>
             </box>
-            <text fg={theme().textMuted}>Kilo includes free models so you can start immediately.</text>
+            <text fg={theme().textMuted}>Tavern includes free models so you can start immediately.</text>
             <text fg={theme().textMuted}>
               Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc
             </text>
@@ -254,7 +254,7 @@ function View(props: { api: TuiPluginApi }) {
       <text fg={theme().textMuted}>
         <span style={{ fg: theme().success }}>•</span>{" "}
         <span style={{ fg: theme().text }}>
-          <b>Kilo</b>
+          <b>Tavern</b>
         </span>{" "}
         <span>{props.api.app.version}</span>
       </text>

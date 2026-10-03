@@ -65,7 +65,7 @@ const SCRIPT_REPLACEMENTS: ScriptReplacement[] = [
   // Release artifact names
   {
     pattern: /opencode-(linux|darwin|windows)-(arm64|x64)(-baseline)?(\.tar\.gz|\.zip)?/g,
-    replacement: "kilo-$1-$2$3$4",
+    replacement: "tavern-$1-$2$3$4",
     description: "Release artifact name",
   },
 
@@ -79,12 +79,12 @@ const SCRIPT_REPLACEMENTS: ScriptReplacement[] = [
   // OpenCode branding in strings
   {
     pattern: /"OpenCode"/g,
-    replacement: '"Kilo"',
+    replacement: '"Tavern"',
     description: "Product name in string",
   },
   {
     pattern: /'OpenCode'/g,
-    replacement: "'Kilo'",
+    replacement: "'Tavern'",
     description: "Product name in single quotes",
   },
 ]
@@ -138,9 +138,9 @@ export async function transformScriptFile(
     return { file, action: "transformed", replacements: 0, dryRun: true }
   }
 
-  // If our version has kilocode_change markers, flag for manual resolution
+  // If our version has taverncode_change markers, flag for manual resolution
   if (await oursHasKilocodeChanges(file)) {
-    warn(`${file} has kilocode_change markers — skipping auto-transform, needs manual resolution`)
+    warn(`${file} has taverncode_change markers — skipping auto-transform, needs manual resolution`)
     return { file, action: "flagged", replacements: 0, dryRun: false }
   }
 

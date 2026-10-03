@@ -101,14 +101,14 @@ describe("speech-to-text source switching", () => {
     expect(canUseSpeechToText(noModel, {})).toBe(false)
     expect(selectedSpeechToTextModel(noModel)).toBe("")
 
-    // A custom endpoint does not need Kilo sign-in, only its own model ID.
+    // A custom endpoint does not need Tavern sign-in, only its own model ID.
     expect(canUseSpeechToText(withModel, {})).toBe(true)
     expect(selectedSpeechToTextModel(withModel)).toBe("small")
   })
 
   it("keeps Gateway auth gating and replaces an unknown stored ID with the default", () => {
     expect(canUseSpeechToText({}, {})).toBe(false)
-    expect(canUseSpeechToText({}, { kilo: "oauth" })).toBe(true)
+    expect(canUseSpeechToText({}, { tavern: "oauth" })).toBe(true)
     expect(selectedSpeechToTextModel({ experimental: { speech_to_text_model: "small" } })).toBe(
       DEFAULT_SPEECH_TO_TEXT_MODEL.id,
     )

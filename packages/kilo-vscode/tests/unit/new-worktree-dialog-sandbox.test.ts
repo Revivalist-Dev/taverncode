@@ -59,10 +59,10 @@ function check(code: string) {
     const { batch, createComputed, createRoot, createSignal, onCleanup } = await import("solid-js")
     const { createDialogModels, createDialogPreferences } = await import("./agent-manager/new-worktree-models.ts")
 
-    const x = { providerID: "kilo", modelID: "x" }
-    const y = { providerID: "kilo", modelID: "y" }
-    const z = { providerID: "kilo", modelID: "z" }
-    const free = { providerID: "kilo", modelID: "kilo-auto/free" }
+    const x = { providerID: "tavern", modelID: "x" }
+    const y = { providerID: "tavern", modelID: "y" }
+    const z = { providerID: "tavern", modelID: "z" }
+    const free = { providerID: "tavern", modelID: "tavern-auto/free" }
     const external = { providerID: "external", modelID: "custom" }
     const catalog = (...models) => Object.fromEntries(
       [...new Set(models.map((model) => model.providerID))].map((id) => [id, {
@@ -149,7 +149,7 @@ describe("NewWorktreeDialog models", () => {
       assert.equal(state.cached().model, undefined)
       assert.equal(state.selection.canSubmit(), false)
       state.refresh({ providers: catalog(x, y), ready: true })
-      state.pick("kilo", "x")
+      state.pick("tavern", "x")
       assert.deepEqual(state.model(), x)
       assert.deepEqual(state.cached(), { agent: "code", model: x, variant: "" })
       assert.equal(state.selection.canSubmit(), true)
@@ -195,7 +195,7 @@ describe("NewWorktreeDialog models", () => {
       const state = dialog({ model: x, variant: ${JSON.stringify(value)} }, {
         providers: catalog(x, y), fallback: x, ready: true, connected: [], efforts: { "code/y": "high" },
       })
-      state.pick("kilo", "y")
+      state.pick("tavern", "y")
       assert.equal(state.variant(), ${JSON.stringify(expected)})
       assert.deepEqual(state.preferences, [["code", y, ${JSON.stringify(expected)}]])
     `)
@@ -229,7 +229,7 @@ describe("NewWorktreeDialog models", () => {
   ])("keeps outgoing effort %s distinct from an unset choice on mode switch", (value, expected) => {
     check(`
       const providers = catalog(x)
-      providers.kilo.models.x.variants = { low: {}, high: {} }
+      providers.tavern.models.x.variants = { low: {}, high: {} }
       const state = dialog(${value === "" ? '{ variant: "" }' : "{}"}, {
         providers, fallback: x, alternate: x, ready: true, connected: [],
         efforts: { code: ${JSON.stringify(value)}, plan: "low" },
@@ -245,7 +245,7 @@ describe("NewWorktreeDialog models", () => {
   it.each(["", "high"])("keeps inherited raw effort %s through catalog changes and a mode switch", (value) => {
     check(`
       const providers = catalog(x)
-      providers.kilo.models.x.variants = { low: {} }
+      providers.tavern.models.x.variants = { low: {} }
       const state = dialog({}, {
         providers, fallback: x, alternate: x, ready: true, connected: [],
         efforts: { code: ${JSON.stringify(value)}, plan: "low" },
@@ -284,7 +284,7 @@ describe("NewWorktreeDialog models", () => {
       const state = dialog({ model: x, variant: "high" })
       await Promise.resolve()
       const providers = catalog(y)
-      providers.kilo.models.y.variants = { low: {} }
+      providers.tavern.models.y.variants = { low: {} }
       state.refresh({ providers })
       assert.deepEqual(state.model(), y)
       assert.equal(state.effectiveVariant(), "low")
@@ -302,11 +302,11 @@ describe("NewWorktreeDialog models", () => {
       const state = dialog({ model: x, variant: "high" })
       await Promise.resolve()
       const providers = catalog(y, z)
-      providers.kilo.models.y.variants = { low: {} }
-      providers.kilo.models.z.variants = { low: {}, high: {} }
+      providers.tavern.models.y.variants = { low: {} }
+      providers.tavern.models.z.variants = { low: {}, high: {} }
       state.refresh({ providers })
       assert.equal(state.effectiveVariant(), "low")
-      state.pick("kilo", "z")
+      state.pick("tavern", "z")
       assert.deepEqual(state.model(), z)
       assert.equal(state.effectiveVariant(), "high")
       assert.deepEqual(state.preferences, [["code", z, "high"]])
@@ -321,7 +321,7 @@ describe("NewWorktreeDialog models", () => {
       })
       await Promise.resolve()
       assert.deepEqual(state.preferences, [])
-      state.pick("kilo", "y")
+      state.pick("tavern", "y")
       assert.deepEqual(state.preferences, [["code", y, "high"]])
       state.clear()
       assert.deepEqual(state.preferences.at(-1), ["code", y, ""])
@@ -358,7 +358,7 @@ describe("NewWorktreeDialog models", () => {
   it("adopts a delayed first hydrated preference once without following later shared updates", () => {
     check(`
       const providers = catalog(x, y, z)
-      providers.kilo.models.y.variants = { low: {}, high: {} }
+      providers.tavern.models.y.variants = { low: {}, high: {} }
       const state = dialog({ model: x, variant: "high" }, {
         providers, fallback: x, ready: true, connected: [], hydrated: false,
       })
@@ -404,7 +404,7 @@ describe("NewWorktreeDialog models", () => {
         providers: catalog(x, y, z), fallback: x, alternate: y, ready: true, connected: [], hydrated: false,
       })
       const actions = {
-        model: () => state.pick("kilo", "z"),
+        model: () => state.pick("tavern", "z"),
         variant: () => state.choose("high"),
         default: state.clear,
         mode: () => state.selectAgent("plan"),
@@ -433,7 +433,7 @@ describe("NewWorktreeDialog models", () => {
       state.refresh({ fallback: x })
       assert.deepEqual(state.model(), y)
       state.setCompareMode(true)
-      const allocations = setAllocationVariant(toggleModel(new Map(), "kilo", "x", "X"), "kilo", "x", "high")
+      const allocations = setAllocationVariant(toggleModel(new Map(), "tavern", "x", "X"), "tavern", "x", "high")
       assert.equal(state.selection.canSubmit(allocations), true)
       state.choose(undefined)
       assert.equal(state.preferences.length, 1)
@@ -496,13 +496,13 @@ describe("NewWorktreeDialog models", () => {
     `)
   })
 
-  it("keeps external-only comparisons usable while a Kilo catalog refresh blocks mixed comparisons", () => {
+  it("keeps external-only comparisons usable while a Tavern catalog refresh blocks mixed comparisons", () => {
     check(`
       const { state, refresh } = scene(x, {
         providers: catalog(x, external, y), fallback: y, ready: true, connected: ["external"],
       })
       const solo = toggleModel(new Map(), "external", "custom", "Custom")
-      const mixed = toggleModel(solo, "kilo", "x", "X")
+      const mixed = toggleModel(solo, "tavern", "x", "X")
       const original = [...mixed.values()].map((entry) => ({ ...entry }))
       assert.equal(state.canSubmit(solo), true)
       assert.equal(state.canSubmit(mixed), true)
@@ -543,8 +543,8 @@ describe("NewWorktreeDialog models", () => {
   it("blocks invalid comparison models and variants without rewriting explicit allocations", () => {
     check(`
       const { state, refresh } = scene(x)
-      const first = toggleModel(new Map(), "kilo", "x", "X")
-      const allocations = toggleModel(first, "kilo", "y", "Y")
+      const first = toggleModel(new Map(), "tavern", "x", "X")
+      const allocations = toggleModel(first, "tavern", "y", "Y")
       const original = [...allocations.values()].map((entry) => ({ ...entry }))
       const [allowed, setAllowed] = createSignal(false)
       createComputed(() => setAllowed(state.canSubmit(allocations)))
@@ -558,14 +558,14 @@ describe("NewWorktreeDialog models", () => {
       refresh({ ready: false })
       assert.equal(allowed(), false)
       refresh({ ready: true })
-      const variants = setAllocationVariant(allocations, "kilo", "x", "high")
+      const variants = setAllocationVariant(allocations, "tavern", "x", "high")
       assert.equal(state.canSubmit(variants), true)
-      refresh({ providers: { kilo: { id: "kilo", name: "kilo", models: {
+      refresh({ providers: { tavern: { id: "tavern", name: "tavern", models: {
         x: { id: "x", name: "X", variants: { low: {} } },
         y: { id: "y", name: "Y" },
       } } } })
       assert.equal(state.canSubmit(variants), false)
-      assert.equal(variants.get("kilo/x").variant, "high")
+      assert.equal(variants.get("tavern/x").variant, "high")
       assert.equal(state.canSubmit(new Map()), false)
       const disconnected = toggleModel(new Map(), "external", "custom", "Custom")
       refresh({ providers: catalog(external), connected: [] })

@@ -50,17 +50,17 @@ const usage: ProviderUsageData = {
   generatedAt: "2026-06-19T12:00:00.000Z",
   items: [
     {
-      id: "kilo-managed:plan",
+      id: "tavern-managed:plan",
       providerID: "minimax",
       sourceKind: "kilo_managed",
       providerLabel: "MiniMax",
       planLabel: "Token Plan Plus",
-      sourceLabel: "via Kilo",
+      sourceLabel: "via Tavern",
       fetchState: "ready",
       planState: "active",
       routingState: "active",
       fetchedAt: "2026-06-19T12:00:00.000Z",
-      managementUrl: "https://app.kilo.ai/subscriptions/coding-plans/plan",
+      managementUrl: "https://app.tavern.ai/subscriptions/coding-plans/plan",
       windows: [
         {
           id: "general-interval",

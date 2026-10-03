@@ -1,4 +1,4 @@
-const WS_SUBPROTOCOL = "kilo.events.v1"
+const WS_SUBPROTOCOL = "tavern.events.v1"
 const HANDSHAKE_TIMEOUT_MS = 10_000
 const PING_INTERVAL_MS = 15_000
 const TICKET_FETCH_TIMEOUT_MS = 10_000
@@ -312,7 +312,7 @@ export class EventServiceClient {
       return
     }
     if (m.type === "error") {
-      console.warn("[Kilo] event-service server error", m)
+      console.warn("[Tavern] event-service server error", m)
       this.onServerError?.(m)
     }
   }

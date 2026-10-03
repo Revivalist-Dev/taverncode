@@ -4,7 +4,7 @@ import simpleGit from "simple-git"
 import { canonicalizePath, projectIdFor, resolveProjectRoot, samePath } from "./agent-manager/project/paths"
 import { ProjectRegistry } from "./agent-manager/project/registry"
 
-const KEY = "kilo.indexingConsent.v1"
+const KEY = "tavern.indexingConsent.v1"
 
 interface File {
   version: 1

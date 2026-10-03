@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import type { PartUpdate } from "../../src/shared/stream-messages"
-import { ToolInputStream } from "../../src/kilo-provider/tool-input-stream"
+import { ToolInputStream } from "../../src/tavern-provider/tool-input-stream"
 
 type Part = {
   id: string

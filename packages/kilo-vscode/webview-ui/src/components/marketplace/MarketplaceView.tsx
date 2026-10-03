@@ -1,10 +1,10 @@
 import { createSignal, createEffect, onCleanup, onMount, Show } from "solid-js"
-import { Card } from "@kilocode/kilo-ui/card"
-import { Button } from "@kilocode/kilo-ui/button"
+import { Card } from "@taverncode/tavern-ui/card"
+import { Button } from "@taverncode/tavern-ui/button"
 import { useVSCode } from "../../context/vscode"
 import { useServer } from "../../context/server"
 import { useLanguage } from "../../context/language"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import type {
   MarketplaceItem,
   MarketplaceInstalledMetadata,

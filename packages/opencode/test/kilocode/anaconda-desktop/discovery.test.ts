@@ -5,9 +5,9 @@ import { Effect, Layer, Redacted } from "effect"
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
-import * as Discovery from "../../../src/kilocode/anaconda-desktop/discovery"
-import * as DesktopPlatform from "../../../src/kilocode/anaconda-desktop/platform"
-import { CONFIG_FILE, STORE_FILE } from "../../../src/kilocode/anaconda-desktop/domain"
+import * as Discovery from "../../../src/taverncode/anaconda-desktop/discovery"
+import * as DesktopPlatform from "../../../src/taverncode/anaconda-desktop/platform"
+import { CONFIG_FILE, STORE_FILE } from "../../../src/taverncode/anaconda-desktop/domain"
 import { testEffect } from "../../lib/effect"
 
 const it = testEffect(Layer.empty)

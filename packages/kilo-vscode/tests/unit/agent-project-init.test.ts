@@ -16,7 +16,7 @@ afterEach(async () => {
 })
 
 async function project(pool: boolean) {
-  const root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "kilo-project-init-")))
+  const root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "tavern-project-init-")))
   const ctx = new ProjectContext("project", root, false, { log: () => {}, worktreePool: () => pool })
   contexts.push(ctx)
   const git = simpleGit(root)

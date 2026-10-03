@@ -6,7 +6,7 @@ import * as Encoding from "./encoding"
  * Optimistically stream as UTF-8; fall back to a buffered iconv decode only
  * when the bytes turn out not to be valid UTF-8.
  *
- *   import * as TextStream from "../kilocode/text-stream"
+ *   import * as TextStream from "../taverncode/text-stream"
  */
 
 /** Distinct class so {@link withFallback} can tell us apart from real I/O failures. */

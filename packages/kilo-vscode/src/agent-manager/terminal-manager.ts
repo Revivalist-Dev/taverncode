@@ -1,7 +1,7 @@
 /**
  * Agent Manager terminal manager.
  *
- * Maps Agent Manager terminal IDs to backend PTY IDs (from `kilo serve`).
+ * Maps Agent Manager terminal IDs to backend PTY IDs (from `tavern serve`).
  * Creation, resize, close, and bulk dispose all funnel through the v2 SDK
  * (`client.pty.{create,update,remove}`). The backend runs a real shell via
  * `@lydell/node-pty` and streams the output over the `/pty/:id/connect`
@@ -13,7 +13,7 @@
  * architecture test happy and makes the manager easy to unit test.
  */
 
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import path from "node:path"
 import { block } from "./pty-cleanup"
 
@@ -125,7 +125,7 @@ export class TerminalManager {
       cwd: params.cwd,
       title: params.title,
       // xterm's DOM renderer cannot draw the Unicode sextant glyphs used by
-      // Kilo's modern wordmark, so use the compatible logo in embedded tabs.
+      // Tavern's modern wordmark, so use the compatible logo in embedded tabs.
       env,
       size: initial,
     })
@@ -200,7 +200,7 @@ export class TerminalManager {
    *  The SDK's `pty.remove` returns `{ data, error }` without throwing
    *  on 4xx/5xx, so we have to check `error` ourselves; otherwise a
    *  failed delete would be silently logged as a successful close and
-   *  the server-side PTY would linger until `kilo serve` exits. */
+   *  the server-side PTY would linger until `tavern serve` exits. */
   async close(terminalId: string): Promise<boolean> {
     this.pending.delete(terminalId)
     const entry = this.entries.get(terminalId)
@@ -210,7 +210,7 @@ export class TerminalManager {
       const { error } = await client.pty.remove({ directory: entry.cwd, ptyID: entry.ptyID })
       if (error) {
         const msg = error instanceof Error ? error.message : String(error)
-        this.deps.log(`Terminal close failed (${terminalId}): ${msg} — PTY may linger until kilo serve exits`)
+        this.deps.log(`Terminal close failed (${terminalId}): ${msg} — PTY may linger until tavern serve exits`)
         return false
       }
       this.entries.delete(terminalId)
@@ -252,7 +252,7 @@ export class TerminalManager {
    * Failure modes we surface in the log:
    *   - The SDK client is unavailable (connection service already torn
    *     down). We can't reach the server to call `pty.remove`; the
-   *     server-side PTYs are then only reaped when `kilo serve` itself
+   *     server-side PTYs are then only reaped when `tavern serve` itself
    *     dies, which ServerManager does on extension deactivate via
    *     SIGTERM → SIGKILL on the process group. OS kills every child.
    *   - Individual `pty.remove` requests error (404 because the server
@@ -279,7 +279,7 @@ export class TerminalManager {
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         this.deps.log(
-          `Terminal dispose: SDK client unavailable (${msg}); relying on kilo serve process-group kill to reap PTYs`,
+          `Terminal dispose: SDK client unavailable (${msg}); relying on tavern serve process-group kill to reap PTYs`,
         )
         return undefined
       }
@@ -308,7 +308,7 @@ export class TerminalManager {
       this.deps.log(`Terminal dispose cleanup failed (${r.entry.terminalId}): ${msg}`)
     }
     if (failed > 0) {
-      this.deps.log(`Terminal dispose: ${failed}/${snapshot.length} PTYs may linger until kilo serve exits`)
+      this.deps.log(`Terminal dispose: ${failed}/${snapshot.length} PTYs may linger until tavern serve exits`)
     }
     for (const result of results) {
       if (result.ok && this.entries.get(result.entry.terminalId) === result.entry) {

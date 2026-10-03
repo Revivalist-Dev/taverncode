@@ -1,11 +1,11 @@
 import { createSignal, createEffect, onCleanup, Show, For } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
-import { RadioGroup } from "@kilocode/kilo-ui/radio-group"
-import { Select } from "@kilocode/kilo-ui/select"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
+import { RadioGroup } from "@taverncode/tavern-ui/radio-group"
+import { Select } from "@taverncode/tavern-ui/select"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { useVSCode } from "../../context/vscode"
 import { useServer } from "../../context/server"
 import { useLanguage } from "../../context/language"
@@ -17,8 +17,8 @@ interface ScopeOption {
   label: string
 }
 
-const MARKETPLACE_DOCS = "https://kilo.ai/docs/customize/marketplace"
-const MCP_DOCS = "https://kilo.ai/docs/automate/mcp/what-is-mcp"
+const MARKETPLACE_DOCS = "https://tavern.ai/docs/customize/marketplace"
+const MCP_DOCS = "https://tavern.ai/docs/automate/mcp/what-is-mcp"
 
 interface Props {
   item: MarketplaceItem
@@ -64,12 +64,12 @@ export const InstallModal = (props: Props) => {
   } | null>(null)
 
   const destination = (target = scope().value) => {
-    const base = target === "project" ? ".kilo" : "~/.config/kilo"
-    if (props.item.type === "mcp") return `${base}/kilo.json`
+    const base = target === "project" ? ".tavern" : "~/.config/tavern"
+    if (props.item.type === "mcp") return `${base}/tavern.json`
     if (props.item.type === "agent") return `${base}/agents/${props.item.id}.md`
     if (props.item.type === "plugin") return `${base}/`
-    if (target === "project") return `.kilo/skills/${props.item.id}/`
-    return `~/.kilo/skills/${props.item.id}/`
+    if (target === "project") return `.tavern/skills/${props.item.id}/`
+    return `~/.tavern/skills/${props.item.id}/`
   }
   const about = () => t(`marketplace.install.about.${props.item.type}`)
   const skills = () => (props.item.type === "mcp" ? (props.item.skills ?? []) : [])
@@ -213,7 +213,7 @@ export const InstallModal = (props: Props) => {
                 {(skill) => (
                   <div class="install-modal-destination">
                     <span>{skill.id}</span>
-                    <code>{`${scope().value === "global" ? "~/" : ""}.kilo/skills/${skill.id}/`}</code>
+                    <code>{`${scope().value === "global" ? "~/" : ""}.tavern/skills/${skill.id}/`}</code>
                   </div>
                 )}
               </For>

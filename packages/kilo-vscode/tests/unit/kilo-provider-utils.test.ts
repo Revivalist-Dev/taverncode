@@ -11,7 +11,7 @@ import {
   getErrorMessage,
   getConfigErrorDetails,
   type ProviderInfo,
-} from "../../src/kilo-provider-utils"
+} from "../../src/tavern-provider-utils"
 import type { CloudSessionMessage } from "../../src/services/cli-backend/types"
 import { normalize, type SyncPayload } from "../../src/services/cli-backend/sdk-sse-adapter"
 import type {
@@ -36,7 +36,7 @@ import type {
   EventServerConnected,
   TextPart,
   AssistantMessage,
-} from "@kilocode/sdk/v2/client"
+} from "@taverncode/sdk/v2/client"
 
 type SyncEventMessagePartUpdated = Extract<SyncPayload, { name: "message.part.updated.1" }>
 type SyncEventMessageUpdated = Extract<SyncPayload, { name: "message.updated.1" }>
@@ -171,13 +171,13 @@ describe("sessionToWebview", () => {
 
   it.each([true, false])("projects the saved goal with active=%s", (active) => {
     const goal = { text: "Fix the failing tests", active }
-    const result = sessionToWebview(makeSession({ metadata: { "kilo.goal": goal, unrelated: "private" } }))
+    const result = sessionToWebview(makeSession({ metadata: { "tavern.goal": goal, unrelated: "private" } }))
     expect(result.goal).toEqual(goal)
     expect(result).not.toHaveProperty("metadata")
   })
 
   it("clears the saved goal through JSON serialization and a session merge", () => {
-    const saved = sessionToWebview(makeSession({ metadata: { "kilo.goal": { text: "Fix tests", active: true } } }))
+    const saved = sessionToWebview(makeSession({ metadata: { "tavern.goal": { text: "Fix tests", active: true } } }))
     const cleared = JSON.parse(JSON.stringify(sessionToWebview(makeSession({ metadata: {} }))))
     expect({ ...saved, ...cleared }.goal).toBeNull()
   })
@@ -191,7 +191,7 @@ describe("sessionToWebview", () => {
         active: status === "active",
         reason: "Reported by the working model, not independently verified.",
       }
-      const result = sessionToWebview(makeSession({ metadata: { "kilo.goal": goal } }))
+      const result = sessionToWebview(makeSession({ metadata: { "tavern.goal": goal } }))
       expect(JSON.parse(JSON.stringify(result)).goal).toEqual(goal)
     },
   )
@@ -199,7 +199,7 @@ describe("sessionToWebview", () => {
   it.each([null, "text", { text: 1, active: true }, { text: "Goal" }, { text: "Goal", active: "true" }])(
     "ignores invalid goal metadata %j",
     (goal) => {
-      expect(sessionToWebview(makeSession({ metadata: { "kilo.goal": goal } })).goal).toBeNull()
+      expect(sessionToWebview(makeSession({ metadata: { "tavern.goal": goal } })).goal).toBeNull()
     },
   )
 
@@ -822,7 +822,7 @@ describe("getErrorMessage", () => {
     const err = {
       name: "ConfigInvalidError",
       data: {
-        path: "/Users/me/.config/kilo/kilo.json",
+        path: "/Users/me/.config/tavern/tavern.json",
         issues: [
           { code: "unrecognized_keys", keys: ["indexing"], path: [], message: 'Unrecognized key: "indexing"' },
           { code: "invalid_type", path: ["timeout"], message: "Expected number" },
@@ -895,11 +895,11 @@ describe("getConfigErrorDetails", () => {
   it("formats a single-issue ConfigInvalidError", () => {
     const err = {
       data: {
-        path: "/home/me/.config/kilo/kilo.json",
+        path: "/home/me/.config/tavern/tavern.json",
         issues: [{ code: "unrecognized_keys", keys: ["indexing"], path: [], message: 'Unrecognized key: "indexing"' }],
       },
     }
-    expect(getConfigErrorDetails(err)).toBe('File: /home/me/.config/kilo/kilo.json\n\n✖ Unrecognized key: "indexing"')
+    expect(getConfigErrorDetails(err)).toBe('File: /home/me/.config/tavern/tavern.json\n\n✖ Unrecognized key: "indexing"')
   })
 
   it("formats a multi-issue ConfigInvalidError with paths (including array indices)", () => {

@@ -9,8 +9,8 @@
 
 import { type Accessor, Component, createEffect, createSignal, For, onCleanup, Show } from "solid-js"
 import { PopupSelector } from "./PopupSelector"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useSession } from "../../context/session"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"

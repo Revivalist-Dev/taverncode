@@ -16,7 +16,7 @@ import { MemoryPaths } from "../src/storage/paths"
 import { MemoryFiles } from "../src/storage/store"
 
 async function tmp() {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kilo-memory-effect-"))
+  const dir = await mkdtemp(path.join(os.tmpdir(), "tavern-memory-effect-"))
   return {
     root: path.join(dir, "memory"),
     async done() {
@@ -938,7 +938,7 @@ describe("MemoryService turn-lock ref-counting", () => {
 
 describe("MemoryTimers signal ref-counting", () => {
   test("shares one controller per root and drops it once the last capture releases", () => {
-    const root = "/kilo-memory/ref-count-root"
+    const root = "/tavern-memory/ref-count-root"
     const first = MemoryTimers.signal(root)
     const second = MemoryTimers.signal(root)
     expect(second).toBe(first) // concurrent captures share the controller

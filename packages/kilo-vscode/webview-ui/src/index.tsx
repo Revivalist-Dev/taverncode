@@ -1,5 +1,5 @@
 /* @refresh reload */
-import "@kilocode/kilo-ui/styles"
+import "@taverncode/tavern-ui/styles"
 import { render } from "solid-js/web"
 import App from "./App"
 

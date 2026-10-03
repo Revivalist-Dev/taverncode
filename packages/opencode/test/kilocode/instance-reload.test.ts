@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { hasActiveSession } from "@/kilocode/server/httpapi/handlers/instance-reload"
+import { hasActiveSession } from "@/taverncode/server/httpapi/handlers/instance-reload"
 import type { SessionStatus } from "@/session/status"
 import { SessionID } from "@/session/schema"
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import * as Cloud from "../src/kilocode/provider-usage/cloud"
+import * as Cloud from "../src/taverncode/provider-usage/cloud"
 
 const subscription = {
   id: "byteplus-plan",

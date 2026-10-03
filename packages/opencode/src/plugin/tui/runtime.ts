@@ -10,7 +10,7 @@ import {
   type TuiPluginStatus,
   type TuiSlotPlugin,
   type TuiTheme,
-} from "@kilocode/plugin/tui"
+} from "@taverncode/plugin/tui"
 import path from "path"
 import { fileURLToPath } from "url"
 import { TuiConfig } from "@/config/tui"
@@ -252,13 +252,13 @@ function createThemeInstaller(
     const src = Filesystem.resolveFilePath(root, file)
     const name = path.basename(src, path.extname(src))
     const source_dir = path.dirname(meta.source)
-    // kilocode_change start - install local themes into supported Kilo config directories
+    // taverncode_change start - install local themes into supported Tavern config directories
     const base = path.basename(source_dir)
     const local_dir =
-      base === ".kilo" || base === ".kilocode"
+      base === ".tavern" || base === ".taverncode"
         ? path.join(source_dir, "themes")
-        : path.join(source_dir, ".kilo", "themes")
-    // kilocode_change end
+        : path.join(source_dir, ".tavern", "themes")
+    // taverncode_change end
     const dest_dir = meta.scope === "local" ? local_dir : path.join(Global.Path.config, "themes")
     const dest = path.join(dest_dir, `${name}.json`)
     const stat = await Filesystem.statAsync(src)
@@ -817,7 +817,7 @@ function defaultPluginOrigin(state: RuntimeState, spec: string): ConfigPlugin.Or
   return {
     spec,
     scope: "local",
-    source: state.api.state.path.config || path.join(state.directory, ".kilo", "tui.json"), // kilocode_change
+    source: state.api.state.path.config || path.join(state.directory, ".tavern", "tui.json"), // taverncode_change
   }
 }
 

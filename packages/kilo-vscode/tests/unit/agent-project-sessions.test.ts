@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import { ProjectContext, type ProjectContextDeps } from "../../src/agent-manager/project/context"
 import type { Worktree, ManagedSession, WorktreeStateManager } from "../../src/agent-manager/WorktreeStateManager"
 import {
@@ -13,7 +13,7 @@ import {
 import { ProjectRouteService } from "../../src/agent-manager/project/route"
 
 const ROOT = "/repo/main"
-const WT_PATH = "/repo/main/.kilo/worktrees/fix"
+const WT_PATH = "/repo/main/.tavern/worktrees/fix"
 const OTHER = "/other/project"
 
 function mkSession(id: string, dir: string): Session {

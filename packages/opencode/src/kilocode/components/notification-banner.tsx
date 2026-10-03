@@ -1,5 +1,5 @@
 /**
- * Kilo Notification Banner
+ * Tavern Notification Banner
  *
  * Displays a notification teaser on the home screen.
  * Clicking opens the full notifications dialog.
@@ -11,7 +11,7 @@
 
 import { createSignal, Show } from "solid-js"
 import { useTheme } from "@tui/context/theme"
-import type { KilocodeNotification } from "@kilocode/kilo-gateway"
+import type { KilocodeNotification } from "@taverncode/tavern-gateway"
 
 interface NotificationBannerProps {
   notification: KilocodeNotification

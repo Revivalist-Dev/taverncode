@@ -50,11 +50,11 @@ import { Snapshot } from "../../src/snapshot"
 import { Ripgrep } from "@opencode-ai/core/ripgrep"
 import { ToolRegistry } from "../../src/tool/registry"
 import { Truncate } from "../../src/tool/truncate"
-import { KiloHeadless } from "../../src/kilocode/permission/headless"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
-import { KiloReadObject } from "../../src/kilocode/tool/read-object"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
-import { MemoryService } from "@kilocode/kilo-memory/effect/service"
+import { KiloHeadless } from "../../src/taverncode/permission/headless"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
+import { KiloReadObject } from "../../src/taverncode/tool/read-object"
+import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
+import { MemoryService } from "@taverncode/tavern-memory/effect/service"
 import { provideTmpdirServer } from "../fixture/fixture"
 import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect"
 import { reply, TestLLMServer } from "../lib/llm-server"
@@ -239,7 +239,7 @@ function providerCfg(url: string) {
 }
 
 it.live(
-  "blocks @file content denied by .kilocodeignore",
+  "blocks @file content denied by .taverncodeignore",
   () =>
     provideTmpdirServer(
       Effect.fnUntraced(function* ({ dir }) {
@@ -247,7 +247,7 @@ it.live(
         yield* Effect.promise(() =>
           Promise.all([
             Bun.write(path.join(dir, "my_file.txt"), sentinel),
-            Bun.write(path.join(dir, ".kilocodeignore"), "my_file.txt\n"),
+            Bun.write(path.join(dir, ".taverncodeignore"), "my_file.txt\n"),
           ]),
         )
 
@@ -569,7 +569,7 @@ it.live(
           Promise.all([
             Bun.write(path.join(dir, "nested", "file.txt"), allowed),
             Bun.write(path.join(dir, "nested", "AGENTS.md"), denied),
-            Bun.write(path.join(dir, ".kilocodeignore"), "nested/AGENTS.md\n"),
+            Bun.write(path.join(dir, ".taverncodeignore"), "nested/AGENTS.md\n"),
           ]),
         )
 
@@ -727,7 +727,7 @@ symlinkIt(
     provideTmpdirServer(
       Effect.fnUntraced(function* ({ dir }) {
         const docs = path.join(dir, "docs")
-        const outside = path.join(os.tmpdir(), `kilo-12133-${crypto.randomUUID()}.txt`)
+        const outside = path.join(os.tmpdir(), `tavern-12133-${crypto.randomUUID()}.txt`)
         const sentinel = "KILO_12133_REFERENCE_SYMLINK_SENTINEL"
         const fs = yield* FSUtil.Service
         yield* fs.ensureDir(docs)
@@ -776,7 +776,7 @@ symlinkIt(
   () =>
     provideTmpdirServer(
       Effect.fnUntraced(function* ({ dir }) {
-        const outside = path.join(os.tmpdir(), `kilo-12133-missing-${crypto.randomUUID()}`)
+        const outside = path.join(os.tmpdir(), `tavern-12133-missing-${crypto.randomUUID()}`)
         const fs = yield* FSUtil.Service
         yield* fs.ensureDir(outside)
         yield* Effect.addFinalizer(() => Effect.promise(() => rm(outside, { recursive: true, force: true })))
@@ -830,7 +830,7 @@ symlinkIt(
       Effect.fnUntraced(function* ({ dir }) {
         const folder = path.join(dir, "folder")
         const moved = path.join(dir, "moved")
-        const outside = path.join(os.tmpdir(), `kilo-12133-directory-${crypto.randomUUID()}`)
+        const outside = path.join(os.tmpdir(), `tavern-12133-directory-${crypto.randomUUID()}`)
         const fs = yield* FSUtil.Service
         yield* fs.ensureDir(folder)
         yield* fs.ensureDir(outside)

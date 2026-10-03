@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
-import { computeMetrics, formatRate } from "@/kilocode/session/metrics"
+import { computeMetrics, formatRate } from "@/taverncode/session/metrics"
 
 const tokens = {
   input: 100,
@@ -9,7 +9,7 @@ const tokens = {
   cache: { read: 0, write: 0 },
 }
 
-describe("kilocode.session.metrics.computeMetrics", () => {
+describe("taverncode.session.metrics.computeMetrics", () => {
   test("derives generation rate from elapsed time", () => {
     const metrics = computeMetrics({
       tokens: { ...tokens, output: 100 },
@@ -64,7 +64,7 @@ describe("kilocode.session.metrics.computeMetrics", () => {
   })
 })
 
-describe("kilocode.session.metrics.formatRate", () => {
+describe("taverncode.session.metrics.formatRate", () => {
   test.each([
     [0, "0 t/s"],
     [12, "12 t/s"],

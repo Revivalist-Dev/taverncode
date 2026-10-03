@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Tests for the git-based diff generator that replaced the JS Myers path.
 
@@ -9,7 +9,7 @@ import { parsePatch } from "diff"
 import { Effect, Layer } from "effect"
 import path from "path"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
-import { DiffFull } from "../../src/kilocode/snapshot/diff-full"
+import { DiffFull } from "../../src/taverncode/snapshot/diff-full"
 import { Filesystem } from "../../src/util/filesystem"
 import * as Log from "@opencode-ai/core/util/log"
 import { tmpdirScoped } from "../fixture/fixture"

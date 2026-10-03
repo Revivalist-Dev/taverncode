@@ -11,7 +11,7 @@ export async function execGhInput(
   input: Record<string, unknown>,
   options?: Omit<ExecFileOptionsWithStringEncoding, "encoding">,
 ): Promise<{ stdout: string; stderr: string }> {
-  const dir = await mkdtemp(join(tmpdir(), "kilo-gh-"))
+  const dir = await mkdtemp(join(tmpdir(), "tavern-gh-"))
   const file = join(dir, "input.json")
   try {
     await writeFile(file, JSON.stringify(input), { encoding: "utf8", mode: 0o600 })

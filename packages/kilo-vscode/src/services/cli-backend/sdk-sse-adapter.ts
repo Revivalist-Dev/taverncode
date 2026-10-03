@@ -1,4 +1,4 @@
-import type { KiloClient, GlobalEvent } from "@kilocode/sdk/v2/client"
+import type { KiloClient, GlobalEvent } from "@taverncode/sdk/v2/client"
 
 export type WirePayload = GlobalEvent["payload"]
 type Flat<T> = T extends {
@@ -73,16 +73,16 @@ export class SdkSSEAdapter {
    */
   connect(): void {
     if (this.abortController) {
-      console.log("[Kilo New] SSE: ⚠️ Already connected, skipping")
+      console.log("[Tavern New] SSE: ⚠️ Already connected, skipping")
       return
     }
 
-    console.log("[Kilo New] SSE: 🔌 connect() called")
+    console.log("[Tavern New] SSE: 🔌 connect() called")
     this.abortController = new AbortController()
-    console.log('[Kilo New] SSE: 🔄 Setting state to "connecting"')
+    console.log('[Tavern New] SSE: 🔄 Setting state to "connecting"')
     this.notifyState("connecting")
     void this.consumeLoop(this.abortController.signal).catch((err) => {
-      console.error("[Kilo New] SSE: Unhandled error in consumeLoop:", err)
+      console.error("[Tavern New] SSE: Unhandled error in consumeLoop:", err)
       this.notifyError(err instanceof Error ? err : new Error(String(err)))
     })
   }
@@ -91,7 +91,7 @@ export class SdkSSEAdapter {
    * Stop consuming the SSE stream and abort any in-flight request.
    */
   disconnect(): void {
-    console.log("[Kilo New] SSE: 🔌 disconnect() called")
+    console.log("[Tavern New] SSE: 🔌 disconnect() called")
     this.abortController?.abort()
     this.abortController = null
     this.attemptController = null
@@ -105,10 +105,10 @@ export class SdkSSEAdapter {
    */
   reconnect(): void {
     if (!this.attemptController) {
-      console.log("[Kilo New] SSE: ⚠️ reconnect() called but no active attempt")
+      console.log("[Tavern New] SSE: ⚠️ reconnect() called but no active attempt")
       return
     }
-    console.log("[Kilo New] SSE: 🔄 reconnect() — aborting current attempt")
+    console.log("[Tavern New] SSE: 🔄 reconnect() — aborting current attempt")
     this.attemptController.abort()
   }
 
@@ -165,10 +165,10 @@ export class SdkSSEAdapter {
       this.attemptController = attempt
 
       try {
-        console.log("[Kilo New] SSE: 🎬 Calling SDK global.event()...")
+        console.log("[Tavern New] SSE: 🎬 Calling SDK global.event()...")
         const events = await this.client.global.event({
           signal: attempt.signal,
-          headers: { "x-kilo-sse-skip-fork-sync": "1" },
+          headers: { "x-tavern-sse-skip-fork-sync": "1" },
           // Disable SDK-internal retries — consumeLoop handles reconnection
           // with its own outer while-loop. Without this the SDK's infinite
           // retry loop with exponential backoff runs in parallel, causing
@@ -183,12 +183,12 @@ export class SdkSSEAdapter {
             if (error instanceof DOMException && error.name === "AbortError") {
               return
             }
-            console.error("[Kilo New] SSE: ❌ SDK SSE error callback:", error)
+            console.error("[Tavern New] SSE: ❌ SDK SSE error callback:", error)
             this.notifyError(error instanceof Error ? error : new Error(String(error)))
           },
         })
 
-        console.log("[Kilo New] SSE: ⏳ Waiting for first stream event")
+        console.log("[Tavern New] SSE: ⏳ Waiting for first stream event")
         this.resetHeartbeat(attempt)
 
         for await (const event of events.stream) {
@@ -201,7 +201,7 @@ export class SdkSSEAdapter {
           if (!ready) {
             ready = true
             delay = SdkSSEAdapter.RECONNECT_DELAY_MS
-            console.log("[Kilo New] SSE: ✅ Stream opened successfully")
+            console.log("[Tavern New] SSE: ✅ Stream opened successfully")
             this.notifyState("connected")
           }
 
@@ -209,14 +209,14 @@ export class SdkSSEAdapter {
         }
 
         console.log(
-          ready ? "[Kilo New] SSE: 📭 Stream ended normally" : "[Kilo New] SSE: 📭 Stream ended before first event",
+          ready ? "[Tavern New] SSE: 📭 Stream ended normally" : "[Tavern New] SSE: 📭 Stream ended before first event",
         )
       } catch (error) {
         // Suppress AbortErrors — they are expected when the heartbeat timer
         // or reconnect() aborts the per-attempt controller.
         const aborted = signal.aborted || (error instanceof DOMException && error.name === "AbortError")
         if (!aborted) {
-          console.error("[Kilo New] SSE: ❌ Stream error:", error)
+          console.error("[Tavern New] SSE: ❌ Stream error:", error)
           this.notifyError(error instanceof Error ? error : new Error(String(error)))
         }
       } finally {
@@ -231,7 +231,7 @@ export class SdkSSEAdapter {
 
       const wait = delay
       delay = ready ? SdkSSEAdapter.RECONNECT_DELAY_MS : Math.min(delay * 2, SdkSSEAdapter.MAX_RECONNECT_DELAY_MS)
-      console.log(`[Kilo New] SSE: 🔄 Reconnecting in ${wait}ms...`)
+      console.log(`[Tavern New] SSE: 🔄 Reconnecting in ${wait}ms...`)
       this.notifyState("connecting")
       await new Promise((resolve) => setTimeout(resolve, wait))
     }
@@ -247,7 +247,7 @@ export class SdkSSEAdapter {
   private resetHeartbeat(attempt: AbortController): void {
     this.clearHeartbeat()
     this.heartbeatTimer = setTimeout(() => {
-      console.log("[Kilo New] SSE: ⏰ Heartbeat timeout — aborting stale connection")
+      console.log("[Tavern New] SSE: ⏰ Heartbeat timeout — aborting stale connection")
       attempt.abort()
     }, SdkSSEAdapter.HEARTBEAT_TIMEOUT_MS)
   }
@@ -266,7 +266,7 @@ export class SdkSSEAdapter {
       try {
         handler(event, directory)
       } catch (error) {
-        console.error("[Kilo New] SSE: Error in event handler:", error)
+        console.error("[Tavern New] SSE: Error in event handler:", error)
       }
     }
   }
@@ -276,7 +276,7 @@ export class SdkSSEAdapter {
       try {
         handler(error)
       } catch (err) {
-        console.error("[Kilo New] SSE: Error in error handler:", err)
+        console.error("[Tavern New] SSE: Error in error handler:", err)
       }
     }
   }
@@ -286,7 +286,7 @@ export class SdkSSEAdapter {
       try {
         handler(state)
       } catch (error) {
-        console.error("[Kilo New] SSE: Error in state handler:", error)
+        console.error("[Tavern New] SSE: Error in state handler:", error)
       }
     }
   }

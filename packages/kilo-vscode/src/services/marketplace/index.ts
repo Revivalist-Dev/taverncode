@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { detectMarketplaceRelevance } from "./relevance"
 import type {
   MarketplaceItem,
@@ -20,7 +20,7 @@ export class MarketplaceService {
     dir: string,
     roots: readonly vscode.Uri[],
   ): Promise<MarketplaceDataResponse> {
-    const { data } = await client.kilocode.marketplace.list({ directory: dir }, { throwOnError: true })
+    const { data } = await client.taverncode.marketplace.list({ directory: dir }, { throwOnError: true })
     const items = (data.items ?? []) as MarketplaceItem[]
     const relevance = await this.relevance(items, roots)
     const installed = project
@@ -51,7 +51,7 @@ export class MarketplaceService {
     options: InstallMarketplaceItemOptions,
     dir: string,
   ): Promise<InstallResult> {
-    const { data } = await client.kilocode.marketplace.install(
+    const { data } = await client.taverncode.marketplace.install(
       {
         directory: dir,
         item,
@@ -72,7 +72,7 @@ export class MarketplaceService {
     scope: "project" | "global",
     dir: string,
   ): Promise<RemoveResult> {
-    const { data } = await client.kilocode.marketplace.remove(
+    const { data } = await client.taverncode.marketplace.remove(
       { directory: dir, item: { id: item.id, type: item.type }, scope },
       { throwOnError: true },
     )

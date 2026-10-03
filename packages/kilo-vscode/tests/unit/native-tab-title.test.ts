@@ -1,14 +1,14 @@
 import { describe, expect, it } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
-import { nativeTitle } from "../../src/kilo-provider/native-tab-title"
+import type { Session } from "@taverncode/sdk/v2/client"
+import { nativeTitle } from "../../src/tavern-provider/native-tab-title"
 
 const session = (title: string | null) => ({ title }) as Session
 
 describe("nativeTitle", () => {
   it("uses the default title without a useful session title", () => {
-    expect(nativeTitle(null)).toBe("Kilo Code")
-    expect(nativeTitle(session(""))).toBe("Kilo Code")
-    expect(nativeTitle(session("New session - 2026-05-06T10:39:00.000Z"))).toBe("Kilo Code")
+    expect(nativeTitle(null)).toBe("Tavern Code")
+    expect(nativeTitle(session(""))).toBe("Tavern Code")
+    expect(nativeTitle(session("New session - 2026-05-06T10:39:00.000Z"))).toBe("Tavern Code")
   })
 
   it("keeps short session titles", () => {
@@ -16,7 +16,7 @@ describe("nativeTitle", () => {
   })
 
   it("truncates long session titles", () => {
-    expect(nativeTitle(session("Dynamic VS Code tab titles for Kilo sessions"))).toBe("Dynamic VS Code tab...")
+    expect(nativeTitle(session("Dynamic VS Code tab titles for Tavern sessions"))).toBe("Dynamic VS Code tab...")
   })
 
   it("updates the native panel only from valid webview activity reports", async () => {
@@ -43,7 +43,7 @@ describe("nativeTitle", () => {
     for (const state of ["busy", "waiting", "done", "scheduled", "error", "idle", "idle", "invalid", null]) {
       await listener.current?.({ type: "sessionActivity", state })
     }
-    expect(titles).toEqual(["◔ Kilo Code", "⚠ Kilo Code", "✓ Kilo Code", "◷ Kilo Code", "⚠ Kilo Code", "Kilo Code"])
+    expect(titles).toEqual(["◔ Tavern Code", "⚠ Tavern Code", "✓ Tavern Code", "◷ Tavern Code", "⚠ Tavern Code", "Tavern Code"])
     provider.dispose()
   })
 

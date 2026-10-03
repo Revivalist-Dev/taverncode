@@ -1,13 +1,13 @@
 import { describe, test, expect } from "bun:test"
 import path from "path"
 import yargs from "yargs"
-import { generateHelp, generateCommandTable } from "../../src/kilocode/help"
+import { generateHelp, generateCommandTable } from "../../src/taverncode/help"
 import { AcpCommand } from "../../src/cli/cmd/acp"
 import { McpCommand } from "../../src/cli/cmd/mcp"
 import { RunCommand } from "../../src/cli/cmd/run"
 import { GenerateCommand } from "../../src/cli/cmd/generate"
 import { DebugCommand } from "../../src/cli/cmd/debug"
-import { ProvidersCommand } from "../../src/cli/cmd/providers" // kilocode_change — upstream renamed auth → providers
+import { ProvidersCommand } from "../../src/cli/cmd/providers" // taverncode_change — upstream renamed auth → providers
 import { AgentCommand } from "../../src/cli/cmd/agent"
 import { UpgradeCommand } from "../../src/cli/cmd/upgrade"
 import { UninstallCommand } from "../../src/cli/cmd/uninstall"
@@ -22,24 +22,24 @@ import { RemoteCommand } from "../../src/cli/cmd/remote"
 import { ConfigCommand as ConfigCLICommand } from "../../src/cli/cmd/config"
 import { PluginCommand } from "../../src/cli/cmd/plug"
 import { DbCommand } from "../../src/cli/cmd/db"
-import { HelpCommand } from "../../src/kilocode/help-command"
-import { ProfileCommand } from "../../src/kilocode/cli/cmd/profile"
-import { DaemonCommand } from "../../src/kilocode/cli/cmd/daemon"
-import { KiloConsoleCommand } from "../../src/kilocode/cli/cmd/console"
-import { CloudCommand } from "../../src/kilocode/cli/cmd/cloud"
+import { HelpCommand } from "../../src/taverncode/help-command"
+import { ProfileCommand } from "../../src/taverncode/cli/cmd/profile"
+import { DaemonCommand } from "../../src/taverncode/cli/cmd/daemon"
+import { KiloConsoleCommand } from "../../src/taverncode/cli/cmd/console"
+import { CloudCommand } from "../../src/taverncode/cli/cmd/cloud"
 
 // Stand-in for TuiThreadCommand — the real one imports @opentui/solid which
 // doesn't resolve in the test environment. Only command/describe matter here.
 const TuiStub = {
   command: "$0 [project]",
-  describe: "start kilo tui",
+  describe: "start tavern tui",
   handler() {},
 }
 
 // Stand-in for AttachCommand — same reason as TuiStub above.
 const AttachStub = {
   command: "attach <url>",
-  describe: "attach to a running kilo server",
+  describe: "attach to a running tavern server",
   handler() {},
 }
 
@@ -81,23 +81,23 @@ const commands = [
   CompletionStub,
 ] as any[]
 
-describe("kilo help --all (markdown)", () => {
+describe("tavern help --all (markdown)", () => {
   test("contains ## heading for each known top-level command", async () => {
     const output = await generateHelp({ all: true, format: "md", commands })
     for (const cmd of ["run", "auth", "debug", "mcp", "session", "agent", "profile"]) {
-      expect(output).toContain(`## kilo ${cmd}`)
+      expect(output).toContain(`## tavern ${cmd}`)
     }
   })
 
   test("contains headings for nested subcommands", async () => {
     const output = await generateHelp({ all: true, format: "md", commands })
-    expect(output).toContain("kilo auth login")
-    expect(output).toContain("kilo auth logout")
-    expect(output).toContain("kilo debug config")
+    expect(output).toContain("tavern auth login")
+    expect(output).toContain("tavern auth logout")
+    expect(output).toContain("tavern debug config")
   })
 })
 
-describe("kilo help --all (text)", () => {
+describe("tavern help --all (text)", () => {
   test("does NOT contain Markdown ## headings or triple-backtick fences", async () => {
     const output = await generateHelp({ all: true, format: "text", commands })
     expect(output).not.toMatch(/^##\s/m)
@@ -107,52 +107,52 @@ describe("kilo help --all (text)", () => {
   test("still contains each command name", async () => {
     const output = await generateHelp({ all: true, format: "text", commands })
     for (const cmd of ["run", "auth", "debug", "mcp", "session", "agent", "profile"]) {
-      expect(output).toContain(`kilo ${cmd}`)
+      expect(output).toContain(`tavern ${cmd}`)
     }
   })
 })
 
-describe("kilo help <command>", () => {
-  test("kilo help auth contains auth subcommand headings", async () => {
+describe("tavern help <command>", () => {
+  test("tavern help auth contains auth subcommand headings", async () => {
     const output = await generateHelp({ command: "auth", format: "md", commands })
-    expect(output).toContain("kilo auth login")
-    expect(output).toContain("kilo auth logout")
-    expect(output).toContain("kilo auth list")
+    expect(output).toContain("tavern auth login")
+    expect(output).toContain("tavern auth logout")
+    expect(output).toContain("tavern auth list")
   })
 
-  test("kilo help auth does NOT contain run or debug headings", async () => {
+  test("tavern help auth does NOT contain run or debug headings", async () => {
     const output = await generateHelp({ command: "auth", format: "md", commands })
-    expect(output).not.toContain("## kilo run")
-    expect(output).not.toContain("## kilo debug")
+    expect(output).not.toContain("## tavern run")
+    expect(output).not.toContain("## tavern debug")
   })
 
   test("documents pr subcommands", async () => {
     const output = await generateHelp({ command: "pr", format: "md", commands })
-    expect(output).toContain("kilo pr checkout")
-    expect(output).toContain("kilo pr link")
-    expect(output).toContain("kilo pr unlink")
-    expect(output).toContain("kilo pr status")
+    expect(output).toContain("tavern pr checkout")
+    expect(output).toContain("tavern pr link")
+    expect(output).toContain("tavern pr unlink")
+    expect(output).toContain("tavern pr status")
   })
 
   test("documents console stop and foreground mode", async () => {
     const output = await generateHelp({ command: "console", format: "md", commands })
-    expect(output).toContain("kilo console stop")
+    expect(output).toContain("tavern console stop")
     expect(output).toContain("--foreground")
     expect(output).toContain("-f")
   })
 
   test("documents daemon foreground mode", async () => {
     const output = await generateHelp({ command: "daemon", format: "md", commands })
-    expect(output).toContain("kilo daemon start")
+    expect(output).toContain("tavern daemon start")
     expect(output).toContain("--foreground")
     expect(output).toContain("-f")
   })
 })
 
-describe("kilo cloud help", () => {
+describe("tavern cloud help", () => {
   async function parser() {
     const cli = yargs([])
-      .scriptName("kilo cloud")
+      .scriptName("tavern cloud")
       .exitProcess(false)
       .help()
       .fail((msg, err) => {
@@ -167,13 +167,13 @@ describe("kilo cloud help", () => {
     await expect(Promise.resolve().then(() => bare.parseAsync([]))).rejects.toThrow()
 
     const help = await (await parser()).getHelp()
-    const names = [...help.matchAll(/^\s*kilo cloud ([a-z][a-z-]*)\b/gm)].map((match) => match[1])
+    const names = [...help.matchAll(/^\s*tavern cloud ([a-z][a-z-]*)\b/gm)].map((match) => match[1])
     expect([...new Set(names)].sort()).toEqual(["result", "send", "start", "status"])
   })
 
   test("documents start prompt stdin", async () => {
     const output = await generateHelp({ command: "cloud", format: "md", commands })
-    expect(output).toContain("kilo cloud start")
+    expect(output).toContain("tavern cloud start")
     expect(output).toContain("--prompt-stdin")
   })
 })
@@ -184,7 +184,7 @@ describe("edge cases", () => {
     expect(/\x1b\[/.test(output)).toBe(false)
   })
 
-  test("kilo help nonexistent throws unknown command error", async () => {
+  test("tavern help nonexistent throws unknown command error", async () => {
     await expect(generateHelp({ command: "nonexistent", commands })).rejects.toThrow("unknown command")
   })
 })
@@ -198,13 +198,13 @@ describe("generateCommandTable", () => {
   test("contains rows for known commands", async () => {
     const output = await generateCommandTable({ commands })
     for (const name of ["run", "auth", "debug", "mcp"]) {
-      expect(output).toContain(`kilo ${name}`)
+      expect(output).toContain(`tavern ${name}`)
     }
   })
 
-  test("default command appears as kilo [project], not $0", async () => {
+  test("default command appears as tavern [project], not $0", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo [project]`")
+    expect(output).toContain("`tavern [project]`")
     expect(output).not.toContain("$0")
   })
 
@@ -215,35 +215,35 @@ describe("generateCommandTable", () => {
 
   test("skips commands with no describe", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).not.toContain("`kilo generate`")
+    expect(output).not.toContain("`tavern generate`")
   })
 
-  test("contains kilo completion row", async () => {
+  test("contains tavern completion row", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo completion`")
+    expect(output).toContain("`tavern completion`")
   })
 
-  test("contains kilo help row", async () => {
+  test("contains tavern help row", async () => {
     const output = await generateCommandTable({ commands })
-    expect(output).toContain("`kilo help")
+    expect(output).toContain("`tavern help")
   })
 })
 
-describe("Kilo CLI customizations are wired into index.ts", () => {
+describe("Tavern CLI customizations are wired into index.ts", () => {
   const file = (rel: string) => Bun.file(path.resolve(import.meta.dir, rel)).text()
   const INDEX = "../../src/index.ts"
-  const SETUP = "../../src/kilocode/cli/setup.ts"
-  const BARREL = "../../src/kilocode/commands.ts"
+  const SETUP = "../../src/taverncode/cli/setup.ts"
+  const BARREL = "../../src/taverncode/commands.ts"
 
-  test("CLI is branded `kilo`, not `opencode`", async () => {
+  test("CLI is branded `tavern`, not `opencode`", async () => {
     const index = await file(INDEX)
-    expect(index).toContain('.scriptName("kilo")')
+    expect(index).toContain('.scriptName("tavern")')
     expect(index).not.toContain('.scriptName("opencode")')
   })
 
   test("index.ts invokes the KiloCli integration points", async () => {
-    // These thin call-sites are the only wiring between upstream index.ts and the Kilo
-    // customizations in setup.ts. If a future upstream merge drops them, every Kilo command
+    // These thin call-sites are the only wiring between upstream index.ts and the Tavern
+    // customizations in setup.ts. If a future upstream merge drops them, every Tavern command
     // and the telemetry/lifecycle hooks silently disappear, exactly the regression this guards.
     const index = await file(INDEX)
     expect(index).toContain("KiloCli.register(")
@@ -251,7 +251,7 @@ describe("Kilo CLI customizations are wired into index.ts", () => {
     expect(index).toContain("KiloCli.shutdown(")
   })
 
-  test("registers the local Kilo Console instead of the upstream account console", async () => {
+  test("registers the local Tavern Console instead of the upstream account console", async () => {
     const index = await file(INDEX)
     const setup = await file(SETUP)
     const barrel = await file(BARREL)

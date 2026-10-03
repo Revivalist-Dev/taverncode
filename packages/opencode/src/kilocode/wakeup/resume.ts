@@ -1,9 +1,9 @@
-import { Instance, provide } from "@/kilocode/instance"
+import { Instance, provide } from "@/taverncode/instance"
 import { InstanceRef } from "@/effect/instance-ref"
 import * as Log from "@opencode-ai/core/util/log"
 import type { InstanceContext } from "@/project/instance-context"
-import { GoalLink } from "@/kilocode/session/goal/link"
-import { GoalState } from "@/kilocode/session/goal/state"
+import { GoalLink } from "@/taverncode/session/goal/link"
+import { GoalState } from "@/taverncode/session/goal/state"
 import { Effect, Layer } from "effect"
 import { Fire, type Info } from "./schema"
 
@@ -61,7 +61,7 @@ async function resume(info: Info, inst?: InstanceContext, inPlace = false, kind?
                   sessionID: info.sessionID,
                   metadata: {
                     ...latest.metadata,
-                    "kilo.goal": {
+                    "tavern.goal": {
                       text: saved.text,
                       status: "paused",
                       active: false,

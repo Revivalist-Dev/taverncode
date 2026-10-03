@@ -8,13 +8,13 @@ import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { Database } from "@opencode-ai/core/database/database"
-import { assertNetwork, assertWrite, enabled as sandboxed } from "@kilocode/sandbox"
+import { assertNetwork, assertWrite, enabled as sandboxed } from "@taverncode/sandbox"
 import { Bus } from "@/bus"
 import { GlobalBus } from "@/bus/global"
 import { Config } from "@/config/config"
-import * as Network from "@/kilocode/sandbox/network"
-import * as SandboxPolicy from "@/kilocode/sandbox/policy"
-import { SandboxStore } from "@/kilocode/sandbox/store"
+import * as Network from "@/taverncode/sandbox/network"
+import * as SandboxPolicy from "@/taverncode/sandbox/policy"
+import { SandboxStore } from "@/taverncode/sandbox/store"
 import { SessionID } from "@/session/schema"
 import { TestInstance } from "../../fixture/fixture"
 import { testEffect } from "../../lib/effect"
@@ -36,7 +36,7 @@ function execute<A, E, R>(sessionID: SessionID, effect: Effect.Effect<A, E, R>) 
 }
 
 test("refreshes the session snapshot after a backend restart", async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-sandbox-restart-"))
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-sandbox-restart-"))
   const directory = path.join(root, "project")
   await fs.mkdir(directory)
   const script = [
@@ -45,8 +45,8 @@ test("refreshes the session snapshot after a backend restart", async () => {
     'import { Database } from "@opencode-ai/core/database/database"',
     'import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"',
     'import { InstanceRef } from "@/effect/instance-ref"',
-    'import * as SandboxPolicy from "@/kilocode/sandbox/policy"',
-    'import { SandboxStore } from "@/kilocode/sandbox/store"',
+    'import * as SandboxPolicy from "@/taverncode/sandbox/policy"',
+    'import { SandboxStore } from "@/taverncode/sandbox/store"',
     'import { SessionID } from "@/session/schema"',
     "const directory = process.env.TEST_DIRECTORY",
     'const context = { directory, worktree: directory, project: { id: "sandbox-restart", worktree: directory, vcs: "git", time: { created: 0, updated: 0 }, sandboxes: [] } }',
@@ -113,12 +113,12 @@ test("refreshes the session snapshot after a backend restart", async () => {
 })
 
 posix("canonicalizes a symlinked policy state root", async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-sandbox-state-link-"))
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-sandbox-state-link-"))
   const target = path.join(root, "real-state")
   const link = path.join(root, "state")
   await fs.mkdir(target)
   await fs.symlink(target, link)
-  const script = 'import { SandboxStore } from "@/kilocode/sandbox/store"; console.log(SandboxStore.root)'
+  const script = 'import { SandboxStore } from "@/taverncode/sandbox/store"; console.log(SandboxStore.root)'
 
   try {
     const result = Bun.spawnSync([process.execPath, "-e", script], {
@@ -130,7 +130,7 @@ posix("canonicalizes a symlinked policy state root", async () => {
     })
     expect(result.exitCode, result.stderr.toString()).toBe(0)
     expect(result.stdout.toString().trim().split("\n").at(-1)).toBe(
-      path.join(await fs.realpath(target), "kilo-sandbox-policy"),
+      path.join(await fs.realpath(target), "tavern-sandbox-policy"),
     )
   } finally {
     await fs.rm(root, { recursive: true, force: true })
@@ -138,7 +138,7 @@ posix("canonicalizes a symlinked policy state root", async () => {
 })
 
 linux("reports configured network namespace availability", async () => {
-  const root = await fs.mkdtemp(path.join(process.env.TMPDIR ?? "/tmp", "kilo-sandbox-status-"))
+  const root = await fs.mkdtemp(path.join(process.env.TMPDIR ?? "/tmp", "tavern-sandbox-status-"))
   const helper = path.join(root, "bwrap-no-network")
   await fs.writeFile(
     helper,
@@ -158,7 +158,7 @@ linux("reports configured network namespace availability", async () => {
     'import { Database } from "@opencode-ai/core/database/database"',
     'import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"',
     'import { InstanceRef } from "@/effect/instance-ref"',
-    'import * as SandboxPolicy from "@/kilocode/sandbox/policy"',
+    'import * as SandboxPolicy from "@/taverncode/sandbox/policy"',
     'import { SessionID } from "@/session/schema"',
     "const directory = process.cwd()",
     'const context = { directory, worktree: directory, project: { id: "sandbox-status", worktree: directory, vcs: "git", time: { created: 0, updated: 0 }, sandboxes: [] } }',
@@ -195,7 +195,7 @@ it.instance("does not let project config weaken an initialized policy", () =>
     () =>
       Effect.gen(function* () {
         const test = yield* TestInstance
-        const file = path.join(test.directory, "kilo.json")
+        const file = path.join(test.directory, "tavern.json")
         const legacy = path.join(test.directory, "opencode.json")
         const config = yield* Config.Service
         yield* Effect.promise(() => Bun.write(file, JSON.stringify({ sandbox: { enabled: true, network: "deny" } })))

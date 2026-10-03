@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
-import type { Config } from "@kilocode/sdk/v2/client"
-import type { AuthContext } from "../../src/kilo-provider/handlers/auth"
+import type { Config } from "@taverncode/sdk/v2/client"
+import type { AuthContext } from "../../src/tavern-provider/handlers/auth"
 
 const { KiloProvider } = await import("../../src/KiloProvider")
 
@@ -9,14 +9,14 @@ const catalog = (org: string) => ({
   data: {
     all: [
       {
-        id: "kilo",
-        name: "Kilo Gateway",
+        id: "tavern",
+        name: "Tavern Gateway",
         models: { [`${org}/first`]: { id: `${org}/first` }, [`${org}/model`]: { id: `${org}/model` } },
       },
       external,
     ],
-    connected: ["kilo", "external"],
-    default: { kilo: `${org}/model`, external: "model" },
+    connected: ["tavern", "external"],
+    default: { tavern: `${org}/model`, external: "model" },
   },
 })
 
@@ -35,7 +35,7 @@ type Internals = {
 function setup(list: () => Promise<ReturnType<typeof catalog>>, org: () => string) {
   const client = {
     provider: { list, auth: async () => ({ data: {} }) },
-    kilo: { authStatus: async () => ({ data: { authenticated: true, type: "oauth", organizationId: org() } }) },
+    tavern: { authStatus: async () => ({ data: { authenticated: true, type: "oauth", organizationId: org() } }) },
     config: {
       get: async (): Promise<{ data: Config }> => ({ data: {} }),
       overlay: async () => ({ data: {} }),
@@ -69,7 +69,7 @@ function setup(list: () => Promise<ReturnType<typeof catalog>>, org: () => strin
 }
 
 describe("KiloProvider catalog refresh", () => {
-  it("invalidates cached Kilo data before another account refresh", async () => {
+  it("invalidates cached Tavern data before another account refresh", async () => {
     const { internal, messages } = setup(
       async () => catalog("org"),
       () => "org",
@@ -111,8 +111,8 @@ describe("KiloProvider catalog refresh", () => {
       type: "providersLoaded",
       organizationId: "b",
       ready: true,
-      defaults: { kilo: "b/model" },
-      providers: { kilo: { models: { "b/model": { id: "b/model" } } } },
+      defaults: { tavern: "b/model" },
+      providers: { tavern: { models: { "b/model": { id: "b/model" } } } },
     })
   })
 
@@ -140,8 +140,8 @@ describe("KiloProvider catalog refresh", () => {
       type: "providersLoaded",
       organizationId: "b",
       ready: true,
-      defaults: { kilo: "b/model" },
-      providers: { kilo: { models: { "b/model": { id: "b/model" } } }, external },
+      defaults: { tavern: "b/model" },
+      providers: { tavern: { models: { "b/model": { id: "b/model" } } }, external },
     })
   })
 
@@ -216,8 +216,8 @@ describe("KiloProvider catalog refresh", () => {
         expect(view.internal.cachedProvidersMessage).toMatchObject({
           organizationId: "b",
           ready: true,
-          defaults: { kilo: "b/model" },
-          providers: { kilo: { models: { "b/model": { id: "b/model" } } }, external },
+          defaults: { tavern: "b/model" },
+          providers: { tavern: { models: { "b/model": { id: "b/model" } } }, external },
         })
         expect(view.messages.some((message) => message.type === "configLoaded")).toBe(false)
       }

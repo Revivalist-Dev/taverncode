@@ -1,5 +1,5 @@
 import type { Command } from "@/command"
-import type { ReviewCommand } from "@kilocode/kilo-telemetry"
+import type { ReviewCommand } from "@taverncode/tavern-telemetry"
 import REVIEW from "./review.txt"
 
 export function isReviewCommand(command: string | undefined): command is ReviewCommand {

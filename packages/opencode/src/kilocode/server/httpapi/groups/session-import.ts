@@ -8,7 +8,7 @@ import {
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
 
-const root = "/kilocode/session-import"
+const root = "/taverncode/session-import"
 
 const ResultSchema = Schema.Struct({
   ok: Schema.Boolean,
@@ -230,7 +230,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.project",
+            identifier: "taverncode.sessionImport.project",
             summary: "Insert project for session import",
             description: "Insert or update a project row used by legacy session import.",
           }),
@@ -242,7 +242,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.session",
+            identifier: "taverncode.sessionImport.session",
             summary: "Insert session for session import",
             description: "Insert or update a session row used by legacy session import.",
           }),
@@ -254,7 +254,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.message",
+            identifier: "taverncode.sessionImport.message",
             summary: "Insert message for session import",
             description: "Insert or update a message row used by legacy session import.",
           }),
@@ -266,7 +266,7 @@ export const SessionImportApi = HttpApi.make("session-import")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionImport.part",
+            identifier: "taverncode.sessionImport.part",
             summary: "Insert part for session import",
             description: "Insert or update a part row used by legacy session import.",
           }),
@@ -275,7 +275,7 @@ export const SessionImportApi = HttpApi.make("session-import")
       .annotateMerge(
         OpenApi.annotations({
           title: "session-import",
-          description: "Kilo legacy session import routes.",
+          description: "Tavern legacy session import routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -284,8 +284,8 @@ export const SessionImportApi = HttpApi.make("session-import")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

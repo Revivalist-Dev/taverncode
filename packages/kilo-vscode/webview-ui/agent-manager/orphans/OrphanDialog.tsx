@@ -1,5 +1,5 @@
 /**
- * Table dialog for resolving leftover folders under `.kilo/worktrees/`.
+ * Table dialog for resolving leftover folders under `.tavern/worktrees/`.
  *
  * Opened from the `Resolve…` banner action. `leftover` rows (no `.git`, nothing tracked) are
  * pre-selected; `broken` rows (still hold a git checkout) start unchecked and flagged, since their
@@ -7,11 +7,11 @@
  * see `worktree-recovery.ts` — so this component only ever collects a selection and hands it off.
  */
 import { Component, For, Show, createSignal } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Checkbox } from "@kilocode/kilo-ui/checkbox"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Checkbox } from "@taverncode/tavern-ui/checkbox"
 import { useLanguage } from "../../src/context/language"
 import {
   defaultOrphanSelection,
@@ -36,7 +36,7 @@ function revealLabelKey(userAgent: string | undefined): string {
 
 /**
  * Header explanation, mirroring the JetBrains dialog's banner: the list comes from a heuristic over a
- * directory Kilo owns, and "delete 48 folders" is not a decision anybody can make from paths alone.
+ * directory Tavern owns, and "delete 48 folders" is not a decision anybody can make from paths alone.
  *
  * Rendered inside the shared dialog's description slot, which is a `<p>`, so every block here is a
  * span laid out by CSS rather than a `<ul>`. The three bullets are the collapsible detail — the intro

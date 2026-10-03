@@ -1,5 +1,5 @@
 import { For, Show, createEffect, createMemo, createSignal, onCleanup, type Component } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import {
   DragDropProvider,
   DragDropSensors,
@@ -21,7 +21,7 @@ import type { LanguageContextValue } from "../src/context/language"
 import { LocalActivity } from "../src/components/shared/ActivityIcon"
 import { label, type Activity } from "../src/utils/session-activity"
 import { useVSCode } from "../src/context/vscode"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import SectionHeader from "./SectionHeader"
 import { OrphanNotice } from "./orphans/OrphanNotice"
 import { OrphanDialog } from "./orphans/OrphanDialog"

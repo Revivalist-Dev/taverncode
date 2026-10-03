@@ -6,64 +6,64 @@ import Link from "next/link"
 const terminalContent = {
   installation: (
     <>
-      <span className="terminal-comment"># Install Kilo Code VS Code Extension</span>
+      <span className="terminal-comment"># Install Tavern Code VS Code Extension</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> code --install-extension kilocode.kilo-code
+      <span className="terminal-prompt">$</span> code --install-extension taverncode.tavern-code
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Or install via CLI</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> npm install -g @kilocode/cli
+      <span className="terminal-prompt">$</span> npm install -g @taverncode/cli
     </>
   ),
   gateway: (
     <>
-      <span className="terminal-comment"># Call Kilo Gateway with a quick curl script</span>
+      <span className="terminal-comment"># Call Tavern Gateway with a quick curl script</span>
       {"\n"}
       <span className="terminal-prompt">$</span> export KILO_API_KEY="YOUR_API_KEY"
       {"\n"}
-      <span className="terminal-prompt">$</span> curl https://api.kilo.ai/api/gateway/chat/completions \{"\n"}
+      <span className="terminal-prompt">$</span> curl https://api.tavern.ai/api/gateway/chat/completions \{"\n"}
       -H "Authorization: Bearer $KILO_API_KEY" \{"\n"}
       -H "Content-Type: application/json" \{"\n"}
-      {`  -d '{"model":"anthropic/claude-sonnet-4.5","messages":[{"role":"user","content":"Say hi from Kilo Gateway"}]}'`}
+      {`  -d '{"model":"anthropic/claude-sonnet-4.5","messages":[{"role":"user","content":"Say hi from Tavern Gateway"}]}'`}
     </>
   ),
   firstTask: (
     <>
-      <span className="terminal-comment"># Start a new task with Kilo Code</span>
+      <span className="terminal-comment"># Start a new task with Tavern Code</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo "Create a React component for a user profile"
+      <span className="terminal-prompt">$</span> tavern "Create a React component for a user profile"
       {"\n"}
       {"\n"}
       <span className="terminal-comment">
-        # Or for interactive sessions, just run the Kilo CLI in your project folder
+        # Or for interactive sessions, just run the Tavern CLI in your project folder
       </span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo
+      <span className="terminal-prompt">$</span> tavern
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Run in architect mode for planning</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo --mode architect "Design a REST API"
+      <span className="terminal-prompt">$</span> tavern --mode architect "Design a REST API"
     </>
   ),
   customRules: (
     <>
       <span className="terminal-comment"># Create a custom rules file in your project</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> touch .kilo/rules/rules.md
+      <span className="terminal-prompt">$</span> touch .tavern/rules/rules.md
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># Or use the CLI to add rules</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules add "Always use TypeScript"
+      <span className="terminal-prompt">$</span> tavern rules add "Always use TypeScript"
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules add "Follow React best practices"
+      <span className="terminal-prompt">$</span> tavern rules add "Follow React best practices"
       {"\n"}
       {"\n"}
       <span className="terminal-comment"># List all active rules</span>
       {"\n"}
-      <span className="terminal-prompt">$</span> kilo rules list
+      <span className="terminal-prompt">$</span> tavern rules list
     </>
   ),
 }
@@ -72,7 +72,7 @@ const terminalContent = {
 const categories = [
   {
     title: "Get Started",
-    description: "Install Kilo Code and get up and running in minutes",
+    description: "Install Tavern Code and get up and running in minutes",
     href: "/getting-started",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -87,7 +87,7 @@ const categories = [
   },
   {
     title: "Code with AI",
-    description: "Learn how to use Kilo Code to write, edit, and understand code",
+    description: "Learn how to use Tavern Code to write, edit, and understand code",
     href: "/code-with-ai",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -115,7 +115,7 @@ const categories = [
     ),
     links: [
       { title: "Sessions & Sharing", href: "/collaborate" },
-      { title: "Kilo for Teams", href: "/collaborate" },
+      { title: "Tavern for Teams", href: "/collaborate" },
       { title: "Enterprise", href: "/collaborate" },
     ],
   },
@@ -154,7 +154,7 @@ const categories = [
     ],
   },
   {
-    title: "Kilo Gateway",
+    title: "Tavern Gateway",
     description:
       "A unified API to access hundreds of AI models through a single endpoint with streaming, BYOK, and usage tracking.",
     href: "/gateway",
@@ -173,7 +173,7 @@ const categories = [
   },
   {
     title: "Contributing",
-    description: "Help improve Kilo Code and learn about its architecture",
+    description: "Help improve Tavern Code and learn about its architecture",
     href: "/contributing",
     icon: (
       <svg className="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -198,7 +198,7 @@ export default function HomePage() {
   return (
     <div className="homepage">
       <Head>
-        <title>Kilo Code Docs: Setup, Models, MCP, Custom Modes & CLI</title>
+        <title>Tavern Code Docs: Setup, Models, MCP, Custom Modes & CLI</title>
       </Head>
       {/* Dotted background pattern */}
       <div className="dot-pattern" />
@@ -206,17 +206,17 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">Kilo Documentation</h1>
+          <h1 className="hero-title">Tavern Documentation</h1>
           <p className="hero-subtitle">
-            Explore guides and examples for the Kilo platform — from coding agents and AI-powered development to
+            Explore guides and examples for the Tavern platform — from coding agents and AI-powered development to
             automation and hosted agentic infrastructure.
           </p>
           <div className="hero-buttons">
             <Link href="/getting-started" className="btn btn-primary">
-              Get started with Kilo Code →
+              Get started with Tavern Code →
             </Link>
             <Link href="/gateway" className="btn btn-secondary">
-              Explore Kilo Gateway
+              Explore Tavern Gateway
             </Link>
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function HomePage() {
       <section className="terminal-section">
         <div className="terminal-intro">
           <h2 className="section-title">Try it out</h2>
-          <p className="terminal-description">Get started quickly with Kilo Code and Kilo Gateway</p>
+          <p className="terminal-description">Get started quickly with Tavern Code and Tavern Gateway</p>
         </div>
         <div className="terminal-container">
           <div className="terminal-tabs">
@@ -321,7 +321,7 @@ export default function HomePage() {
               className={`terminal-tab ${activeTab === "gateway" ? "active" : ""}`}
               onClick={() => setActiveTab("gateway")}
             >
-              Kilo Gateway
+              Tavern Gateway
             </button>
           </div>
           <div className="terminal-window">
@@ -349,7 +349,7 @@ export default function HomePage() {
             <span className="footer-icon">💬</span>
             <div>
               <strong>Need help?</strong>
-              <Link href="https://kilo.ai/discord" className="footer-link">
+              <Link href="https://tavern.ai/discord" className="footer-link">
                 Join our Discord
               </Link>
             </div>
@@ -375,9 +375,9 @@ export default function HomePage() {
           <div className="footer-item">
             <span className="footer-icon">🐍</span>
             <div>
-              <strong>Kilo has been acquired by Anaconda</strong>
+              <strong>Tavern has been acquired by Anaconda</strong>
               <Link
-                href="https://www.anaconda.com/blog/anaconda-acquires-kilo-code"
+                href="https://www.anaconda.com/blog/anaconda-acquires-tavern-code"
                 className="footer-link"
                 target="_blank"
                 rel="noreferrer"

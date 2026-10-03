@@ -11,7 +11,7 @@ import { MessageID, PartID, SessionID } from "../../../src/session/schema"
 import type { Session } from "../../../src/session/session"
 import type { SessionSummary } from "../../../src/session/summary"
 import type { Snapshot } from "../../../src/snapshot"
-import { MemoryModel, MemorySession } from "../../../src/kilocode/memory/ports"
+import { MemoryModel, MemorySession } from "../../../src/taverncode/memory/ports"
 
 const pid = ProviderV2.ID.make("test")
 const mid = ModelV2.ID.make("fake-memory-model")
@@ -211,7 +211,7 @@ describe("memory ports", () => {
     const final = MessageID.make("msg_final")
     const diffs = [
       {
-        file: "packages/opencode/src/kilocode/memory/ports.ts",
+        file: "packages/opencode/src/taverncode/memory/ports.ts",
         additions: 4,
         deletions: 1,
         status: "modified" as const,
@@ -299,7 +299,7 @@ describe("memory ports", () => {
     expect(seen).toEqual(["memory-config-model", "fake-memory-model"])
   })
 
-  test("model port sends x-opencode-session for opencode-managed memory models", async () => {
+  test("model port sends x-tavern-session for opencode-managed memory models", async () => {
     const calls: unknown[] = []
     const port = MemoryModel.port({
       provider: provider({ providerID: ProviderV2.ID.make("opencode"), calls }),
@@ -315,7 +315,7 @@ describe("memory ports", () => {
     })
 
     const opts = calls[0] as { headers?: Record<string, string> }
-    expect(opts.headers?.["x-opencode-session"]).toBe("ses_memory_headers")
+    expect(opts.headers?.["x-tavern-session"]).toBe("ses_memory_headers")
   })
 
   test("model port omits opencode headers for non-opencode memory models", async () => {
@@ -332,7 +332,7 @@ describe("memory ports", () => {
     })
 
     const opts = calls[0] as { headers?: Record<string, string> }
-    expect(opts.headers?.["x-opencode-session"]).toBeUndefined()
+    expect(opts.headers?.["x-tavern-session"]).toBeUndefined()
   })
 
   test("model port asks OpenAI-compatible providers for a non-streaming JSON response", async () => {

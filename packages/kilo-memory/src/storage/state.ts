@@ -59,7 +59,7 @@ export namespace MemoryState {
       file,
       `${JSON.stringify(
         {
-          kind: "kilo-memory",
+          kind: "tavern-memory",
           version: 1,
           ...(id
             ? {
@@ -85,7 +85,7 @@ export namespace MemoryState {
       typeof data === "object" &&
       data !== null &&
       "kind" in data &&
-      data.kind === "kilo-memory" &&
+      data.kind === "tavern-memory" &&
       "version" in data &&
       data.version === 1
     )

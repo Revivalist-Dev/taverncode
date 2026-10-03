@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test"
-import { reasoningOpenState, type ReasoningOpenInput } from "../../../kilo-ui/src/components/reasoning-open"
+import { reasoningOpenState, type ReasoningOpenInput } from "../../../tavern-ui/src/components/reasoning-open"
 
 function state(input: Partial<ReasoningOpenInput>): ReasoningOpenInput {
   return {

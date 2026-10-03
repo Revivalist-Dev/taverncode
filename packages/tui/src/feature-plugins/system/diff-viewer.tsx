@@ -1,6 +1,6 @@
 /** @jsxImportSource @opentui/solid */
-import type { TuiPlugin, TuiPluginApi, TuiRouteCurrent } from "@kilocode/plugin/tui"
-import type { SnapshotFileDiff, VcsFileDiff } from "@kilocode/sdk/v2"
+import type { TuiPlugin, TuiPluginApi, TuiRouteCurrent } from "@taverncode/plugin/tui"
+import type { SnapshotFileDiff, VcsFileDiff } from "@taverncode/sdk/v2"
 import {
   TextAttributes,
   type BorderSides,
@@ -43,7 +43,7 @@ const VCS_DIFF_CONTEXT_LINES = 12
 const KV_SHOW_FILE_TREE = "diff_viewer_show_file_tree"
 const KV_SINGLE_PATCH = "diff_viewer_single_patch"
 const KV_VIEW = "diff_viewer_view"
-type DiffMode = "git" | "branch" | "last-turn" | "last-commit" // kilocode_change
+type DiffMode = "git" | "branch" | "last-turn" | "last-commit" // taverncode_change
 type DiffViewerFocus = "patches" | "files"
 type DiffView = "split" | "unified"
 type SelectedHunk = { readonly fileIndex: number; readonly hunkIndex: number; readonly scrollTop: number }
@@ -84,7 +84,7 @@ function storedView(value: unknown): DiffView | undefined {
 
 function diffSourceLabel(mode: DiffMode) {
   if (mode === "last-turn") return "last turn"
-  if (mode === "last-commit") return "last commit" // kilocode_change
+  if (mode === "last-commit") return "last commit" // taverncode_change
   if (mode === "branch") return "main branch"
   return "working tree"
 }
@@ -704,13 +704,13 @@ function DiffViewer(props: { api: TuiPluginApi }) {
         value: "last-turn" as const,
         description: "Show changes from the last assistant turn",
       },
-      // kilocode_change start
+      // taverncode_change start
       {
         title: "Last commit",
         value: "last-commit" as const,
         description: "Show changes introduced by the most recent git commit",
       },
-      // kilocode_change end
+      // taverncode_change end
     ]
   })
 
@@ -997,7 +997,7 @@ function DiffViewerHelpDialog() {
     {
       shortcut: useCommandShortcut("diff.switch_source"),
       action: "Switch source",
-      description: "Choose working tree, main branch, last-turn, or last-commit changes", // kilocode_change
+      description: "Choose working tree, main branch, last-turn, or last-commit changes", // taverncode_change
     },
     {
       shortcut: useCommandShortcut("diff.toggle_view"),

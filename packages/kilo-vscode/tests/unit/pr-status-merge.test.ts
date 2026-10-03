@@ -32,7 +32,7 @@ const threads = {
     {
       id: "PRRC_1",
       threadId: "PRRT_1",
-      author: "kilo-code-bot",
+      author: "tavern-code-bot",
       body: "guard this",
       resolved: false,
       outdated: false,

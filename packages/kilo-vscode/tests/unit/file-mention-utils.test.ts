@@ -963,18 +963,18 @@ describe("modelReferenceToken", () => {
 
 describe("segmentMentionText", () => {
   it("marks inserted mention tokens and keeps plain text as-is", () => {
-    const tokens = new Set(["kilo/kilo-auto/free", "Fix auth bug", "/repo/.kilo/worktrees/feature"])
+    const tokens = new Set(["tavern/tavern-auto/free", "Fix auth bug", "/repo/.tavern/worktrees/feature"])
     const segments = segmentMentionText(
-      "see @Fix auth bug then @/repo/.kilo/worktrees/feature use @kilo/kilo-auto/free",
+      "see @Fix auth bug then @/repo/.tavern/worktrees/feature use @tavern/tavern-auto/free",
       tokens,
     )
     expect(segments.map((segment) => [segment.mention, segment.text])).toEqual([
       [false, "see "],
       [true, "@Fix auth bug"],
       [false, " then "],
-      [true, "@/repo/.kilo/worktrees/feature"],
+      [true, "@/repo/.tavern/worktrees/feature"],
       [false, " use "],
-      [true, "@kilo/kilo-auto/free"],
+      [true, "@tavern/tavern-auto/free"],
     ])
   })
 

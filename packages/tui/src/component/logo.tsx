@@ -1,5 +1,5 @@
-import { KiloLogo } from "./kilo-logo" // kilocode_change
+import { KiloLogo } from "./tavern-logo" // taverncode_change
 
 export function Logo() {
-  return <KiloLogo /> // kilocode_change
+  return <KiloLogo /> // taverncode_change
 }

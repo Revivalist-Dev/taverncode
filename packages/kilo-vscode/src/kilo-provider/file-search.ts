@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { braceExpand, minimatch } from "minimatch"
 import { mergeFileSearchResults } from "./file-search-results"
 import { mergeFileSearchItems, type FileSearchItem } from "./file-search-items"
@@ -108,7 +108,7 @@ const empty = (): Gathered => ({ files: [], folders: [], open: new Set(), relati
  * match in another.
  *
  * A root that cannot be read yields nothing rather than throwing, so one
- * unreadable `.kilocodeignore` cannot empty the whole mention list.
+ * unreadable `.taverncodeignore` cannot empty the whole mention list.
  */
 async function gather(
   client: KiloClient,
@@ -127,7 +127,7 @@ async function gather(
       relative: new Map(),
     }
   } catch (err) {
-    console.error(`[Kilo New] File search failed for ${root}:`, err)
+    console.error(`[Tavern New] File search failed for ${root}:`, err)
     return empty()
   }
 }
@@ -214,7 +214,7 @@ async function gatherExternal(
       return full
     }
 
-    // Apply editor exclusions to open tabs too, then this folder's Kilo ignore rules.
+    // Apply editor exclusions to open tabs too, then this folder's Tavern ignore rules.
     const active = activeIn(root.path)
     const opened = [...(await open(root.path))].map(record)
     const candidates = [...new Set([...hits.map(record), ...opened, ...(active ? [record(active)] : [])])]
@@ -272,7 +272,7 @@ async function gatherExternal(
       relative,
     }
   } catch (err) {
-    console.error(`[Kilo New] File search failed for ${root.path}:`, err)
+    console.error(`[Tavern New] File search failed for ${root.path}:`, err)
     return empty()
   }
 }
@@ -293,7 +293,7 @@ export async function handleFileSearch(input: Input): Promise<void> {
     try {
       return splitRoots(input.roots?.() ?? [], dir)
     } catch (err) {
-      console.error("[Kilo New] Failed to read workspace folders:", err)
+      console.error("[Tavern New] Failed to read workspace folders:", err)
       return { secondary: [] as SearchRoot[] }
     }
   })()
@@ -376,6 +376,6 @@ function capFolders(items: FileSearchItem[], limit: number): FileSearchItem[] {
 
 function settled(result: PromiseSettledResult<{ data: string[] }>, kind: "file" | "folder"): string[] {
   if (result.status === "fulfilled") return result.value.data
-  console.error(`[Kilo New] File search (${kind}) failed:`, result.reason)
+  console.error(`[Tavern New] File search (${kind}) failed:`, result.reason)
   return []
 }

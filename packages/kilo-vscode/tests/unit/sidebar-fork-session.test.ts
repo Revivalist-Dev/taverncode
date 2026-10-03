@@ -1,6 +1,6 @@
 import { describe, expect, it, mock } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
-import { handleForkSession, type ForkContext } from "../../src/kilo-provider/fork-session"
+import type { Session } from "@taverncode/sdk/v2/client"
+import { handleForkSession, type ForkContext } from "../../src/tavern-provider/fork-session"
 
 const session = { id: "fork", title: "fork", createdAt: "", updatedAt: "" } as Session
 

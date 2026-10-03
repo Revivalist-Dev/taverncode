@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import path from "path"
 import fs from "fs/promises"
 import fsSync from "fs"
@@ -18,7 +18,7 @@ export namespace TestCli {
       hash.update("bun.lock").update(String(st.mtimeMs)).update(String(st.size))
     }
 
-    const ignored = new Set(["kilo-vscode", "kilo-jetbrains", "kilo-docs"])
+    const ignored = new Set(["tavern-vscode", "tavern-jetbrains", "tavern-docs"])
     const entries = fsSync.readdirSync(pkgs, { withFileTypes: true })
 
     for (const ent of entries) {
@@ -82,7 +82,7 @@ export namespace TestCli {
       conditions: ["browser"],
       plugins: [createSolidTransformPlugin()],
       // Keep the native TUI variants dynamic and the memory package singleton shared.
-      external: ["node-gyp", "@opentui/core-*", "@kilocode/kilo-memory", "@kilocode/kilo-memory/*"],
+      external: ["node-gyp", "@opentui/core-*", "@taverncode/tavern-memory", "@taverncode/tavern-memory/*"],
       naming: { entry: "cli.js", asset: "[name]-[hash].[ext]" },
     })
     if (!result.success) throw new AggregateError(result.logs, "Failed to build CLI subprocess test bundle")

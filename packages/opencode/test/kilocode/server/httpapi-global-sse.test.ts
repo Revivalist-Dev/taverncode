@@ -7,7 +7,7 @@ import { Auth } from "../../../src/auth"
 import { GlobalBus } from "../../../src/bus/global"
 import { Config } from "../../../src/config/config"
 import { Installation } from "../../../src/installation"
-import { copied } from "../../../src/kilocode/event-wire"
+import { copied } from "../../../src/taverncode/event-wire"
 import { ServerAuth } from "../../../src/server/auth"
 import { RootHttpApi } from "../../../src/server/routes/instance/httpapi/api"
 import { GlobalPaths } from "../../../src/server/routes/instance/httpapi/groups/global"
@@ -53,7 +53,7 @@ describe("global SSE lifecycle", () => {
 
         for (const attempt of [1, 2, 3]) {
           const response = yield* HttpClient.get(GlobalPaths.event, {
-            headers: attempt === 2 ? { "x-kilo-sse-skip-fork-sync": "1" } : {},
+            headers: attempt === 2 ? { "x-tavern-sse-skip-fork-sync": "1" } : {},
           })
           expect(response.status).toBe(200)
           const chunks = new Array<string>()

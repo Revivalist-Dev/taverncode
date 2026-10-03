@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { KiloSteer } from "../../src/kilocode/steer"
+import { KiloSteer } from "../../src/taverncode/steer"
 
 const child = {
   parentID: "ses_parent",

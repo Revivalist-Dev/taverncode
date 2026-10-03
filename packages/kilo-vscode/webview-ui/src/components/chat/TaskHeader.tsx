@@ -9,10 +9,10 @@
  */
 
 import { Component, For, Show, createMemo, createSignal, createEffect, on, onMount, onCleanup } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Checkbox } from "@kilocode/kilo-ui/checkbox"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Checkbox } from "@taverncode/tavern-ui/checkbox"
 import { useSession } from "../../context/session"
 import { calcTokenUsage, collapseCostBreakdown, sessionCost } from "../../context/session-utils"
 import { useLanguage } from "../../context/language"
@@ -101,7 +101,7 @@ export const TaskHeader: Component<TaskHeaderProps> = (props) => {
   window.addEventListener("message", handler)
   onCleanup(() => window.removeEventListener("message", handler))
 
-  // "Kilo Code: Toggle Chat Search" (Command Palette) toggles the search
+  // "Tavern Code: Toggle Chat Search" (Command Palette) toggles the search
   // bar from here rather than TranscriptSearch.tsx itself: that component
   // only mounts once search.active() is already true (it's behind a
   // <Show>), so it can never be what turns search on in the first place —

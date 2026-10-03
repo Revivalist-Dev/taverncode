@@ -1,6 +1,6 @@
 import { Show } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
 import type { MarketplaceItem } from "../../types/marketplace"
 import { useLanguage } from "../../context/language"
 

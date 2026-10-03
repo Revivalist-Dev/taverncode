@@ -1,8 +1,8 @@
 import { describe, expect } from "bun:test"
 import { Deferred, Effect, Exit, Fiber, Scope } from "effect"
 import { Runner } from "@/effect/runner"
-import { KiloRunner } from "@/kilocode/effect/runner"
-import { SessionDrain } from "@/kilocode/session/drain"
+import { KiloRunner } from "@/taverncode/effect/runner"
+import { SessionDrain } from "@/taverncode/session/drain"
 import { SessionID } from "@/session/schema"
 import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect"
 

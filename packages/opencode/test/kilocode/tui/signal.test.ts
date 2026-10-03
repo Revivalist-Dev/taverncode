@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { createRoot } from "solid-js"
-import { createLeadingTrailingSignal } from "@/kilocode/plugins/session-switcher/preview-pane"
+import { createLeadingTrailingSignal } from "@/taverncode/plugins/session-switcher/preview-pane"
 import { createDebouncedSignal } from "@tui/util/signal"
 
 describe("TUI scheduling", () => {

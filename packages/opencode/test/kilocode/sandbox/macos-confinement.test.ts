@@ -10,7 +10,7 @@ import {
   type MutationRequest,
   type MutationRunner,
   type Profile,
-} from "@kilocode/sandbox"
+} from "@taverncode/sandbox"
 import { Effect, Exit, Layer } from "effect"
 import { ChildProcess } from "effect/unstable/process"
 import fs from "node:fs/promises"
@@ -21,9 +21,9 @@ import { Agent } from "@/agent/agent"
 import { Bus } from "@/bus"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Format } from "@/format"
-import { BackgroundProcess } from "@/kilocode/background-process"
-import { BackgroundProcessTool } from "@/kilocode/tool/background-process"
-import * as EncodedIO from "@/kilocode/tool/encoded-io"
+import { BackgroundProcess } from "@/taverncode/background-process"
+import { BackgroundProcessTool } from "@/taverncode/tool/background-process"
+import * as EncodedIO from "@/taverncode/tool/encoded-io"
 import { Instruction } from "@/session/instruction"
 import { LSP } from "@/lsp/lsp"
 import { Permission } from "@/permission"

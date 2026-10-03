@@ -41,7 +41,7 @@ describe("trackOrphanSizes", () => {
   })
 
   it("computes sizes for a real directory and mutates them onto the report in place", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-track-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-track-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(50))
     const landed = Promise.withResolvers<void>()
@@ -61,10 +61,10 @@ describe("trackOrphanSizes", () => {
    * rather than failing the whole batch — so an unreadable folder used to leave it calculating forever.
    */
   it("marks a directory it could not measure as settled, with no size", async () => {
-    const ok = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-ok-"))
+    const ok = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-ok-"))
     tempDirs.push(ok)
     await fs.writeFile(path.join(ok, "f.txt"), "x".repeat(15))
-    const gone = path.join(os.tmpdir(), "kilo-orphan-never-existed")
+    const gone = path.join(os.tmpdir(), "tavern-orphan-never-existed")
     const landed = Promise.withResolvers<void>()
     const project = ctx(() => landed.resolve())
     const orphans: OrphanDirectory[] = [
@@ -91,7 +91,7 @@ describe("trackOrphanSizes", () => {
    * for one poll interval and then said "calculating size…" forever.
    */
   it("re-applies known sizes to the fresh objects a later reconcile builds", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-keep-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-keep-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(50))
     const landed = Promise.withResolvers<void>()
@@ -119,11 +119,11 @@ describe("trackOrphanSizes", () => {
 
   /**
    * A directory that leaves the orphan list entirely while a walk covering it is still in flight (say
-   * it was removed outside Kilo) must not have that walk's eventual answer written into the cache —
+   * it was removed outside Tavern) must not have that walk's eventual answer written into the cache —
    * if it reappears later, the stale number would apply instantly with no new walk ever correcting it.
    */
   it("does not resurrect a stale size for a directory that leaves and rejoins the orphan list mid-walk", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-resurrect-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-resurrect-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(10))
     let onSized = () => undefined
@@ -158,7 +158,7 @@ describe("trackOrphanSizes", () => {
   })
 
   it("does not re-run when called again with the same orphan path set", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-track-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-track-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(10))
     const first = Promise.withResolvers<void>()
@@ -189,8 +189,8 @@ describe("trackOrphanSizes", () => {
    * is tens of gigabytes of walking for one added directory.
    */
   it("walks only the folders it has never measured when the set grows", async () => {
-    const first = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-grow-a-"))
-    const second = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-grow-b-"))
+    const first = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-grow-a-"))
+    const second = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-grow-b-"))
     tempDirs.push(first, second)
     await fs.writeFile(path.join(first, "f.txt"), "x".repeat(11))
     await fs.writeFile(path.join(second, "f.txt"), "x".repeat(22))
@@ -217,7 +217,7 @@ describe("trackOrphanSizes", () => {
   })
 
   it("forgets folders that leave the list so the cache cannot grow unbounded", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-forget-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-forget-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(12))
     let landed = Promise.withResolvers<void>()
@@ -242,8 +242,8 @@ describe("trackOrphanSizes", () => {
   })
 
   it("re-runs once the orphan path set actually changes", async () => {
-    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-track-a-"))
-    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-track-b-"))
+    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-track-a-"))
+    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-track-b-"))
     tempDirs.push(dirA, dirB)
     await fs.writeFile(path.join(dirB, "f.txt"), "x".repeat(20))
     let landed = Promise.withResolvers<void>()
@@ -262,8 +262,8 @@ describe("trackOrphanSizes", () => {
   })
 
   it("aborts the pass in flight when the orphan path set changes under it", async () => {
-    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-abort-a-"))
-    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-abort-b-"))
+    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-abort-a-"))
+    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-abort-b-"))
     tempDirs.push(dirA, dirB)
     await fs.writeFile(path.join(dirA, "f.txt"), "x".repeat(30))
     await fs.writeFile(path.join(dirB, "f.txt"), "x".repeat(40))
@@ -295,8 +295,8 @@ describe("trackOrphanSizes", () => {
    * `pending` once the aborted walk's result is thrown away.
    */
   it("folds a still-valid in-flight walk's paths into the replacement pass when the orphan set grows under it", async () => {
-    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-grow-inflight-a-"))
-    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-grow-inflight-b-"))
+    const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-grow-inflight-a-"))
+    const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-grow-inflight-b-"))
     tempDirs.push(dirA, dirB)
     await fs.writeFile(path.join(dirA, "f.txt"), "x".repeat(30))
     await fs.writeFile(path.join(dirB, "f.txt"), "x".repeat(40))
@@ -326,7 +326,7 @@ describe("trackOrphanSizes", () => {
   })
 
   it("pauses in-flight sizing for a delete and only measures again once resumed", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-pause-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-pause-"))
     tempDirs.push(dir)
     await fs.writeFile(path.join(dir, "f.txt"), "x".repeat(70))
     const landed = Promise.withResolvers<void>()
@@ -366,7 +366,7 @@ describe("trackOrphanSizes", () => {
 
   it("aborts in-flight sizing when the project is disposed, without throwing", async () => {
     const project = ctx()
-    const orphans: OrphanDirectory[] = [{ path: "/repo/.kilo/worktrees/a", kind: "leftover" }]
+    const orphans: OrphanDirectory[] = [{ path: "/repo/.tavern/worktrees/a", kind: "leftover" }]
     project.report = reportWith(orphans)
 
     trackOrphanSizes(project, orphans, () => undefined)

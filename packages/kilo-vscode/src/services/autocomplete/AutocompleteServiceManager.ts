@@ -14,7 +14,7 @@ import type { KiloConnectionService } from "../cli-backend"
 import { hasValidCredentials, fimModel as notebookModel } from "./fim"
 import { DEFAULT_AUTOCOMPLETE_MODEL, getAutocompleteModel } from "../../shared/autocomplete-models"
 
-const CONFIG_SECTION = "kilo-code.new.autocomplete"
+const CONFIG_SECTION = "tavern-code.new.autocomplete"
 
 export function selector(kind: "classic" | "next-edit"): vscode.DocumentSelector {
   return kind === "classic" ? [{ scheme: "file" }, { scheme: "vscode-notebook-cell" }] : [{ scheme: "file" }]
@@ -173,7 +173,7 @@ export class AutocompleteServiceManager {
     )
 
     this.config = vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("kilo-code.new.language")) {
+      if (event.affectsConfiguration("tavern-code.new.language")) {
         this.updateStatusBar()
       }
     })
@@ -373,7 +373,7 @@ export class AutocompleteServiceManager {
   private async updateGlobalContext() {
     await vscode.commands.executeCommand(
       "setContext",
-      "kilocode.autocomplete.enableSmartInlineTaskKeybinding",
+      "taverncode.autocomplete.enableSmartInlineTaskKeybinding",
       this.settings?.enableSmartInlineTaskKeybinding || false,
     )
   }
@@ -410,13 +410,13 @@ export class AutocompleteServiceManager {
   private handleFatalAutocompleteError(status: number | null): void {
     const msg =
       status === 402
-        ? t("kilocode:autocomplete.creditsExhausted.message")
-        : t("kilocode:autocomplete.authError.message")
+        ? t("taverncode:autocomplete.creditsExhausted.message")
+        : t("taverncode:autocomplete.authError.message")
 
     if (status === 402) {
-      vscode.window.showWarningMessage(msg, t("kilocode:autocomplete.creditsExhausted.addCredits")).then((choice) => {
-        if (choice === t("kilocode:autocomplete.creditsExhausted.addCredits")) {
-          vscode.env.openExternal(vscode.Uri.parse("https://app.kilo.ai/credits"))
+      vscode.window.showWarningMessage(msg, t("taverncode:autocomplete.creditsExhausted.addCredits")).then((choice) => {
+        if (choice === t("taverncode:autocomplete.creditsExhausted.addCredits")) {
+          vscode.env.openExternal(vscode.Uri.parse("https://app.tavern.ai/credits"))
         }
       })
     } else {
@@ -448,15 +448,15 @@ export class AutocompleteServiceManager {
   }
 
   public async showIncompatibilityExtensionPopup() {
-    const message = t("kilocode:autocomplete.incompatibilityExtensionPopup.message")
-    const disableCopilot = t("kilocode:autocomplete.incompatibilityExtensionPopup.disableCopilot")
-    const disableInlineAssist = t("kilocode:autocomplete.incompatibilityExtensionPopup.disableInlineAssist")
+    const message = t("taverncode:autocomplete.incompatibilityExtensionPopup.message")
+    const disableCopilot = t("taverncode:autocomplete.incompatibilityExtensionPopup.disableCopilot")
+    const disableInlineAssist = t("taverncode:autocomplete.incompatibilityExtensionPopup.disableInlineAssist")
     const response = await vscode.window.showErrorMessage(message, disableCopilot, disableInlineAssist)
 
     if (response === disableCopilot) {
       await vscode.commands.executeCommand("github.copilot.completions.disable")
     } else if (response === disableInlineAssist) {
-      await vscode.commands.executeCommand("kilo-code.new.autocomplete.disable")
+      await vscode.commands.executeCommand("tavern-code.new.autocomplete.disable")
     }
   }
 

@@ -1,7 +1,7 @@
 import { TextAttributes } from "@opentui/core"
 import { useKeyboard } from "@opentui/solid"
-import type { ProviderUsage, ProviderUsageSnapshot } from "@kilocode/sdk/v2"
-import { formatWindow, windowLabel } from "@kilocode/kilo-gateway/provider-usage"
+import type { ProviderUsage, ProviderUsageSnapshot } from "@taverncode/sdk/v2"
+import { formatWindow, windowLabel } from "@taverncode/tavern-gateway/provider-usage"
 import { useTheme } from "@tui/context/theme"
 import { useSDK } from "@tui/context/sdk"
 import { useDialog } from "@tui/ui/dialog"
@@ -82,8 +82,8 @@ export function DialogProviderUsage() {
     setLoading(true)
     setFailure(undefined)
     const response = await (force
-      ? sdk.client.kilocode.providerUsage.refresh().catch(() => undefined)
-      : sdk.client.kilocode.providerUsage.get().catch(() => undefined))
+      ? sdk.client.taverncode.providerUsage.refresh().catch(() => undefined)
+      : sdk.client.taverncode.providerUsage.get().catch(() => undefined))
     if (response?.data) setData(response.data)
     if (response?.error || !response?.data) setFailure("Provider usage could not be loaded.")
     setLoading(false)

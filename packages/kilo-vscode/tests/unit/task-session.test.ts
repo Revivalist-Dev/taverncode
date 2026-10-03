@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { VisibleTaskStreams } from "../../src/kilo-provider/visible-task-streams"
+import { VisibleTaskStreams } from "../../src/tavern-provider/visible-task-streams"
 
 describe("VisibleTaskStreams", () => {
   it("suspends and restores visible child sessions with provider activity", () => {

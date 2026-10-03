@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { handleSessionLifecycle } from "../../src/agent-manager/session-lifecycle"
 import type { ProjectContexts } from "../../src/agent-manager/project/contexts"
 import type { AgentManagerOutMessage } from "../../src/agent-manager/types"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 
 const info: Session = {
   id: "session",

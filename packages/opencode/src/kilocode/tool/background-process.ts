@@ -1,13 +1,13 @@
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/taverncode/background-process"
 import { Tool } from "@/tool/tool"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { containsPath } from "@/project/instance-context"
 import { InstanceState } from "@/effect/instance-state"
-import { KiloSession } from "@/kilocode/session"
+import { KiloSession } from "@/taverncode/session"
 import { SessionID } from "@/session/schema"
 import { PositiveInt } from "@opencode-ai/core/schema"
 import { Effect, Schema } from "effect"
-import { enabled as sandboxed } from "@kilocode/sandbox"
+import { enabled as sandboxed } from "@taverncode/sandbox"
 import DESCRIPTION from "./background-process.txt"
 import path from "path"
 
@@ -47,7 +47,7 @@ export const Params = Schema.Struct({
     description: "For subagents only: transfer the process to the parent session when this session ends",
   }),
   persistent: Schema.optional(Schema.Boolean).annotate({
-    description: "Keep the process running and manageable after the session or Kilo exits",
+    description: "Keep the process running and manageable after the session or Tavern exits",
   }),
 }).check(
   Schema.makeFilter(

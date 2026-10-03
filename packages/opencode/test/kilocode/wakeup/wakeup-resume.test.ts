@@ -9,10 +9,10 @@ import { ModelV2 } from "@opencode-ai/core/model"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { AppRuntime } from "@/effect/app-runtime"
 import { InstanceRef } from "@/effect/instance-ref"
-import { KiloSession } from "@/kilocode/session"
-import { GoalLink } from "@/kilocode/session/goal/link"
-import { GoalState } from "@/kilocode/session/goal/state"
-import { Wakeup } from "@/kilocode/wakeup"
+import { KiloSession } from "@/taverncode/session"
+import { GoalLink } from "@/taverncode/session/goal/link"
+import { GoalState } from "@/taverncode/session/goal/state"
+import { Wakeup } from "@/taverncode/wakeup"
 import { InstanceStore } from "@/project/instance-store"
 import { Session } from "@/session/session"
 import { SessionPrompt } from "@/session/prompt"
@@ -448,7 +448,7 @@ describe("wakeup resume", () => {
           svc.setMetadata({
             sessionID: session.id,
             metadata: {
-              "kilo.goal": {
+              "tavern.goal": {
                 text: objective,
                 status: "waiting",
                 active: false,
@@ -555,7 +555,7 @@ describe("wakeup resume", () => {
           svc.setMetadata({
             sessionID: session.id,
             metadata: {
-              "kilo.goal": {
+              "tavern.goal": {
                 text: objective,
                 status: "waiting",
                 active: false,
@@ -652,7 +652,7 @@ describe("wakeup resume", () => {
           svc.setMetadata({
             sessionID: session.id,
             metadata: {
-              "kilo.goal": {
+              "tavern.goal": {
                 text: objective,
                 status: "waiting",
                 active: false,
@@ -897,7 +897,7 @@ describe("wakeup resume", () => {
           svc.setMetadata({
             sessionID: session.id,
             metadata: {
-              "kilo.goal": {
+              "tavern.goal": {
                 text: objective,
                 status: "waiting",
                 active: false,
@@ -985,7 +985,7 @@ describe("wakeup resume", () => {
           svc.setMetadata({
             sessionID: session.id,
             metadata: {
-              "kilo.goal": {
+              "tavern.goal": {
                 text: "Wait for the deploy",
                 status: "waiting",
                 active: false,

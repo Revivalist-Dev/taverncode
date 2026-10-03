@@ -9,24 +9,24 @@
   <!-- packages/opencode/src/provider/models.ts -->
 - <https://api.digitalocean.com>
   <!-- packages/opencode/src/plugin/digitalocean.ts -->
-- <https://api.kilo.ai>
+- <https://api.tavern.ai>
   <!-- packages/opencode/src/cli/cmd/github.handler.ts -->
 - <https://api.x.ai/v1>
   <!-- packages/opencode/src/plugin/xai.ts -->
-- <https://app.kilo.ai>
-  <!-- packages/opencode/src/kilocode/kilo-commands.tsx -->
-- <https://app.kilo.ai/config.json>
-  <!-- packages/kilo-vscode/src/kilo-provider/config-file.ts -->
+- <https://app.tavern.ai>
+  <!-- packages/opencode/src/taverncode/tavern-commands.tsx -->
+- <https://app.tavern.ai/config.json>
+  <!-- packages/tavern-vscode/src/tavern-provider/config-file.ts -->
   <!-- packages/opencode/src/config/config.ts -->
-- <https://app.kilo.ai/credits>
-  <!-- packages/kilo-vscode/src/services/autocomplete/AutocompleteServiceManager.ts -->
-  <!-- packages/kilo-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
-- <https://app.kilo.ai/profile>
-  <!-- packages/kilo-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
-- <https://app.kilo.ai/tui.json>
+- <https://app.tavern.ai/credits>
+  <!-- packages/tavern-vscode/src/services/autocomplete/AutocompleteServiceManager.ts -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
+- <https://app.tavern.ai/profile>
+  <!-- packages/tavern-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
+- <https://app.tavern.ai/tui.json>
   <!-- packages/opencode/src/config/tui-migrate.ts -->
-- <https://app.kilo.ai/usage>
-  <!-- packages/opencode/src/kilocode/components/dialog-kilo-profile.tsx -->
+- <https://app.tavern.ai/usage>
+  <!-- packages/opencode/src/taverncode/components/dialog-tavern-profile.tsx -->
 - <https://auth.x.ai>
   <!-- packages/opencode/src/plugin/xai.ts -->
 - <https://auth.x.ai/oauth2/authorize>
@@ -35,24 +35,24 @@
   <!-- packages/opencode/src/plugin/xai.ts -->
 - <https://auth.x.ai/oauth2/token>
   <!-- packages/opencode/src/plugin/xai.ts -->
-- <https://blog.kilo.ai/p/kilo-gateway-now-supports-byok-20-providers>
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/ProviderConnectDialog.tsx -->
+- <https://blog.tavern.ai/p/tavern-gateway-now-supports-byok-20-providers>
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/ProviderConnectDialog.tsx -->
 - <https://chatgpt.com/explore/plus>
   <!-- packages/opencode/src/provider/error.ts -->
 - <https://cli.github.com/>
-  <!-- packages/kilo-vscode/src/agent-manager/WorktreeManager.ts -->
+  <!-- packages/tavern-vscode/src/agent-manager/WorktreeManager.ts -->
 - <https://cloud-agent-next.kilosessions.ai>
-  <!-- packages/opencode/src/kilocode/cloud/origin.ts -->
+  <!-- packages/opencode/src/taverncode/cloud/origin.ts -->
 - <https://cloud.digitalocean.com/v1/oauth/authorize>
   <!-- packages/opencode/src/plugin/digitalocean.ts -->
 - <https://cloudflare.com/cdn-cgi/trace>
   <!-- packages/opencode/src/session/network.ts -->
 - <https://developers.google.com/identity/sign-in/web/devconsole-project>
-  <!-- packages/opencode/src/kilocode/provider/error.ts -->
+  <!-- packages/opencode/src/taverncode/provider/error.ts -->
 - <https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services>
   <!-- packages/opencode/src/cli/cmd/github.handler.ts -->
 - <https://docs.inceptionlabs.ai/capabilities/next-edit>
-  <!-- packages/opencode/src/kilocode/server/httpapi/groups/kilo-gateway.ts -->
+  <!-- packages/opencode/src/taverncode/server/httpapi/groups/tavern-gateway.ts -->
 - <https://docs.mistral.ai/studio-api/conversations/reasoning>
   <!-- packages/opencode/src/provider/transform.ts -->
 - <https://docs.venice.ai/overview/guides/reasoning-models#reasoning-effort>
@@ -60,11 +60,11 @@
 - <https://docs.x.ai/docs/guides/reasoning#control-how-hard-the-model-thinks>
   <!-- packages/opencode/src/provider/transform.ts -->
 - <https://git-scm.com>
-  <!-- packages/kilo-vscode/src/agent-manager/git-errors.ts -->
+  <!-- packages/tavern-vscode/src/agent-manager/git-errors.ts -->
 - <https://github.com>
-  <!-- packages/opencode/src/kilocode/security/github.ts -->
+  <!-- packages/opencode/src/taverncode/security/github.ts -->
 - <https://github.com/anthropics/claude-code/issues/31375>
-  <!-- packages/kilo-vscode/src/utils.ts -->
+  <!-- packages/tavern-vscode/src/utils.ts -->
 - <https://github.com/apps/kiloconnect>
   <!-- packages/opencode/src/cli/cmd/github.handler.ts -->
 - <https://github.com/cline/cline/blob/main/evals/diff-edits/diff-apply/diff-06-23-25.ts>
@@ -75,21 +75,21 @@
   <!-- packages/opencode/src/lsp/server.ts -->
 - <https://github.com/google-gemini/gemini-cli/blob/main/packages/core/src/utils/editCorrector.ts>
   <!-- packages/opencode/src/tool/edit.ts -->
-- <https://github.com/Kilo-Org/kilo-marketplace>
-  <!-- packages/kilo-vscode/webview-ui/src/components/marketplace/MarketplaceContribute.tsx -->
+- <https://github.com/Kilo-Org/tavern-marketplace>
+  <!-- packages/tavern-vscode/webview-ui/src/components/marketplace/MarketplaceContribute.tsx -->
 - <https://github.com/Kilo-Org/kilocode>
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-about.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/component/dialog-about.tsx -->
 - <https://github.com/Kilo-Org/kilocode/issues>
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-about.tsx -->
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/component/dialog-about.tsx -->
 - <https://github.com/Kilo-Org/kilocode/issues/6986>
-  <!-- packages/kilo-vscode/src/agent-manager/constants.ts -->
+  <!-- packages/tavern-vscode/src/agent-manager/constants.ts -->
 - <https://github.com/Kilo-Org/kilocode/issues/9618>
-  <!-- packages/opencode/src/kilocode/encoding.ts -->
+  <!-- packages/opencode/src/taverncode/encoding.ts -->
 - <https://github.com/Kilo-Org/kilocode/issues/9755>
-  <!-- packages/opencode/src/kilocode/encoding.ts -->
+  <!-- packages/opencode/src/taverncode/encoding.ts -->
 - <https://github.com/Kilo-Org/kilocode/issues/new/choose>
-  <!-- packages/kilo-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
 - <https://github.com/microsoft/vscode-eslint/archive/refs/heads/main.zip>
   <!-- packages/opencode/src/lsp/server.ts -->
 - <https://github.com/oven-sh/bun/issues/16682>
@@ -102,65 +102,65 @@
   <!-- packages/opencode/src/provider/provider.ts -->
 - <https://inference.do-ai.run/v1>
   <!-- packages/opencode/src/plugin/digitalocean.ts -->
-- <https://kilo.ai>
+- <https://tavern.ai>
   <!-- packages/opencode/src/cli/cmd/github.handler.ts -->
-  <!-- packages/opencode/src/kilocode/cloud/origin.ts -->
+  <!-- packages/opencode/src/taverncode/cloud/origin.ts -->
   <!-- packages/opencode/src/mcp/oauth-provider.ts -->
   <!-- packages/opencode/src/session/network.ts -->
-- <https://kilo.ai/>
+- <https://tavern.ai/>
   <!-- packages/opencode/src/cli/cmd/generate.ts -->
-  <!-- packages/opencode/src/kilocode/server/httpapi/public.ts -->
+  <!-- packages/opencode/src/taverncode/server/httpapi/public.ts -->
   <!-- packages/opencode/src/provider/provider.ts -->
-- <https://kilo.ai/cli/install>
-  <!-- packages/opencode/src/kilocode/installation/index.ts -->
-- <https://kilo.ai/discord>
-  <!-- packages/kilo-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-about.tsx -->
-- <https://kilo.ai/docs>
-  <!-- packages/kilo-vscode/webview-ui/src/hooks/useSlashCommand.ts -->
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/app.tsx -->
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-about.tsx -->
-- <https://kilo.ai/docs/ai-providers/cloudflare>
+- <https://tavern.ai/cli/install>
+  <!-- packages/opencode/src/taverncode/installation/index.ts -->
+- <https://tavern.ai/discord>
+  <!-- packages/tavern-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/component/dialog-about.tsx -->
+- <https://tavern.ai/docs>
+  <!-- packages/tavern-vscode/webview-ui/src/hooks/useSlashCommand.ts -->
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/app.tsx -->
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/component/dialog-about.tsx -->
+- <https://tavern.ai/docs/ai-providers/cloudflare>
   <!-- packages/opencode/src/cli/cmd/providers.ts -->
-- <https://kilo.ai/docs/ai-providers/gemini>
-  <!-- packages/opencode/src/kilocode/provider/error.ts -->
-- <https://kilo.ai/docs/ai-providers#custom-provider>
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/CustomProviderDialog.tsx -->
-- <https://kilo.ai/docs/automate/agent-manager-workflows>
-  <!-- packages/kilo-vscode/webview-ui/agent-manager/intro/AgentManagerIntro.tsx -->
-- <https://kilo.ai/docs/automate/mcp/what-is-mcp>
-  <!-- packages/kilo-vscode/webview-ui/src/components/marketplace/InstallModal.tsx -->
-- <https://kilo.ai/docs/code-with-ai/platforms/github>
+- <https://tavern.ai/docs/ai-providers/gemini>
+  <!-- packages/opencode/src/taverncode/provider/error.ts -->
+- <https://tavern.ai/docs/ai-providers#custom-provider>
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/CustomProviderDialog.tsx -->
+- <https://tavern.ai/docs/automate/agent-manager-workflows>
+  <!-- packages/tavern-vscode/webview-ui/agent-manager/intro/AgentManagerIntro.tsx -->
+- <https://tavern.ai/docs/automate/mcp/what-is-mcp>
+  <!-- packages/tavern-vscode/webview-ui/src/components/marketplace/InstallModal.tsx -->
+- <https://tavern.ai/docs/code-with-ai/platforms/github>
   <!-- packages/opencode/src/cli/cmd/github.handler.ts -->
-- <https://kilo.ai/docs/customize/marketplace>
-  <!-- packages/kilo-vscode/webview-ui/src/components/marketplace/InstallModal.tsx -->
-  <!-- packages/kilo-vscode/webview-ui/src/components/marketplace/MarketplaceListView.tsx -->
-- <https://kilo.ai/docs/getting-started/settings>
-  <!-- packages/opencode/src/kilocode/config/claude-migration.ts -->
-  <!-- packages/opencode/src/kilocode/config/config.ts -->
-- <https://kilo.ai/docs/oauth/kilo/client.json>
-  <!-- packages/opencode/src/kilocode/mcp/client-metadata.ts -->
-- <https://kilo.ai/gateway>
-  <!-- packages/opencode/src/kilocode/cli/cmd/tui/component/dialog-provider.tsx -->
-- <https://kilo.ai/pricing/kilo-pass>
-  <!-- packages/kilo-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
-- <https://kilo.ai/support>
-  <!-- packages/kilo-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
-- <https://kilocode.ai>
-  <!-- packages/opencode/src/kilocode/const.ts -->
+- <https://tavern.ai/docs/customize/marketplace>
+  <!-- packages/tavern-vscode/webview-ui/src/components/marketplace/InstallModal.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/marketplace/MarketplaceListView.tsx -->
+- <https://tavern.ai/docs/getting-started/settings>
+  <!-- packages/opencode/src/taverncode/config/claude-migration.ts -->
+  <!-- packages/opencode/src/taverncode/config/config.ts -->
+- <https://tavern.ai/docs/oauth/tavern/client.json>
+  <!-- packages/opencode/src/taverncode/mcp/client-metadata.ts -->
+- <https://tavern.ai/gateway>
+  <!-- packages/opencode/src/taverncode/cli/cmd/tui/component/dialog-provider.tsx -->
+- <https://tavern.ai/pricing/tavern-pass>
+  <!-- packages/tavern-vscode/webview-ui/src/components/profile/ProfileView.tsx -->
+- <https://tavern.ai/support>
+  <!-- packages/tavern-vscode/webview-ui/src/components/chat/FeedbackDialog.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
+- <https://taverncode.ai>
+  <!-- packages/opencode/src/taverncode/const.ts -->
 - <https://opencode.ai/>
   <!-- packages/opencode/src/cli/cmd/generate.ts -->
-  <!-- packages/opencode/src/kilocode/server/httpapi/public.ts -->
+  <!-- packages/opencode/src/taverncode/server/httpapi/public.ts -->
 - <https://openrouter.ai/api/v1/chat/completions>
-  <!-- packages/opencode/src/kilocode/tool/generate-image.ts -->
+  <!-- packages/opencode/src/taverncode/tool/generate-image.ts -->
 - <https://openrouter.ai/docs/cookbook/administration/usage-accounting>
-  <!-- packages/opencode/src/kilocode/session/index.ts -->
+  <!-- packages/opencode/src/taverncode/session/index.ts -->
 - <https://opncd.ai>
   <!-- packages/opencode/src/share/share-next.ts -->
-- <https://reddit.com/r/kilocode>
-  <!-- packages/kilo-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
+- <https://reddit.com/r/taverncode>
+  <!-- packages/tavern-vscode/webview-ui/src/components/settings/AboutKiloCodeTab.tsx -->
 - <https://search.parallel.ai/mcp>
   <!-- packages/opencode/src/tool/mcp-websearch.ts -->
 - <https://v5.ai-sdk.dev/providers/ai-sdk-providers/amazon-bedrock>
@@ -196,18 +196,18 @@
 - <https://vercel.link/ai-gateway-token>
   <!-- packages/opencode/src/cli/cmd/providers.ts -->
 - <https://www.anaconda.com/products/desktop>
-  <!-- packages/opencode/src/kilocode/anaconda-desktop/domain.ts -->
+  <!-- packages/opencode/src/taverncode/anaconda-desktop/domain.ts -->
 - <https://www.eclipse.org/downloads/download.php?file=/jdtls/snapshots/jdt-language-server-latest.tar.gz>
   <!-- packages/opencode/src/lsp/server.ts -->
 - <https://www.google.com/chrome/>
-  <!-- packages/kilo-vscode/webview-ui/agent-manager/BrowserPanel.tsx -->
+  <!-- packages/tavern-vscode/webview-ui/agent-manager/BrowserPanel.tsx -->
 - <https://www.googleapis.com/auth/cloud-platform>
   <!-- packages/opencode/src/provider/provider.ts -->
 - <https://www.rfc-editor.org/rfc/rfc8628.html#section-3.5>
   <!-- packages/opencode/src/plugin/github-copilot/copilot.ts -->
 - <https://x.com>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/taverncode/util/url.ts -->
 - <https://xn--pitest-2nf.com/status>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/taverncode/util/url.ts -->
 - <https://аpitest.com/status>
-  <!-- packages/opencode/src/kilocode/util/url.ts -->
+  <!-- packages/opencode/src/taverncode/util/url.ts -->

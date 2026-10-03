@@ -1,12 +1,12 @@
-// kilocode_change - new file
-// Subprocess tests for `kilo run` when the model produces no assistant message.
+// taverncode_change - new file
+// Subprocess tests for `tavern run` when the model produces no assistant message.
 // Same harness as run-process.test.ts — see `test/lib/cli-process.ts`.
 import { describe, expect } from "bun:test"
 import { Effect } from "effect"
 import { reply } from "../../lib/llm-server"
 import { cliIt } from "../../lib/cli-process"
 
-// kilocode_change start - a run where the model returns no assistant message used to
+// taverncode_change start - a run where the model returns no assistant message used to
 // exit 0, so a caller could not tell an empty run from a successful one
 describe("opencode run with an empty model completion (non-interactive subprocess)", () => {
   cliIt.concurrent(
@@ -98,4 +98,4 @@ describe("opencode run with an empty model completion (non-interactive subproces
     60_000,
   )
 })
-// kilocode_change end
+// taverncode_change end

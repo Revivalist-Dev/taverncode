@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { RemoteExitRpc } from "../../../../src/kilocode/cli/cmd/tui/remote-exit-rpc"
-import { createParentRemoteExitBridge } from "../../../../src/kilocode/cli/cmd/tui/remote-exit-bridge"
+import { RemoteExitRpc } from "../../../../src/taverncode/cli/cmd/tui/remote-exit-rpc"
+import { createParentRemoteExitBridge } from "../../../../src/taverncode/cli/cmd/tui/remote-exit-bridge"
 import { Rpc } from "../../../../src/util/rpc"
 
 describe("parent remote exit RPC bridge", () => {

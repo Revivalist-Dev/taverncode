@@ -5,7 +5,7 @@ import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 
 export const indexingHandlers = HttpApiBuilder.group(InstanceHttpApi, "indexing", (handlers) =>
   Effect.gen(function* () {
-    const mod = yield* Effect.promise(() => import("@/kilocode/indexing"))
+    const mod = yield* Effect.promise(() => import("@/taverncode/indexing"))
     const status = Effect.fn("IndexingHttpApi.status")(function* () {
       return yield* EffectBridge.fromPromise(() => mod.KiloIndexing.current())
     })

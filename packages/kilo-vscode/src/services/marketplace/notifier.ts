@@ -6,7 +6,7 @@ import { selectSuggestions, showSuggestionNotification, suggestionSlug } from ".
 import type { KiloConnectionService } from "../cli-backend"
 import type { MarketplaceItem } from "./types"
 
-const DISMISSED_KEY = "kilo.marketplace.dismissedSuggestions"
+const DISMISSED_KEY = "tavern.marketplace.dismissedSuggestions"
 const DEBOUNCE = 1500
 
 /** Runs a marketplace action for a suggested item. */
@@ -92,7 +92,7 @@ export class MarketplaceNotifier implements vscode.Disposable {
     const generation = ++this.generation
     const data = await fetchMarketplaceData(this.ctx, this.project(), this.directory(), this.roots()).catch(
       (err: unknown) => {
-        console.warn("[Kilo New] Marketplace suggestion scan failed:", err)
+        console.warn("[Tavern New] Marketplace suggestion scan failed:", err)
         return undefined
       },
     )

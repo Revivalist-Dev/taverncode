@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-ui/basic-tool"
+export * from "@taverncode/tavern-ui/basic-tool"

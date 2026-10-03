@@ -4,10 +4,10 @@ import {
   AgentStartRequestSchema,
   GetMessageResultInputSchema,
   MessageIdSchema,
-} from "../../../src/kilocode/cloud/contracts"
-import { parseServiceOrigin } from "../../../src/kilocode/cloud/origin"
-import { MAX_CLOUD_AGENT_RESPONSE_BYTES } from "../../../src/kilocode/cloud/response-json"
-import { createCloudAgentClient } from "../../../src/kilocode/cloud/trpc"
+} from "../../../src/taverncode/cloud/contracts"
+import { parseServiceOrigin } from "../../../src/taverncode/cloud/origin"
+import { MAX_CLOUD_AGENT_RESPONSE_BYTES } from "../../../src/taverncode/cloud/response-json"
+import { createCloudAgentClient } from "../../../src/taverncode/cloud/trpc"
 
 const SESSION = "agent_12345678-1234-1234-1234-123456789abc"
 const OTHER_SESSION = "agent_abcdefab-cdef-4abc-8def-abcdefabcdef"
@@ -98,7 +98,7 @@ describe("Cloud Agent transport", () => {
         message: { prompt: "Inspect the repository" },
         agent: { mode: "code", model: "anthropic/claude-sonnet-4" },
         repository: { type: "github", repo: "Kilo-Org/kilocode" },
-        options: { createdOnPlatform: "kilo-cli" },
+        options: { createdOnPlatform: "tavern-cli" },
       })
       const send = await agent.send({
         cloudAgentSessionId: start.cloudAgentSessionId,
@@ -129,7 +129,7 @@ describe("Cloud Agent transport", () => {
           message: { prompt: "mismatch" },
           agent: { mode: "code", model: "anthropic/claude-sonnet-4" },
           repository: { type: "github", repo: "Kilo-Org/kilocode" },
-          options: { createdOnPlatform: "kilo-cli" },
+          options: { createdOnPlatform: "tavern-cli" },
         })
         .then(
           () => new Error("Expected start correlation to fail"),
@@ -143,7 +143,7 @@ describe("Cloud Agent transport", () => {
           message: { prompt: "invalid-session" },
           agent: { mode: "code", model: "anthropic/claude-sonnet-4" },
           repository: { type: "github", repo: "Kilo-Org/kilocode" },
-          options: { createdOnPlatform: "kilo-cli" },
+          options: { createdOnPlatform: "tavern-cli" },
         })
         .then(
           () => new Error("Expected invalid session ID to fail"),
@@ -243,7 +243,7 @@ describe("Cloud Agent transport", () => {
           message: { prompt },
           agent: { mode: "code", model: "anthropic/claude-sonnet-4" },
           repository: { type: "github", repo: "Kilo-Org/kilocode" },
-          options: { createdOnPlatform: "kilo-cli" },
+          options: { createdOnPlatform: "tavern-cli" },
         })
 
       for (const prompt of ["redirect", "oversized", "malformed", "unavailable"]) {

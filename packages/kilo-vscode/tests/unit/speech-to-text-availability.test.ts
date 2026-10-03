@@ -6,25 +6,25 @@ import {
 import { DEFAULT_SPEECH_TO_TEXT_MODEL } from "../../src/speech-to-text/models"
 
 describe("speech-to-text availability", () => {
-  it("shows speech input for stored Kilo credentials", () => {
-    expect(canUseSpeechToText({}, { kilo: "oauth" })).toBe(true)
-    expect(canUseSpeechToText({}, { kilo: "api" })).toBe(true)
+  it("shows speech input for stored Tavern credentials", () => {
+    expect(canUseSpeechToText({}, { tavern: "oauth" })).toBe(true)
+    expect(canUseSpeechToText({}, { tavern: "api" })).toBe(true)
   })
 
-  it("hides speech input without usable Kilo credentials", () => {
+  it("hides speech input without usable Tavern credentials", () => {
     expect(canUseSpeechToText({}, {})).toBe(false)
-    expect(canUseSpeechToText({}, { kilo: "wellknown" })).toBe(false)
+    expect(canUseSpeechToText({}, { tavern: "wellknown" })).toBe(false)
   })
 
   it("honors enabled and disabled provider configuration", () => {
-    expect(canUseSpeechToText({ disabled_providers: ["kilo"] }, { kilo: "oauth" })).toBe(false)
-    expect(canUseSpeechToText({ enabled_providers: ["openai"] }, { kilo: "oauth" })).toBe(false)
-    expect(canUseSpeechToText({ enabled_providers: ["kilo"] }, { kilo: "oauth" })).toBe(true)
+    expect(canUseSpeechToText({ disabled_providers: ["tavern"] }, { tavern: "oauth" })).toBe(false)
+    expect(canUseSpeechToText({ enabled_providers: ["openai"] }, { tavern: "oauth" })).toBe(false)
+    expect(canUseSpeechToText({ enabled_providers: ["tavern"] }, { tavern: "oauth" })).toBe(true)
   })
 
   it("hides speech input when the window cannot capture audio", () => {
-    expect(canUseSpeechToText({}, { kilo: "oauth" }, false)).toBe(false)
-    expect(canUseSpeechToText({}, { kilo: "oauth" }, true)).toBe(true)
+    expect(canUseSpeechToText({}, { tavern: "oauth" }, false)).toBe(false)
+    expect(canUseSpeechToText({}, { tavern: "oauth" }, true)).toBe(true)
   })
 
   it("normalizes configured and unknown transcription models", () => {

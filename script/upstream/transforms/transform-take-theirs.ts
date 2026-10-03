@@ -1,14 +1,14 @@
 #!/usr/bin/env bun
 /**
- * Transform files by taking upstream version and applying Kilo branding
+ * Transform files by taking upstream version and applying Tavern branding
  *
  * This script handles files that have only branding differences (no logic changes).
- * It takes the upstream version and applies Kilo branding transforms.
+ * It takes the upstream version and applies Tavern branding transforms.
  *
  * Use this for:
- * - UI components with OpenCode -> Kilo branding
+ * - UI components with OpenCode -> Tavern branding
  * - Config files with predictable patterns
- * - Files without kilocode_change logic blocks
+ * - Files without taverncode_change logic blocks
  */
 
 import { $ } from "bun"
@@ -52,41 +52,41 @@ const BRANDING_REPLACEMENTS: BrandingReplacement[] = [
   // Domain replacements (specific first)
   {
     pattern: /app\.opencode\.ai/g,
-    replacement: "app.kilo.ai",
+    replacement: "app.tavern.ai",
     description: "App domain",
   },
   {
     pattern: /opencode\.ai(?!\/zen)/g,
-    replacement: "kilo.ai",
+    replacement: "tavern.ai",
     description: "Main domain (excluding zen)",
   },
 
   // CLI commands
   {
     pattern: /npx opencode(?!\w)/g,
-    replacement: "npx kilo",
+    replacement: "npx tavern",
     description: "npx command",
   },
   {
     pattern: /bun add opencode(?!\w)/g,
-    replacement: "bun add kilo",
+    replacement: "bun add tavern",
     description: "bun add command",
   },
   {
     pattern: /npm install opencode(?!\w)/g,
-    replacement: "npm install kilo",
+    replacement: "npm install tavern",
     description: "npm install command",
   },
   {
     pattern: /opencode upgrade(?!\w)/g,
-    replacement: "kilo upgrade",
+    replacement: "tavern upgrade",
     description: "upgrade command",
   },
 
   // Database filename
   {
     pattern: /opencode\.db/g,
-    replacement: "kilo.db",
+    replacement: "tavern.db",
     description: "Database filename",
   },
 
@@ -94,7 +94,7 @@ const BRANDING_REPLACEMENTS: BrandingReplacement[] = [
   // Only replace "OpenCode" when it's a standalone word
   {
     pattern: /\bOpenCode\b(?!\.json|\/| Zen)/g,
-    replacement: "Kilo",
+    replacement: "Tavern",
     description: "Product name",
   },
 
@@ -105,7 +105,7 @@ const BRANDING_REPLACEMENTS: BrandingReplacement[] = [
     description: "Environment variable",
   },
   {
-    pattern: /VITE_OPENCODE_/g,
+    pattern: /VITE_TAVERN_/g,
     replacement: "VITE_KILO_",
     description: "Vite env var",
   },
@@ -115,12 +115,12 @@ const BRANDING_REPLACEMENTS: BrandingReplacement[] = [
     description: "Window global",
   },
   {
-    pattern: /x-opencode-/g,
-    replacement: "x-kilo-",
+    pattern: /x-tavern-/g,
+    replacement: "x-tavern-",
     description: "HTTP header prefix",
   },
   {
-    pattern: /_EXTENSION_OPENCODE_/g,
+    pattern: /_EXTENSION_TAVERN_/g,
     replacement: "_EXTENSION_KILO_",
     description: "Extension env var",
   },
@@ -146,8 +146,8 @@ export function applyBrandingTransforms(content: string, verbose = false): { res
   let total = 0
 
   for (const line of lines) {
-    // Skip lines with kilocode_change marker (already customized)
-    if (line.includes("// kilocode_change")) {
+    // Skip lines with taverncode_change marker (already customized)
+    if (line.includes("// taverncode_change")) {
       transformed.push(line)
       continue
     }
@@ -187,9 +187,9 @@ export async function transformTakeTheirs(file: string, options: TakeTheirsOptio
     return { file, action: "transformed", replacements: 0, dryRun: true }
   }
 
-  // If our version has kilocode_change markers, flag for manual resolution
+  // If our version has taverncode_change markers, flag for manual resolution
   if (await oursHasKilocodeChanges(file)) {
-    warn(`${file} has kilocode_change markers — skipping auto-transform, needs manual resolution`)
+    warn(`${file} has taverncode_change markers — skipping auto-transform, needs manual resolution`)
     return { file, action: "flagged", replacements: 0, dryRun: false }
   }
 

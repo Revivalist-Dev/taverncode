@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
-import { stripInternalOptions, INTERNAL_OPTION_KEYS } from "../../src/kilocode/agent/options"
+import { stripInternalOptions, INTERNAL_OPTION_KEYS } from "../../src/taverncode/agent/options"
 
 describe("stripInternalOptions", () => {
-  test("removes Kilo-internal metadata keys", () => {
+  test("removes Tavern-internal metadata keys", () => {
     const result = stripInternalOptions({
       id: "architect",
       displayName: "Architect",

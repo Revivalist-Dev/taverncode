@@ -39,9 +39,9 @@ class FakeClient {
   }
 }
 
-const realSessions = await import("@/kilo-sessions/kilo-sessions")
+const realSessions = await import("@/tavern-sessions/tavern-sessions")
 const realSetAttached = realSessions.KiloSessions.setAttachedSessions
-mock.module("@/kilo-sessions/kilo-sessions", () => ({
+mock.module("@/tavern-sessions/tavern-sessions", () => ({
   ...realSessions,
   KiloSessions: {
     ...realSessions.KiloSessions,
@@ -53,7 +53,7 @@ mock.module("@/kilo-sessions/kilo-sessions", () => ({
 }))
 
 let current = new FakeClient()
-mock.module("@/kilocode/event-service/client", () => ({
+mock.module("@/taverncode/event-service/client", () => ({
   EventServiceClient: class {
     constructor() {
       // The service constructs one client per layer; expose it for assertions.
@@ -77,7 +77,7 @@ mock.module("@/kilocode/event-service/client", () => ({
   },
 }))
 
-const { KiloViewers } = await import("@/kilocode/presence/service")
+const { KiloViewers } = await import("@/taverncode/presence/service")
 
 const authLayer = Layer.succeed(
   Auth.Service,

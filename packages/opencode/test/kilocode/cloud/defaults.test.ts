@@ -4,10 +4,10 @@ import { Effect, Layer, Redacted, Ref } from "effect"
 import { Agent } from "@/agent/agent"
 import { Auth } from "@/auth"
 import { Config } from "@/config/config"
-import { CloudAuth } from "@/kilocode/cloud/auth"
-import { CloudCatalog } from "@/kilocode/cloud/catalog"
-import { CloudDefaults } from "@/kilocode/cloud/defaults"
-import { MAX_CLOUD_AGENT_RESPONSE_BYTES } from "@/kilocode/cloud/response-json"
+import { CloudAuth } from "@/taverncode/cloud/auth"
+import { CloudCatalog } from "@/taverncode/cloud/catalog"
+import { CloudDefaults } from "@/taverncode/cloud/defaults"
+import { MAX_CLOUD_AGENT_RESPONSE_BYTES } from "@/taverncode/cloud/response-json"
 import { testEffect } from "../../lib/effect"
 
 const it = testEffect(Layer.mergeAll(AppNodeBuilder.build(Agent.node), AppNodeBuilder.build(Config.node)))
@@ -30,7 +30,7 @@ const oauth = (token: string, organizationID: string) =>
 
 const authLayer = (info: Auth.Info) =>
   Layer.mock(Auth.Service)({
-    get: (id) => Effect.succeed(id === "kilo" ? info : undefined),
+    get: (id) => Effect.succeed(id === "tavern" ? info : undefined),
   })
 
 const stateLayer = (state: CloudDefaults.ModelStateInfo) =>
@@ -61,8 +61,8 @@ function withCatalog<A, E, R>(
           const url = new URL(request.url)
           requests.push({
             authorization: request.headers.get("authorization"),
-            feature: request.headers.get("x-kilocode-feature"),
-            organization: request.headers.get("x-kilocode-organizationid"),
+            feature: request.headers.get("x-taverncode-feature"),
+            organization: request.headers.get("x-taverncode-organizationid"),
             path: url.pathname,
           })
           if (url.pathname.endsWith("/models")) {
@@ -88,7 +88,7 @@ it.instance("routes URL-scoped credentials to their catalog origin", () => {
     expect(requests).toEqual([
       {
         authorization: `Bearer ${token}`,
-        feature: "kilo-cli",
+        feature: "tavern-cli",
         organization: null,
         path: "/api/openrouter/models",
       },
@@ -102,8 +102,8 @@ it.instance("routes URL-scoped credentials to their catalog origin", () => {
           expect(url.origin).toBe("https://catalog.example.test")
           requests.push({
             authorization: request.headers.get("authorization"),
-            feature: request.headers.get("x-kilocode-feature"),
-            organization: request.headers.get("x-kilocode-organizationid"),
+            feature: request.headers.get("x-taverncode-feature"),
+            organization: request.headers.get("x-taverncode-organizationid"),
             path: url.pathname,
           })
           return Response.json({ data: [{ id: "anthropic/scoped", supported_parameters: ["tools"] }] })
@@ -178,14 +178,14 @@ it.instance(
         const stored = oauth("stored-token", savedID)
         const current = yield* Ref.make<Auth.Info>(stored)
         const auth = Layer.mock(Auth.Service)({
-          get: (id) => (id === "kilo" ? Ref.get(current) : Effect.succeed(undefined)),
-          set: (id, info) => (id === "kilo" ? Ref.set(current, info) : Effect.void),
+          get: (id) => (id === "tavern" ? Ref.get(current) : Effect.succeed(undefined)),
+          set: (id, info) => (id === "tavern" ? Ref.set(current, info) : Effect.void),
         })
 
         const resolved = yield* Effect.gen(function* () {
           const result = yield* CloudDefaults.resolve({
             mode: "debug",
-            model: "kilo/anthropic/explicit",
+            model: "tavern/anthropic/explicit",
             orgID: explicitID,
             env: {
               KILO_API_KEY: "ignored-env-token",
@@ -193,7 +193,7 @@ it.instance(
             },
           })
           const service = yield* Auth.Service
-          expect(yield* service.get("kilo")).toEqual(stored)
+          expect(yield* service.get("tavern")).toEqual(stored)
           return result
         }).pipe(
           Effect.provide(
@@ -201,7 +201,7 @@ it.instance(
               auth,
               stateLayer(
                 state({
-                  model: { debug: { providerID: "kilo", modelID: "anthropic/saved" } },
+                  model: { debug: { providerID: "tavern", modelID: "anthropic/saved" } },
                 }),
               ),
               CloudCatalog.layer({ env: { KILO_API_URL: url.origin } }),
@@ -220,7 +220,7 @@ it.instance(
             (request) =>
               request.path.startsWith(`/api/organizations/${explicitID}/`) &&
               request.authorization === "Bearer stored-token" &&
-              request.feature === "kilo-cli" &&
+              request.feature === "tavern-cli" &&
               request.organization === explicitID,
           ),
         ).toBe(true)
@@ -229,8 +229,8 @@ it.instance(
   {
     config: {
       default_agent: "plan",
-      model: "kilo/anthropic/repository",
-      agent: { plan: { model: "kilo/anthropic/mode" } },
+      model: "tavern/anthropic/repository",
+      agent: { plan: { model: "tavern/anthropic/mode" } },
     },
   },
 )
@@ -254,8 +254,8 @@ it.instance(
               authLayer(new Auth.Api({ type: "api", key: "stored-api-token" })),
               stateLayer(
                 state({
-                  model: { code: { providerID: "kilo", modelID: "anthropic/stale" } },
-                  recent: [{ providerID: "kilo", modelID: "anthropic/recent" }],
+                  model: { code: { providerID: "tavern", modelID: "anthropic/stale" } },
+                  recent: [{ providerID: "tavern", modelID: "anthropic/recent" }],
                 }),
               ),
               CloudCatalog.layer({ env: { KILO_API_URL: url.origin } }),
@@ -265,7 +265,7 @@ it.instance(
     ),
   {
     config: {
-      model: "kilo/anthropic/repository",
+      model: "tavern/anthropic/repository",
       agent: { code: { model: null } },
     },
   },
@@ -287,7 +287,7 @@ it.instance(
             authLayer(new Auth.Api({ type: "api", key: "stored-api-token" })),
             stateLayer(
               state({
-                model: { code: { providerID: "kilo", modelID: "anthropic/saved" } },
+                model: { code: { providerID: "tavern", modelID: "anthropic/saved" } },
               }),
             ),
             CloudCatalog.layer({ env: { KILO_API_URL: url.origin } }),
@@ -354,8 +354,8 @@ it.instance(
     config: {
       default_agent: "custom",
       agent: {
-        code: { model: "kilo/anthropic/code" },
-        custom: { mode: "primary", model: "kilo/anthropic/custom" },
+        code: { model: "tavern/anthropic/code" },
+        custom: { mode: "primary", model: "tavern/anthropic/custom" },
       },
     },
   },
@@ -410,8 +410,8 @@ it.instance(
                 authLayer(oauth("stored-token", organizationID)),
                 stateLayer(
                   state({
-                    model: { plan: { providerID: "kilo", modelID: "anthropic/saved" } },
-                    recent: [{ providerID: "kilo", modelID: "anthropic/recent" }],
+                    model: { plan: { providerID: "tavern", modelID: "anthropic/saved" } },
+                    recent: [{ providerID: "tavern", modelID: "anthropic/recent" }],
                   }),
                 ),
                 CloudCatalog.layer({ env: { KILO_API_URL: url.origin } }),
@@ -435,8 +435,8 @@ it.instance(
   {
     config: {
       default_agent: "plan",
-      model: "kilo/anthropic/repository",
-      agent: { plan: { model: "kilo/anthropic/mode" } },
+      model: "tavern/anthropic/repository",
+      agent: { plan: { model: "tavern/anthropic/mode" } },
     },
   },
 )

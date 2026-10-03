@@ -7,7 +7,7 @@ description: "How to prevent runaway agent usage, reduce token consumption, choo
 
 ## Overview
 
-How much you spend with Kilo Code is shaped by several factors working together:
+How much you spend with Tavern Code is shaped by several factors working together:
 
 - **Model selection** — frontier models cost significantly more per token than efficient or free tiers
 - **Prompt and context size** — every token in your system prompt, conversation history, file attachments, and tool definitions is billed as input
@@ -18,7 +18,7 @@ How much you spend with Kilo Code is shaped by several factors working together:
 
 No single control eliminates cost on its own. The most effective approach combines model selection, context management, task scope, and account-level monitoring together.
 
-This page covers the controls currently available in Kilo Code. For a direct overview of Auto Model tiers and token optimization tips, see [Cost Efficiency & Model Selection](/docs/getting-started/rate-limits-and-costs).
+This page covers the controls currently available in Tavern Code. For a direct overview of Auto Model tiers and token optimization tips, see [Cost Efficiency & Model Selection](/docs/getting-started/rate-limits-and-costs).
 
 ---
 
@@ -26,23 +26,23 @@ This page covers the controls currently available in Kilo Code. For a direct ove
 
 ### Doom loop protection
 
-When the agent enters a repeated failure cycle — attempting the same action multiple times without making progress — Kilo pauses and asks for permission before continuing. This is controlled by the `doom_loop` permission, which defaults to `ask`.
+When the agent enters a repeated failure cycle — attempting the same action multiple times without making progress — Tavern pauses and asks for permission before continuing. This is controlled by the `doom_loop` permission, which defaults to `ask`.
 
-**Where to configure:** Settings → Auto Approve (VS Code) or the `permission.doom_loop` key in `kilo.jsonc` (CLI).
+**Where to configure:** Settings → Auto Approve (VS Code) or the `permission.doom_loop` key in `tavern.jsonc` (CLI).
 
 **When to use:** Leave this at `ask` (the default) unless you are running fully unattended automation in a controlled environment. Setting it to `deny` blocks recovery entirely; `allow` lets loops continue without interruption.
 
 ### Per-tool approval controls
 
-Every action Kilo takes — reading files, editing code, running shell commands, launching sub-agents — is governed by the permission system. Each tool can be set to `allow`, `ask`, or `deny`. When set to `ask`, Kilo pauses before executing and you can approve or reject that specific action.
+Every action Tavern takes — reading files, editing code, running shell commands, launching sub-agents — is governed by the permission system. Each tool can be set to `allow`, `ask`, or `deny`. When set to `ask`, Tavern pauses before executing and you can approve or reject that specific action.
 
-**Where to configure:** Settings → Auto Approve (VS Code) or the `permission` section in `kilo.jsonc` (CLI). See [Auto-Approving Actions](/docs/getting-started/settings/auto-approving-actions) for the full list of available permissions.
+**Where to configure:** Settings → Auto Approve (VS Code) or the `permission` section in `tavern.jsonc` (CLI). See [Auto-Approving Actions](/docs/getting-started/settings/auto-approving-actions) for the full list of available permissions.
 
 **When to use:** Keep `bash` set to `ask` by default for unfamiliar tasks. You can allow specific safe command prefixes (e.g. `git *`, `npm *`) while keeping everything else at `ask`. This prevents the agent from running expensive or destructive commands in a loop without oversight.
 
 ### Runtime auto-approve toggle (VS Code)
 
-A shield button in the prompt controls lets you toggle auto-approve on and off at runtime without opening Settings. When enabled, pending permission prompts are approved automatically. The state stays synced across the sidebar and open Kilo tabs.
+A shield button in the prompt controls lets you toggle auto-approve on and off at runtime without opening Settings. When enabled, pending permission prompts are approved automatically. The state stays synced across the sidebar and open Tavern tabs.
 
 **When to use:** Turn it on when working on a well-understood, low-risk task that does not need step-by-step review. Turn it off as soon as you want to pause and review the agent's next actions.
 
@@ -52,7 +52,7 @@ Individual accounts stop spending when their balance reaches zero — further re
 
 Organization accounts can additionally configure **per-user daily spending limits**. When a member reaches their daily cap, subsequent requests are blocked until midnight UTC, when the limit resets.
 
-**Where to configure:** Organization spending limits are managed in the organization dashboard at [app.kilo.ai](https://app.kilo.ai). Individual credit top-up is at Settings → Adding Credits.
+**Where to configure:** Organization spending limits are managed in the organization dashboard at [app.tavern.ai](https://app.tavern.ai). Individual credit top-up is at Settings → Adding Credits.
 
 ### Spend alerts
 
@@ -63,13 +63,13 @@ Two rule kinds are available, and you can switch each one on or off on its own:
 - **Spending limit** — fires when spend in a rolling 24-hour, 7-day, or 30-day window crosses the limit you set.
 - **Spend spike** — fires when one hour's spend runs a set multiple (1x to 50x) above the scope's usual rate, taken from the previous 14 days of hourly usage. The rule stays quiet until the scope has a day of history.
 
-Each rule can send by email to the scope's billing contacts and by push to a signed-in Kilo mobile app. Push needs the app installed and its **Spend alerts** notification category on; in the mobile app, spend alerts are their own category, so you can turn them off without silencing agent notifications.
+Each rule can send by email to the scope's billing contacts and by push to a signed-in Tavern mobile app. Push needs the app installed and its **Spend alerts** notification category on; in the mobile app, spend alerts are their own category, so you can turn them off without silencing agent notifications.
 
-**Where to configure:** the spend view at [app.kilo.ai](https://app.kilo.ai), or the same view in the Kilo mobile app. For an organization, owners, admins, and billing managers can manage the alerts.
+**Where to configure:** the spend view at [app.tavern.ai](https://app.tavern.ai), or the same view in the Tavern mobile app. For an organization, owners, admins, and billing managers can manage the alerts.
 
 ### Free model rate limits
 
-Requests to free models (`kilo-auto/free` and other free-tier models) are rate-limited to **200 requests per hour**. If you exceed this, requests return HTTP 429 and you must wait before continuing.
+Requests to free models (`tavern-auto/free` and other free-tier models) are rate-limited to **200 requests per hour**. If you exceed this, requests return HTTP 429 and you must wait before continuing.
 
 ### Practical recommendations
 
@@ -97,7 +97,7 @@ Attaching an entire folder sends every file in it as input tokens, even if only 
 
 ### Exclude generated, build, and vendor directories
 
-Kilo automatically skips a set of directories including `node_modules`, `dist`, `build`, `.git`, `__pycache__`, `.cache`, and `vendor`. You can add additional paths using **permission deny rules** in `kilo.jsonc` or using a `.kilocodeignore` file at your workspace root.
+Tavern automatically skips a set of directories including `node_modules`, `dist`, `build`, `.git`, `__pycache__`, `.cache`, and `vendor`. You can add additional paths using **permission deny rules** in `tavern.jsonc` or using a `.taverncodeignore` file at your workspace root.
 
 ```jsonc
 {
@@ -111,15 +111,15 @@ Kilo automatically skips a set of directories including `node_modules`, `dist`, 
 }
 ```
 
-**Where to configure:** `kilo.jsonc` (VS Code / CLI). See [.kilocodeignore](/docs/customize/context/kilocodeignore) for full details.
+**Where to configure:** `tavern.jsonc` (VS Code / CLI). See [.taverncodeignore](/docs/customize/context/taverncodeignore) for full details.
 
 ### Compact long conversations
 
-When a conversation grows long, use `/compact` in the chat (also searchable as `smol` or `condense`) to summarize the history and free up context space. Kilo replaces older conversation turns with an anchored summary that captures your goal, constraints, progress, and next steps.
+When a conversation grows long, use `/compact` in the chat (also searchable as `smol` or `condense`) to summarize the history and free up context space. Tavern replaces older conversation turns with an anchored summary that captures your goal, constraints, progress, and next steps.
 
-Auto-compaction is **enabled by default** — Kilo automatically compacts when approaching the context window limit so you do not need to intervene manually.
+Auto-compaction is **enabled by default** — Tavern automatically compacts when approaching the context window limit so you do not need to intervene manually.
 
-**Where to configure:** Toggle auto-compaction in **Settings → Context** (VS Code) or set `compaction.auto` in `kilo.jsonc`. Configure the trigger threshold with `compaction.threshold_percent` (e.g. `80` to compact at 80% of the model's context window).
+**Where to configure:** Toggle auto-compaction in **Settings → Context** (VS Code) or set `compaction.auto` in `tavern.jsonc`. Configure the trigger threshold with `compaction.threshold_percent` (e.g. `80` to compact at 80% of the model's context window).
 
 You can also configure a cheaper model specifically for compaction, so summarization does not consume frontier model tokens:
 
@@ -139,7 +139,7 @@ See [Context Condensing](/docs/customize/context/context-condensing) for full co
 
 Every token you allocate to model output reduces how much conversation history can remain in the context window. For routine coding tasks, keep Code mode at **16k max output tokens or below**. Raise the limit only in Architect or Debug modes where extended reasoning is useful.
 
-**Where to configure:** Model settings in the Kilo Code UI, or the `limit.output` key in custom model configuration.
+**Where to configure:** Model settings in the Tavern Code UI, or the `limit.output` key in custom model configuration.
 
 ### Use project instructions efficiently
 
@@ -153,46 +153,46 @@ See [MCP Overview](/docs/automate/mcp/overview) for details.
 
 ### Prompt caching
 
-Kilo automatically applies prompt caching on supported providers. Repeated context — your system prompt, stable file contents, and tool definitions — is reused from cache at a discounted rate. No configuration is required to benefit from this.
+Tavern automatically applies prompt caching on supported providers. Repeated context — your system prompt, stable file contents, and tool definitions — is reused from cache at a discounted rate. No configuration is required to benefit from this.
 
 ---
 
 ## Choosing Models for Specific Tasks
 
 Different tasks benefit from different model characteristics. Routing work to the right model reduces cost without sacrificing quality.
-Kilo has auto-models that can help you control costs; more information is available in [Auto Model](/docs/code-with-ai/agents/auto-model).
+Tavern has auto-models that can help you control costs; more information is available in [Auto Model](/docs/code-with-ai/agents/auto-model).
 
 ### Practical examples by task type
 
 | Task type | Suggested approach |
 |---|---|
-| Quick questions, syntax lookups, simple formatting | `kilo-auto/efficient` or a lightweight model |
-| Routine edits, test generation, straightforward refactors | `kilo-auto/efficient` or a mid-tier model |
-| Complex debugging, tracing unexpected behavior | `kilo-auto/frontier` or a strong reasoning model; Debug mode |
-| Architecture planning, design decisions | `kilo-auto/frontier`; Architect mode |
+| Quick questions, syntax lookups, simple formatting | `tavern-auto/efficient` or a lightweight model |
+| Routine edits, test generation, straightforward refactors | `tavern-auto/efficient` or a mid-tier model |
+| Complex debugging, tracing unexpected behavior | `tavern-auto/frontier` or a strong reasoning model; Debug mode |
+| Architecture planning, design decisions | `tavern-auto/frontier`; Architect mode |
 | Repository-wide analysis or search | A model with a large context window (256K+); Architect mode |
-| Code review and summarization | `kilo-auto/efficient` or a cost-effective model |
-| Automated background tasks (CI, scripting) | `kilo-auto/efficient` or `kilo-auto/free` |
+| Code review and summarization | `tavern-auto/efficient` or a cost-effective model |
+| Automated background tasks (CI, scripting) | `tavern-auto/efficient` or `tavern-auto/free` |
 
 ### Manually selecting a model
 
-Use the **model selector dropdown** in the Kilo Code chat interface to switch models for the current session. In the CLI, pass the `--model` flag to `kilo run` or use the model picker in the TUI (`Ctrl+X m` or `/models`).
+Use the **model selector dropdown** in the Tavern Code chat interface to switch models for the current session. In the CLI, pass the `--model` flag to `tavern run` or use the model picker in the TUI (`Ctrl+X m` or `/models`).
 
 ### Configuring a model per agent or mode
 
 You can set a default model for each agent (Code, Architect, Debug, Plan, or a custom subagent) independently:
 
-- **VS Code:** Settings → Models → Model per Mode, or edit `kilo.jsonc` directly.
-- **CLI:** Set `agent.<name>.model` in `kilo.jsonc`.
+- **VS Code:** Settings → Models → Model per Mode, or edit `tavern.jsonc` directly.
+- **CLI:** Set `agent.<name>.model` in `tavern.jsonc`.
 
 ```jsonc
 {
   "agent": {
     "code": {
-      "model": "kilo-auto/efficient"
+      "model": "tavern-auto/efficient"
     },
     "architect": {
-      "model": "kilo-auto/frontier"
+      "model": "tavern-auto/frontier"
     }
   }
 }
@@ -247,7 +247,7 @@ The **Usage** tab of the organization dashboard provides:
 
 This gives administrators visibility into which team members, models, and projects are driving the majority of spend.
 
-**Where to access:** [app.kilo.ai](https://app.kilo.ai) → Usage tab. 
+**Where to access:** [app.tavern.ai](https://app.tavern.ai) → Usage tab. 
 
 ### Administrative permissions
 
@@ -259,8 +259,8 @@ Dashboard administrative actions (model restrictions, spending limits, billing m
 
 ### Cost-conscious individual developer
 
-- Use `kilo-auto/efficient` as the default model
-- Switch to `kilo-auto/free` for low-stakes questions and exploration
+- Use `tavern-auto/efficient` as the default model
+- Switch to `tavern-auto/free` for low-stakes questions and exploration
 - Enable auto-compaction (on by default); set `compaction.threshold_percent: 80` to compact earlier
 - Set Code agent max output tokens to 16k or below
 - Keep `doom_loop` permission at `ask`
@@ -279,17 +279,17 @@ Dashboard administrative actions (model restrictions, spending limits, billing m
 
 ### Team using multiple models
 
-- Assign `kilo-auto/efficient` to Code and Debug agents for everyday work
-- Assign `kilo-auto/frontier` to Architect (or Plan) agent for planning tasks
-- Set `kilo-auto/efficient` as the compaction model for all agents
+- Assign `tavern-auto/efficient` to Code and Debug agents for everyday work
+- Assign `tavern-auto/frontier` to Architect (or Plan) agent for planning tasks
+- Set `tavern-auto/efficient` as the compaction model for all agents
 - If on an Enterprise plan, use Providers & Models to block high-cost models that are not needed for your team's typical work
 
 ```jsonc
 {
   "agent": {
-    "code": { "model": "kilo-auto/efficient" },
-    "debug": { "model": "kilo-auto/efficient" },
-    "architect": { "model": "kilo-auto/frontier" },
+    "code": { "model": "tavern-auto/efficient" },
+    "debug": { "model": "tavern-auto/efficient" },
+    "architect": { "model": "tavern-auto/frontier" },
     "compaction": { "model": "anthropic/claude-haiku-4-5" }
   }
 }
@@ -297,22 +297,22 @@ Dashboard administrative actions (model restrictions, spending limits, billing m
 
 ### Maximum-constraint starter configuration
 
-The snippet below is a ready-to-copy `kilo.jsonc` that turns on every available cost-control knob at its most restrictive setting. Drop it into your project root (or your global `~/.config/kilo/kilo.jsonc`) and adjust individual values upward as you get comfortable with how each one behaves.
+The snippet below is a ready-to-copy `tavern.jsonc` that turns on every available cost-control knob at its most restrictive setting. Drop it into your project root (or your global `~/.config/tavern/tavern.jsonc`) and adjust individual values upward as you get comfortable with how each one behaves.
 
 {% callout type="tip" %}
-This configuration uses only `kilo-auto/efficient`.
+This configuration uses only `tavern-auto/efficient`.
 {% /callout %}
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
 
   // ── Model selection ──────────────────────────────────────────────────────
-  // Route all requests through the two lowest-cost Kilo Auto tiers.
-  // kilo-auto/efficient: lowest-cost paid tier (classifies each request by
+  // Route all requests through the two lowest-cost Tavern Auto tiers.
+  // tavern-auto/efficient: lowest-cost paid tier (classifies each request by
   //   difficulty and routes to the cheapest benchmark-proven model).
-  "model": "kilo-auto/efficient",
-  "subagent_model": "kilo-auto/efficient", // default model for Task-tool subagents
+  "model": "tavern-auto/efficient",
+  "subagent_model": "tavern-auto/efficient", // default model for Task-tool subagents
 
   // ── Per-agent model and step limits ─────────────────────────────────────
   // Assign the cheapest suitable tier to each agent and cap how many
@@ -320,37 +320,37 @@ This configuration uses only `kilo-auto/efficient`.
   // Raise `steps` for agents that need more room; lower it to tighten cost.
   "agent": {
     "code": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 20 // hard cap on agentic iterations per turn
     },
     "plan": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 10
     },
     "debug": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 20
     },
     "ask": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 5
     },
     "orchestrator": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 10
     },
     "explore": {
-      "model": "kilo-auto/free",  
+      "model": "tavern-auto/free",  
       "steps": 15
     },
     "general": {
-      "model": "kilo-auto/efficient",
+      "model": "tavern-auto/efficient",
       "steps": 15
     },
     // Dedicated agents for background summarization 
-    "compaction": { "model": "kilo-auto/free" },
-    "title":      { "model": "kilo-auto/free" },
-    "summary":    { "model": "kilo-auto/free" }
+    "compaction": { "model": "tavern-auto/free" },
+    "title":      { "model": "tavern-auto/free" },
+    "summary":    { "model": "tavern-auto/free" }
   },
 
   // ── Compaction (context management) ─────────────────────────────────────
@@ -373,7 +373,7 @@ This configuration uses only `kilo-auto/efficient`.
   },
 
   // ── Permission safeguards ────────────────────────────────────────────────
-  // "ask" means Kilo pauses and requires your approval before executing.
+  // "ask" means Tavern pauses and requires your approval before executing.
   // This prevents runaway loops from autonomously consuming tokens or making
   // irreversible changes. Flip individual entries to "allow" once you trust them.
   "permission": {
@@ -395,13 +395,13 @@ Every field in this block is documented in the sections above. Use it as a start
 
 If your spend is higher than expected:
 
-- **Check your usage dashboard** at [app.kilo.ai/usage](https://app.kilo.ai/usage) for a breakdown by day, model, and project
+- **Check your usage dashboard** at [app.tavern.ai/usage](https://app.tavern.ai/usage) for a breakdown by day, model, and project
 - **Review the model in use** — an accidental switch to a frontier model for routine tasks can significantly raise costs
 - **Look for long sessions** — sessions that were never compacted carry their full history as input tokens on every request; use `/compact` to reset them
 - **Check MCP server configuration** — unused MCP servers add tool definitions to every system prompt
 - **Review permission settings** — auto-approving all actions with no `doom_loop` guard removes the friction that normally slows down runaway loops
 
-For further reading: [4 Levers to Take Control of Your AI Spend](https://blog.kilo.ai/p/4-spend-levers)
+For further reading: [4 Levers to Take Control of Your AI Spend](https://blog.tavern.ai/p/4-spend-levers)
 
 ## Related
 

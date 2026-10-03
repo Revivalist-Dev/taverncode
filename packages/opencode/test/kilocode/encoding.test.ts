@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 // Unit tests for the Encoding namespace. These complement tool-encoding.test.ts
 // by exercising detect/decode/encode/read/write/readSync directly, without
 // going through the Effect runtime, agent harness, or tool pipeline. They are
@@ -11,7 +11,7 @@ import fs from "fs/promises"
 import os from "os"
 import path from "path"
 import iconv from "iconv-lite"
-import * as Encoding from "../../src/kilocode/encoding"
+import * as Encoding from "../../src/taverncode/encoding"
 
 const BOM = {
   utf8: Buffer.from([0xef, 0xbb, 0xbf]),
@@ -22,7 +22,7 @@ const BOM = {
 }
 
 async function tmp<T>(body: (dir: string) => Promise<T>): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-encoding-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-encoding-"))
   try {
     return await body(dir)
   } finally {

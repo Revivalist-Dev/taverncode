@@ -7,11 +7,11 @@ import {
 } from "../src/autocomplete"
 
 describe("DEFAULT_AUTOCOMPLETE_MODEL", () => {
-  test("resolves to Mercury Next Edit through Kilo Gateway", () => {
+  test("resolves to Mercury Next Edit through Tavern Gateway", () => {
     const match = AUTOCOMPLETE_MODELS.find(
       (m) => m.providerID === DEFAULT_AUTOCOMPLETE_PROVIDER_ID && m.modelID === DEFAULT_AUTOCOMPLETE_MODEL_ID,
     )
-    expect(DEFAULT_AUTOCOMPLETE_PROVIDER_ID).toBe("kilo")
+    expect(DEFAULT_AUTOCOMPLETE_PROVIDER_ID).toBe("tavern")
     expect(DEFAULT_AUTOCOMPLETE_MODEL_ID).toBe("inception/mercury-next-edit")
     expect(match).toBeDefined()
     expect(DEFAULT_AUTOCOMPLETE_MODEL).toBe(match!)

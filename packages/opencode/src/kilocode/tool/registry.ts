@@ -20,26 +20,26 @@ import { SendFileTool } from "./send-file"
 import * as Tool from "../../tool/tool"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { Effect } from "effect"
-import * as Network from "@/kilocode/sandbox/network"
-import { Notebook } from "@/kilocode/notebook/service"
-import { AgentManager, HostError } from "@/kilocode/agent-manager/service"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
-import { enabled as prEnabled } from "@/kilo-sessions/pr-link"
+import * as Network from "@/taverncode/sandbox/network"
+import { Notebook } from "@/taverncode/notebook/service"
+import { AgentManager, HostError } from "@/taverncode/agent-manager/service"
+import { KiloSessions } from "@/tavern-sessions/tavern-sessions"
+import { enabled as prEnabled } from "@/tavern-sessions/pr-link"
 import * as Log from "@opencode-ai/core/util/log"
 import type { Config } from "@/config/config"
 import type { RuntimeFlags } from "@/effect/runtime-flags"
-import { BoardEnabled } from "@/kilocode/board/enabled"
+import { BoardEnabled } from "@/taverncode/board/enabled"
 import { Agent } from "@/agent/agent"
 import * as Truncate from "@/tool/truncate"
 import { InstanceState } from "@/effect/instance-state"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryPaths } from "@kilocode/kilo-memory/effect/paths"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryPaths } from "@taverncode/tavern-memory/effect/paths"
 
-const log = Log.create({ service: "kilocode-tool-registry" })
+const log = Log.create({ service: "taverncode-tool-registry" })
 type Deps = { agent: Agent.Interface; truncate: Truncate.Interface; indexing?: boolean }
 type Loaders = {
   indexing?: () => Promise<{ KiloIndexing: { ready: () => boolean } }>
-  semantic?: () => Promise<Pick<typeof import("@/kilocode/tool/semantic-search"), "SemanticSearchTool">>
+  semantic?: () => Promise<Pick<typeof import("@/taverncode/tool/semantic-search"), "SemanticSearchTool">>
 }
 
 export namespace KiloToolRegistry {
@@ -61,7 +61,7 @@ export namespace KiloToolRegistry {
    * indexing.ts imports AppRuntime, which imports the tool registry, and indexing load failures must not break tools.
    */
   function consented(dir: string) {
-    return Effect.tryPromise(() => import("@/kilocode/indexing").then((mod) => mod.KiloIndexing.consented(dir))).pipe(
+    return Effect.tryPromise(() => import("@/taverncode/indexing").then((mod) => mod.KiloIndexing.consented(dir))).pipe(
       Effect.catch((err) =>
         Effect.sync(() => {
           log.warn("semantic search consent unavailable", { err })
@@ -82,7 +82,7 @@ export namespace KiloToolRegistry {
     return family?.startsWith("gpt") ?? false
   }
 
-  /** Resolve Kilo-specific tool Infos outside any InstanceState, so their Truncate/Agent deps are
+  /** Resolve Tavern-specific tool Infos outside any InstanceState, so their Truncate/Agent deps are
    * satisfied at the outer registry scope instead of leaking into InstanceState's Effect. */
   const unavailable = AgentManager.Service.of({
     request: () =>
@@ -177,7 +177,7 @@ export namespace KiloToolRegistry {
     })
   }
 
-  /** Finalize Kilo-specific tools into Tool.Defs. Call this inside the InstanceState state Effect —
+  /** Finalize Tavern-specific tools into Tool.Defs. Call this inside the InstanceState state Effect —
    * it has no Service deps beyond what Tool.init itself needs. */
   export function build(
     tools: {
@@ -270,7 +270,7 @@ export namespace KiloToolRegistry {
     return Effect.gen(function* () {
       const ready = yield* deps.indexing === undefined
         ? (() => {
-            const indexing = loaders.indexing ?? (() => import("@/kilocode/indexing"))
+            const indexing = loaders.indexing ?? (() => import("@/taverncode/indexing"))
             return Effect.tryPromise(() => indexing().then((mod) => mod.KiloIndexing.ready())).pipe(
               Effect.catch((err) =>
                 Effect.sync(() => {
@@ -283,7 +283,7 @@ export namespace KiloToolRegistry {
         : Effect.succeed(deps.indexing)
       if (!ready) return undefined
 
-      const semantic = loaders.semantic ?? (() => import("@/kilocode/tool/semantic-search"))
+      const semantic = loaders.semantic ?? (() => import("@/taverncode/tool/semantic-search"))
       const mod = yield* Effect.tryPromise(() => semantic()).pipe(
         Effect.catch((err) =>
           Effect.sync(() => {
@@ -309,7 +309,7 @@ export namespace KiloToolRegistry {
     return true
   }
 
-  /** Kilo-specific tools to append to the builtin list */
+  /** Tavern-specific tools to append to the builtin list */
   export function extra(
     tools: {
       semantic?: Tool.Def
@@ -395,7 +395,7 @@ export namespace KiloToolRegistry {
 
   /** Per-turn cache of `KiloMemory.toolEnabled` keyed by root string, with a short TTL so the
    * step-loop coalesces probes inside a single turn. Cache is invalidated immediately on enable /
-   * disable / purge / rebuild via the MemoryEvents bus (subscribed in kilocode/bootstrap.ts). */
+   * disable / purge / rebuild via the MemoryEvents bus (subscribed in taverncode/bootstrap.ts). */
   export function memoryToolsEnabled(input: { ctx: MemoryPaths.Ctx }) {
     return Effect.gen(function* () {
       const root = MemoryPaths.root({ ctx: input.ctx })
@@ -420,7 +420,7 @@ export namespace KiloToolRegistry {
       return enabled
     })
   }
-  /** Hide Kilo memory tools from the model when project memory is disabled. */
+  /** Hide Tavern memory tools from the model when project memory is disabled. */
   export const applyVisibility = Effect.fn("KiloToolRegistry.applyVisibility")(function* (tools: Tool.Def[]) {
     const ctx = yield* InstanceState.context
     const memoryEnabled = yield* memoryToolsEnabled({ ctx })

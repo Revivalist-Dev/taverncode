@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import * as PowerShell from "@/kilocode/shell/shell"
+import * as PowerShell from "@/taverncode/shell/shell"
 import { Shell } from "@opencode-ai/core/shell"
 
 const command = `Write-Output "こんにちは 😀"; Write-Output '$value'; Write-Output \`tick\`
@@ -20,7 +20,7 @@ describe("PowerShell arguments", () => {
     expect(value).not.toContain("FromBase64String")
   })
 
-  test.each(["powershell", "pwsh"])("routes %s through the Kilo argument builder", (shell) => {
+  test.each(["powershell", "pwsh"])("routes %s through the Tavern argument builder", (shell) => {
     expect(Shell.args(shell, command, "/tmp")).toEqual(PowerShell.args(command))
   })
 

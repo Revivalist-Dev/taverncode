@@ -1,15 +1,15 @@
 ---
 title: "Custom Instructions"
-description: "Provide custom instructions to guide Kilo Code"
+description: "Provide custom instructions to guide Tavern Code"
 ---
 
 # Custom Instructions
 
-Custom Instructions allow you to personalize how Kilo Code behaves, providing specific guidance that shapes responses, coding style, and decision-making processes. Both the **VSCode** and **CLI** versions support custom instructions, though the mechanisms differ.
+Custom Instructions allow you to personalize how Tavern Code behaves, providing specific guidance that shapes responses, coding style, and decision-making processes. Both the **VSCode** and **CLI** versions support custom instructions, though the mechanisms differ.
 
 ## What Are Custom Instructions?
 
-Custom Instructions define specific Extension behaviors, preferences, and constraints beyond Kilo's basic role definition. Examples include coding style, documentation standards, testing requirements, and workflow guidelines.
+Custom Instructions define specific Extension behaviors, preferences, and constraints beyond Tavern's basic role definition. Examples include coding style, documentation standards, testing requirements, and workflow guidelines.
 
 {% tabs %}
 {% tab label="VSCode" %}
@@ -29,9 +29,9 @@ These prompts are injected into the agent's system prompt and apply across all s
 
 ## Instruction Files
 
-Kilo automatically discovers instruction files at your project root and in parent directories (via `findUp`). The following filenames are recognized:
+Tavern automatically discovers instruction files at your project root and in parent directories (via `findUp`). The following filenames are recognized:
 
-- **`AGENTS.md`** — The primary instruction file for Kilo
+- **`AGENTS.md`** — The primary instruction file for Tavern
 - **`CLAUDE.md`** — Also supported for compatibility
 - **`CONTEXT.md`** — Additional project context
 
@@ -41,7 +41,7 @@ Place any of these files at your project root to provide project-wide instructio
 
 For instructions that apply across all your projects, place an `AGENTS.md` file in your global config directory:
 
-- **Kilo:** `~/.config/kilo/AGENTS.md`
+- **Tavern:** `~/.config/tavern/AGENTS.md`
 - **Claude-compatible:** `~/.claude/CLAUDE.md`, until [Claude Code Migration](/docs/getting-started/settings#claude-code-migration) has been attempted. Migration ends this global fallback; project-level `CLAUDE.md` files keep working.
 
 Project-level instructions are loaded before global instructions and apply to every session.
@@ -54,7 +54,7 @@ This is useful for providing context-specific guidance for different parts of a 
 
 ## Additional Instruction Sources
 
-The `instructions` key in `kilo.jsonc` accepts an array of paths, globs, or URLs pointing to additional instruction files. You can manage these in **Settings → Agent Behaviour → Rules** subtab.
+The `instructions` key in `tavern.jsonc` accepts an array of paths, globs, or URLs pointing to additional instruction files. You can manage these in **Settings → Agent Behaviour → Rules** subtab.
 
 ```yaml
 # Examples of instruction sources
@@ -68,9 +68,9 @@ instructions:
 URL-based instruction sources are fetched at session start with a 5-second timeout. If the URL is unreachable, the instruction source is silently skipped.
 {% /callout %}
 
-## Legacy `.kilocoderules` Support
+## Legacy `.taverncoderules` Support
 
-If your project contains `.kilocoderules` files from the VSCode extension, these are still loaded via auto-migration. However, migrating to `AGENTS.md` is recommended for new projects.
+If your project contains `.taverncoderules` files from the VSCode extension, these are still loaded via auto-migration. However, migrating to `AGENTS.md` is recommended for new projects.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -79,10 +79,10 @@ The CLI provides multiple layers of instruction configuration — from per-agent
 
 ## Per-Agent Prompts
 
-Each agent can have its own custom prompt defined in its `.md` file (the markdown body) or via the `agent.<name>.prompt` key in `kilo.jsonc`:
+Each agent can have its own custom prompt defined in its `.md` file (the markdown body) or via the `agent.<name>.prompt` key in `tavern.jsonc`:
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
   "agent": {
     "code": {
@@ -92,7 +92,7 @@ Each agent can have its own custom prompt defined in its `.md` file (the markdow
 }
 ```
 
-Or as the markdown body in `.kilo/agents/code.md`:
+Or as the markdown body in `.tavern/agents/code.md`:
 
 ```markdown
 ---
@@ -106,9 +106,9 @@ These prompts are injected into the agent's system prompt and apply across all s
 
 ## Instruction Files
 
-Kilo automatically discovers instruction files at your project root and in parent directories (via `findUp`). The following filenames are recognized:
+Tavern automatically discovers instruction files at your project root and in parent directories (via `findUp`). The following filenames are recognized:
 
-- **`AGENTS.md`** — The primary instruction file for Kilo
+- **`AGENTS.md`** — The primary instruction file for Tavern
 - **`CLAUDE.md`** — Also supported for compatibility
 - **`CONTEXT.md`** — Additional project context
 
@@ -118,7 +118,7 @@ Place any of these files at your project root to provide project-wide instructio
 
 For instructions that apply across all your projects, place an `AGENTS.md` file in your global config directory:
 
-- **Kilo:** `~/.config/kilo/AGENTS.md`
+- **Tavern:** `~/.config/tavern/AGENTS.md`
 - **Claude-compatible:** `~/.claude/CLAUDE.md`, until [Claude Code Migration](/docs/getting-started/settings#claude-code-migration) has been attempted. Migration ends this global fallback; project-level `CLAUDE.md` files keep working.
 
 Project-level instructions are loaded before global instructions and apply to every session.
@@ -131,10 +131,10 @@ This is useful for providing context-specific guidance for different parts of a 
 
 ## Additional Instruction Sources
 
-The `instructions` key in `kilo.jsonc` accepts an array of paths, globs, or URLs pointing to additional instruction files. Configure these in your `kilo.jsonc`:
+The `instructions` key in `tavern.jsonc` accepts an array of paths, globs, or URLs pointing to additional instruction files. Configure these in your `tavern.jsonc`:
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
   "instructions": [
     "./docs/coding-standards.md",
@@ -148,9 +148,9 @@ The `instructions` key in `kilo.jsonc` accepts an array of paths, globs, or URLs
 URL-based instruction sources are fetched at session start with a 5-second timeout. If the URL is unreachable, the instruction source is silently skipped.
 {% /callout %}
 
-## Legacy `.kilocoderules` Support
+## Legacy `.taverncoderules` Support
 
-If your project contains `.kilocoderules` files from the VSCode extension, these are still loaded via auto-migration. However, migrating to `AGENTS.md` is recommended for new projects.
+If your project contains `.taverncoderules` files from the VSCode extension, these are still loaded via auto-migration. However, migrating to `AGENTS.md` is recommended for new projects.
 
 {% /tab %}
 {% /tabs %}

@@ -2,7 +2,7 @@ import { FileDiff, type FileDiffOptions } from "@pierre/diffs"
 import type { WorkerPoolManager } from "@pierre/diffs/worker"
 import { createEffect, createMemo, on, onCleanup, splitProps, untrack, type ComponentProps, type JSX } from "solid-js"
 import { File as BaseFile } from "@opencode-ai/ui/file"
-import { createDefaultOptions, styleVariables } from "@kilocode/kilo-ui/pierre"
+import { createDefaultOptions, styleVariables } from "@taverncode/tavern-ui/pierre"
 import { getWorkerPool } from "../pierre/worker"
 
 const VirtualFile = BaseFile as unknown as (props: Record<string, unknown>) => JSX.Element

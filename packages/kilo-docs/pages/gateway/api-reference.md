@@ -1,14 +1,14 @@
 ---
 title: "API Reference"
-description: "Complete API reference for the Kilo AI Gateway, including chat completions, FIM completions, and model listing endpoints."
+description: "Complete API reference for the Tavern AI Gateway, including chat completions, FIM completions, and model listing endpoints."
 ---
 
 # API Reference
 
-The Kilo AI Gateway provides an OpenAI-compatible API. All endpoints use the base URL:
+The Tavern AI Gateway provides an OpenAI-compatible API. All endpoints use the base URL:
 
 ```
-https://api.kilo.ai/api/gateway
+https://api.tavern.ai/api/gateway
 ```
 
 ## Chat completions
@@ -130,7 +130,7 @@ type ChatCompletionChunk = {
 ### Example request
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -263,7 +263,7 @@ type FIMRequest = {
 ### Example request
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/fim/completions" \
+curl -X POST "https://api.tavern.ai/api/fim/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -281,20 +281,20 @@ FIM completions are limited to Mistral models (model IDs starting with `mistrala
 
 ## TypeSafe System One
 
-Route TypeSafe System One requests through the gateway with your Kilo API key. This endpoint is not OpenAI-compatible; use it with the `@typesafe-ai/sdk` client, which points its base URL at the TypeSafe gateway path.
+Route TypeSafe System One requests through the gateway with your Tavern API key. This endpoint is not OpenAI-compatible; use it with the `@typesafe-ai/sdk` client, which points its base URL at the TypeSafe gateway path.
 
 ```
 POST /typesafe/v1/systemone
 ```
 
-The gateway forwards each request to OpenRouter using the platform credential, so no OpenRouter key is required. Requests are limited to the pinned `typesafe/jev-1.13` model, and an HTTP request that omits the model defaults to it; the bare `jev-1.13` SDK model ID is also accepted. Gateway authentication, rate limits, balance checks, and organization policy apply, and upstream usage is billed to your Kilo account.
+The gateway forwards each request to OpenRouter using the platform credential, so no OpenRouter key is required. Requests are limited to the pinned `typesafe/jev-1.13` model, and an HTTP request that omits the model defaults to it; the bare `jev-1.13` SDK model ID is also accepted. Gateway authentication, rate limits, balance checks, and organization policy apply, and upstream usage is billed to your Tavern account.
 
 ```typescript
 import { TypeSafeClient } from "@typesafe-ai/sdk"
 
 const client = new TypeSafeClient({
   apiKey: process.env.KILO_API_KEY,
-  baseURL: "https://api.kilo.ai/api/gateway/typesafe",
+  baseURL: "https://api.tavern.ai/api/gateway/typesafe",
   defaultModel: "typesafe/jev-1.13",
 })
 

@@ -1,4 +1,4 @@
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
+import type { SnapshotFileDiff } from "@taverncode/sdk/v2/client"
 import type { DiffSource, DiffSourceDescriptor, DiffSourceFetch } from "./types"
 import type { GeneratedFiles } from "../shared/git-attributes"
 import { toSessionDiffFile } from "./session"

@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/kilo-console",
+  "name": "@taverncode/tavern-console",
   "version": "7.8.3",
   "private": true,
   "type": "module",
@@ -12,9 +12,9 @@
     "typecheck": "tsgo --noEmit"
   },
   "dependencies": {
-    "@kilocode/kilo-indexing": "workspace:*",
-    "@kilocode/kilo-web-ui": "workspace:*",
-    "@kilocode/sdk": "workspace:*",
+    "@taverncode/tavern-indexing": "workspace:*",
+    "@taverncode/tavern-web-ui": "workspace:*",
+    "@taverncode/sdk": "workspace:*",
     "@pierre/diffs": "catalog:",
     "@solidjs/router": "catalog:",
     "ghostty-web": "0.4.0",

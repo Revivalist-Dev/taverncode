@@ -1,6 +1,6 @@
 import { Show } from "solid-js"
 import type { JSX } from "solid-js"
-import { Card } from "@kilocode/kilo-web-ui/card"
+import { Card } from "@taverncode/tavern-web-ui/card"
 import { LoadingScreen } from "../components/LoadingScreen"
 import { ConfigProvider } from "../context/ConfigProvider"
 import { useConfig } from "../context/config"

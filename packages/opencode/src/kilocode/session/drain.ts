@@ -1,8 +1,8 @@
 import { Context, Deferred, Effect, Layer } from "effect"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { InstanceState } from "@/effect/instance-state"
-import { isDisposing, registerBeforeDisposer } from "@/kilocode/effect/instance-registry"
-import { capture, type InstanceContext } from "@/kilocode/instance"
+import { isDisposing, registerBeforeDisposer } from "@/taverncode/effect/instance-registry"
+import { capture, type InstanceContext } from "@/taverncode/instance"
 import type { SessionID } from "@/session/schema"
 
 type Entry = {
@@ -23,7 +23,7 @@ export interface Interface {
   readonly track: <A, E, R>(id: SessionID, work: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@kilo/SessionDrain") {}
+export class Service extends Context.Service<Service, Interface>()("@tavern/SessionDrain") {}
 
 export const layer = Layer.effect(
   Service,

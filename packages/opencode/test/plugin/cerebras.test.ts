@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import type { Hooks, PluginInput } from "@kilocode/plugin"
+import type { Hooks, PluginInput } from "@taverncode/plugin"
 import { CerebrasPlugin } from "../../src/plugin/cerebras"
 
 type ChatParams = NonNullable<Hooks["chat.params"]>

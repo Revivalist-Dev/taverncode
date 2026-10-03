@@ -1,5 +1,5 @@
 import { Agent } from "@/agent/agent"
-import { KiloLLM } from "@/kilocode/session/llm"
+import { KiloLLM } from "@/taverncode/session/llm"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { Provider } from "@/provider/provider"

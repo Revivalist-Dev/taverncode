@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
-import { KiloRunDrain } from "@/kilocode/cli/run-drain"
-import { KiloRun } from "@/kilocode/cli/cmd/run"
+import { KiloRunDrain } from "@/taverncode/cli/run-drain"
+import { KiloRun } from "@/taverncode/cli/cmd/run"
 
 function client(handle: (request: Request) => Promise<Response>) {
   return KiloRunDrain.client({
@@ -23,7 +23,7 @@ test("checks capabilities through the selected transport before accepting comple
     expect(new URL(request.url).pathname).toBe("/prefix/doc")
     expect(request.headers.get("authorization")).toBe("Basic test-only")
     return Response.json({
-      paths: { "/kilocode/session/{sessionID}/drain": { post: { operationId: "kilocode.drainSession" } } },
+      paths: { "/taverncode/session/{sessionID}/drain": { post: { operationId: "taverncode.drainSession" } } },
     })
   })
   await KiloRunDrain.check(sdk, new AbortController().signal)
@@ -66,7 +66,7 @@ test("headless goal controls use direct commands without draining", async () => 
   const sdk = KiloRunDrain.scope(
     client(async (request) => {
       const url = new URL(request.url)
-      calls.push({ path: url.pathname, directory: request.headers.get("x-kilo-directory"), body: await request.json() })
+      calls.push({ path: url.pathname, directory: request.headers.get("x-tavern-directory"), body: await request.json() })
       return Response.json({ parts: [part] })
     }),
     "/goal owner",
@@ -108,7 +108,7 @@ test("headless goal start and resume fail before dispatch", async () => {
     }
     expect(calls).toEqual([])
     expect(errors).toHaveLength(2)
-    for (const error of errors) expect(error).toContain("Run kilo, then use /goal <text> or /goal resume")
+    for (const error of errors) expect(error).toContain("Run tavern, then use /goal <text> or /goal resume")
     expect(process.exitCode).toBe(1)
   } finally {
     process.exitCode = code ?? 0
@@ -218,8 +218,8 @@ test("accepts the HTTP result before the matching acknowledgment", async () => {
   const received = Promise.withResolvers<void>()
   const drain = KiloRunDrain.create("ses_parent")
   const sdk = client(async () => Response.json(true))
-  const original = sdk.kilocode.drainSession.bind(sdk.kilocode)
-  sdk.kilocode.drainSession = (params, options) => {
+  const original = sdk.taverncode.drainSession.bind(sdk.taverncode)
+  sdk.taverncode.drainSession = (params, options) => {
     const result = original(params, options)
     void result.then(() => received.resolve())
     return result

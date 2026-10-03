@@ -1,9 +1,9 @@
 import type { KiloConnectionService } from "../services/cli-backend/connection-service"
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { type SpeechToTextModelDef } from "./models"
 import { hasCustomSource, sourceHeaders, sourceUrl, type SpeechToTextSource } from "./source"
 
-const PATH = "/kilo/models/transcriptions"
+const PATH = "/tavern/models/transcriptions"
 
 type CatalogModel = {
   id: string
@@ -21,9 +21,9 @@ export async function fetchSpeechToTextModels(
   if (hasCustomSource(source)) return await fetchCustomModels(source, signal)
 
   const cfg = connection.getServerConfig()
-  if (!cfg) return fail("Not connected to the Kilo backend")
+  if (!cfg) return fail("Not connected to the Tavern backend")
 
-  const auth = Buffer.from(`kilo:${cfg.password}`).toString("base64")
+  const auth = Buffer.from(`tavern:${cfg.password}`).toString("base64")
   const url = new URL(PATH, cfg.baseUrl)
   if (dir) url.searchParams.set("directory", dir)
 
@@ -97,7 +97,7 @@ function isCatalogModel(value: unknown): value is CatalogModel {
 
 function toModel(model: CatalogModel): SpeechToTextModelDef {
   const index = model.name.indexOf(":")
-  const provider = index === -1 ? model.id.split("/", 1)[0] || "Kilo Gateway" : model.name.slice(0, index).trim()
+  const provider = index === -1 ? model.id.split("/", 1)[0] || "Tavern Gateway" : model.name.slice(0, index).trim()
   return {
     id: model.id,
     label: index === -1 ? model.name : model.name.slice(index + 1).trim(),

@@ -3,23 +3,23 @@ import {
   hasKiloIndexingAuth,
   resolveKiloIndexingAuth,
   shouldDefaultIndexingToKilo,
-} from "../../src/kilocode/indexing-auth"
+} from "../../src/taverncode/indexing-auth"
 
-describe("Kilo indexing auth resolution", () => {
-  test("detects auth from explicit indexing Kilo config", () => {
+describe("Tavern indexing auth resolution", () => {
+  test("detects auth from explicit indexing Tavern config", () => {
     const auth = resolveKiloIndexingAuth({
-      config: { indexing: { kilo: { apiKey: "idx-token", baseUrl: "https://idx.test", organizationId: "org_idx" } } },
+      config: { indexing: { tavern: { apiKey: "idx-token", baseUrl: "https://idx.test", organizationId: "org_idx" } } },
     })
 
     expect(auth).toEqual({ apiKey: "idx-token", baseUrl: "https://idx.test", organizationId: "org_idx" })
-    expect(hasKiloIndexingAuth({ config: { indexing: { kilo: { apiKey: "idx-token" } } } })).toBe(true)
+    expect(hasKiloIndexingAuth({ config: { indexing: { tavern: { apiKey: "idx-token" } } } })).toBe(true)
   })
 
   test("detects auth from provider config, provider state, auth storage, and env", () => {
     expect(
-      resolveKiloIndexingAuth({ config: { provider: { kilo: { options: { apiKey: "cfg-token" } } } } }).apiKey,
+      resolveKiloIndexingAuth({ config: { provider: { tavern: { options: { apiKey: "cfg-token" } } } } }).apiKey,
     ).toBe("cfg-token")
-    expect(resolveKiloIndexingAuth({ provider: { options: { kilocodeToken: "provider-token" } } }).apiKey).toBe(
+    expect(resolveKiloIndexingAuth({ provider: { options: { taverncodeToken: "provider-token" } } }).apiKey).toBe(
       "provider-token",
     )
     expect(resolveKiloIndexingAuth({ auth: { type: "oauth", access: "oauth-token", accountId: "org_oauth" } })).toEqual(
@@ -34,8 +34,8 @@ describe("Kilo indexing auth resolution", () => {
     })
   })
 
-  test("defaults to Kilo only when no provider or other embedder config is present", () => {
-    const auth = { apiKey: "kilo-token" }
+  test("defaults to Tavern only when no provider or other embedder config is present", () => {
+    const auth = { apiKey: "tavern-token" }
 
     expect(shouldDefaultIndexingToKilo({}, auth)).toBe(true)
     expect(shouldDefaultIndexingToKilo({ provider: "openai" }, auth)).toBe(false)

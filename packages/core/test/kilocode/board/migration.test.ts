@@ -5,10 +5,10 @@ import { SqliteClient } from "@effect/sql-sqlite-bun"
 import { EffectDrizzleSqlite } from "@opencode-ai/effect-drizzle-sqlite"
 import { DatabaseMigration } from "@opencode-ai/core/database/migration"
 import { migrations } from "@opencode-ai/core/database/migration.gen"
-import boardMigration from "@opencode-ai/core/database/migration/20260828074139_kilocode_board"
-import reset from "@opencode-ai/core/database/migration/20260903104806_kilocode_board_reset"
+import boardMigration from "@opencode-ai/core/database/migration/20260828074139_taverncode_board"
+import reset from "@opencode-ai/core/database/migration/20260903104806_taverncode_board_reset"
 import type { SqlClient as SqlClientService } from "effect/unstable/sql/SqlClient"
-import { line } from "../../../script/kilocode/migration"
+import { line } from "../../../script/taverncode/migration"
 
 const make = EffectDrizzleSqlite.makeWithDefaults()
 
@@ -20,7 +20,7 @@ const run = <A, E>(effect: Effect.Effect<A, E, SqlClientService>) =>
 describe("board migration", () => {
   test("preserves reset migration annotations during registry generation", () => {
     const source = 'import("./migration")'
-    expect(line(reset.id, source)).toBe(`${source} // kilocode_change`)
+    expect(line(reset.id, source)).toBe(`${source} // taverncode_change`)
     expect(line("upstream_migration", source)).toBe(source)
   })
 
@@ -74,7 +74,7 @@ describe("board migration", () => {
         expect(yield* db.all(sql`PRAGMA foreign_key_list('kilo_board')`)).toMatchObject([
           { table: "session", on_delete: "CASCADE" },
         ])
-        expect(migrations.find((migration) => migration.id.includes("kilocode_board"))?.id).toContain("kilocode_board")
+        expect(migrations.find((migration) => migration.id.includes("taverncode_board"))?.id).toContain("taverncode_board")
       }),
     )
   })

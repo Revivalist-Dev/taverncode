@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 import { buildWebviewHtml, getWebviewFontSize } from "./utils"
-import { watchFontSizeConfig } from "./kilo-provider/font-size"
+import { watchFontSizeConfig } from "./tavern-provider/font-size"
 import { appendOutput, getWorkspaceRoot } from "./review-utils"
 import { getDiffMarkdownRender, getUserDiffStyle, setDiffMarkdownRender, setUserDiffStyle } from "./review-settings"
 
@@ -26,7 +26,7 @@ export class DiffVirtualProvider implements vscode.Disposable {
   private fontConfigDisposable: vscode.Disposable | undefined
 
   constructor(private readonly extensionUri: vscode.Uri) {
-    this.outputChannel = vscode.window.createOutputChannel("Kilo Diff Virtual")
+    this.outputChannel = vscode.window.createOutputChannel("Tavern Diff Virtual")
   }
 
   private log(...args: unknown[]) {
@@ -48,15 +48,15 @@ export class DiffVirtualProvider implements vscode.Disposable {
       return
     }
 
-    const panel = vscode.window.createWebviewPanel("kilo-code.new.DiffVirtualPanel", title, vscode.ViewColumn.One, {
+    const panel = vscode.window.createWebviewPanel("tavern-code.new.DiffVirtualPanel", title, vscode.ViewColumn.One, {
       enableScripts: true,
       retainContextWhenHidden: true,
       localResourceRoots: [this.extensionUri],
     })
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-dark.svg"),
     }
 
     panel.webview.html = this.getHtml(panel.webview)
@@ -81,7 +81,7 @@ export class DiffVirtualProvider implements vscode.Disposable {
       this.post({
         type: "ready",
         vscodeLanguage: vscode.env.language,
-        languageOverride: vscode.workspace.getConfiguration("kilo-code.new").get<string>("language"),
+        languageOverride: vscode.workspace.getConfiguration("tavern-code.new").get<string>("language"),
         fontSize: getWebviewFontSize(),
         workspaceDirectory: getWorkspaceRoot(),
       })

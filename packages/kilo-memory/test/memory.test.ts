@@ -7,7 +7,7 @@ import { MemoryPaths } from "../src/storage/paths"
 import { MemoryRecall } from "../src/recall/recall"
 
 async function tmp() {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kilo-memory-"))
+  const dir = await mkdtemp(path.join(os.tmpdir(), "tavern-memory-"))
   return {
     dir,
     root: path.join(dir, "memory"),
@@ -52,11 +52,11 @@ describe("memory facade", () => {
       await Memory.remember({
         root: t.root,
         key: "設定",
-        text: "日本語の設定は packages/kilo-vscode に保存します。",
+        text: "日本語の設定は packages/tavern-vscode に保存します。",
       })
 
       const shown = await Memory.show({ root: t.root })
-      const recall = await Memory.recall({ root: t.root, query: "日本語 設定 kilo-vscode" })
+      const recall = await Memory.recall({ root: t.root, query: "日本語 設定 tavern-vscode" })
 
       expect(shown.sources.project).toContain("設定")
       expect(recall.result?.block).toContain("日本語")

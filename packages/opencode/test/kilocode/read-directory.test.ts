@@ -66,7 +66,7 @@ const put = Effect.fn("ReadDirectoryTest.put")(function* (p: string, content: st
   yield* fs.writeWithDirs(p, content)
 })
 
-describe("kilocode directory reads", () => {
+describe("taverncode directory reads", () => {
   it.live("lists directory entries without reading child contents", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
@@ -84,7 +84,7 @@ describe("kilocode directory reads", () => {
     }),
   )
 
-  it.live("skips content inlining without the kilo flag", () =>
+  it.live("skips content inlining without the tavern flag", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped()
       yield* put(path.join(dir, "folder", "a.txt"), "alpha")

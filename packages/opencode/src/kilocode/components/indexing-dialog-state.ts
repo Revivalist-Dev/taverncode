@@ -1,5 +1,5 @@
-import { fetchKiloEmbeddingModelCatalog, resolveKiloGatewayBaseUrl } from "@kilocode/kilo-gateway"
-import type { Config, IndexingConfig, KiloEmbeddingModelCatalog } from "@kilocode/sdk/v2"
+import { fetchKiloEmbeddingModelCatalog, resolveKiloGatewayBaseUrl } from "@taverncode/tavern-gateway"
+import type { Config, IndexingConfig, KiloEmbeddingModelCatalog } from "@taverncode/sdk/v2"
 import * as Log from "@opencode-ai/core/util/log"
 import { createMemo, type Accessor } from "solid-js"
 
@@ -9,10 +9,10 @@ const log = Log.create({ service: "indexing-model-catalog" })
 
 export async function loadKiloEmbeddingModels(onError?: (message: string) => void) {
   const endpoint = new URL("embedding-models", resolveKiloGatewayBaseUrl()).toString()
-  log.info("loading Kilo embedding model catalog", { endpoint })
+  log.info("loading Tavern embedding model catalog", { endpoint })
   const catalog = await fetchKiloEmbeddingModelCatalog({
     onError: (issue) => {
-      log.warn("failed to load Kilo embedding model catalog", {
+      log.warn("failed to load Tavern embedding model catalog", {
         code: issue.code,
         status: issue.status,
         message: issue.message,
@@ -20,7 +20,7 @@ export async function loadKiloEmbeddingModels(onError?: (message: string) => voi
       onError?.(issue.message)
     },
   })
-  log.info("loaded Kilo embedding model catalog", {
+  log.info("loaded Tavern embedding model catalog", {
     models: catalog.models.length,
     defaultModel: catalog.defaultModel || undefined,
   })

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test"
 import { MessageV2 } from "../../src/session/message-v2"
-import { KILO_ERROR_CODES, isKiloError, parseKiloErrorCode } from "../../src/kilocode/kilo-errors"
+import { KILO_ERROR_CODES, isKiloError, parseKiloErrorCode } from "../../src/taverncode/tavern-errors"
 import { SessionRetry } from "../../src/session/retry"
 import { NamedError } from "@opencode-ai/core/util/error"
 
@@ -51,7 +51,7 @@ describe("parseKiloErrorCode", () => {
     expect(parseKiloErrorCode(error)).toBe("PROMOTION_MODEL_LIMIT_REACHED")
   })
 
-  it("returns undefined for non-Kilo error codes", () => {
+  it("returns undefined for non-Tavern error codes", () => {
     const error = makeAPIError({
       statusCode: 429,
       responseBody: JSON.stringify({ error: { code: "SOME_OTHER_ERROR" } }),
@@ -97,7 +97,7 @@ describe("isKiloError", () => {
     expect(isKiloError(error)).toBe(true)
   })
 
-  it("returns false for regular 429 errors without Kilo code", () => {
+  it("returns false for regular 429 errors without Tavern code", () => {
     const error = makeAPIError({
       statusCode: 429,
       isRetryable: true,
@@ -112,7 +112,7 @@ describe("isKiloError", () => {
   })
 })
 
-describe("SessionRetry.retryable with Kilo errors", () => {
+describe("SessionRetry.retryable with Tavern errors", () => {
   it("returns undefined for PAID_MODEL_AUTH_REQUIRED (not retryable)", () => {
     const error = makeAPIError({
       statusCode: 401,

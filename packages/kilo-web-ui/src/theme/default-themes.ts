@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-ui/theme/default-themes"
+export * from "@taverncode/tavern-ui/theme/default-themes"

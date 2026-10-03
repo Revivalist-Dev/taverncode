@@ -1,10 +1,10 @@
-import type { TuiPluginApi } from "@kilocode/plugin/tui"
-import type { Event } from "@kilocode/sdk/v2"
+import type { TuiPluginApi } from "@taverncode/plugin/tui"
+import type { Event } from "@taverncode/sdk/v2"
 import { createMemo, createResource, createSignal, onCleanup, onMount, Show } from "solid-js"
 import * as Log from "@opencode-ai/core/util/log"
-import { route } from "@/kilocode/cli/cmd/tui/memory-command"
-import { MemoryTuiMeta } from "@/kilocode/cli/cmd/tui/memory-meta"
-import { MemoryTuiState } from "@/kilocode/cli/cmd/tui/memory-state"
+import { route } from "@/taverncode/cli/cmd/tui/memory-command"
+import { MemoryTuiMeta } from "@/taverncode/cli/cmd/tui/memory-meta"
+import { MemoryTuiState } from "@/taverncode/cli/cmd/tui/memory-state"
 
 export function memoryRow(input: {
   enabled?: boolean

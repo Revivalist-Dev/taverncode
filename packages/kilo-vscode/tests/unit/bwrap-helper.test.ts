@@ -22,10 +22,10 @@ afterEach(() => {
 
 describe("local Bubblewrap helper", () => {
   it("copies the configured helper to a cache outside the extension", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-bwrap-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-bwrap-"))
     try {
       const source = path.join(root, "source", "bwrap")
-      const extension = path.join(root, "workspace", "packages", "kilo-vscode")
+      const extension = path.join(root, "workspace", "packages", "tavern-vscode")
       const cache = path.join(root, "cache")
       await fs.mkdir(path.dirname(source), { recursive: true })
       await fs.writeFile(source, "bubblewrap")
@@ -44,7 +44,7 @@ describe("local Bubblewrap helper", () => {
   })
 
   it("prefers a complete production helper bundled beside the CLI", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-bwrap-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-bwrap-"))
     try {
       const extension = path.join(root, "extension")
       const bin = path.join(extension, "bin")
@@ -64,7 +64,7 @@ describe("local Bubblewrap helper", () => {
   })
 
   it("removes an incomplete helper before local packaging", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-bwrap-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-bwrap-"))
     try {
       const bin = path.join(root, "extension", "bin")
       const helper = path.join(bin, "bwrap")
@@ -84,7 +84,7 @@ describe("local Bubblewrap helper", () => {
   })
 
   it("rejects a symlinked or public cache", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-bwrap-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-bwrap-"))
     try {
       const source = path.join(root, "source")
       const cache = path.join(root, "cache")
@@ -106,7 +106,7 @@ describe("local Bubblewrap helper", () => {
   })
 
   it("does not stage Bubblewrap for unsupported operating systems", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-bwrap-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-bwrap-"))
     try {
       process.env.KILO_BWRAP_PATH = path.join(root, "missing")
 

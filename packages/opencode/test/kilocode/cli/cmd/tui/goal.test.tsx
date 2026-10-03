@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { createDefaultOpenTuiKeymap } from "@opentui/keymap/opentui"
 import { testRender, useRenderer } from "@opentui/solid"
 import { createSignal, onCleanup } from "solid-js"
-import { GoalPrompt } from "@/kilocode/cli/cmd/tui/component/goal"
+import { GoalPrompt } from "@/taverncode/cli/cmd/tui/component/goal"
 import { resolve, TuiConfigProvider } from "@tui/config"
 import { KVProvider } from "@tui/context/kv"
 import { ThemeProvider } from "@tui/context/theme"
@@ -14,15 +14,15 @@ import { TestTuiContexts } from "../../../../fixture/tui-environment"
 
 test("goal metadata requires text and explicit active state", () => {
   for (const goal of [undefined, null, false, "goal", {}, { text: 3 }, { text: " \n " }]) {
-    expect(GoalPrompt.read({ "kilo.goal": goal })).toBeUndefined()
+    expect(GoalPrompt.read({ "tavern.goal": goal })).toBeUndefined()
   }
   expect(GoalPrompt.read()).toBeUndefined()
-  expect(GoalPrompt.read({ "kilo.goal": { text: "Add tests", active: true } })).toEqual({
+  expect(GoalPrompt.read({ "tavern.goal": { text: "Add tests", active: true } })).toEqual({
     text: "Add tests",
     active: true,
     status: "active",
   })
-  expect(GoalPrompt.read({ "kilo.goal": { text: "Add tests", active: "true" } })).toEqual({
+  expect(GoalPrompt.read({ "tavern.goal": { text: "Add tests", active: "true" } })).toEqual({
     text: "Add tests",
     active: false,
     status: "paused",

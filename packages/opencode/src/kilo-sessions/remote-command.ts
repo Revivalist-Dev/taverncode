@@ -5,7 +5,7 @@ import type { MessageV2 } from "@/session/message-v2"
 import type { SessionPrompt } from "@/session/prompt"
 import type { Info as SessionInfo } from "@/session/session"
 import { MessageID, type SessionID } from "@/session/schema"
-import { RemoteExit } from "@/kilo-sessions/remote-exit"
+import { RemoteExit } from "@/tavern-sessions/remote-exit"
 import z from "zod"
 
 export namespace RemoteCommand {
@@ -88,9 +88,9 @@ export namespace RemoteCommand {
     .object({
       protocolVersion: z.literal(1),
       commands: z.array(Info).max(MAX_COMMANDS),
-      // kilocode_change - K1 W1: `canExitSession` is an INDEPENDENT producer
+      // taverncode_change - K1 W1: `canExitSession` is an INDEPENDENT producer
       // contract advertised by every CLI (interactive TUI and headless
-      // `kilo remote` alike) so the mobile client can rely on the
+      // `tavern remote` alike) so the mobile client can rely on the
       // interpretation of `exit_cli` as "detach THIS session" without having
       // to inspect the synthetic `/exit` command entry's presence (which is
       // gated on RemoteExit.get() — i.e. interactive-only — and therefore
@@ -104,7 +104,7 @@ export namespace RemoteCommand {
     .strict()
   export type Response = z.infer<typeof Response>
 
-  // The only entry from BUILTIN_COMMANDS (kilocode/session/builtin-commands) exposed
+  // The only entry from BUILTIN_COMMANDS (taverncode/session/builtin-commands) exposed
   // remotely: `summarize` is a local alias for the same compaction flow, so listing
   // both would just duplicate the suggestion.
   const compact: Info = {
@@ -186,10 +186,10 @@ export namespace RemoteCommand {
     // response stays alphabetized regardless of input order.
     if (!names.has(compact.name)) commands.push(compact)
     if (exitAvailable) commands.push(exit)
-    // kilocode_change - K1 W1: always advertise `canExitSession: true`. This
+    // taverncode_change - K1 W1: always advertise `canExitSession: true`. This
     // is the producer contract for the new `exit_cli`-as-detach semantics
     // (independent of `exitAvailable`, which gates the synthetic `/exit`
-    // command entry on RemoteExit.get()). A headless `kilo remote` host has
+    // command entry on RemoteExit.get()). A headless `tavern remote` host has
     // no RemoteExit callback, so it does NOT emit `/exit` here — but it
     // DOES interpret `exit_cli` as a session-detach, so `canExitSession`
     // is true for both interactive and headless producers.
@@ -229,7 +229,7 @@ export namespace RemoteCommand {
     return {
       list: async () => build(await services.list(), services.exitAvailable?.() ?? false),
       execute: async (input) => {
-        // kilocode_change - enforce membership in the supplied bounded
+        // taverncode_change - enforce membership in the supplied bounded
         // remote-safe catalog. The dispatcher's preflight also gates
         // membership before the ACK, but execute() is the last line of
         // defense: a caller (or a future caller) that bypasses the

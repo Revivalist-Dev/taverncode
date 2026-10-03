@@ -13,7 +13,7 @@ export namespace MemoryPaths {
   // A provider (not a snapshot) so hosts that resolve the data dir dynamically — e.g. from env at
   // call time — are reflected on every `root` call.
   let host: () => Host = () => ({
-    data: path.join(process.env.XDG_DATA_HOME ?? path.join(homedir(), ".local", "share"), "kilo"),
+    data: path.join(process.env.XDG_DATA_HOME ?? path.join(homedir(), ".local", "share"), "tavern"),
   })
 
   export function configure(next: () => Host) {

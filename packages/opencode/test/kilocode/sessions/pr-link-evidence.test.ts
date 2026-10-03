@@ -1,4 +1,4 @@
-// kilocode_change - new file. Hard-evidence tests: a session owns a pull
+// taverncode_change - new file. Hard-evidence tests: a session owns a pull
 // request only from its own `gh pr create` output, its own push of the PR's
 // head branch, or an explicit user link. A same-named branch in another repo or
 // a fork, a reused branch name, a PR merely checked out, or a PR merely
@@ -48,9 +48,9 @@ const fetchMock = spyOn(globalThis, "fetch").mockImplementation(
   ),
 )
 
-const prLink = await import("@/kilo-sessions/pr-link")
+const prLink = await import("@/tavern-sessions/pr-link")
 const { clearSessionLink, loadSessionLinks, readSessionPrLink, recordPrCreate, recordPush } = prLink
-const { refreshPrLink } = await import("@/kilo-sessions/pr-link-poller")
+const { refreshPrLink } = await import("@/tavern-sessions/pr-link-poller")
 
 const created: string[] = []
 

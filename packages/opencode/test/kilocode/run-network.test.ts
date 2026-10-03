@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, mock, spyOn, test } from "bun:test"
-import * as SDK from "@kilocode/sdk/v2"
+import * as SDK from "@taverncode/sdk/v2"
 import { RunCommand } from "@/cli/cmd/run"
-import { KiloRunDrain } from "@/kilocode/cli/run-drain"
+import { KiloRunDrain } from "@/taverncode/cli/run-drain"
 
 const actual = { ...SDK }
 
@@ -72,7 +72,7 @@ function idle(): Event {
 function args() {
   return {
     _: [],
-    $0: "kilo",
+    $0: "tavern",
     message: ["hi"],
     command: undefined,
     continue: false,
@@ -102,7 +102,7 @@ const tty = Object.getOwnPropertyDescriptor(process.stdin, "isTTY")
 const stream = Bun.stdin.stream
 
 afterEach(async () => {
-  await mock.module("@kilocode/sdk/v2", () => actual)
+  await mock.module("@taverncode/sdk/v2", () => actual)
   process.exitCode = exitCode ?? 0
   Bun.stdin.stream = stream
   if (tty) {
@@ -124,19 +124,19 @@ async function run(
       return { stream: q.stream() }
     },
   }
-  sdk.kilocode = {
+  sdk.taverncode = {
     drainSession: async (input: { sessionID: string; token: string }) => {
       q.push({ type: "session.drained", properties: input })
       q.end()
       return { data: true }
     },
   }
-  await mock.module("@kilocode/sdk/v2", () => ({
+  await mock.module("@taverncode/sdk/v2", () => ({
     createKiloClient: (config: { fetch?: () => Promise<Response> }) => {
       config.fetch = async () =>
         Response.json({
           paths: {
-            "/kilocode/session/{sessionID}/drain": { post: { operationId: "kilocode.drainSession" } },
+            "/taverncode/session/{sessionID}/drain": { post: { operationId: "taverncode.drainSession" } },
           },
         })
       return sdk
@@ -252,7 +252,7 @@ describe("cli run network retries", () => {
   test("built-in compaction uses the session model without reading stdin", async () => {
     const q = feed<Event>()
     const calls: unknown[] = []
-    // kilocode_change - run-stdin.ts reads piped stdin through Bun.stdin.stream()
+    // taverncode_change - run-stdin.ts reads piped stdin through Bun.stdin.stream()
     Bun.stdin.stream = () => {
       throw new Error("stdin should not be read")
     }
@@ -295,7 +295,7 @@ describe("cli run network retries", () => {
   test("custom compact commands retain piped arguments without a session", async () => {
     const q = feed<Event>()
     const calls: unknown[] = []
-    // kilocode_change - run-stdin.ts reads piped stdin through Bun.stdin.stream()
+    // taverncode_change - run-stdin.ts reads piped stdin through Bun.stdin.stream()
     Bun.stdin.stream = () => new Response("from stdin").body!
 
     const sdk = {

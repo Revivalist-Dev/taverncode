@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "agentmanager--full-screen-diff-agent-edit-scroll"
 const INLINE_STORY_ID = "agentmanager--diff-panel-scroll-up"
 const CACHE_STORY_ID = "agentmanager--diff-panel-cached-worktree-switch"

@@ -3,7 +3,7 @@ import { BusEvent } from "@/bus/bus-event"
 import { GlobalBus } from "@/bus/global"
 import { Provider } from "@/provider/provider"
 import { Session } from "@/session/session"
-import { KiloSession } from "@/kilocode/session"
+import { KiloSession } from "@/taverncode/session"
 import { SessionID } from "@/session/schema"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -12,23 +12,23 @@ import { Storage } from "@/storage/storage"
 import * as Log from "@opencode-ai/core/util/log"
 import { Auth } from "@/auth"
 import { makeRuntime } from "@/effect/run-service"
-import { IngestQueue } from "@/kilo-sessions/ingest-queue"
-import { IngestDrain } from "@/kilo-sessions/ingest-drain"
-import { clearInFlightCache, withInFlightCache } from "@/kilo-sessions/inflight-cache"
-import type * as SDK from "@kilocode/sdk/v2"
+import { IngestQueue } from "@/tavern-sessions/ingest-queue"
+import { IngestDrain } from "@/tavern-sessions/ingest-drain"
+import { clearInFlightCache, withInFlightCache } from "@/tavern-sessions/inflight-cache"
+import type * as SDK from "@taverncode/sdk/v2"
 import z from "zod"
 import { Context, Effect, Layer, Schema } from "effect"
-import { KILO_API_BASE } from "@kilocode/kilo-gateway"
+import { KILO_API_BASE } from "@taverncode/tavern-gateway"
 import { Config } from "@/config/config"
 import { InstanceState } from "@/effect/instance-state"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { Vcs } from "@/project/vcs"
 import { Git } from "@/git"
 import simpleGit from "simple-git"
-import { RemoteWS } from "@/kilo-sessions/remote-ws"
-import { RemoteSender } from "@/kilo-sessions/remote-sender"
-import { RemoteProtocol } from "@/kilo-sessions/remote-protocol"
-import { buildInstanceAdvertisement } from "@/kilo-sessions/instance-advertisement"
+import { RemoteWS } from "@/tavern-sessions/remote-ws"
+import { RemoteSender } from "@/tavern-sessions/remote-sender"
+import { RemoteProtocol } from "@/tavern-sessions/remote-protocol"
+import { buildInstanceAdvertisement } from "@/tavern-sessions/instance-advertisement"
 import {
   clearSessionLink,
   enabled as prEnabled,
@@ -36,41 +36,41 @@ import {
   pruneLegacyWorktreeLinks,
   recordPrCreate,
   recordPush,
-} from "@/kilo-sessions/pr-link"
-import type { SessionPrLink } from "@/kilo-sessions/pr-link"
-import { refreshPrLink, startPrLinkPoll } from "@/kilo-sessions/pr-link-poller"
-import { AttachedState } from "@/kilo-sessions/attached-state"
-import { RemoteSessionLog } from "@/kilo-sessions/remote-session-log"
+} from "@/tavern-sessions/pr-link"
+import type { SessionPrLink } from "@/tavern-sessions/pr-link"
+import { refreshPrLink, startPrLinkPoll } from "@/tavern-sessions/pr-link-poller"
+import { AttachedState } from "@/tavern-sessions/attached-state"
+import { RemoteSessionLog } from "@/tavern-sessions/remote-session-log"
 import {
   clear as clearRenameMarks,
   consumeAutoTitle,
   consumeRenameAdoption,
   markAutoTitle,
   markRenameAdopted,
-} from "@/kilo-sessions/rename-adoptions"
-import { KiloSessionTitle } from "@/kilocode/session/title"
-import { resolveDerivedSessionStatus, type DerivedSessionStatus } from "@/kilocode/session/scheduled"
-import { Wakeup } from "@/kilocode/wakeup"
+} from "@/tavern-sessions/rename-adoptions"
+import { KiloSessionTitle } from "@/taverncode/session/title"
+import { resolveDerivedSessionStatus, type DerivedSessionStatus } from "@/taverncode/session/scheduled"
+import { Wakeup } from "@/taverncode/wakeup"
 import { SessionStatus } from "@/session/status"
-import { Telemetry } from "@kilocode/kilo-telemetry"
+import { Telemetry } from "@taverncode/tavern-telemetry"
 import { Question } from "@/question"
 import { Permission } from "@/permission"
 import { withTimeout } from "@/util/timeout"
 import { Snapshot } from "@/snapshot"
-import { cumulativeSessionDiff } from "@/kilocode/session-portability/cumulative-diff"
+import { cumulativeSessionDiff } from "@/taverncode/session-portability/cumulative-diff"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // kilocode_change
-import { KiloShutdown } from "@/kilocode/cli/shutdown"
+import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder" // taverncode_change
+import { KiloShutdown } from "@/taverncode/cli/shutdown"
 
 async function provide<R>(input: { directory: string; fn: () => R }): Promise<R> {
-  const { provide } = await import("@/kilocode/instance")
+  const { provide } = await import("@/taverncode/instance")
   return provide(input)
 }
 
 export namespace KiloSessions {
   export const Event = {
     RemoteStatusChanged: BusEvent.define(
-      "kilo-sessions.remote-status-changed",
+      "tavern-sessions.remote-status-changed",
       Schema.Struct({
         enabled: Schema.Boolean,
         connected: Schema.Boolean,
@@ -91,23 +91,23 @@ export namespace KiloSessions {
     ) => Effect.Effect<{ ok: true } | { ok: false; reason: string }, never>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/KiloSessions") {}
+  export class Service extends Context.Service<Service, Interface>()("@taverncode/KiloSessions") {}
 
-  const log = Log.create({ service: "kilo-sessions" })
+  const log = Log.create({ service: "tavern-sessions" })
   const attachedLog = { warn: (msg: string, meta?: unknown) => log.warn(msg, meta as never) }
   const runtime = makeRuntime(Auth.Service, Auth.defaultLayer)
 
   const Uuid = z.uuid()
   type Uuid = z.infer<typeof Uuid>
 
-  const tokenValidKeyTemplate = "kilo-sessions:token-valid:"
+  const tokenValidKeyTemplate = "tavern-sessions:token-valid:"
   let tokenValidKey = tokenValidKeyTemplate + "unknown"
 
-  const tokenKey = "kilo-sessions:token"
-  const orgKey = "kilo-sessions:org"
-  const clientKey = "kilo-sessions:client"
-  const gitUrlKeyPrefix = "kilo-sessions:git-url:"
-  const gitBranchKeyPrefix = "kilo-sessions:git-branch:"
+  const tokenKey = "tavern-sessions:token"
+  const orgKey = "tavern-sessions:org"
+  const clientKey = "tavern-sessions:client"
+  const gitUrlKeyPrefix = "tavern-sessions:git-url:"
+  const gitBranchKeyPrefix = "tavern-sessions:git-branch:"
 
   const ttlMs = 10_000
 
@@ -152,7 +152,7 @@ export namespace KiloSessions {
     | { ok: false; reason: string; skipped?: true; refused?: true }
   const bootstrapInflight = new Map<string, Promise<BootstrapOutcome>>()
 
-  // kilocode_change - `bootstrap` rejects with this when the relay answered the
+  // taverncode_change - `bootstrap` rejects with this when the relay answered the
   // ingest POST with a definitive refusal (a permanent 4xx). `trackBootstrap`
   // marks the outcome `refused` from this type, and only a refused outcome may
   // fail the create_session command: a transient failure (5xx/408/429 or a
@@ -196,9 +196,9 @@ export namespace KiloSessions {
     })
   }
 
-  async function kilocodeToken() {
+  async function taverncodeToken() {
     return withInFlightCache(tokenKey, ttlMs, async () => {
-      const auth = await runtime.runPromise((svc) => svc.get("kilo"))
+      const auth = await runtime.runPromise((svc) => svc.get("tavern"))
       if (auth?.type === "api" && auth.key.length > 0) return auth.key
       if (auth?.type === "oauth" && auth.access.length > 0) return auth.access
       if (auth?.type === "wellknown" && auth.token.length > 0) return auth.token
@@ -244,7 +244,7 @@ export namespace KiloSessions {
 
   async function getClient(): Promise<Client | undefined> {
     return withInFlightCache(clientKey, ttlMs, async () => {
-      const token = await kilocodeToken()
+      const token = await taverncodeToken()
       if (!token) return undefined
 
       const valid = await authValid(token)
@@ -302,7 +302,7 @@ export namespace KiloSessions {
   KiloShutdown.register(drainIngest)
 
   // Process-level, like the ingest drain: every exit path (Ctrl-C on
-  // `kilo remote`, TUI quit) closes the remote sessions this run started and
+  // `tavern remote`, TUI quit) closes the remote sessions this run started and
   // still hosts, so a finished run always leaves an end line for what ran.
   KiloShutdown.register(() => RemoteSessionLog.endAll(log, "shutdown"))
 
@@ -319,8 +319,8 @@ export namespace KiloSessions {
   let remote: { conn: RemoteWS.Connection; sender: RemoteSender.Sender } | undefined
   let enabling: Promise<void> | undefined
   let remoteSeq = 0
-  // kilocode_change - K1 W1: module-level instance advertisement flag.
-  // `enableRemote` can be triggered either by the explicit `kilo remote` command
+  // taverncode_change - K1 W1: module-level instance advertisement flag.
+  // `enableRemote` can be triggered either by the explicit `tavern remote` command
   // or by bootstrap auto-enable (`KILO_REMOTE=1` / `remote_control` config); it
   // is idempotent/coalescing, so passing an {instance} arg on one specific call
   // would race with whichever call happens first. A module-level flag flipped
@@ -338,7 +338,7 @@ export namespace KiloSessions {
     log: attachedLog,
   })
 
-  // kilocode_change - locally started sessions never announce to the remote
+  // taverncode_change - locally started sessions never announce to the remote
   // connection, so the mobile live list (fed by per-connection attached ids)
   // never shows them. Announce on the first turn (idempotent via
   // AttachedState.announce) and detach on dispose, mirroring the create_session
@@ -386,7 +386,7 @@ export namespace KiloSessions {
     }
   }
 
-  // kilocode_change - detach a locally announced session on dispose so it leaves
+  // taverncode_change - detach a locally announced session on dispose so it leaves
   // the live list. No-op for an unowned id (e.g. an app-spawned session already
   // detached via exit_cli). Detaches the raw attached state without touching
   // SessionStatus, because the session row is already gone on delete.
@@ -414,7 +414,7 @@ export namespace KiloSessions {
   const STATUS_TIMEOUT_MS = 3_000
 
   // Shared attention/status resolution for ingest sync and the remote heartbeat.
-  // The precedence lives in kilocode/session/scheduled so the HTTP status
+  // The precedence lives in taverncode/session/scheduled so the HTTP status
   // endpoint derives the same result.
   type DerivedStatus = { status: DerivedSessionStatus; scheduledAt?: string }
 
@@ -453,7 +453,7 @@ export namespace KiloSessions {
     await ingest.sync(sessionID, [{ type: "session_status", data: derived }])
   }
 
-  // kilocode_change - PR link advertise: a PR is linked to a session only on
+  // taverncode_change - PR link advertise: a PR is linked to a session only on
   // hard evidence the session itself produced (it created the PR or pushed its
   // head branch), stored per session. The heartbeat reads each advertised
   // session's own link and ingests its triple; it never resolves one worktree
@@ -762,7 +762,7 @@ export namespace KiloSessions {
             }
             clearRenameMarks(sessionID)
             KiloSessionTitle.clear(sessionID)
-            // kilocode_change - detach a locally announced session on dispose.
+            // taverncode_change - detach a locally announced session on dispose.
             void detachLocalSession(sessionID)
             // The row is gone, so this run stops hosting it. No-op unless this
             // run started the session (see RemoteSessionLog.end).
@@ -778,7 +778,7 @@ export namespace KiloSessions {
             const part = evt.properties.part
             await ingest.sync(part.sessionID, [{ type: "part", data: part }])
             if (!prEnabled()) return
-            // kilocode_change - A PR is linked only on the session's own hard
+            // taverncode_change - A PR is linked only on the session's own hard
             // evidence: the session ran a create command whose output returned
             // the PR URL, or it pushed the PR's head branch. Agent text, a
             // listing (`gh pr list`), a view, or a review is a mention, never a
@@ -803,7 +803,7 @@ export namespace KiloSessions {
           )
           watch(Session.Event.TurnOpen, (evt) => {
             const sessionID = evt.properties.sessionID
-            // kilocode_change - announce a locally started session on its first
+            // taverncode_change - announce a locally started session on its first
             // turn so it appears in the mobile live list.
             void announceLocalSession(sessionID)
             return ingest.sync(sessionID, [{ type: "session_open", data: {} }])
@@ -953,7 +953,7 @@ export namespace KiloSessions {
     LayerNode.make({ service: Service, layer, deps: [Bus.node, Config.node, Session.node] }),
   )
 
-  // kilocode_change - DEF-1: default advertisement for every successful
+  // taverncode_change - DEF-1: default advertisement for every successful
   // enableRemote() entry (covers `/remote` after auto-enable already connected).
   // No-op when an advertisement is already set — must not re-set or fire an
   // extra heartbeat. Explicit setInstanceAdvertisement keeps replace semantics.
@@ -973,30 +973,30 @@ export namespace KiloSessions {
     const seq = ++remoteSeq
     void Bus.publish(Instance.current, Event.RemoteStatusChanged, { enabled: true, connected: false })
     enabling = (async () => {
-      const token = await kilocodeToken()
+      const token = await taverncodeToken()
       if (!token) {
-        throw new Error("Unable to enable remote: no Kilo credentials found. Run `kilo auth login`.")
+        throw new Error("Unable to enable remote: no Tavern credentials found. Run `tavern auth login`.")
       }
 
       const valid = await authValid(token)
       if (valid === false) {
-        throw new Error("Unable to enable remote: invalid or expired Kilo credentials. Run `kilo auth login`.")
+        throw new Error("Unable to enable remote: invalid or expired Tavern credentials. Run `tavern auth login`.")
       }
-      if (valid === undefined) throw new Error("Unable to enable remote: failed to verify Kilo credentials.")
+      if (valid === undefined) throw new Error("Unable to enable remote: failed to verify Tavern credentials.")
 
       const url = (process.env["KILO_SESSION_INGEST_URL"] ?? "https://ingest.kilosessions.ai")
         .replace(/^https:\/\//, "wss://")
         .replace(/^http:\/\//, "ws://")
 
       const [{ RemoteWS }, { RemoteSender }] = await Promise.all([
-        import("@/kilo-sessions/remote-ws"),
-        import("@/kilo-sessions/remote-sender"),
+        import("@/tavern-sessions/remote-ws"),
+        import("@/tavern-sessions/remote-sender"),
       ])
 
       // Capture directory so the heartbeat timer can re-enter the Instance context
       // (setInterval runs outside AsyncLocalStorage scope)
       const directory = Instance.directory
-      // kilocode_change - K1 W1: capture module-level advertisement so each
+      // taverncode_change - K1 W1: capture module-level advertisement so each
       // heartbeat's `instance` field stays consistent with the flag at the
       // moment of sending. The flag may be set after this closure is created
       // (race-proof) — `getSessions` reads the current value each tick.
@@ -1043,7 +1043,7 @@ export namespace KiloSessions {
                       : {}),
                     title: session.title,
                     parentSessionId: session.parentID,
-                    // kilocode_change - K1 W1: per-session platform, mirrors
+                    // taverncode_change - K1 W1: per-session platform, mirrors
                     // meta()'s resolution order so the live value always agrees
                     // with the session's stored created_on_platform.
                     platform: KiloSession.resolvePlatform(id) || process.env["KILO_PLATFORM"] || "cli",
@@ -1087,7 +1087,7 @@ export namespace KiloSessions {
         }
         if (!prEnabled()) return { type: "heartbeat", sessions, ...(instance ? { instance } : {}) }
 
-        // kilocode_change - A PR link is per session and only from that
+        // taverncode_change - A PR link is per session and only from that
         // session's own hard evidence (see the PartUpdated watcher). Read the
         // stored links for exactly the advertised rows once and attach each to
         // its own row; never resolve one worktree link and stamp it on every
@@ -1123,13 +1123,13 @@ export namespace KiloSessions {
 
       const conn = RemoteWS.connect({
         url,
-        getToken: kilocodeToken,
+        getToken: taverncodeToken,
         withContext: (fn) => provide({ directory, fn }),
         getSessions,
         log,
         onOpen: () => {
           void Bus.publish(Instance.current, Event.RemoteStatusChanged, { enabled: true, connected: true })
-          // kilocode_change - K1 W1: on reconnect, a headless `kilo remote` host
+          // taverncode_change - K1 W1: on reconnect, a headless `tavern remote` host
           // preserves its module-level advertisement flag but would otherwise not
           // be re-advertised until the next periodic heartbeat (up to ~10s).
           // Fire one immediate out-of-band heartbeat when the flag is set.
@@ -1157,7 +1157,7 @@ export namespace KiloSessions {
         conn,
         directory: Instance.directory,
         log,
-        // kilocode_change - K1 W1: in-process attach/detach/ownership seams
+        // taverncode_change - K1 W1: in-process attach/detach/ownership seams
         // back to KiloSessions. The sender does NOT spawn a process per
         // session — concurrent remote sessions share this CLI process with
         // per-directory InstanceRef isolation.
@@ -1166,7 +1166,7 @@ export namespace KiloSessions {
         hasSession: (id) => KiloSessions.hasRemoteSession(id),
         ownedCount: () => KiloSessions.ownedRemoteSessionCount(),
         cancelPrompt: async (id) => {
-          // kilocode_change - K1 W1: dynamic import breaks the module-load cycle
+          // taverncode_change - K1 W1: dynamic import breaks the module-load cycle
           // (@/session/prompt reads KiloSessionPrompt at eval; a static edge here
           // races that init). Mirrors remote-command.ts's lazy SessionPrompt use.
           const [{ AppRuntime }, { SessionPrompt }] = await Promise.all([
@@ -1175,12 +1175,12 @@ export namespace KiloSessions {
           ])
           await AppRuntime.runPromise(SessionPrompt.Service.use((svc) => svc.cancel(id)))
         },
-        // kilocode_change - K1 W1 clone: import a cloud session in-process. The
+        // taverncode_change - K1 W1 clone: import a cloud session in-process. The
         // dynamic import keeps the HTTP handler graph out of the remote-sender
         // module graph, mirroring the lazy cancelPrompt pattern.
         importFromCloud: async (cloneId) => {
           const [{ CloudSessionImportInProcess }, { AppRuntime }] = await Promise.all([
-            import("@/kilocode/server/import-cloud-session-in-process"),
+            import("@/taverncode/server/import-cloud-session-in-process"),
             import("@/effect/app-runtime"),
           ])
           const { session, diffs, directory } = await AppRuntime.runPromise(
@@ -1224,7 +1224,7 @@ export namespace KiloSessions {
   // while the process stays up), "disconnected" when the relay connection went
   // away, and "shutdown" for the process/instance teardown.
   export function disableRemote(reason = "disabled") {
-    // kilocode_change - the attached state is cleared below, so this is the
+    // taverncode_change - the attached state is cleared below, so this is the
     // last moment this run hosts these sessions. Pair every open start line
     // here; otherwise the entry survives the disconnect and a later `endAll`
     // reports a stale end line whose duration spans the disconnected period.
@@ -1258,10 +1258,10 @@ export namespace KiloSessions {
     attachedState.setPresence(ids)
   }
 
-  // kilocode_change - K1 W1: instance advertisement setter.
+  // taverncode_change - K1 W1: instance advertisement setter.
   // Idempotent. If a remote connection is already established when the flag is
   // flipped (typical for the race between bootstrap auto-enable and the
-  // explicit `kilo remote` command — `enableRemote` itself is coalescing), we
+  // explicit `tavern remote` command — `enableRemote` itself is coalescing), we
   // fire one out-of-band heartbeat so the cloud side learns about the
   // instance without waiting for the next 10s timer tick.
   export function setInstanceAdvertisement(advertisement: RemoteProtocol.InstanceAdvertisement) {
@@ -1276,7 +1276,7 @@ export namespace KiloSessions {
   }
 
   // Test-only: the advertisement flag is intentionally one-way in production
-  // (once a process runs `kilo remote`, it keeps advertising for its whole
+  // (once a process runs `tavern remote`, it keeps advertising for its whole
   // lifetime, including across a transient disableRemote/enableRemote
   // reconnect cycle — disableRemote() deliberately does not clear it). Tests
   // that assert the "unset" default must reset the module-level flag
@@ -1285,7 +1285,7 @@ export namespace KiloSessions {
     instanceAdvertisement = undefined
   }
 
-  // kilocode_change - create_session gate: hosting a session on the relay only
+  // taverncode_change - create_session gate: hosting a session on the relay only
   // means something once the relay accepted its ingest bootstrap (POST
   // /api/session). `create` coalesces onto the POST the Session.Event.Created
   // watcher already started, so a healthy create_session adds no second
@@ -1312,7 +1312,7 @@ export namespace KiloSessions {
     if (tracked) assertShared(await tracked)
   }
 
-  // kilocode_change - only an explicit relay refusal fails hosting. A skipped
+  // taverncode_change - only an explicit relay refusal fails hosting. A skipped
   // bootstrap (never reached the relay) or a transient failure resolves like a
   // success so the session stays hosted locally.
   function assertShared(outcome: BootstrapOutcome): void {
@@ -1335,7 +1335,7 @@ export namespace KiloSessions {
     await attachedState.announce(id)
   }
 
-  // kilocode_change - K1 W1: session-detach semantics. The exit_cli handler
+  // taverncode_change - K1 W1: session-detach semantics. The exit_cli handler
   // calls this after a verified owns-check + cancel-prompt; the heartbeat
   // must confirm the id was removed from the next sent payload (negative-
   // containment fence) before the handler ACKs the request.
@@ -1353,16 +1353,16 @@ export namespace KiloSessions {
     await attachedState.detach(id)
   }
 
-  // kilocode_change - K1 W1: ownership probe used by the exit_cli handler
+  // taverncode_change - K1 W1: ownership probe used by the exit_cli handler
   // before the cancel/detach sequence. Cheap and synchronous.
   export function hasRemoteSession(id: string): boolean {
     return attachedState.has(id)
   }
 
-  // kilocode_change - K1 W1: count of "owned" sessions (presence ∪ pending).
+  // taverncode_change - K1 W1: count of "owned" sessions (presence ∪ pending).
   // Used to drive the last-interactive-session exit decision: zero remaining
   // + a registered RemoteExit callback => invoke it after the ACK can flush;
-  // zero remaining + no callback (kilo remote) => keep host alive. Sessions
+  // zero remaining + no callback (tavern remote) => keep host alive. Sessions
   // remain => stay alive regardless of callback state.
   export function ownedRemoteSessionCount(): number {
     return attachedState.union().size
@@ -1409,7 +1409,7 @@ export namespace KiloSessions {
       .catch((error: unknown): BootstrapOutcome => {
         const reason = error instanceof Error ? error.message : String(error)
         log.warn("session bootstrap failed", { sessionId, reason })
-        // kilocode_change - only a definitive refusal is marked. A transient
+        // taverncode_change - only a definitive refusal is marked. A transient
         // failure (5xx/408/429/network) stays retryable and must not fail the
         // create_session command (see ensureSharedSession).
         return error instanceof RelayRefusal ? { ok: false, reason, refused: true } : { ok: false, reason }
@@ -1450,7 +1450,7 @@ export namespace KiloSessions {
 
     if (!response.ok) {
       const message = `Unable to create session ${sessionId}: ${response.status} ${response.statusText}`
-      // kilocode_change - a permanent 4xx is the relay's answer and blocks
+      // taverncode_change - a permanent 4xx is the relay's answer and blocks
       // hosting; 5xx/408/429 is transient and retried rather than rolled back.
       if (refusedByRelay(response.status)) throw new RelayRefusal(message)
       throw new Error(message)
@@ -1476,7 +1476,7 @@ export namespace KiloSessions {
 
     const client = await getClient()
     if (!client) {
-      throw new Error("Unable to share session: no Kilo credentials found. Run `kilo auth login`.")
+      throw new Error("Unable to share session: no Tavern credentials found. Run `tavern auth login`.")
     }
 
     const current = (await get(sessionId).catch(() => undefined)) ?? (await create(sessionId))
@@ -1500,7 +1500,7 @@ export namespace KiloSessions {
       throw new Error(`Unable to share session ${sessionId}: server did not return a share token`)
     }
 
-    const url = `https://app.kilo.ai/s/${result.share_token}`
+    const url = `https://app.tavern.ai/s/${result.share_token}`
 
     await save(sessionId, {
       ...current,
@@ -1521,7 +1521,7 @@ export namespace KiloSessions {
 
     const client = await getClient()
     if (!client) {
-      throw new Error("Unable to unshare session: no Kilo credentials found. Run `kilo auth login`.")
+      throw new Error("Unable to unshare session: no Tavern credentials found. Run `tavern auth login`.")
     }
 
     log.info("unsharing", { sessionId })
@@ -1843,7 +1843,7 @@ export namespace KiloSessions {
     const override = sessionId ? KiloSession.resolvePlatform(sessionId) : undefined
     const platform = override || process.env["KILO_PLATFORM"] || "cli"
     const orgId = await getOrgId(sessionId, info)
-    // Repository metadata follows the session's own directory (a `kilo remote`
+    // Repository metadata follows the session's own directory (a `tavern remote`
     // host launched outside the selected repository must still publish the
     // session's repo); directory-less sessions fall back to the launch worktree
     // when an instance context exists, else to "no git metadata".
@@ -1873,7 +1873,7 @@ export namespace KiloSessions {
     if (isUuid(env)) return env
 
     return withInFlightCache(orgKey, ttlMs, async () => {
-      const auth = await runtime.runPromise((svc) => svc.get("kilo"))
+      const auth = await runtime.runPromise((svc) => svc.get("tavern"))
       if (auth?.type === "oauth" && isUuid(auth.accountId)) return auth.accountId
       return undefined
     })

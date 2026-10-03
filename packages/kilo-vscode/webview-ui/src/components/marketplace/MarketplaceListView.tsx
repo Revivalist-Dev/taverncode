@@ -1,9 +1,9 @@
 import { createSignal, createMemo, createEffect, For, Show } from "solid-js"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Tag } from "@kilocode/kilo-ui/tag"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { Checkbox } from "@kilocode/kilo-ui/checkbox"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Tag } from "@taverncode/tavern-ui/tag"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { Checkbox } from "@taverncode/tavern-ui/checkbox"
 import type {
   MarketplaceItem,
   McpMarketplaceItem,
@@ -145,7 +145,7 @@ export const MarketplaceListView = (props: Props) => {
           type="button"
           class="link"
           onClick={() =>
-            vscode.postMessage({ type: "openExternal", url: "https://kilo.ai/docs/customize/marketplace" })
+            vscode.postMessage({ type: "openExternal", url: "https://tavern.ai/docs/customize/marketplace" })
           }
         >
           {t("marketplace.intro.learnMore")}

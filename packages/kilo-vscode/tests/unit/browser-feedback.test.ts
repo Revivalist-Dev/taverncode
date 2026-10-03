@@ -73,7 +73,7 @@ describe("browser feedback metadata", () => {
   it("round-trips metadata while ignoring legacy content", () => {
     const data = browserFeedbackData([reference()])!
     const prefix = formatBrowserFeedback(data.references)
-    expect(partFeedback({ kilo: { browserFeedback: data } }, `${prefix}\n\nFix the save action`)).toEqual({
+    expect(partFeedback({ tavern: { browserFeedback: data } }, `${prefix}\n\nFix the save action`)).toEqual({
       browserFeedback: data,
       body: "Fix the save action",
     })
@@ -97,7 +97,7 @@ describe("browser feedback metadata", () => {
     const reviewPrefix = formatReviewCommentsMarkdown(review.comments)
     const browserPrefix = formatBrowserFeedback(browser.references)
     const content = `${reviewPrefix}\n\n${browserPrefix}\n\nDo both`
-    expect(partFeedback({ kilo: { review, browserFeedback: browser } }, content)).toEqual({
+    expect(partFeedback({ tavern: { review, browserFeedback: browser } }, content)).toEqual({
       review,
       browserFeedback: browser,
       body: "Do both",

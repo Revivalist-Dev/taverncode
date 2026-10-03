@@ -219,7 +219,7 @@ export function handleBrowserMessage(message: AgentManagerInMessage, deps: Depen
     return true
   }
   if (!deps.host.browserAutomation()) {
-    fail(deps, m, "Browser automation is disabled. Enable it in Kilo Settings > Experimental.")
+    fail(deps, m, "Browser automation is disabled. Enable it in Tavern Settings > Experimental.")
     return true
   }
   return action(m, deps)

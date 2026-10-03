@@ -1,4 +1,4 @@
-import type { Session, SessionStatus } from "@kilocode/sdk/v2/client"
+import type { Session, SessionStatus } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../services/cli-backend"
 import { forkSession } from "../agent-manager/fork-session"
 import { isRunningStatus } from "../session-status"
@@ -21,7 +21,7 @@ export async function handleForkSession(ctx: ForkContext, sessionId: string, mes
       )
       .then((result) => result.data?.[sessionId]?.type ?? "idle")
       .catch((e) => {
-        console.error("[Kilo New] refreshForkStatus failed:", e)
+        console.error("[Tavern New] refreshForkStatus failed:", e)
         return "busy" as SessionStatus["type"]
       }))
   if (isRunningStatus(status)) {
@@ -42,7 +42,7 @@ export async function handleForkSession(ctx: ForkContext, sessionId: string, mes
         ctx.forked(session, sessionId)
       },
       registerSession: () => {},
-      log: (...args) => console.log("[Kilo New] KiloProvider:", ...args),
+      log: (...args) => console.log("[Tavern New] KiloProvider:", ...args),
     },
     sessionId,
     undefined,

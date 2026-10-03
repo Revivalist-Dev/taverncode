@@ -1,5 +1,5 @@
 import { Cache, Context, Effect, Layer } from "effect"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { registerDisposer } from "@/effect/instance-registry"
 import { makeRuntime } from "@/effect/run-service"
 import path from "path"
@@ -38,13 +38,13 @@ function normalizeProjectId(input: string): string {
 }
 
 /**
- * Read project ID from .kilo/config.json, falling back to .kilocode/config.json
+ * Read project ID from .tavern/config.json, falling back to .taverncode/config.json
  * @param directory - Project directory
  * @returns Normalized project ID or undefined
  */
 async function getProjectIdFromConfig(directory: string): Promise<string | undefined> {
-  // Check .kilo first, then legacy .kilocode
-  for (const dir of [".kilo", ".kilocode"]) {
+  // Check .tavern first, then legacy .taverncode
+  for (const dir of [".tavern", ".taverncode"]) {
     const file = Bun.file(path.join(directory, dir, "config.json"))
     const text = await file.text().catch(() => undefined)
     if (!text) continue
@@ -80,11 +80,11 @@ async function getProjectIdFromGit(directory: string): Promise<string | undefine
 }
 
 /**
- * Resolve project ID with priority: .kilo/config.json -> .kilocode/config.json -> git origin URL
+ * Resolve project ID with priority: .tavern/config.json -> .taverncode/config.json -> git origin URL
  * @returns Normalized project ID or undefined
  */
 async function resolveProjectId(dir: string): Promise<string | undefined> {
-  // Priority 1: .kilo/config.json (falls back to .kilocode/config.json)
+  // Priority 1: .tavern/config.json (falls back to .taverncode/config.json)
   const id = await getProjectIdFromConfig(dir)
   if (id) return id
 
@@ -97,7 +97,7 @@ export namespace KiloProjectID {
     readonly get: () => Effect.Effect<string | undefined>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/KiloProjectID") {}
+  export class Service extends Context.Service<Service, Interface>()("@taverncode/KiloProjectID") {}
 
   export const layer = Layer.effect(
     Service,

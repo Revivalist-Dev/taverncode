@@ -1,18 +1,18 @@
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../cli-backend"
 import { playwrightCommand } from "./settings"
 import { canonicalizePath, samePath } from "../../agent-manager/project/paths"
 
 /**
- * Manages the built-in Playwright MCP browser server for ordinary Kilo sessions.
+ * Manages the built-in Playwright MCP browser server for ordinary Tavern sessions.
  *
  * This is independent from the Agent Manager browser broker. It must not read
  * Agent Manager settings, and Agent Manager must not read its settings.
  */
 export class BrowserAutomationService implements vscode.Disposable {
   // MCP server name used when registering with the CLI backend
-  private static readonly MCP_SERVER_NAME = "kilo-playwright"
+  private static readonly MCP_SERVER_NAME = "tavern-playwright"
   private readonly disposables: vscode.Disposable[] = []
   private readonly registered = new Set<string>()
   private queue: Promise<void> = Promise.resolve()
@@ -24,7 +24,7 @@ export class BrowserAutomationService implements vscode.Disposable {
   ) {
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((event) => {
-        if (!event.affectsConfiguration("kilo-code.new.browserAutomation")) return
+        if (!event.affectsConfiguration("tavern-code.new.browserAutomation")) return
         void this.syncWithSettings()
       }),
       vscode.workspace.onDidChangeWorkspaceFolders(() => this.enqueue(() => this.apply(true))),
@@ -95,7 +95,7 @@ export class BrowserAutomationService implements vscode.Disposable {
     const outcome = task.then(
       () => undefined,
       (error) => {
-        console.warn("[Kilo New] BrowserAutomationService: readiness failed:", error)
+        console.warn("[Tavern New] BrowserAutomationService: readiness failed:", error)
         return { error }
       },
     )
@@ -103,7 +103,7 @@ export class BrowserAutomationService implements vscode.Disposable {
     const result = await Promise.race([outcome, limit.promise])
     if (result === "timeout") {
       console.warn(
-        "[Kilo New] BrowserAutomationService: readiness timed out, submitting without waiting for Playwright MCP",
+        "[Tavern New] BrowserAutomationService: readiness timed out, submitting without waiting for Playwright MCP",
       )
       return
     }
@@ -136,7 +136,7 @@ export class BrowserAutomationService implements vscode.Disposable {
       return
     }
     if (!vscode.workspace.isTrusted) {
-      console.warn("[Kilo New] BrowserAutomationService: Workspace is not trusted, skipping Playwright MCP")
+      console.warn("[Tavern New] BrowserAutomationService: Workspace is not trusted, skipping Playwright MCP")
       return
     }
     const dirs = this.directories()
@@ -146,11 +146,11 @@ export class BrowserAutomationService implements vscode.Disposable {
   }
 
   private enabled(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.browserAutomation").get<boolean>("enabled", false) === true
+    return vscode.workspace.getConfiguration("tavern-code.new.browserAutomation").get<boolean>("enabled", false) === true
   }
 
   private command(): string[] {
-    const config = vscode.workspace.getConfiguration("kilo-code.new.browserAutomation")
+    const config = vscode.workspace.getConfiguration("tavern-code.new.browserAutomation")
     return playwrightCommand({
       headless: config.get<boolean>("headless", false),
       useSystemChrome: config.get<boolean>("useSystemChrome", true),
@@ -199,7 +199,7 @@ export class BrowserAutomationService implements vscode.Disposable {
       }
     }
     if (this.registered.size > 0) return
-    if (failure) console.error("[Kilo New] BrowserAutomationService: Failed to register MCP server:", failure)
+    if (failure) console.error("[Tavern New] BrowserAutomationService: Failed to register MCP server:", failure)
   }
 
   private async unregister(dirs = [...this.registered]): Promise<void> {
@@ -213,7 +213,7 @@ export class BrowserAutomationService implements vscode.Disposable {
           )
           this.registered.delete(directory)
         } catch (error) {
-          console.error("[Kilo New] BrowserAutomationService: Failed to disconnect MCP server:", error)
+          console.error("[Tavern New] BrowserAutomationService: Failed to disconnect MCP server:", error)
         }
       }
     }

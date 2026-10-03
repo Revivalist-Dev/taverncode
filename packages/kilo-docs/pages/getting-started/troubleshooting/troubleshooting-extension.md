@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting IDE Extensions"
-description: "How to capture console logs and report issues with Kilo Code"
+description: "How to capture console logs and report issues with Tavern Code"
 ---
 
 # Capturing Console Logs
@@ -23,20 +23,20 @@ Once you have the Developer Tools console open:
 
 ## SQLite database is malformed
 
-If every prompt fails with `SQLiteError: database disk image is malformed`, Kilo Code's local SQLite database may be corrupted. This database stores local Kilo state such as sessions and history.
+If every prompt fails with `SQLiteError: database disk image is malformed`, Tavern Code's local SQLite database may be corrupted. This database stores local Tavern state such as sessions and history.
 
 ### Find the database
 
-When the kilo CLI uses the same environment as the affected installation, run `kilo db path` to print the selected database. See [Session History and Search](/docs/code-with-ai/agents/session-history) for normal database inspection and search workflows.
+When the tavern CLI uses the same environment as the affected installation, run `tavern db path` to print the selected database. See [Session History and Search](/docs/code-with-ai/agents/session-history) for normal database inspection and search workflows.
 
-The default database location depends on where Kilo Code is running:
+The default database location depends on where Tavern Code is running:
 
 | Environment | Database path |
 |---|---|
-| Windows | `%USERPROFILE%\.local\share\kilo\kilo.db` |
-| macOS | `~/.local/share/kilo/kilo.db` |
-| Linux | `~/.local/share/kilo/kilo.db` |
-| VS Code Remote SSH | `~/.local/share/kilo/kilo.db` on the remote machine |
+| Windows | `%USERPROFILE%\.local\share\tavern\tavern.db` |
+| macOS | `~/.local/share/tavern/tavern.db` |
+| Linux | `~/.local/share/tavern/tavern.db` |
+| VS Code Remote SSH | `~/.local/share/tavern/tavern.db` on the remote machine |
 
 {% callout type="warning" %}
 When using VS Code Remote SSH, check the remote Linux machine, not your local Windows or macOS computer.
@@ -44,38 +44,38 @@ When using VS Code Remote SSH, check the remote Linux machine, not your local Wi
 
 ### Reset the database
 
-Close VS Code or stop the Kilo backend first. On Linux or Remote SSH, run:
+Close VS Code or stop the Tavern backend first. On Linux or Remote SSH, run:
 
 ```bash
-pkill -f "kilo serve"
-mkdir -p ~/.local/share/kilo
-mv ~/.local/share/kilo/kilo.db ~/.local/share/kilo/kilo.db.bak
-mv ~/.local/share/kilo/kilo.db-wal ~/.local/share/kilo/kilo.db-wal.bak 2>/dev/null
-mv ~/.local/share/kilo/kilo.db-shm ~/.local/share/kilo/kilo.db-shm.bak 2>/dev/null
+pkill -f "tavern serve"
+mkdir -p ~/.local/share/tavern
+mv ~/.local/share/tavern/tavern.db ~/.local/share/tavern/tavern.db.bak
+mv ~/.local/share/tavern/tavern.db-wal ~/.local/share/tavern/tavern.db-wal.bak 2>/dev/null
+mv ~/.local/share/tavern/tavern.db-shm ~/.local/share/tavern/tavern.db-shm.bak 2>/dev/null
 ```
 
-Then reload VS Code or reconnect Remote SSH. Kilo Code recreates the database the next time it starts.
+Then reload VS Code or reconnect Remote SSH. Tavern Code recreates the database the next time it starts.
 
-On Windows or macOS, rename the database file and any `kilo.db-wal` or `kilo.db-shm` files in the same folder, then restart the IDE.
+On Windows or macOS, rename the database file and any `tavern.db-wal` or `tavern.db-shm` files in the same folder, then restart the IDE.
 
 {% callout type="warning" %}
-Renaming this database resets local Kilo Code sessions and history for that machine. Keep the `.bak` files if you need to share them with support or attempt recovery later.
+Renaming this database resets local Tavern Code sessions and history for that machine. Keep the `.bak` files if you need to share them with support or attempt recovery later.
 {% /callout %}
 
-### Fully reset local Kilo data
+### Fully reset local Tavern data
 
-If resetting the database does not fix the issue, you can fully reset Kilo Code's local data. This also removes local configuration and cache files, so use it only after trying the database reset above.
+If resetting the database does not fix the issue, you can fully reset Tavern Code's local data. This also removes local configuration and cache files, so use it only after trying the database reset above.
 
-On Linux or VS Code Remote SSH, run this on the machine where Kilo Code is running:
+On Linux or VS Code Remote SSH, run this on the machine where Tavern Code is running:
 
 ```bash
-pkill -f "kilo serve"
-mv ~/.local/share/kilo ~/.local/share/kilo.bak 2>/dev/null
-mv ~/.config/kilo ~/.config/kilo.bak 2>/dev/null
-mv ~/.cache/kilo ~/.cache/kilo.bak 2>/dev/null
+pkill -f "tavern serve"
+mv ~/.local/share/tavern ~/.local/share/tavern.bak 2>/dev/null
+mv ~/.config/tavern ~/.config/tavern.bak 2>/dev/null
+mv ~/.cache/tavern ~/.cache/tavern.bak 2>/dev/null
 ```
 
-Then reload VS Code or reconnect Remote SSH. Kilo Code recreates these directories the next time it starts.
+Then reload VS Code or reconnect Remote SSH. Tavern Code recreates these directories the next time it starts.
 
 {% callout type="warning" %}
 This resets local sessions, history, settings, and cached data. Prefer renaming the directories instead of deleting them so you can recover files. Remove secrets such as API keys or tokens before sharing any backup with support.
@@ -83,31 +83,31 @@ This resets local sessions, history, settings, and cached data. Prefer renaming 
 
 ## Diagnosing WSL disconnects
 
-If you use Kilo Code with VS Code on WSL and the extension repeatedly disconnects — VS Code shows "reconnecting" or the Kilo backend stops responding — capture a diagnostic bundle **before** restarting WSL or rebooting. A restart wipes most of the evidence.
+If you use Tavern Code with VS Code on WSL and the extension repeatedly disconnects — VS Code shows "reconnecting" or the Tavern backend stops responding — capture a diagnostic bundle **before** restarting WSL or rebooting. A restart wipes most of the evidence.
 
 1. Open any WSL terminal. An already-open Windows Terminal tab with your distribution works fine, even while VS Code is still reconnecting.
 
 2. Paste this single command:
 
    ```bash
-   OUT=/tmp/kilo-diag-$(date +%Y%m%dT%H%M%S) && mkdir -p $OUT && { echo "--- date"; date; echo "--- uptime"; uptime; echo "--- free"; free -h; echo "--- oom/kills"; sudo dmesg -T | grep -iE "oom|out of memory|killed process" | tail -60; } > $OUT/system.txt 2>&1; cp -r ~/.vscode-server/data/logs $OUT/vscode-logs 2>/dev/null; cp -r ~/.vscode-server-insiders/data/logs $OUT/vscode-insiders-logs 2>/dev/null; cp -r ~/.local/share/kilo/log $OUT/kilo-logs 2>/dev/null; tar czf /mnt/c/Users/Public/kilo-diag.tgz -C /tmp $(basename $OUT) && echo "Done -> C:\\Users\\Public\\kilo-diag.tgz"
+   OUT=/tmp/tavern-diag-$(date +%Y%m%dT%H%M%S) && mkdir -p $OUT && { echo "--- date"; date; echo "--- uptime"; uptime; echo "--- free"; free -h; echo "--- oom/kills"; sudo dmesg -T | grep -iE "oom|out of memory|killed process" | tail -60; } > $OUT/system.txt 2>&1; cp -r ~/.vscode-server/data/logs $OUT/vscode-logs 2>/dev/null; cp -r ~/.vscode-server-insiders/data/logs $OUT/vscode-insiders-logs 2>/dev/null; cp -r ~/.local/share/tavern/log $OUT/tavern-logs 2>/dev/null; tar czf /mnt/c/Users/Public/tavern-diag.tgz -C /tmp $(basename $OUT) && echo "Done -> C:\\Users\\Public\\tavern-diag.tgz"
    ```
 
-   It may ask for your sudo password. The command collects kernel out-of-memory events, WSL VM uptime (which shows whether the whole VM restarted or just the VS Code server died), current memory stats, the VS Code remote server logs, and Kilo logs — nothing else.
+   It may ask for your sudo password. The command collects kernel out-of-memory events, WSL VM uptime (which shows whether the whole VM restarted or just the VS Code server died), current memory stats, the VS Code remote server logs, and Tavern logs — nothing else.
 
    {% callout type="warning" %}
    Inspect the bundle before sharing it and remove any secrets such as API keys, tokens, prompts, or file paths. The bundle is written to `C:\Users\Public`, a folder shared with Windows so you can access it outside WSL — delete it once you're done sharing it.
    {% /callout %}
 
-3. When it prints `Done`, send us the file `C:\Users\Public\kilo-diag.tgz` from Windows.
+3. When it prints `Done`, send us the file `C:\Users\Public\tavern-diag.tgz` from Windows.
 
 4. Include roughly how many Agent Manager sessions or worktrees were running in parallel when the disconnect happened.
 
 ## Contact Support
 
-If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@kilocode.ai](mailto:hi@kilocode.ai)** along with the following:
+If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@taverncode.ai](mailto:hi@taverncode.ai)** along with the following:
 
 - The error messages from the console
 - Steps to reproduce the issue
 - Screenshots or screen recordings of the issue
-- Your IDE and Kilo Code version
+- Your IDE and Tavern Code version

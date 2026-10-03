@@ -1,5 +1,5 @@
 import { describe, expect, mock, spyOn, test } from "bun:test"
-import { fetchKiloPassState, parseKiloPassState } from "../../src/api/kilo-pass"
+import { fetchKiloPassState, parseKiloPassState } from "../../src/api/tavern-pass"
 
 describe("parseKiloPassState", () => {
   test("parses batched tRPC subscription data", () => {

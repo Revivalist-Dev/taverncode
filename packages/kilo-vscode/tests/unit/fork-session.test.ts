@@ -1,5 +1,5 @@
 import { describe, expect, it, mock } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import { forkText } from "../../src/agent-manager/fork-handoff"
 import { forkSession, type ForkContext } from "../../src/agent-manager/fork-session"
 
@@ -52,17 +52,17 @@ describe("agent manager fork session", () => {
     const promptAsync = mock(async () => ({}))
     const client = { session: { fork, promptAsync } }
     const state = {
-      getWorktree: () => ({ path: "/repo/.kilo/worktrees/feature" }),
+      getWorktree: () => ({ path: "/repo/.tavern/worktrees/feature" }),
       addSession: mock(() => undefined),
     }
 
     await forkSession(ctx(client, { state: state as never }), "source", "worktree")
 
     expect(fork).toHaveBeenCalledWith(
-      { sessionID: "source", directory: "/repo/.kilo/worktrees/feature" },
+      { sessionID: "source", directory: "/repo/.tavern/worktrees/feature" },
       { throwOnError: true },
     )
-    expect(promptAsync).toHaveBeenCalledWith(expect.objectContaining({ directory: "/repo/.kilo/worktrees/feature" }), {
+    expect(promptAsync).toHaveBeenCalledWith(expect.objectContaining({ directory: "/repo/.tavern/worktrees/feature" }), {
       throwOnError: true,
     })
   })

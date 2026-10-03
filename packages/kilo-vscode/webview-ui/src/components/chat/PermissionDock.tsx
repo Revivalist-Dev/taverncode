@@ -1,7 +1,7 @@
 /**
  * PermissionDock component
  * Displays permission requests from the AI assistant in the dock above the prompt input.
- * Uses kilo-ui's DockPrompt component for proper surface styling.
+ * Uses tavern-ui's DockPrompt component for proper surface styling.
  *
  * Per-rule toggles allow users to approve/deny individual permission rules for future requests.
  * For bash, the hierarchical rules from metadata.rules are shown.
@@ -10,11 +10,11 @@
  */
 
 import { Component, For, Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { DockPrompt } from "@kilocode/kilo-ui/dock-prompt"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { DockPrompt } from "@taverncode/tavern-ui/dock-prompt"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { useConfig } from "../../context/config"
@@ -28,7 +28,7 @@ import {
 import { PermissionCommand } from "./PermissionCommand"
 import { PermissionDiff } from "./PermissionDiff"
 import { permissionDiffs } from "./permission-diff-utils"
-import { normalizeUrls } from "../../../../../opencode/src/kilocode/util/url"
+import { normalizeUrls } from "../../../../../opencode/src/taverncode/util/url"
 import type { PermissionRequest } from "../../types/messages"
 import { isEnterKeyCommitNotIme } from "../../utils/ime-enter"
 

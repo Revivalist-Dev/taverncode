@@ -1,11 +1,11 @@
 ---
 title: "SDKs & Frameworks"
-description: "Integrate with the Kilo AI Gateway using the Vercel AI SDK, OpenAI SDK, Python, cURL, or any OpenAI-compatible client."
+description: "Integrate with the Tavern AI Gateway using the Vercel AI SDK, OpenAI SDK, Python, cURL, or any OpenAI-compatible client."
 ---
 
 # SDKs & Frameworks
 
-The Kilo AI Gateway is OpenAI-compatible, meaning any SDK or framework that works with the OpenAI API can work with the Kilo Gateway by changing the base URL.
+The Tavern AI Gateway is OpenAI-compatible, meaning any SDK or framework that works with the OpenAI API can work with the Tavern Gateway by changing the base URL.
 
 ## Vercel AI SDK (Recommended)
 
@@ -23,13 +23,13 @@ npm install ai @ai-sdk/openai
 import { streamText } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 
-const kilo = createOpenAI({
-  baseURL: "https://api.kilo.ai/api/gateway",
+const tavern = createOpenAI({
+  baseURL: "https://api.tavern.ai/api/gateway",
   apiKey: process.env.KILO_API_KEY,
 })
 
 const result = streamText({
-  model: kilo.chat("anthropic/claude-sonnet-4.5"),
+  model: tavern.chat("anthropic/claude-sonnet-4.5"),
   prompt: "Write a haiku about programming.",
 })
 
@@ -45,13 +45,13 @@ import { streamText, tool } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 import { z } from "zod"
 
-const kilo = createOpenAI({
-  baseURL: "https://api.kilo.ai/api/gateway",
+const tavern = createOpenAI({
+  baseURL: "https://api.tavern.ai/api/gateway",
   apiKey: process.env.KILO_API_KEY,
 })
 
 const result = streamText({
-  model: kilo.chat("anthropic/claude-sonnet-4.5"),
+  model: tavern.chat("anthropic/claude-sonnet-4.5"),
   prompt: "What is the weather in San Francisco?",
   tools: {
     getWeather: tool({
@@ -77,8 +77,8 @@ for await (const textPart of result.textStream) {
 import { streamText } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 
-const kilo = createOpenAI({
-  baseURL: "https://api.kilo.ai/api/gateway",
+const tavern = createOpenAI({
+  baseURL: "https://api.tavern.ai/api/gateway",
   apiKey: process.env.KILO_API_KEY,
 })
 
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
   const { messages } = await request.json()
 
   const result = streamText({
-    model: kilo.chat("anthropic/claude-sonnet-4.5"),
+    model: tavern.chat("anthropic/claude-sonnet-4.5"),
     messages,
   })
 
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
 
 ## OpenAI SDK
 
-The official OpenAI SDKs work with the Kilo Gateway by setting the base URL.
+The official OpenAI SDKs work with the Tavern Gateway by setting the base URL.
 
 ### TypeScript / JavaScript
 
@@ -109,7 +109,7 @@ import OpenAI from "openai"
 
 const client = new OpenAI({
   apiKey: process.env.KILO_API_KEY,
-  baseURL: "https://api.kilo.ai/api/gateway",
+  baseURL: "https://api.tavern.ai/api/gateway",
 })
 
 // Non-streaming
@@ -148,7 +148,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.getenv("KILO_API_KEY"),
-    base_url="https://api.kilo.ai/api/gateway",
+    base_url="https://api.tavern.ai/api/gateway",
 )
 
 # Non-streaming
@@ -182,7 +182,7 @@ for chunk in stream:
 ### Non-streaming request
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -196,7 +196,7 @@ curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
 ### Streaming request
 
 ```bash
-curl -N -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -N -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -239,7 +239,7 @@ func main() {
     jsonBody, _ := json.Marshal(body)
 
     req, _ := http.NewRequest("POST",
-        "https://api.kilo.ai/api/gateway/chat/completions",
+        "https://api.tavern.ai/api/gateway/chat/completions",
         bytes.NewBuffer(jsonBody))
 
     req.Header.Set("Authorization", "Bearer "+os.Getenv("KILO_API_KEY"))
@@ -262,7 +262,7 @@ func main() {
 require 'net/http'
 require 'json'
 
-uri = URI('https://api.kilo.ai/api/gateway/chat/completions')
+uri = URI('https://api.tavern.ai/api/gateway/chat/completions')
 http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = true
 
@@ -283,26 +283,26 @@ puts result['choices'][0]['message']['content']
 
 ## Framework integrations
 
-The Kilo AI Gateway works with any framework that supports OpenAI-compatible APIs:
+The Tavern AI Gateway works with any framework that supports OpenAI-compatible APIs:
 
 | Framework | Integration |
 |---|---|
-| [Vercel AI SDK](https://ai-sdk.dev) | Use `createOpenAI` with Kilo base URL |
+| [Vercel AI SDK](https://ai-sdk.dev) | Use `createOpenAI` with Tavern base URL |
 | [LangChain](https://langchain.com) | Use `ChatOpenAI` with custom base URL |
 | [LlamaIndex](https://www.llamaindex.ai) | Use OpenAI-compatible configuration |
 | [Haystack](https://haystack.deepset.ai) | Use OpenAI generator with custom URL |
 | [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/) | Use OpenAI connector with custom endpoint |
-| [Pi](https://pi.dev) | Install the [Kilo provider extension](https://github.com/Kilo-Org/kilo-pi-provider) |
+| [Pi](https://pi.dev) | Install the [Tavern provider extension](https://github.com/Kilo-Org/tavern-pi-provider) |
 
 ### Pi coding agent
 
-Use the Kilo-maintained [Pi provider extension](https://github.com/Kilo-Org/kilo-pi-provider) to access Kilo Gateway models from the [Pi coding agent](https://pi.dev).
+Use the Tavern-maintained [Pi provider extension](https://github.com/Kilo-Org/tavern-pi-provider) to access Tavern Gateway models from the [Pi coding agent](https://pi.dev).
 
 ```bash
-pi install git:github.com/Kilo-Org/kilo-pi-provider
+pi install git:github.com/Kilo-Org/tavern-pi-provider
 ```
 
-Run `/login kilo` in Pi to connect your account, or use supported free models without signing in. See the provider repository for organization configuration and model-specific behavior.
+Run `/login tavern` in Pi to connect your account, or use supported free models without signing in. See the provider repository for organization configuration and model-specific behavior.
 
 ### LangChain example
 
@@ -312,7 +312,7 @@ from langchain_openai import ChatOpenAI
 llm = ChatOpenAI(
     model="anthropic/claude-sonnet-4.5",
     api_key=os.getenv("KILO_API_KEY"),
-    base_url="https://api.kilo.ai/api/gateway",
+    base_url="https://api.tavern.ai/api/gateway",
 )
 
 response = llm.invoke("Explain photosynthesis in simple terms.")
@@ -328,7 +328,7 @@ const model = new ChatOpenAI({
   modelName: "anthropic/claude-sonnet-4.5",
   openAIApiKey: process.env.KILO_API_KEY,
   configuration: {
-    baseURL: "https://api.kilo.ai/api/gateway",
+    baseURL: "https://api.tavern.ai/api/gateway",
   },
 })
 

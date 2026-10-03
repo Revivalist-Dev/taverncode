@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
-import { KiloCli } from "../../../src/kilocode/cli/setup"
-import { createHelpCommand } from "../../../src/kilocode/help-command"
-import { resetLazyCommandSelection } from "../../../src/kilocode/cli/lazy-commands"
+import { KiloCli } from "../../../src/taverncode/cli/setup"
+import { createHelpCommand } from "../../../src/taverncode/help-command"
+import { resetLazyCommandSelection } from "../../../src/taverncode/cli/lazy-commands"
 import yargs from "yargs"
 
 describe("CLI bootstrap runtime selection", () => {

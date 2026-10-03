@@ -1,6 +1,6 @@
 import type { Config } from "../types/messages"
 
-// Top-level config keys that persist to the project's kilo.json rather than the
+// Top-level config keys that persist to the project's tavern.json rather than the
 // global one. Settings that are inherently per-repository (e.g. commit message
 // conventions) belong here so they don't leak across workspaces.
 const PROJECT_SCOPED_KEYS: ReadonlySet<string> = new Set(["commit_message"])

@@ -13,7 +13,7 @@ type Status = Meta["status"]
 type Log = (...args: unknown[]) => void
 
 /** Cap per-side reads in the detail view. Opening very large tracked files
- *  used to spike `kilo serve`; now that the detail path runs in the
+ *  used to spike `tavern serve`; now that the detail path runs in the
  *  extension host, the same file would spike VS Code's RSS. Over this
  *  threshold we return a summarized entry (empty `before`/`after`/`patch`,
  *  metadata preserved) so the webview can render counts without
@@ -24,7 +24,7 @@ const MAX_SUMMARY_FILES = 32
 /**
  * Local, Node.js-side replacement for the server's `WorktreeDiff.summary()` and
  * `WorktreeDiff.detail()` routes. Keeps Agent Manager polling out of the Bun
- * `kilo serve` process, which leaks native memory on every `Bun.spawn` on
+ * `tavern serve` process, which leaks native memory on every `Bun.spawn` on
  * Windows (oven-sh/bun#18265).
  *
  * All git calls go through `GitOps.execGit()` → `child_process.spawn` with

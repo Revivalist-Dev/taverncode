@@ -14,7 +14,7 @@ import { Config } from "../../src/config/config"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
 import { EventV2Bridge } from "../../src/event-v2-bridge"
 import { Image } from "../../src/image/image"
-import { KiloSessionProcessor } from "../../src/kilocode/session/processor"
+import { KiloSessionProcessor } from "../../src/taverncode/session/processor"
 import { Permission } from "../../src/permission"
 import { Plugin } from "../../src/plugin"
 import type { Provider } from "../../src/provider/provider"
@@ -80,7 +80,7 @@ function model(): Provider.Model {
 
 function empty(vercelID?: string) {
   const usage = new Usage({})
-  const providerMetadata = vercelID ? { kilo: { vercelID } } : undefined
+  const providerMetadata = vercelID ? { tavern: { vercelID } } : undefined
   return [
     LLMEvent.stepStart({ index: 0 }),
     LLMEvent.reasoningStart({ id: "reasoning" }),
@@ -457,7 +457,7 @@ describe("session processor incomplete response retry", () => {
           const usage = new Usage({})
           yield* ctx.test.reply(
             LLMEvent.stepStart({ index: 0 }),
-            LLMEvent.toolCall({ id: "call", name: "web_search", input: { query: "Kilo" }, providerExecuted: true }),
+            LLMEvent.toolCall({ id: "call", name: "web_search", input: { query: "Tavern" }, providerExecuted: true }),
             LLMEvent.toolResult({
               id: "call",
               name: "web_search",

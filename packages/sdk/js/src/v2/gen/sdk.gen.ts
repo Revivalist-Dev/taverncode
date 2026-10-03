@@ -796,7 +796,7 @@ export class App extends HeyApiClient {
   /**
    * List agents
    *
-   * Get a list of all available AI agents in the Kilo system.
+   * Get a list of all available AI agents in the Tavern system.
    */
   public agents<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -826,7 +826,7 @@ export class App extends HeyApiClient {
   /**
    * List skills
    *
-   * Get a list of all available skills in the Kilo system.
+   * Get a list of all available skills in the Tavern system.
    */
   public skills<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -901,7 +901,7 @@ export class Capabilities extends HeyApiClient {
   /**
    * Get experimental capabilities
    *
-   * Get experimental features enabled on the Kilo server.
+   * Get experimental features enabled on the Tavern server.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1005,7 +1005,7 @@ export class Console extends HeyApiClient {
   /**
    * Switch active Console org
    *
-   * Persist a new active Console account/org selection for the current local Kilo state.
+   * Persist a new active Console account/org selection for the current local Tavern state.
    */
   public switchOrg<ThrowOnError extends boolean = false>(
     parameters: {
@@ -1046,7 +1046,7 @@ export class Session extends HeyApiClient {
   /**
    * List sessions
    *
-   * Get a list of all Kilo sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.
+   * Get a list of all Tavern sessions across projects, sorted by most recently updated. Archived sessions are excluded by default.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1527,7 +1527,7 @@ export class Config extends HeyApiClient {
   /**
    * Get global configuration
    *
-   * Retrieve the current global Kilo configuration settings and preferences.
+   * Retrieve the current global Tavern configuration settings and preferences.
    */
   public get<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).get<GlobalConfigGetResponses, GlobalConfigGetErrors, ThrowOnError>({
@@ -1539,7 +1539,7 @@ export class Config extends HeyApiClient {
   /**
    * Update global configuration
    *
-   * Update global Kilo configuration settings and preferences.
+   * Update global Tavern configuration settings and preferences.
    */
   public update<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1565,7 +1565,7 @@ export class Global extends HeyApiClient {
   /**
    * Get health
    *
-   * Get health information about the Kilo server.
+   * Get health information about the Tavern server.
    */
   public health<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).get<GlobalHealthResponses, GlobalHealthErrors, ThrowOnError>({
@@ -1577,7 +1577,7 @@ export class Global extends HeyApiClient {
   /**
    * Get global events
    *
-   * Subscribe to global events from the Kilo system using server-sent events.
+   * Subscribe to global events from the Tavern system using server-sent events.
    */
   public event<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError, GlobalEventResponse>) {
     return (options?.client ?? this.client).sse.get<GlobalEventResponses, GlobalEventErrors, ThrowOnError>({
@@ -1589,7 +1589,7 @@ export class Global extends HeyApiClient {
   /**
    * Dispose instance
    *
-   * Clean up and dispose all Kilo instances, releasing all resources.
+   * Clean up and dispose all Tavern instances, releasing all resources.
    */
   public dispose<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).post<GlobalDisposeResponses, GlobalDisposeErrors, ThrowOnError>({
@@ -1599,9 +1599,9 @@ export class Global extends HeyApiClient {
   }
 
   /**
-   * Upgrade kilo
+   * Upgrade tavern
    *
-   * Upgrade kilo to the specified version or latest if not specified.
+   * Upgrade tavern to the specified version or latest if not specified.
    */
   public upgrade<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1664,7 +1664,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Get configuration
    *
-   * Retrieve the current Kilo configuration settings and preferences.
+   * Retrieve the current Tavern configuration settings and preferences.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1694,7 +1694,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Update configuration
    *
-   * Update Kilo configuration settings and preferences.
+   * Update Tavern configuration settings and preferences.
    */
   public update<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -1935,7 +1935,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Get project rules
    *
-   * List project instruction files used by Kilo and return their current contents.
+   * List project instruction files used by Tavern and return their current contents.
    */
   public rules<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2036,7 +2036,7 @@ export class Config2 extends HeyApiClient {
   /**
    * Update model state
    *
-   * Patch TUI-compatible model selections shared with Kilo Console.
+   * Patch TUI-compatible model selections shared with Tavern Console.
    */
   public modelStateUpdate<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2185,7 +2185,7 @@ export class Worktree extends HeyApiClient {
   /**
    * List worktrees
    *
-   * List all git worktrees for the current project and whether Kilo manages them.
+   * List all git worktrees for the current project and whether Tavern manages them.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2589,7 +2589,7 @@ export class Instance extends HeyApiClient {
   /**
    * Dispose instance
    *
-   * Clean up and dispose the current Kilo instance, releasing all resources.
+   * Clean up and dispose the current Tavern instance, releasing all resources.
    */
   public dispose<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2651,7 +2651,7 @@ export class Path extends HeyApiClient {
   /**
    * Get paths
    *
-   * Retrieve the current working directory and related path information for the Kilo instance.
+   * Retrieve the current working directory and related path information for the Tavern instance.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -2853,7 +2853,7 @@ export class Command extends HeyApiClient {
   /**
    * List commands
    *
-   * Get a list of all available commands in the Kilo system.
+   * Get a list of all available commands in the Tavern system.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3306,7 +3306,7 @@ export class Project extends HeyApiClient {
   /**
    * List all projects
    *
-   * Get a list of projects that have been opened with Kilo.
+   * Get a list of projects that have been opened with Tavern.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3336,7 +3336,7 @@ export class Project extends HeyApiClient {
   /**
    * Get current project
    *
-   * Retrieve the currently active project that Kilo is working with.
+   * Retrieve the currently active project that Tavern is working with.
    */
   public current<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -3503,7 +3503,7 @@ export class Pty extends HeyApiClient {
   /**
    * List PTY sessions
    *
-   * Get a list of all active pseudo-terminal (PTY) sessions managed by Kilo.
+   * Get a list of all active pseudo-terminal (PTY) sessions managed by Tavern.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -4237,7 +4237,7 @@ export class Session2 extends HeyApiClient {
   /**
    * List sessions
    *
-   * Get a list of all Kilo sessions, sorted by most recently updated.
+   * Get a list of all Tavern sessions, sorted by most recently updated.
    */
   public list<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -4279,7 +4279,7 @@ export class Session2 extends HeyApiClient {
   /**
    * Create session
    *
-   * Create a new Kilo session for interacting with AI assistants and managing conversations.
+   * Create a new Tavern session for interacting with AI assistants and managing conversations.
    */
   public create<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -4400,7 +4400,7 @@ export class Session2 extends HeyApiClient {
   /**
    * Get session
    *
-   * Retrieve detailed information about a specific Kilo session.
+   * Retrieve detailed information about a specific Tavern session.
    */
   public get<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6670,9 +6670,9 @@ export class Indexing extends HeyApiClient {
   }
 
   /**
-   * List Kilo embedding models
+   * List Tavern embedding models
    *
-   * Retrieve the embedding models available through the active Kilo account.
+   * Retrieve the embedding models available through the active Tavern account.
    */
   public models<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6741,7 +6741,7 @@ export class Audio extends HeyApiClient {
   /**
    * Speech to text transcription
    *
-   * Proxy an audio transcription request to the Kilo Gateway
+   * Proxy an audio transcription request to the Tavern Gateway
    */
   public transcriptions<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6779,7 +6779,7 @@ export class Audio extends HeyApiClient {
       KiloAudioTranscriptionsErrors,
       ThrowOnError
     >({
-      url: "/kilo/audio/transcriptions",
+      url: "/tavern/audio/transcriptions",
       ...options,
       ...params,
       headers: {
@@ -6795,7 +6795,7 @@ export class Models extends HeyApiClient {
   /**
    * Image generation models
    *
-   * List image-capable models from the Kilo Gateway OpenRouter passthrough
+   * List image-capable models from the Tavern Gateway OpenRouter passthrough
    */
   public images<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6816,7 +6816,7 @@ export class Models extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloModelsImagesResponses, KiloModelsImagesErrors, ThrowOnError>({
-      url: "/kilo/models/images",
+      url: "/tavern/models/images",
       ...options,
       ...params,
     })
@@ -6825,7 +6825,7 @@ export class Models extends HeyApiClient {
   /**
    * Speech-to-text models
    *
-   * List transcription-capable models from the Kilo Gateway catalog
+   * List transcription-capable models from the Tavern Gateway catalog
    */
   public transcriptions<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -6850,7 +6850,7 @@ export class Models extends HeyApiClient {
       KiloModelsTranscriptionsErrors,
       ThrowOnError
     >({
-      url: "/kilo/models/transcriptions",
+      url: "/tavern/models/transcriptions",
       ...options,
       ...params,
     })
@@ -6859,9 +6859,9 @@ export class Models extends HeyApiClient {
 
 export class Organization extends HeyApiClient {
   /**
-   * Update Kilo Gateway organization
+   * Update Tavern Gateway organization
    *
-   * Switch to a different Kilo Gateway organization
+   * Switch to a different Tavern Gateway organization
    */
   public set<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6885,7 +6885,7 @@ export class Organization extends HeyApiClient {
     )
     return (options?.client ?? this.client).post<KiloOrganizationSetResponses, KiloOrganizationSetErrors, ThrowOnError>(
       {
-        url: "/kilo/organization",
+        url: "/tavern/organization",
         ...options,
         ...params,
         headers: {
@@ -6902,7 +6902,7 @@ export class Session3 extends HeyApiClient {
   /**
    * Get cloud session
    *
-   * Fetch full session data from the Kilo cloud for preview
+   * Fetch full session data from the Tavern cloud for preview
    */
   public get<ThrowOnError extends boolean = false>(
     parameters: {
@@ -6925,7 +6925,7 @@ export class Session3 extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloCloudSessionGetResponses, KiloCloudSessionGetErrors, ThrowOnError>({
-      url: "/kilo/cloud/session/{id}",
+      url: "/tavern/cloud/session/{id}",
       ...options,
       ...params,
     })
@@ -6961,7 +6961,7 @@ export class Session3 extends HeyApiClient {
       KiloCloudSessionImportErrors,
       ThrowOnError
     >({
-      url: "/kilo/cloud/session/import",
+      url: "/tavern/cloud/session/import",
       ...options,
       ...params,
       headers: {
@@ -6980,11 +6980,11 @@ export class Cloud extends HeyApiClient {
   }
 }
 
-export class Kilo extends HeyApiClient {
+export class Tavern extends HeyApiClient {
   /**
-   * Get Kilo Gateway profile
+   * Get Tavern Gateway profile
    *
-   * Fetch user profile and organizations from Kilo Gateway
+   * Fetch user profile and organizations from Tavern Gateway
    */
   public profile<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7005,16 +7005,16 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloProfileResponses, KiloProfileErrors, ThrowOnError>({
-      url: "/kilo/profile",
+      url: "/tavern/profile",
       ...options,
       ...params,
     })
   }
 
   /**
-   * Get Kilo authentication status
+   * Get Tavern authentication status
    *
-   * Check whether a locally stored Kilo credential can authenticate Gateway requests
+   * Check whether a locally stored Tavern credential can authenticate Gateway requests
    */
   public authStatus<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7035,7 +7035,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloAuthStatusResponses, KiloAuthStatusErrors, ThrowOnError>({
-      url: "/kilo/auth-status",
+      url: "/tavern/auth-status",
       ...options,
       ...params,
     })
@@ -7065,7 +7065,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloModesResponses, KiloModesErrors, ThrowOnError>({
-      url: "/kilo/modes",
+      url: "/tavern/modes",
       ...options,
       ...params,
     })
@@ -7074,7 +7074,7 @@ export class Kilo extends HeyApiClient {
   /**
    * FIM completion
    *
-   * Proxy a Fill-in-the-Middle completion request to the Kilo Gateway
+   * Proxy a Fill-in-the-Middle completion request to the Tavern Gateway
    */
   public fim<ThrowOnError extends boolean = false>(
     parameters: {
@@ -7107,7 +7107,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).sse.post<KiloFimResponses, KiloFimErrors, ThrowOnError>({
-      url: "/kilo/fim",
+      url: "/tavern/fim",
       ...options,
       ...params,
       headers: {
@@ -7167,7 +7167,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<KiloEditResponses, KiloEditErrors, ThrowOnError>({
-      url: "/kilo/edit",
+      url: "/tavern/edit",
       ...options,
       ...params,
       headers: {
@@ -7179,9 +7179,9 @@ export class Kilo extends HeyApiClient {
   }
 
   /**
-   * Get Kilo notifications
+   * Get Tavern notifications
    *
-   * Fetch notifications from Kilo Gateway for CLI display
+   * Fetch notifications from Tavern Gateway for CLI display
    */
   public notifications<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7202,7 +7202,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloNotificationsResponses, KiloNotificationsErrors, ThrowOnError>({
-      url: "/kilo/notifications",
+      url: "/tavern/notifications",
       ...options,
       ...params,
     })
@@ -7211,7 +7211,7 @@ export class Kilo extends HeyApiClient {
   /**
    * Get cloud sessions
    *
-   * Fetch cloud CLI sessions from Kilo API
+   * Fetch cloud CLI sessions from Tavern API
    */
   public cloudSessions<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7238,7 +7238,7 @@ export class Kilo extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KiloCloudSessionsResponses, KiloCloudSessionsErrors, ThrowOnError>({
-      url: "/kilo/cloud-sessions",
+      url: "/tavern/cloud-sessions",
       ...options,
       ...params,
     })
@@ -7294,7 +7294,7 @@ export class Heap extends HeyApiClient {
       KilocodeHeapSnapshotErrors,
       ThrowOnError
     >({
-      url: "/kilocode/heap/snapshot",
+      url: "/taverncode/heap/snapshot",
       ...options,
       ...params,
     })
@@ -7330,7 +7330,7 @@ export class Marketplace extends HeyApiClient {
       KilocodeMarketplaceListErrors,
       ThrowOnError
     >({
-      url: "/kilocode/marketplace",
+      url: "/taverncode/marketplace",
       ...options,
       ...params,
     })
@@ -7339,7 +7339,7 @@ export class Marketplace extends HeyApiClient {
   /**
    * Install a marketplace item
    *
-   * Install a marketplace MCP server, agent, skill, or plugin into project or global Kilo config.
+   * Install a marketplace MCP server, agent, skill, or plugin into project or global Tavern config.
    */
   public install<ThrowOnError extends boolean = false>(
     parameters: {
@@ -7372,7 +7372,7 @@ export class Marketplace extends HeyApiClient {
       KilocodeMarketplaceInstallErrors,
       ThrowOnError
     >({
-      url: "/kilocode/marketplace/install",
+      url: "/taverncode/marketplace/install",
       ...options,
       ...params,
       headers: {
@@ -7386,7 +7386,7 @@ export class Marketplace extends HeyApiClient {
   /**
    * Remove a marketplace item
    *
-   * Remove a marketplace MCP server, agent, skill, or plugin from project or global Kilo config.
+   * Remove a marketplace MCP server, agent, skill, or plugin from project or global Tavern config.
    */
   public remove<ThrowOnError extends boolean = false>(
     parameters: {
@@ -7415,7 +7415,7 @@ export class Marketplace extends HeyApiClient {
       KilocodeMarketplaceRemoveErrors,
       ThrowOnError
     >({
-      url: "/kilocode/marketplace/remove",
+      url: "/taverncode/marketplace/remove",
       ...options,
       ...params,
       headers: {
@@ -7456,7 +7456,7 @@ export class Snapshot extends HeyApiClient {
       KilocodeSnapshotPrepareErrors,
       ThrowOnError
     >({
-      url: "/kilocode/snapshot/prepare",
+      url: "/taverncode/snapshot/prepare",
       ...options,
       ...params,
     })
@@ -7492,7 +7492,7 @@ export class ProviderUsage extends HeyApiClient {
       KilocodeProviderUsageGetErrors,
       ThrowOnError
     >({
-      url: "/kilocode/provider-usage",
+      url: "/taverncode/provider-usage",
       ...options,
       ...params,
     })
@@ -7526,7 +7526,7 @@ export class ProviderUsage extends HeyApiClient {
       KilocodeProviderUsageRefreshErrors,
       ThrowOnError
     >({
-      url: "/kilocode/provider-usage/refresh",
+      url: "/taverncode/provider-usage/refresh",
       ...options,
       ...params,
     })
@@ -7562,7 +7562,7 @@ export class Notebook extends HeyApiClient {
       KilocodeNotebookListErrors,
       ThrowOnError
     >({
-      url: "/kilocode/notebook",
+      url: "/taverncode/notebook",
       ...options,
       ...params,
     })
@@ -7600,7 +7600,7 @@ export class Notebook extends HeyApiClient {
       KilocodeNotebookReplyErrors,
       ThrowOnError
     >({
-      url: "/kilocode/notebook/{requestID}/reply",
+      url: "/taverncode/notebook/{requestID}/reply",
       ...options,
       ...params,
       headers: {
@@ -7643,7 +7643,7 @@ export class Notebook extends HeyApiClient {
       KilocodeNotebookRejectErrors,
       ThrowOnError
     >({
-      url: "/kilocode/notebook/{requestID}/reject",
+      url: "/taverncode/notebook/{requestID}/reject",
       ...options,
       ...params,
       headers: {
@@ -7684,7 +7684,7 @@ export class AgentManager extends HeyApiClient {
       KilocodeAgentManagerListErrors,
       ThrowOnError
     >({
-      url: "/kilocode/agent-manager",
+      url: "/taverncode/agent-manager",
       ...options,
       ...params,
     })
@@ -7722,7 +7722,7 @@ export class AgentManager extends HeyApiClient {
       KilocodeAgentManagerReplyErrors,
       ThrowOnError
     >({
-      url: "/kilocode/agent-manager/{requestID}/reply",
+      url: "/taverncode/agent-manager/{requestID}/reply",
       ...options,
       ...params,
       headers: {
@@ -7765,7 +7765,7 @@ export class AgentManager extends HeyApiClient {
       KilocodeAgentManagerRejectErrors,
       ThrowOnError
     >({
-      url: "/kilocode/agent-manager/{requestID}/reject",
+      url: "/taverncode/agent-manager/{requestID}/reject",
       ...options,
       ...params,
       headers: {
@@ -7808,7 +7808,7 @@ export class BackgroundJob extends HeyApiClient {
       KilocodeBackgroundJobCancelErrors,
       ThrowOnError
     >({
-      url: "/kilocode/background-jobs/{jobID}/cancel",
+      url: "/taverncode/background-jobs/{jobID}/cancel",
       ...options,
       ...params,
     })
@@ -7844,7 +7844,7 @@ export class BackgroundJob extends HeyApiClient {
       KilocodeBackgroundJobPromoteErrors,
       ThrowOnError
     >({
-      url: "/kilocode/background-jobs/{jobID}/promote",
+      url: "/taverncode/background-jobs/{jobID}/promote",
       ...options,
       ...params,
     })
@@ -7880,7 +7880,7 @@ export class Retention extends HeyApiClient {
       KilocodeRetentionStatusErrors,
       ThrowOnError
     >({
-      url: "/kilocode/retention",
+      url: "/taverncode/retention",
       ...options,
       ...params,
     })
@@ -7889,7 +7889,7 @@ export class Retention extends HeyApiClient {
   /**
    * Run session retention
    *
-   * Run one machine-wide session retention pass. Does nothing unless the retention policy is enabled in kilo.json; `force` bypasses the minimum spacing between scheduled passes, never the enable check.
+   * Run one machine-wide session retention pass. Does nothing unless the retention policy is enabled in tavern.json; `force` bypasses the minimum spacing between scheduled passes, never the enable check.
    */
   public run<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -7916,7 +7916,7 @@ export class Retention extends HeyApiClient {
       KilocodeRetentionRunErrors,
       ThrowOnError
     >({
-      url: "/kilocode/retention/run",
+      url: "/taverncode/retention/run",
       ...options,
       ...params,
       headers: {
@@ -7955,7 +7955,7 @@ export class Retention extends HeyApiClient {
       KilocodeRetentionCancelErrors,
       ThrowOnError
     >({
-      url: "/kilocode/retention/cancel",
+      url: "/taverncode/retention/cancel",
       ...options,
       ...params,
     })
@@ -7964,9 +7964,9 @@ export class Retention extends HeyApiClient {
 
 export class Migrate extends HeyApiClient {
   /**
-   * Migrate external sessions into Kilo
+   * Migrate external sessions into Tavern
    *
-   * Discover Claude Code and OpenAI Codex JSONL transcripts for a directory and migrate them into new Kilo sessions, one session per transcript. Sources that were already migrated are skipped, so calling this repeatedly is a no-op once everything has landed.
+   * Discover Claude Code and OpenAI Codex JSONL transcripts for a directory and migrate them into new Tavern sessions, one session per transcript. Sources that were already migrated are skipped, so calling this repeatedly is a no-op once everything has landed.
    */
   public sessions<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -8003,7 +8003,7 @@ export class Migrate extends HeyApiClient {
       KilocodeMigrateSessionsErrors,
       ThrowOnError
     >({
-      url: "/kilocode/migrate/sessions",
+      url: "/taverncode/migrate/sessions",
       ...options,
       ...params,
       headers: {
@@ -8046,7 +8046,7 @@ export class Migrate extends HeyApiClient {
       KilocodeMigrateDiscoverErrors,
       ThrowOnError
     >({
-      url: "/kilocode/migrate/sessions/discover",
+      url: "/taverncode/migrate/sessions/discover",
       ...options,
       ...params,
       headers: {
@@ -8111,7 +8111,7 @@ export class SessionImport extends HeyApiClient {
       KilocodeSessionImportProjectErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/project",
+      url: "/taverncode/session-import/project",
       ...options,
       ...params,
       headers: {
@@ -8207,7 +8207,7 @@ export class SessionImport extends HeyApiClient {
       KilocodeSessionImportSessionErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/session",
+      url: "/taverncode/session-import/session",
       ...options,
       ...params,
       headers: {
@@ -8299,7 +8299,7 @@ export class SessionImport extends HeyApiClient {
       KilocodeSessionImportMessageErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/message",
+      url: "/taverncode/session-import/message",
       ...options,
       ...params,
       headers: {
@@ -8431,7 +8431,7 @@ export class SessionImport extends HeyApiClient {
       KilocodeSessionImportPartErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session-import/part",
+      url: "/taverncode/session-import/part",
       ...options,
       ...params,
       headers: {
@@ -8443,7 +8443,7 @@ export class SessionImport extends HeyApiClient {
   }
 }
 
-export class Kilocode extends HeyApiClient {
+export class Taverncode extends HeyApiClient {
   /**
    * Resume an interrupted session
    *
@@ -8478,7 +8478,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeResumeSessionErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session/{sessionID}/resume",
+      url: "/taverncode/session/{sessionID}/resume",
       ...options,
       ...params,
       headers: {
@@ -8521,7 +8521,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeDrainSessionErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session/{sessionID}/drain",
+      url: "/taverncode/session/{sessionID}/drain",
       ...options,
       ...params,
       headers: {
@@ -8566,7 +8566,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeSessionBoardErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session/{sessionID}/board",
+      url: "/taverncode/session/{sessionID}/board",
       ...options,
       ...params,
     })
@@ -8604,7 +8604,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeResetSessionBoardErrors,
       ThrowOnError
     >({
-      url: "/kilocode/session/{sessionID}/board/reset",
+      url: "/taverncode/session/{sessionID}/board/reset",
       ...options,
       ...params,
       headers: {
@@ -8643,7 +8643,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeCommandFilesErrors,
       ThrowOnError
     >({
-      url: "/kilocode/command/files",
+      url: "/taverncode/command/files",
       ...options,
       ...params,
     })
@@ -8679,7 +8679,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeRemoveCommandErrors,
       ThrowOnError
     >({
-      url: "/kilocode/command/remove",
+      url: "/taverncode/command/remove",
       ...options,
       ...params,
       headers: {
@@ -8717,7 +8717,7 @@ export class Kilocode extends HeyApiClient {
     )
     return (options?.client ?? this.client).post<KilocodeRemoveSkillResponses, KilocodeRemoveSkillErrors, ThrowOnError>(
       {
-        url: "/kilocode/skill/remove",
+        url: "/taverncode/skill/remove",
         ...options,
         ...params,
         headers: {
@@ -8758,7 +8758,7 @@ export class Kilocode extends HeyApiClient {
     )
     return (options?.client ?? this.client).post<KilocodeRemoveAgentResponses, KilocodeRemoveAgentErrors, ThrowOnError>(
       {
-        url: "/kilocode/agent/remove",
+        url: "/taverncode/agent/remove",
         ...options,
         ...params,
         headers: {
@@ -8800,7 +8800,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeRemoveSnapshotErrors,
       ThrowOnError
     >({
-      url: "/kilocode/snapshot/remove",
+      url: "/taverncode/snapshot/remove",
       ...options,
       ...params,
       headers: {
@@ -8841,7 +8841,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeTeardownWorktreeErrors,
       ThrowOnError
     >({
-      url: "/kilocode/worktree/teardown",
+      url: "/taverncode/worktree/teardown",
       ...options,
       ...params,
       headers: {
@@ -8918,7 +8918,7 @@ export class Kilocode extends HeyApiClient {
       KilocodeBackgroundJobsErrors,
       ThrowOnError
     >({
-      url: "/kilocode/background-jobs",
+      url: "/taverncode/background-jobs",
       ...options,
       ...params,
     })
@@ -8948,7 +8948,7 @@ export class Kilocode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<KilocodeWakeupsResponses, KilocodeWakeupsErrors, ThrowOnError>({
-      url: "/kilocode/wakeups",
+      url: "/taverncode/wakeups",
       ...options,
       ...params,
     })
@@ -9034,7 +9034,7 @@ export class AnacondaDesktop extends HeyApiClient {
       AnacondaDesktopStatusErrors,
       ThrowOnError
     >({
-      url: "/kilocode/anaconda-desktop/status",
+      url: "/taverncode/anaconda-desktop/status",
       ...options,
       ...params,
     })
@@ -9065,7 +9065,7 @@ export class AnacondaDesktop extends HeyApiClient {
     )
     return (options?.client ?? this.client).post<AnacondaDesktopOpenResponses, AnacondaDesktopOpenErrors, ThrowOnError>(
       {
-        url: "/kilocode/anaconda-desktop/open",
+        url: "/taverncode/anaconda-desktop/open",
         ...options,
         ...params,
       },
@@ -9075,7 +9075,7 @@ export class AnacondaDesktop extends HeyApiClient {
   /**
    * Synchronize Anaconda Desktop provider
    *
-   * Discover the active local inference server and replace Kilo provider authentication metadata.
+   * Discover the active local inference server and replace Tavern provider authentication metadata.
    */
   public sync<ThrowOnError extends boolean = false>(
     parameters?: {
@@ -9099,7 +9099,7 @@ export class AnacondaDesktop extends HeyApiClient {
     )
     return (options?.client ?? this.client).post<AnacondaDesktopSyncResponses, AnacondaDesktopSyncErrors, ThrowOnError>(
       {
-        url: "/kilocode/anaconda-desktop/sync",
+        url: "/taverncode/anaconda-desktop/sync",
         ...options,
         ...params,
         headers: {
@@ -9503,7 +9503,7 @@ export class Telemetry extends HeyApiClient {
   /**
    * Capture telemetry event
    *
-   * Forward a telemetry event to PostHog via kilo-telemetry.
+   * Forward a telemetry event to PostHog via tavern-telemetry.
    */
   public capture<ThrowOnError extends boolean = false>(
     parameters: {
@@ -10421,7 +10421,7 @@ export class Session4 extends HeyApiClient {
   /**
    * List active sessions
    *
-   * Retrieve foreground Session drains currently owned by this Kilo process. Sessions absent from the result are inactive.
+   * Retrieve foreground Session drains currently owned by this Tavern process. Sessions absent from the result are inactive.
    */
   public active<ThrowOnError extends boolean = false>(options?: Options<never, ThrowOnError>) {
     return (options?.client ?? this.client).get<V2SessionActiveResponses, V2SessionActiveErrors, ThrowOnError>({
@@ -10690,7 +10690,7 @@ export class Session4 extends HeyApiClient {
   /**
    * Interrupt session execution
    *
-   * Interrupt active execution owned by this Kilo process. Idle interruption is a no-op.
+   * Interrupt active execution owned by this Tavern process. Idle interruption is a no-op.
    */
   public interrupt<ThrowOnError extends boolean = false>(
     parameters: {
@@ -12175,14 +12175,14 @@ export class KiloClient extends HeyApiClient {
     return (this._indexing ??= new Indexing({ client: this.client }))
   }
 
-  private _kilo?: Kilo
-  get kilo(): Kilo {
-    return (this._kilo ??= new Kilo({ client: this.client }))
+  private _kilo?: Tavern
+  get tavern(): Tavern {
+    return (this._kilo ??= new Tavern({ client: this.client }))
   }
 
-  private _kilocode?: Kilocode
-  get kilocode(): Kilocode {
-    return (this._kilocode ??= new Kilocode({ client: this.client }))
+  private _taverncode?: Taverncode
+  get taverncode(): Taverncode {
+    return (this._taverncode ??= new Taverncode({ client: this.client }))
   }
 
   private _anacondaDesktop?: AnacondaDesktop

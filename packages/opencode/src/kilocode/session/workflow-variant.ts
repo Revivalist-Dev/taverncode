@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import type { Agent } from "@/agent/agent"
 import type { Command } from "@/command"
 

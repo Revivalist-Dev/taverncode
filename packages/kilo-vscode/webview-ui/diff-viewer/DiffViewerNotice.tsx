@@ -1,5 +1,5 @@
 import { Show, type Component } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 
 interface Props {
   text?: string

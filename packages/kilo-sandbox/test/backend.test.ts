@@ -87,7 +87,7 @@ describe("sandbox launch preparation", () => {
   })
 
   test("keeps the host network namespace in Linux allow mode", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-policy-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-policy-"))
     const git = path.join(root, ".git")
     mkdirSync(git)
     writeFileSync(path.join(git, "config"), "original")
@@ -101,10 +101,10 @@ describe("sandbox launch preparation", () => {
     }
 
     try {
-      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/kilo/bwrap")
+      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/tavern/bwrap")
       const writable = result.args.indexOf("--bind")
       const protectedPath = result.args.indexOf("--ro-bind", writable + 1)
-      expect(result.command).toBe("/opt/kilo/bwrap")
+      expect(result.command).toBe("/opt/tavern/bwrap")
       expect(writable).toBeGreaterThan(-1)
       expect(protectedPath).toBeGreaterThan(writable)
       expect(result.args.slice(protectedPath, protectedPath + 3)).toEqual(["--ro-bind", git, git])
@@ -116,7 +116,7 @@ describe("sandbox launch preparation", () => {
   })
 
   test("isolates the Linux network namespace in deny mode", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-network-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-network-"))
     const input = makeProfile("deny")
     const profile: Profile = {
       ...input,
@@ -128,7 +128,7 @@ describe("sandbox launch preparation", () => {
     }
 
     try {
-      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/kilo/bwrap")
+      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/tavern/bwrap")
       expect(result.args).toContain("--unshare-net")
       expect(result.args.indexOf("--unshare-net")).toBeGreaterThan(result.args.indexOf("--unshare-pid"))
       expect(result.args.slice(-3)).toEqual(["--", "/bin/echo", "hello"])
@@ -138,7 +138,7 @@ describe("sandbox launch preparation", () => {
   })
 
   test("re-binds unreadable directories read-only instead of failing Linux setup", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-unreadable-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-unreadable-"))
     const git = path.join(root, ".git")
     const secrets = path.join(root, "secrets")
     mkdirSync(git)
@@ -155,7 +155,7 @@ describe("sandbox launch preparation", () => {
 
     try {
       if (readable(secrets)) return
-      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/kilo/bwrap")
+      const result = generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/tavern/bwrap")
       const writable = result.args.indexOf("--bind")
       expect(result.args.slice(writable, writable + 3)).toEqual(["--bind", root, root])
       const first = result.args.indexOf("--ro-bind", writable + 3)
@@ -169,7 +169,7 @@ describe("sandbox launch preparation", () => {
   })
 
   test("rejects an unreadable writable root", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-root-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-root-"))
     chmodSync(root, 0o000)
     const profile: Profile = {
       ...makeProfile("allow"),
@@ -182,7 +182,7 @@ describe("sandbox launch preparation", () => {
 
     try {
       if (readable(root)) return
-      expect(() => generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/kilo/bwrap")).toThrow(
+      expect(() => generateBubblewrap(profile, { ...launch, cwd: root }, "/opt/tavern/bwrap")).toThrow(
         `Writable root is not readable: ${root}`,
       )
     } finally {
@@ -194,17 +194,17 @@ describe("sandbox launch preparation", () => {
   test("parses escaped mount points from Linux mountinfo", () => {
     const content = [
       String.raw`36 25 0:32 / / rw,relatime - overlay overlay rw`,
-      String.raw`37 36 0:33 / /tmp/kilo\040root rw - tmpfs tmpfs rw`,
-      String.raw`38 37 0:34 / /tmp/kilo\040root/nested\011mount rw - tmpfs tmpfs rw`,
+      String.raw`37 36 0:33 / /tmp/tavern\040root rw - tmpfs tmpfs rw`,
+      String.raw`38 37 0:34 / /tmp/tavern\040root/nested\011mount rw - tmpfs tmpfs rw`,
       String.raw`39 36 0:35 / /tmp/back\134slash rw - tmpfs tmpfs rw`,
       "",
     ].join("\n")
 
-    expect(parseMountinfo(content)).toEqual(["/", "/tmp/kilo root", "/tmp/kilo root/nested\tmount", "/tmp/back\\slash"])
+    expect(parseMountinfo(content)).toEqual(["/", "/tmp/tavern root", "/tmp/tavern root/nested\tmount", "/tmp/back\\slash"])
   })
 
   test("allows a mounted writable root but rejects nested mount points", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-mount-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-mount-"))
     const nested = path.join(root, "nested mount")
     const profile: Profile = {
       ...makeProfile("allow"),
@@ -216,8 +216,8 @@ describe("sandbox launch preparation", () => {
     }
 
     try {
-      expect(() => generateBubblewrap(profile, launch, "/opt/kilo/bwrap", [root])).not.toThrow()
-      expect(() => generateBubblewrap(profile, launch, "/opt/kilo/bwrap", [root, nested])).toThrow(
+      expect(() => generateBubblewrap(profile, launch, "/opt/tavern/bwrap", [root])).not.toThrow()
+      expect(() => generateBubblewrap(profile, launch, "/opt/tavern/bwrap", [root, nested])).toThrow(
         `Writable root contains a nested mount point: ${nested}`,
       )
     } finally {
@@ -226,7 +226,7 @@ describe("sandbox launch preparation", () => {
   })
 
   test("rejects a Bubblewrap executable inside a writable root", () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "kilo-bubblewrap-helper-"))
+    const root = mkdtempSync(path.join(os.tmpdir(), "tavern-bubblewrap-helper-"))
     const helper = path.join(root, "bwrap")
     writeFileSync(helper, "helper")
     const profile: Profile = {
@@ -280,7 +280,7 @@ describe("sandbox launch preparation", () => {
       return
     }
     expect(Result.isSuccess(result)).toBe(true)
-    if (Result.isSuccess(result)) expect(result.success.environment?.HTTPS_PROXY).toContain("http://kilo:")
+    if (Result.isSuccess(result)) expect(result.success.environment?.HTTPS_PROXY).toContain("http://tavern:")
   })
 
   test("fails non-empty allowedHosts closed before launching a process", async () => {

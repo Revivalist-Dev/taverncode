@@ -1,4 +1,4 @@
-import type { KilocodeSessionModelUsageResponse } from "@kilocode/sdk/v2"
+import type { KilocodeSessionModelUsageResponse } from "@taverncode/sdk/v2"
 import type { Part, TokenUsage } from "./parts"
 
 export type SessionModelUsage = KilocodeSessionModelUsageResponse
@@ -73,7 +73,7 @@ export interface ProjectSessionInfo extends SessionInfo {
 
 export type SessionUpdate = Partial<SessionInfo> & Pick<SessionInfo, "id">
 
-// Cloud session info (from Kilo cloud API)
+// Cloud session info (from Tavern cloud API)
 export interface CloudSessionInfo {
   session_id: string
   title: string | null

@@ -1,5 +1,5 @@
-import { PART_MAPPING, ToolRegistry } from "@kilocode/kilo-ui/message-part"
-import type { AssistantMessage, Part } from "@kilocode/sdk/v2"
+import { PART_MAPPING, ToolRegistry } from "@taverncode/tavern-ui/message-part"
+import type { AssistantMessage, Part } from "@taverncode/sdk/v2"
 import { snapshotProgress } from "../context/session-utils"
 
 export const UPSTREAM_SUPPRESSED_TOOLS = new Set(["todowrite", "todoread"])

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { formatIndexingLabel } from "../../src/kilocode/indexing-label"
+import { formatIndexingLabel } from "../../src/taverncode/indexing-label"
 
 describe("indexing label", () => {
   test("formats in-progress status with counts", () => {

@@ -75,7 +75,7 @@ describe("Agent Manager application settings", () => {
     const writes: unknown[] = []
     vscode.workspace.getConfiguration = ((section?: string) => ({
       get: (key: string, fallback: unknown) =>
-        section === "kilo-code.new.agentManager" && values.has(key) ? values.get(key) : fallback,
+        section === "tavern-code.new.agentManager" && values.has(key) ? values.get(key) : fallback,
       update: async (key: string, value: unknown, target: unknown) => {
         writes.push({ section, key, value, target })
         values.set(key, value)
@@ -94,13 +94,13 @@ describe("Agent Manager application settings", () => {
       await provider.handleUpdateSetting("agentManager.branchPrefix", "")
       expect(writes).toEqual([
         {
-          section: "kilo-code.new.agentManager",
+          section: "tavern-code.new.agentManager",
           key: "autoBranchNaming",
           value: !expected,
           target: vscode.ConfigurationTarget.Global,
         },
         {
-          section: "kilo-code.new.agentManager",
+          section: "tavern-code.new.agentManager",
           key: "branchPrefix",
           value: "",
           target: vscode.ConfigurationTarget.Global,
@@ -116,7 +116,7 @@ describe("Agent Manager application settings", () => {
 
 describe("Claude migration application setting", () => {
   it("declares an opt-in application setting", () => {
-    expect(PACKAGE.contributes.configuration.properties["kilo-code.new.experimental.claudeMigration"]).toEqual({
+    expect(PACKAGE.contributes.configuration.properties["tavern-code.new.experimental.claudeMigration"]).toEqual({
       type: "boolean",
       default: false,
       scope: "application",
@@ -132,7 +132,7 @@ describe("Claude migration application setting", () => {
     const writes: unknown[] = []
     vscode.workspace.getConfiguration = ((section?: string) => ({
       get: (key: string, fallback: unknown) =>
-        section === "kilo-code.new.experimental" && values.has(key) ? values.get(key) : fallback,
+        section === "tavern-code.new.experimental" && values.has(key) ? values.get(key) : fallback,
       update: async (key: string, value: unknown, target: unknown) => {
         writes.push({ section, key, value, target })
         values.set(key, value)
@@ -147,7 +147,7 @@ describe("Claude migration application setting", () => {
       await provider.handleUpdateSetting("experimental.claudeMigration", true)
       expect(writes).toEqual([
         {
-          section: "kilo-code.new.experimental",
+          section: "tavern-code.new.experimental",
           key: "claudeMigration",
           value: true,
           target: vscode.ConfigurationTarget.Global,

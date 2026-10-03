@@ -1,7 +1,7 @@
 import { describe, expect } from "bun:test"
 import { Cause, Effect, Exit } from "effect"
-import { run, type Profile } from "@kilocode/sandbox"
-import * as Network from "@/kilocode/sandbox/network"
+import { run, type Profile } from "@taverncode/sandbox"
+import * as Network from "@/taverncode/sandbox/network"
 import { it } from "../../lib/effect"
 
 function profile(mode: Profile["network"]["mode"]): Profile {

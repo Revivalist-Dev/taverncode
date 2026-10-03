@@ -9,7 +9,7 @@ type Auth = Pick<AuthStore, "get">
 const FIM_TIMEOUT_MS = 30_000
 
 async function getProxyAuth(Auth: Auth) {
-  const auth = await Auth.get("kilo")
+  const auth = await Auth.get("tavern")
   const token = auth?.type === "api" ? auth.key : auth?.type === "oauth" ? auth.access : undefined
   return {
     auth,
@@ -43,10 +43,10 @@ async function fetchFim(
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${key}`,
-        ...(target.provider === "kilo"
-          ? buildKiloHeaders(undefined, { kilocodeOrganizationId: input.organizationId })
+        ...(target.provider === "tavern"
+          ? buildKiloHeaders(undefined, { taverncodeOrganizationId: input.organizationId })
           : {}),
-        ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+        ...(target.provider === "tavern" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
       },
       signal: input.signal,
       body: JSON.stringify({
@@ -70,14 +70,14 @@ export function createFimHandler(Auth: Auth) {
     const target = resolveFimTarget(provider, model)
     const fimMaxTokens = maxTokens ?? 256
     const fimTemperature = temperature ?? 0.2
-    const proxy = target.provider === "kilo" ? await getProxyAuth(Auth) : undefined
-    const token = target.provider === "kilo" ? proxy?.token : await getProviderKey(Auth, target.provider)
+    const proxy = target.provider === "tavern" ? await getProxyAuth(Auth) : undefined
+    const token = target.provider === "tavern" ? proxy?.token : await getProviderKey(Auth, target.provider)
 
-    if (target.provider === "kilo" && !proxy?.auth) {
-      return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+    if (target.provider === "tavern" && !proxy?.auth) {
+      return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
     }
 
-    if (target.provider === "kilo" && !token) {
+    if (target.provider === "tavern" && !token) {
       return c.json({ error: "No valid token found" }, 401)
     }
 

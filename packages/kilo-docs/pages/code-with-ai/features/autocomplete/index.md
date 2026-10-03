@@ -1,20 +1,20 @@
 ---
 title: "Autocomplete"
-description: "AI-powered code autocompletion in Kilo Code"
+description: "AI-powered code autocompletion in Tavern Code"
 ---
 
 # Autocomplete
 
-Kilo Code's autocomplete feature provides intelligent code suggestions and completions while you're typing, helping you write code faster and more efficiently. It offers both automatic and manual triggering options.
+Tavern Code's autocomplete feature provides intelligent code suggestions and completions while you're typing, helping you write code faster and more efficiently. It offers both automatic and manual triggering options.
 
 ## How Autocomplete Works
 
-The extension uses **Fill-in-the-Middle (FIM)** completion routed through the **Kilo Gateway**. It analyzes the code before and after your cursor to generate contextually accurate inline suggestions.
+The extension uses **Fill-in-the-Middle (FIM)** completion routed through the **Tavern Gateway**. It analyzes the code before and after your cursor to generate contextually accurate inline suggestions.
 
 You can choose between two FIM models:
 
-- **Codestral** (`mistralai/codestral-2508`) by Mistral AI — the default, billed through your Kilo account.
-- **Mercury Edit 2** (`inception/mercury-edit-2`) by Inception — temporarily available via **BYOK** (Bring Your Own Key) only; Kilo Gateway support is coming soon.
+- **Codestral** (`mistralai/codestral-2508`) by Mistral AI — the default, billed through your Tavern account.
+- **Mercury Edit 2** (`inception/mercury-edit-2`) by Inception — temporarily available via **BYOK** (Bring Your Own Key) only; Tavern Gateway support is coming soon.
 
 ## Triggering Options
 
@@ -27,18 +27,18 @@ Autocomplete is **enabled by default** and automatically shows inline suggestion
 Press `Cmd+L` (Mac) or `Ctrl+L` (Windows/Linux) to manually request a completion at your cursor position.
 
 {% callout type="note" %}
-This keybinding requires `kilo-code.new.autocomplete.enableSmartInlineTaskKeybinding` to be enabled in VS Code settings. It is **disabled by default**.
+This keybinding requires `tavern-code.new.autocomplete.enableSmartInlineTaskKeybinding` to be enabled in VS Code settings. It is **disabled by default**.
 {% /callout %}
 
 ## Provider and Model
 
-Autocomplete requests are routed through the **Kilo Gateway**. You can pick the FIM model under **Settings → Models → Autocomplete model**:
+Autocomplete requests are routed through the **Tavern Gateway**. You can pick the FIM model under **Settings → Models → Autocomplete model**:
 
-- **Codestral** (`mistralai/codestral-2508`) — the default. Billed through your Kilo account, or free when you add your own Mistral Codestral key via BYOK. See [Setting Up Mistral for Free Autocomplete](/docs/code-with-ai/features/autocomplete/mistral-setup).
-- **Mercury Edit 2** (`inception/mercury-edit-2`) — a fast diffusion-based FIM model by Inception. Temporarily requires an **Inception BYOK key** until Kilo Gateway support lands. Add one from the [BYOK page](https://app.kilo.ai/byok) in the Kilo platform. See [Bring Your Own Key (BYOK)](/docs/getting-started/byok) for setup details.
+- **Codestral** (`mistralai/codestral-2508`) — the default. Billed through your Tavern account, or free when you add your own Mistral Codestral key via BYOK. See [Setting Up Mistral for Free Autocomplete](/docs/code-with-ai/features/autocomplete/mistral-setup).
+- **Mercury Edit 2** (`inception/mercury-edit-2`) — a fast diffusion-based FIM model by Inception. Temporarily requires an **Inception BYOK key** until Tavern Gateway support lands. Add one from the [BYOK page](https://app.tavern.ai/byok) in the Tavern platform. See [Bring Your Own Key (BYOK)](/docs/getting-started/byok) for setup details.
 
 {% callout type="note" %}
-Mercury Edit 2 is only available through BYOK for now — Kilo Gateway support is coming soon. If you select Mercury Edit 2 without a valid Inception BYOK key configured, autocomplete requests will fail — switch back to Codestral or add an Inception key to continue.
+Mercury Edit 2 is only available through BYOK for now — Tavern Gateway support is coming soon. If you select Mercury Edit 2 without a valid Inception BYOK key configured, autocomplete requests will fail — switch back to Codestral or add an Inception key to continue.
 {% /callout %}
 
 ## Status Bar
@@ -54,7 +54,7 @@ You can temporarily disable autocomplete by clicking the status bar item to **sn
 
 ## Copilot Conflict Detection
 
-The extension automatically detects if **GitHub Copilot** inline suggestions are enabled and warns you about potential conflicts. Disable Copilot's inline completions for the best experience with Kilo Code autocomplete.
+The extension automatically detects if **GitHub Copilot** inline suggestions are enabled and warns you about potential conflicts. Disable Copilot's inline completions for the best experience with Tavern Code autocomplete.
 
 ## Best Practices
 

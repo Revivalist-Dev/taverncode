@@ -2,11 +2,11 @@ import { Tool } from "@/tool/tool"
 import { Effect, Schema } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import { assertExternalDirectoryEffect } from "@/tool/external-directory"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
-import { KiloReadObject } from "@/kilocode/tool/read-object"
+import { KiloSessions } from "@/tavern-sessions/tavern-sessions"
+import { KiloReadObject } from "@/taverncode/tool/read-object"
 import { sniffAttachmentMime } from "@/util/media"
 import { FSUtil } from "@opencode-ai/core/fs-util"
-import { KiloReference } from "@/kilocode/reference/contains"
+import { KiloReference } from "@/taverncode/reference/contains"
 import DESCRIPTION from "./send-file.txt"
 import path from "node:path"
 
@@ -43,7 +43,7 @@ export const SendFileTool = Tool.define<typeof Params, {}, FSUtil.Service, "send
         Effect.gen(function* () {
           if (!KiloSessions.remoteStatus().connected) {
             return fail(
-              "Cannot send files: this session is not connected to Kilo cloud. Delivery needs an active link.",
+              "Cannot send files: this session is not connected to Tavern cloud. Delivery needs an active link.",
             )
           }
 
@@ -51,7 +51,7 @@ export const SendFileTool = Tool.define<typeof Params, {}, FSUtil.Service, "send
           const requested = path.resolve(inst.directory, params.path)
           const basename = path.basename(requested)
 
-          // kilocode_change start — authorize missing and directory paths with the same
+          // taverncode_change start — authorize missing and directory paths with the same
           // security sequence as read.ts before any file inspection via KiloReadObject.
           // Route absent targets through a read-style authorized failure, and produce a
           // structured fail() for directories. This prevents access-pattern leakage where
@@ -95,7 +95,7 @@ export const SendFileTool = Tool.define<typeof Params, {}, FSUtil.Service, "send
             })
             return fail(`Cannot send: ${basename} is a directory.`)
           }
-          // kilocode_change end
+          // taverncode_change end
 
           // 1. Resolve via KiloReadObject.file (same authorization sequence as read.ts)
           const file = yield* KiloReadObject.file(requested)
@@ -148,7 +148,7 @@ export const SendFileTool = Tool.define<typeof Params, {}, FSUtil.Service, "send
 
               return {
                 title: `Sent file: ${basename}`,
-                output: `File ${basename} (${bytes.byteLength} bytes, ${mime}) delivered to the user's Kilo app. Older app builds ignore non-image file attachments — make sure the user has an up-to-date app to see the delivery.`,
+                output: `File ${basename} (${bytes.byteLength} bytes, ${mime}) delivered to the user's Tavern app. Older app builds ignore non-image file attachments — make sure the user has an up-to-date app to see the delivery.`,
                 metadata: {},
                 attachments: [
                   {

@@ -1,15 +1,15 @@
 ---
 title: "Documentation Style Guide"
-description: "Guidelines for writing Kilo Code documentation"
+description: "Guidelines for writing Tavern Code documentation"
 ---
 
 # Documentation Style Guide
 
-This guide covers writing, formatting, and structuring documentation for the Kilo Code docs site.
+This guide covers writing, formatting, and structuring documentation for the Tavern Code docs site.
 
 ## Voice and Tone
 
-Kilo Code documentation should be:
+Tavern Code documentation should be:
 
 - **Clear and direct** - Cut unnecessary words. Prefer active voice.
 - **Helpful, not salesy** - Focus on what users can do, not just what's possible.
@@ -20,7 +20,7 @@ Kilo Code documentation should be:
 
 - Write in the second person ("you")
 - Use present tense
-- Be specific: "Run `kilo run` to execute a task" not "You can run kilo run"
+- Be specific: "Run `tavern run` to execute a task" not "You can run tavern run"
 
 ### Don't
 
@@ -36,7 +36,7 @@ Kilo Code documentation should be:
 - Use heading levels logically (don't skip from H2 to H4)
 
 ```markdown
-## Installing Kilo Code
+## Installing Tavern Code
 
 ### VS Code Extension
 
@@ -50,7 +50,7 @@ Use numbered lists for step-by-step instructions. Each step should be a complete
 ```markdown
 1. Open VS Code
 2. Go to Extensions (Ctrl+Shift+X / Cmd+Shift+X)
-3. Search for "Kilo Code"
+3. Search for "Tavern Code"
 4. Click the dropdown arrow next to **Install** and select **Install Pre-Release Version**
 ```
 
@@ -76,7 +76,7 @@ Use callouts to highlight important information. Choose the right type:
 
 ```markdown
 {% callout type="tip" %}
-**The easiest way to configure Kilo is to ask the agent.** Just tell the agent what you want.
+**The easiest way to configure Tavern is to ask the agent.** Just tell the agent what you want.
 {% /callout %}
 ```
 
@@ -97,11 +97,11 @@ Bad: [Click here](/docs/getting-started/quickstart)
 - Use fenced code blocks with language specified
 - Include comments in code where helpful
 - Show realistic, working examples
-- Use `kilo run` for CLI examples, not hypothetical commands
+- Use `tavern run` for CLI examples, not hypothetical commands
 
 ````markdown
 ```bash
-kilo run "create a utils.py file with a function that adds two numbers"
+tavern run "create a utils.py file with a function that adds two numbers"
 ```
 ````
 
@@ -109,7 +109,7 @@ kilo run "create a utils.py file with a function that adds two numbers"
 
 Use backticks for inline code, file references, and commands:
 
-- `kilo.jsonc` for configuration files
+- `tavern.jsonc` for configuration files
 - `Ctrl+Shift+X` for keyboard shortcuts
 - `src/utils.ts` for file paths
 
@@ -120,12 +120,12 @@ Use backticks for inline code, file references, and commands:
 Use the Markdoc image tag format:
 
 ```markdown
-{% image src="/docs/img/kilo-provider/connected-accounts.png" alt="Connect account screen" width="800" caption="Connect account screen" /%}
+{% image src="/docs/img/tavern-provider/connected-accounts.png" alt="Connect account screen" width="800" caption="Connect account screen" /%}
 ```
 
 **Image path rules:**
 - Always include `/docs` prefix
-- Use generated screenshots from `packages/kilo-docs/public/img/screenshot-tests/` when available
+- Use generated screenshots from `packages/tavern-docs/public/img/screenshot-tests/` when available
 - Write descriptive alt text for accessibility
 
 ### Tables
@@ -135,7 +135,7 @@ Use compact markdown tables without padding:
 ```markdown
 | Command | What it runs |
 |---|---|
-| `kilo serve` | The prod CLI on `$PATH`. |
+| `tavern serve` | The prod CLI on `$PATH`. |
 ```
 
 ### Tabs
@@ -183,12 +183,12 @@ Use consistent terms throughout:
 
 | Term | Use for |
 |---|---|
-| Kilo Code | The product name |
-| kilo CLI | The command-line interface |
+| Tavern Code | The product name |
+| tavern CLI | The command-line interface |
 | VS Code extension | The VS Code extension |
 | JetBrains plugin | The JetBrains IDE plugin |
-| `kilo serve` | The local HTTP server |
-| `kilo run` | The headless execution command |
+| `tavern serve` | The local HTTP server |
+| `tavern run` | The headless execution command |
 | agent | The AI assistant |
 
 ## Navigation

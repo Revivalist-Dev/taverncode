@@ -12,7 +12,7 @@ export function createDialogModels(opts: {
 }) {
   const [choice, select] = createSignal(opts.saved)
   const [held, hold] = createSignal<ModelSelection | null>(null)
-  const valid = (value: ModelSelection) => (value.providerID !== "kilo" || opts.ready()) && opts.valid(value)
+  const valid = (value: ModelSelection) => (value.providerID !== "tavern" || opts.ready()) && opts.valid(value)
   const model = createMemo(() => {
     const saved = choice() ?? held()
     if (saved && valid(saved)) return saved

@@ -2,8 +2,8 @@ import type {
   IndexingConfigInput,
   IndexingTelemetryEvent,
   VectorStoreSearchResult,
-} from "@kilocode/kilo-indexing/engine"
-import type { IndexingStatus } from "@kilocode/kilo-indexing/status"
+} from "@taverncode/tavern-indexing/engine"
+import type { IndexingStatus } from "@taverncode/tavern-indexing/status"
 import type { IndexingWarning } from "./indexing-warning"
 
 export type InitInput = {

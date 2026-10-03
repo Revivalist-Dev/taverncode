@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test"
 import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
-import type { AgentManagerRequest, Session } from "@kilocode/sdk/v2/client"
+import type { AgentManagerRequest, Session } from "@taverncode/sdk/v2/client"
 import { AgentManagerOrchestrationBridge } from "../../src/agent-manager/orchestration-bridge"
 import { createOrchestrationBridge } from "../../src/agent-manager/orchestration-setup"
 import { ProjectContexts } from "../../src/agent-manager/project/contexts"
@@ -24,7 +24,7 @@ describe("AgentManagerOrchestrationBridge", () => {
   beforeEach(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), "am-orchestration-bridge-"))
     dir = path.join(root, "worktree")
-    fs.mkdirSync(path.join(root, ".kilo"), { recursive: true })
+    fs.mkdirSync(path.join(root, ".tavern"), { recursive: true })
     fs.mkdirSync(dir)
     state = new WorktreeStateManager(root, () => undefined)
     const worktree = state.addWorktree({ branch: "fix/bridge", path: dir, parentBranch: "main" })
@@ -69,7 +69,7 @@ describe("AgentManagerOrchestrationBridge", () => {
         list: mock(async () => ({ data: [] })),
         reply: questionReply,
       },
-      kilocode: {
+      taverncode: {
         agentManager: {
           list: mock(async ({ directory }: { directory?: string }) => {
             if (directory === status.failList) throw new Error("offline")
@@ -131,7 +131,7 @@ describe("AgentManagerOrchestrationBridge", () => {
     })
     const request = (value: AgentManagerRequest, directory = root) =>
       handlers.event?.(
-        { id: `event-${value.id}`, type: "kilocode.agent_manager.requested", properties: value } as SSEPayload,
+        { id: `event-${value.id}`, type: "taverncode.agent_manager.requested", properties: value } as SSEPayload,
         directory,
       )
     return {
@@ -333,7 +333,7 @@ describe("AgentManagerOrchestrationBridge", () => {
         parts: [
           expect.objectContaining({
             type: "text",
-            text: expect.stringContaining("Continue\n\n<!-- kilo-agent-manager source=ses_caller -->"),
+            text: expect.stringContaining("Continue\n\n<!-- tavern-agent-manager source=ses_caller -->"),
           }),
         ],
       }),
@@ -765,8 +765,8 @@ describe("AgentManagerOrchestrationBridge", () => {
     test.handlers.state?.("connected")
     await waitFor(() => test.promptAsync.mock.calls.length === 1)
 
-    expect(test.client.kilocode.agentManager.list).toHaveBeenCalledWith({ directory: root })
-    expect(test.client.kilocode.agentManager.list).toHaveBeenCalledWith({ directory: dir })
+    expect(test.client.taverncode.agentManager.list).toHaveBeenCalledWith({ directory: root })
+    expect(test.client.taverncode.agentManager.list).toHaveBeenCalledWith({ directory: dir })
     expect(test.promptAsync).toHaveBeenCalledTimes(1)
     expect(test.replies[0]).toEqual({
       requestID: "amr_prompt",
@@ -784,8 +784,8 @@ describe("AgentManagerOrchestrationBridge", () => {
     test.handlers.state?.("connected")
     await waitFor(() => test.promptAsync.mock.calls.length === 1)
 
-    expect(test.client.kilocode.agentManager.list).toHaveBeenCalledWith({ directory: root })
-    expect(test.client.kilocode.agentManager.list).toHaveBeenCalledWith({ directory: dir })
+    expect(test.client.taverncode.agentManager.list).toHaveBeenCalledWith({ directory: root })
+    expect(test.client.taverncode.agentManager.list).toHaveBeenCalledWith({ directory: dir })
     expect(test.promptAsync).toHaveBeenCalledTimes(1)
     test.bridge.dispose()
   })
@@ -821,7 +821,7 @@ describe("AgentManagerOrchestrationBridge", () => {
   it("keeps live-only secondary worktree sessions scoped to their owning project", async () => {
     const secondary = fs.mkdtempSync(path.join(os.tmpdir(), "am-orchestration-secondary-live-"))
     const worktree = path.join(secondary, "worktree")
-    fs.mkdirSync(path.join(secondary, ".kilo"), { recursive: true })
+    fs.mkdirSync(path.join(secondary, ".tavern"), { recursive: true })
     fs.mkdirSync(worktree)
     const other = new WorktreeStateManager(secondary, () => undefined)
     const wt = other.addWorktree({ branch: "fix/secondary-live", path: worktree, parentBranch: "main" })
@@ -867,7 +867,7 @@ describe("AgentManagerOrchestrationBridge", () => {
 
   it("handles requests for secondary project directories in multi-project mode", async () => {
     const secondaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "am-orchestration-secondary-"))
-    fs.mkdirSync(path.join(secondaryRoot, ".kilo"), { recursive: true })
+    fs.mkdirSync(path.join(secondaryRoot, ".tavern"), { recursive: true })
     const secondaryState = new WorktreeStateManager(secondaryRoot, () => undefined)
     secondaryState.addSession("ses_secondary", null)
 

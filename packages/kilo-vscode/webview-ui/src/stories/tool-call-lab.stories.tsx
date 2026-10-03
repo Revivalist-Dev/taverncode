@@ -8,7 +8,7 @@ import type {
   ReasoningPart,
   TextPart,
   ToolPart,
-} from "@kilocode/sdk/v2"
+} from "@taverncode/sdk/v2"
 import { StoryProviders, defaultMockData, mockSessionValue } from "./StoryProviders"
 import { AssistantMessage } from "../components/chat/AssistantMessage"
 import { ErrorDisplay } from "../components/chat/ErrorDisplay"
@@ -26,7 +26,7 @@ import { ServerContext } from "../context/server"
 import { SessionContext } from "../context/session"
 import type { TranscriptDiffRow } from "../context/transcript-rows"
 import type { PermissionRequest, QuestionRequest, SuggestionRequest } from "../types/messages"
-import { writeToolOpen } from "../../../../kilo-ui/src/components/tool-open-state"
+import { writeToolOpen } from "../../../../tavern-ui/src/components/tool-open-state"
 
 registerExpandedTaskTool()
 registerVscodeToolOverrides()
@@ -45,7 +45,7 @@ const base: SDKAssistantMessage = {
   parentID: "tool-call-lab-user-message",
   time: { created: stamp - 9000, completed: stamp - 1000 },
   modelID: "anthropic/claude-sonnet-4-6",
-  providerID: "kilo",
+  providerID: "tavern",
   mode: "default",
   agent: "default",
   path: { cwd: "/project", root: "/project" },
@@ -54,16 +54,16 @@ const base: SDKAssistantMessage = {
 }
 
 const hits = [
-  'packages/kilo-ui/src/components/message-part.tsx:1847: <div data-component="tool-output">',
-  'packages/kilo-ui/src/components/basic-tool.css:250: [data-component="tool-output"]',
-  "packages/kilo-vscode/webview-ui/src/components/chat/VscodeToolOverrides.tsx:141: background process output",
+  'packages/tavern-ui/src/components/message-part.tsx:1847: <div data-component="tool-output">',
+  'packages/tavern-ui/src/components/basic-tool.css:250: [data-component="tool-output"]',
+  "packages/tavern-vscode/webview-ui/src/components/chat/VscodeToolOverrides.tsx:141: background process output",
 ].join("\n")
 
 const proc = [
   "pid: 48122",
   "status: running",
   "cwd: /project",
-  "command: bun run --cwd packages/kilo-vscode storybook",
+  "command: bun run --cwd packages/tavern-vscode storybook",
   "last_output:",
   "Storybook 9.0.18 for solid-vite started",
   "Local: http://localhost:6007/",
@@ -159,10 +159,10 @@ function done(
 
 const gapPatch = [
   "===================================================================",
-  "--- packages/kilo-ui/src/components/message-part.css",
-  "+++ packages/kilo-ui/src/components/message-part.css",
+  "--- packages/tavern-ui/src/components/message-part.css",
+  "+++ packages/tavern-ui/src/components/message-part.css",
   "@@ -560,5 +560,5 @@",
-  ' html[data-theme="kilo-vscode"] [data-component="reasoning-part"] {',
+  ' html[data-theme="tavern-vscode"] [data-component="reasoning-part"] {',
   '   [data-component="collapsible"].tool-collapsible {',
   "-    gap: 4px;",
   "+    gap: 8px;",
@@ -172,8 +172,8 @@ const gapPatch = [
 
 const writePatch = [
   "===================================================================",
-  "--- packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
-  "+++ packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+  "--- packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+  "+++ packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
   "@@ -1,3 +1,4 @@",
   " /** @jsxImportSource solid-js */",
   ' import { For } from "solid-js"',
@@ -183,8 +183,8 @@ const writePatch = [
 
 const tailPatch = [
   "===================================================================",
-  "--- packages/kilo-vscode/webview-ui/src/components/chat/MessageList.tsx",
-  "+++ packages/kilo-vscode/webview-ui/src/components/chat/MessageList.tsx",
+  "--- packages/tavern-vscode/webview-ui/src/components/chat/MessageList.tsx",
+  "+++ packages/tavern-vscode/webview-ui/src/components/chat/MessageList.tsx",
   "@@ -1,1 +1,1 @@",
   "-const old = true",
   "+const next = true",
@@ -314,7 +314,7 @@ const permissions: PermissionRequest[] = [
     patterns: ["bun test"],
     always: ["bun *"],
     args: {
-      command: "bun test packages/kilo-vscode/tests/unit",
+      command: "bun test packages/tavern-vscode/tests/unit",
       description: "Run extension unit tests",
       rules: ["bun *", "bun test *"],
     },
@@ -324,11 +324,11 @@ const permissions: PermissionRequest[] = [
     id: "matrix-permission-edit",
     sessionID: SID,
     toolName: "edit",
-    patterns: ["packages/kilo-ui/src/components/message-part.css"],
-    always: ["packages/kilo-ui/src/components/*"],
+    patterns: ["packages/tavern-ui/src/components/message-part.css"],
+    always: ["packages/tavern-ui/src/components/*"],
     args: {
       filediff: {
-        file: "packages/kilo-ui/src/components/message-part.css",
+        file: "packages/tavern-ui/src/components/message-part.css",
         patch: gapPatch,
         additions: 1,
         deletions: 1,
@@ -356,7 +356,7 @@ const blocks: SDKPart[] = [
     "matrix-bash",
     "matrix-call-bash",
     "Run visual check",
-    "bun run --cwd packages/kilo-vscode build-storybook",
+    "bun run --cwd packages/tavern-vscode build-storybook",
     ["storybook v10.2.10", "info => Output directory: storybook-static", "success Built Storybook in 4.2s"].join("\n"),
   ),
   done(
@@ -365,28 +365,28 @@ const blocks: SDKPart[] = [
     { command: "bun test", description: "Run test suite" },
     "Run test suite",
     "Output truncated. Open the complete output in an editor.",
-    { outputPath: "/tmp/kilo-tool-output.log" },
+    { outputPath: "/tmp/tavern-tool-output.log" },
   ),
   done(
     "read",
     "read",
-    { filePath: "packages/kilo-ui/src/components/message-part.tsx", offset: 1788, limit: 80 },
+    { filePath: "packages/tavern-ui/src/components/message-part.tsx", offset: 1788, limit: 80 },
     "Read tool renderers",
   ),
   done(
     "glob",
     "glob",
-    { pattern: "webview-ui/src/**/*.tsx", path: "packages/kilo-vscode" },
+    { pattern: "webview-ui/src/**/*.tsx", path: "packages/tavern-vscode" },
     "Find webview files",
     [
-      "packages/kilo-vscode/webview-ui/src/components/chat/AssistantMessage.tsx",
-      "packages/kilo-vscode/webview-ui/src/components/chat/QuestionDock.tsx",
+      "packages/tavern-vscode/webview-ui/src/components/chat/AssistantMessage.tsx",
+      "packages/tavern-vscode/webview-ui/src/components/chat/QuestionDock.tsx",
     ].join("\n"),
   ),
   done(
     "grep",
     "grep",
-    { pattern: "tool-collapsible", include: "*.css", path: "packages/kilo-ui/src/components" },
+    { pattern: "tool-collapsible", include: "*.css", path: "packages/tavern-ui/src/components" },
     "Find gaps",
     hits,
   ),
@@ -415,7 +415,7 @@ const blocks: SDKPart[] = [
   tool("matrix-edit", "matrix-call-edit", "edit", {
     status: "completed",
     input: {
-      filePath: "packages/kilo-ui/src/components/message-part.css",
+      filePath: "packages/tavern-ui/src/components/message-part.css",
       oldString: "gap: 4px;",
       newString: "gap: 8px;",
     },
@@ -423,13 +423,13 @@ const blocks: SDKPart[] = [
     title: "Edit reasoning gap",
     metadata: {
       filediff: {
-        file: "packages/kilo-ui/src/components/message-part.css",
+        file: "packages/tavern-ui/src/components/message-part.css",
         patch: gapPatch,
         additions: 1,
         deletions: 1,
       },
       diagnostics: {
-        "/project/packages/kilo-ui/src/components/message-part.css": [
+        "/project/packages/tavern-ui/src/components/message-part.css": [
           {
             severity: 2,
             message: "Verify spacing token consistency",
@@ -444,7 +444,7 @@ const blocks: SDKPart[] = [
     "write-content",
     "write",
     {
-      filePath: "packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+      filePath: "packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
       content: "export const BlockMatrix = {}",
     },
     "Write raw story content",
@@ -453,14 +453,14 @@ const blocks: SDKPart[] = [
   tool("matrix-write", "matrix-call-write", "write", {
     status: "completed",
     input: {
-      filePath: "packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+      filePath: "packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
       content: "export const SearchPreviews = {}",
     },
     output: "",
     title: "Write story fixture",
     metadata: {
       filediff: {
-        file: "packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+        file: "packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
         patch: writePatch,
         additions: 1,
         deletions: 0,
@@ -472,15 +472,15 @@ const blocks: SDKPart[] = [
     status: "completed",
     input: {
       patchText:
-        "*** Begin Patch\n*** Update File: packages/kilo-ui/src/components/message-part.css\n@@\n-gap: 4px;\n+gap: 8px;\n*** End Patch",
+        "*** Begin Patch\n*** Update File: packages/tavern-ui/src/components/message-part.css\n@@\n-gap: 4px;\n+gap: 8px;\n*** End Patch",
     },
     output: "",
     title: "Patch three files",
     metadata: {
       files: [
         {
-          filePath: "/project/packages/kilo-ui/src/components/message-part.css",
-          relativePath: "packages/kilo-ui/src/components/message-part.css",
+          filePath: "/project/packages/tavern-ui/src/components/message-part.css",
+          relativePath: "packages/tavern-ui/src/components/message-part.css",
           type: "update",
           patch: gapPatch,
           diff: gapPatch,
@@ -488,8 +488,8 @@ const blocks: SDKPart[] = [
           deletions: 1,
         },
         {
-          filePath: "/project/packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
-          relativePath: "packages/kilo-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+          filePath: "/project/packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
+          relativePath: "packages/tavern-vscode/webview-ui/src/stories/tool-call-lab.stories.tsx",
           type: "update",
           patch: writePatch,
           diff: writePatch,
@@ -497,8 +497,8 @@ const blocks: SDKPart[] = [
           deletions: 0,
         },
         {
-          filePath: "/project/packages/kilo-vscode/webview-ui/src/components/chat/MessageList.tsx",
-          relativePath: "packages/kilo-vscode/webview-ui/src/components/chat/MessageList.tsx",
+          filePath: "/project/packages/tavern-vscode/webview-ui/src/components/chat/MessageList.tsx",
+          relativePath: "packages/tavern-vscode/webview-ui/src/components/chat/MessageList.tsx",
           type: "update",
           patch: tailPatch,
           diff: tailPatch,
@@ -613,7 +613,7 @@ const blocks: SDKPart[] = [
     metadata: {
       parentSessionId: SID,
       sessionId: CHILD,
-      model: { providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" },
+      model: { providerID: "tavern", modelID: "anthropic/claude-sonnet-4-6" },
       truncated: false,
     },
     time: { start: stamp - 4200, end: stamp - 3800 },
@@ -665,7 +665,7 @@ const blocks: SDKPart[] = [
     "background_process",
     {
       action: "start",
-      command: "bun run --cwd packages/kilo-vscode storybook",
+      command: "bun run --cwd packages/tavern-vscode storybook",
       description: "Start Storybook",
       ready: { port: 6007, pattern: "Local:", timeout: 30000 },
       workdir: "/project",
@@ -780,27 +780,27 @@ const blocks: SDKPart[] = [
     "repo_clone",
     { repository: "Kilo-Org/kilocode" },
     "Clone repository",
-    "Repository ready: Kilo-Org/kilocode\nStatus: cached\nLocal path: /cache/kilocode",
-    { repository: "Kilo-Org/kilocode", status: "cached", localPath: "/cache/kilocode" },
+    "Repository ready: Kilo-Org/kilocode\nStatus: cached\nLocal path: /cache/taverncode",
+    { repository: "Kilo-Org/kilocode", status: "cached", localPath: "/cache/taverncode" },
   ),
   done(
     "repo-overview",
     "repo_overview",
     { path: "/project", depth: 2 },
     "Inspect repository",
-    "Repository structure:\npackages/\n  kilo-vscode/\n  kilo-ui/",
+    "Repository structure:\npackages/\n  tavern-vscode/\n  tavern-ui/",
     { ecosystems: ["TypeScript"], dependency_files: ["package.json"], depth: 2, truncated: false },
   ),
   done(
     "semantic-search",
     "semantic_search",
-    { query: "tool renderer selection", path: "packages/kilo-ui" },
+    { query: "tool renderer selection", path: "packages/tavern-ui" },
     "Semantic code search",
-    "Found 1 result in packages/kilo-ui/src/components/message-part.tsx",
+    "Found 1 result in packages/tavern-ui/src/components/message-part.tsx",
     {
       results: [
         {
-          filePath: "packages/kilo-ui/src/components/message-part.tsx",
+          filePath: "packages/tavern-ui/src/components/message-part.tsx",
           score: 0.92,
           startLine: 1210,
           endLine: 1220,
@@ -845,13 +845,13 @@ const blocks: SDKPart[] = [
     "codesearch",
     { query: "tool renderer selection" },
     "Legacy code search",
-    "https://github.com/Kilo-Org/kilocode/blob/main/packages/kilo-ui/src/components/message-part.tsx",
+    "https://github.com/Kilo-Org/kilocode/blob/main/packages/tavern-ui/src/components/message-part.tsx",
   ),
   tool(
     "matrix-tool-hint",
     "matrix-call-tool-hint",
     "edit",
-    failed({ filePath: "packages/kilo-ui/src/components/message-part.css" }, "oldString and newString are identical"),
+    failed({ filePath: "packages/tavern-ui/src/components/message-part.css" }, "oldString and newString are identical"),
   ),
   tool(
     "matrix-tool-error",
@@ -1209,8 +1209,8 @@ export const SearchPreviews: Story = {
                 <div class="tool-call-lab-example">
                   <span class="tool-call-lab-example-label">CLI startup failure</span>
                   <StartupErrorBanner
-                    errorMessage="Failed to start the Kilo CLI"
-                    errorDetails="spawn /path/to/kilo ENOENT"
+                    errorMessage="Failed to start the Tavern CLI"
+                    errorDetails="spawn /path/to/tavern ENOENT"
                   />
                 </div>
               </div>
@@ -1219,7 +1219,7 @@ export const SearchPreviews: Story = {
               <div class="tool-call-lab-panel-header">
                 <span class="tool-call-lab-panel-title">Assistant error families</span>
                 <span class="tool-call-lab-panel-note">
-                  Generic provider errors and Kilo authentication or promotion actions.
+                  Generic provider errors and Tavern authentication or promotion actions.
                 </span>
               </div>
               <div class="tool-call-lab-stack">

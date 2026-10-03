@@ -16,7 +16,7 @@ import { RuntimeFlags } from "@/effect/runtime-flags"
 import { InstanceRef } from "@/effect/instance-ref"
 import { Format } from "@/format"
 import { LSP } from "@/lsp/lsp"
-import * as ToolNetwork from "@/kilocode/sandbox/network"
+import * as ToolNetwork from "@/taverncode/sandbox/network"
 import { MCP } from "@/mcp"
 import type { Tool as MCPToolDef } from "@modelcontextprotocol/sdk/types.js"
 import { Permission } from "@/permission"
@@ -99,7 +99,7 @@ const agents = Layer.mock(Agent.Service)({
   get: () => Effect.succeed(agent),
 })
 const sessions = Layer.mock(Session.Service)({
-  get: () => Effect.succeed(session("/workspace/project/.kilo/worktrees/a")),
+  get: () => Effect.succeed(session("/workspace/project/.tavern/worktrees/a")),
 })
 const permission = Layer.mock(Permission.Service)({
   ask: (input) =>
@@ -113,7 +113,7 @@ const plugin = Layer.mock(Plugin.Service)({
 })
 const mcp = Layer.mock(MCP.Service)({
   tools: () => Effect.succeed({}),
-  clients: () => Effect.succeed({}), // kilocode_change - upstream's MCP resource tools probe the clients
+  clients: () => Effect.succeed({}), // taverncode_change - upstream's MCP resource tools probe the clients
 })
 const lsp = Layer.mock(LSP.Service)({
   touchFile: () => Effect.void,
@@ -209,8 +209,8 @@ function fixture() {
     const root = yield* tmpdirScoped()
     const main = path.join(root, "main")
     const local = path.join(main, "packages", "app")
-    const a = path.join(main, ".kilo", "worktrees", "a")
-    const b = path.join(main, ".kilo", "worktrees", "b")
+    const a = path.join(main, ".tavern", "worktrees", "a")
+    const b = path.join(main, ".tavern", "worktrees", "b")
     const approved = path.join(root, "approved")
     yield* Effect.promise(() =>
       Promise.all([path.join(main, ".git"), local, a, b, approved].map((dir) => fs.mkdir(dir, { recursive: true }))),
@@ -251,7 +251,7 @@ mac("confines model-originated file mutations to the active worktree", () =>
     yield* Effect.addFinalizer(() => Effect.promise(() => fs.rm(stateDir, { recursive: true, force: true })))
 
     const allowed = yield* call(write, { filePath: active, content: "active" }, "call-active").pipe(Effect.exit)
-    const kilo = yield* call(write, { filePath: state, content: "state" }, "call-state").pipe(Effect.exit)
+    const tavern = yield* call(write, { filePath: state, content: "state" }, "call-state").pipe(Effect.exit)
     const siblingResult = yield* call(write, { filePath: sibling, content: "sibling" }, "call-sibling").pipe(
       Effect.exit,
     )
@@ -268,7 +268,7 @@ mac("confines model-originated file mutations to the active worktree", () =>
     const requested = approvals.slice(start)
 
     expect(Exit.isSuccess(allowed)).toBe(true)
-    expect(Exit.isSuccess(kilo)).toBe(true)
+    expect(Exit.isSuccess(tavern)).toBe(true)
     expect(Exit.isFailure(siblingResult)).toBe(true)
     expect(Exit.isFailure(primaryResult)).toBe(true)
     expect(Exit.isFailure(outsideResult)).toBe(true)

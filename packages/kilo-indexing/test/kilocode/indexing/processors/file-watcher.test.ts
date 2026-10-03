@@ -307,13 +307,13 @@ describe("FileWatcher", () => {
     await watcher.shutdown()
   })
 
-  test("processFile skips files matched by .kilocodeignore during incremental updates", async () => {
+  test("processFile skips files matched by .taverncodeignore during incremental updates", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "file-watcher-test-"))
     const cacheDir = path.join(root, ".cache")
     const file = path.join(root, "secret.ts")
 
     await mkdir(cacheDir, { recursive: true })
-    await writeFile(path.join(root, ".kilocodeignore"), "secret.ts\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "secret.ts\n")
     await writeFile(file, "export const secret = 1\n")
 
     const cache = new CacheManager(cacheDir, root)
@@ -323,7 +323,7 @@ describe("FileWatcher", () => {
     const result = await watcher.processFile(file)
 
     expect(result.status).toBe("skipped")
-    expect(result.reason).toBe("File is ignored by .gitignore or .kilocodeignore")
+    expect(result.reason).toBe("File is ignored by .gitignore or .taverncodeignore")
   })
 
   test("processFile uses the configured extension allowlist", async () => {
@@ -385,7 +385,7 @@ describe("FileWatcher", () => {
       const result = await watcher.processFile(file)
 
       expect(result.status).toBe("skipped")
-      expect(result.reason).toBe("File is ignored by .gitignore or .kilocodeignore")
+      expect(result.reason).toBe("File is ignored by .gitignore or .taverncodeignore")
     } finally {
       await rm(root, { recursive: true, force: true })
     }
@@ -615,7 +615,7 @@ describe("FileWatcher subscription", () => {
 
       const { watcher } = await makeWatcher(backend.subscribe, ignore, root)
       await watcher.initialize()
-      // Both Kilo's infra dirs and the per-repo gitignore dirs reach the native watcher.
+      // Both Tavern's infra dirs and the per-repo gitignore dirs reach the native watcher.
       expect(backend.lastIgnore).toEqual(expect.arrayContaining(["**/node_modules", "**/.venv", "pkg/**/build"]))
       await watcher.shutdown()
     } finally {

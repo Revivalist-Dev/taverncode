@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { createStreamTicketClient, type StreamTicketClient } from "@/kilocode/cloud/stream-ticket"
-import { parseServiceOrigin } from "@/kilocode/cloud/origin"
+import { createStreamTicketClient, type StreamTicketClient } from "@/taverncode/cloud/stream-ticket"
+import { parseServiceOrigin } from "@/taverncode/cloud/origin"
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

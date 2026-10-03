@@ -5,31 +5,31 @@ import { SessionID, PartID } from "@/session/schema"
 import { MessageV2 } from "@/session/message-v2"
 import { Session } from "@/session/session"
 import { Agent } from "@/agent/agent"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import type { SessionStatus } from "@/session/status"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { PlanFollowup } from "@/kilocode/plan-followup"
-import { PlanFile } from "@/kilocode/plan-file"
-import { KiloSession } from "@/kilocode/session"
-import type { SessionDrain } from "@/kilocode/session/drain"
+import { PlanFollowup } from "@/taverncode/plan-followup"
+import { PlanFile } from "@/taverncode/plan-file"
+import { KiloSession } from "@/taverncode/session"
+import type { SessionDrain } from "@/taverncode/session/drain"
 import type { EventV2 } from "@opencode-ai/core/event"
-import { Interrupted } from "@opencode-ai/schema/kilocode/session-drain"
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { Interrupted } from "@opencode-ai/schema/taverncode/session-drain"
+import { KiloSessionMessageOrder } from "@/taverncode/session/message-order"
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
 import { Permission } from "@/permission"
-import { PermissionProvenance } from "@/kilocode/permission/provenance"
+import { PermissionProvenance } from "@/taverncode/permission/provenance"
 import { Question } from "@/question"
 import { InstanceRef } from "@/effect/instance-ref"
-import { environmentDetails } from "@/kilocode/editor-context"
+import { environmentDetails } from "@/taverncode/editor-context"
 import { Identifier } from "@/id/id"
 import { Filesystem } from "@/util/filesystem"
-import NATIVE_PLAN_PROMPT from "@/kilocode/session/native-plan-prompt.txt"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryPaths } from "@kilocode/kilo-memory/effect/paths"
-import { MemoryMarker } from "@/kilocode/memory/marker"
-import { KilocodeSystemPrompt } from "@/kilocode/system-prompt"
-import { KiloToolRegistry } from "@/kilocode/tool/registry"
-import { consumeAutoTitle, markAutoTitle } from "@/kilo-sessions/rename-adoptions"
+import NATIVE_PLAN_PROMPT from "@/taverncode/session/native-plan-prompt.txt"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryPaths } from "@taverncode/tavern-memory/effect/paths"
+import { MemoryMarker } from "@/taverncode/memory/marker"
+import { KilocodeSystemPrompt } from "@/taverncode/system-prompt"
+import { KiloToolRegistry } from "@/taverncode/tool/registry"
+import { consumeAutoTitle, markAutoTitle } from "@/tavern-sessions/rename-adoptions"
 
 export namespace KiloSessionPrompt {
   const modes = ["ask", "plan", "architect"]
@@ -504,7 +504,7 @@ export namespace KiloSessionPrompt {
   /**
    * Ensures the plan file directory exists. Pre-checks with `Filesystem.isDir`
    * because `fs.mkdir(recursive: true)` still throws `EEXIST` on Windows
-   * OneDrive ReparsePoint directories in some Node versions (kilocode#9755).
+   * OneDrive ReparsePoint directories in some Node versions (taverncode#9755).
    */
   export async function ensurePlanDir(dir: string) {
     if (await Filesystem.isDir(dir)) return

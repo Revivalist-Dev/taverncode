@@ -12,7 +12,7 @@ export const DIRECT_EDIT_ENV: Record<DirectAutocompleteProviderID, string[]> = {
 
 export type EditTarget =
   | { provider: "inception"; model: string; url: string }
-  | { provider: "kilo"; model: string; url: string }
+  | { provider: "tavern"; model: string; url: string }
 
 /** Shape of the upstream (Mercury) chat/edit completion response we read from. */
 export interface EditUpstreamResponse {
@@ -25,27 +25,27 @@ const KILO_NEXTEDIT_URL = KILO_API_BASE + "/api/edit/completions"
 
 /**
  * Pick the upstream edit endpoint for a (provider, model) pair. Today this is
- * either Inception's `/v1/edit/completions` (direct BYOK) or the Kilo Gateway's
+ * either Inception's `/v1/edit/completions` (direct BYOK) or the Tavern Gateway's
  * `/api/edit/completions` proxy, which forwards to Inception server-side.
  * Mistral does not expose a comparable surface.
  */
 export function resolveEditTarget(provider?: string, model?: string): EditTarget {
   const info = getAutocompleteModel(provider, model)
   if (info.kind === "edit") {
-    if (info.providerID === "kilo") {
+    if (info.providerID === "tavern") {
       // The gateway expects the upstream model id with the `inception/` prefix
-      // (it strips it before forwarding to Inception). The kilo entry's
+      // (it strips it before forwarding to Inception). The tavern entry's
       // `requestModel` already carries the prefix.
       const m = info.requestModel.includes("/") ? info.requestModel : `inception/${info.requestModel}`
-      return { provider: "kilo", model: m, url: KILO_NEXTEDIT_URL }
+      return { provider: "tavern", model: m, url: KILO_NEXTEDIT_URL }
     }
     if (info.directProvider === "inception") {
       return { provider: "inception", model: info.requestModel, url: INCEPTION_EDIT_URL }
     }
   }
-  // Non-edit models fall through to a kilo placeholder with no URL so the
+  // Non-edit models fall through to a tavern placeholder with no URL so the
   // handler can surface a 400 rather than silently routing somewhere unexpected.
-  return { provider: "kilo", model: info.requestModel, url: "" }
+  return { provider: "tavern", model: info.requestModel, url: "" }
 }
 
 /**

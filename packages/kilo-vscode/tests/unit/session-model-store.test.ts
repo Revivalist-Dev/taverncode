@@ -17,10 +17,10 @@ function makeProvider(id: string, models: string[]): Provider {
   return result
 }
 
-const KILO_AUTO: ModelSelection = { providerID: "kilo", modelID: "kilo-auto/free" }
+const KILO_AUTO: ModelSelection = { providerID: "tavern", modelID: "tavern-auto/free" }
 
 const providers: Record<string, Provider> = {
-  kilo: makeProvider("kilo", ["kilo-auto/free"]),
+  tavern: makeProvider("tavern", ["tavern-auto/free"]),
   anthropic: makeProvider("anthropic", ["claude-sonnet-4"]),
   openai: makeProvider("openai", ["gpt-4.1"]),
 }
@@ -28,7 +28,7 @@ const providers: Record<string, Provider> = {
 function env(): ResolveEnv {
   return {
     providers,
-    connected: ["kilo", "anthropic", "openai"],
+    connected: ["tavern", "anthropic", "openai"],
     fallback: KILO_AUTO,
     getModeModel: () => null,
     getGlobalModel: () => null,
@@ -257,14 +257,14 @@ describe("per-mode model memory", () => {
 })
 
 describe("organization model store", () => {
-  const first = { providerID: "kilo", modelID: "first" }
-  const recommendation = { providerID: "kilo", modelID: "org-default" }
+  const first = { providerID: "tavern", modelID: "first" }
+  const recommendation = { providerID: "tavern", modelID: "org-default" }
   const organization: ResolveEnv = {
     ...env(),
     ready: true,
     organizationId: "org-a",
-    providers: { ...providers, kilo: makeProvider("kilo", [first.modelID, recommendation.modelID, KILO_AUTO.modelID]) },
-    defaults: { kilo: recommendation.modelID },
+    providers: { ...providers, tavern: makeProvider("tavern", [first.modelID, recommendation.modelID, KILO_AUTO.modelID]) },
+    defaults: { tavern: recommendation.modelID },
   }
 
   it("ignores implicit mode memory and generic recents across every accessor", () => {
@@ -293,7 +293,7 @@ describe("organization model store", () => {
     const store = emptyStore()
     const updated = { ...store, ...applyModel(store, "code", KILO_AUTO, scope) }
     const before = structuredClone(updated)
-    const restricted = { ...organization, providers: { kilo: makeProvider("kilo", [recommendation.modelID]) } }
+    const restricted = { ...organization, providers: { tavern: makeProvider("tavern", [recommendation.modelID]) } }
     expect(getSelected(updated, env(), scope, "code")).toEqual(KILO_AUTO)
     expect(getSelected(updated, restricted, scope, "code")).toEqual(recommendation)
     expect(getSessionModel(updated, restricted, "session-a", "code")).toEqual(recommendation)
@@ -311,7 +311,7 @@ describe("organization model store", () => {
       ...emptyStore(),
       modelSelections: { code: gpt },
       userSetAgents: { code: true },
-      sessionOverrides: { "session-a": { providerID: "kilo", modelID: "missing" } },
+      sessionOverrides: { "session-a": { providerID: "tavern", modelID: "missing" } },
     }
     expect(getSelected(store, organization, "session-a", "code")).toEqual(gpt)
     expect(getSessionModel(store, organization, "session-a", "code")).toEqual(gpt)
@@ -328,7 +328,7 @@ describe("organization model store", () => {
     expect(store).toEqual(before)
   })
 
-  it("preserves connected external session choices while Kilo refreshes", () => {
+  it("preserves connected external session choices while Tavern refreshes", () => {
     const store = { ...emptyStore(), sessionOverrides: { "session-a": gpt } }
     expect(getSessionModel(store, { ...organization, ready: false }, "session-a", "code")).toEqual(gpt)
     expect(getSessionModel(store, { ...organization, connected: [] }, "session-a", "code")).toEqual(recommendation)
@@ -363,7 +363,7 @@ describe("organization model store", () => {
       expect(getSelected(store, configured, undefined, agent)).toEqual(gpt)
       expect(getSelected(store, configured, "active", agent)).toEqual(claude)
     }
-    const unavailable = { ...configured, connected: ["kilo"] }
+    const unavailable = { ...configured, connected: ["tavern"] }
     expect(getAgentModel(store, unavailable, "code")).toEqual(KILO_AUTO)
     expect(getAgentModel(store, configured, "code")).toEqual(gpt)
     expect(store.preferred).toEqual(gpt)

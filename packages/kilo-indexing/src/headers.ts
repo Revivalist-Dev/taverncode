@@ -1,6 +1,6 @@
-import { getDefaultHeaders } from "@kilocode/kilo-gateway"
+import { getDefaultHeaders } from "@taverncode/tavern-gateway"
 
 /**
- * Default headers for KiloCode requests
+ * Default headers for TavernCode requests
  */
 export const DEFAULT_HEADERS = getDefaultHeaders()

@@ -8,7 +8,7 @@ import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { RepositoryCache } from "@opencode-ai/core/repository-cache"
 import { Ripgrep } from "@opencode-ai/core/ripgrep"
-import { MemoryService } from "@kilocode/kilo-memory/effect/service"
+import { MemoryService } from "@taverncode/tavern-memory/effect/service"
 import { Deferred, Effect, Fiber, Layer } from "effect"
 import * as Stream from "effect/Stream"
 import path from "path"
@@ -27,9 +27,9 @@ import {
   clearAll as clearRenameMarks,
   consumeAutoTitle,
   markAutoTitle,
-} from "../../../src/kilo-sessions/rename-adoptions"
-import { KiloSessions } from "../../../src/kilo-sessions/kilo-sessions"
-import { KiloSessionTitle } from "../../../src/kilocode/session/title"
+} from "../../../src/tavern-sessions/rename-adoptions"
+import { KiloSessions } from "../../../src/tavern-sessions/tavern-sessions"
+import { KiloSessionTitle } from "../../../src/taverncode/session/title"
 import { LSP } from "../../../src/lsp/lsp"
 import { MCP } from "../../../src/mcp"
 import { Permission } from "../../../src/permission"
@@ -221,7 +221,7 @@ const installHooks = Effect.fn("test.installTitleHooks")(function* () {
 function providerCfg(url: string): Partial<ConfigV1.Info> {
   return {
     // Pin title/small generation to the TestLLMServer provider. Without this,
-    // getSmallModel("test") falls through to kilo-auto/small and ensureTitle
+    // getSmallModel("test") falls through to tavern-auto/small and ensureTitle
     // never hits the local fixture (no setTitle, no E2E Title).
     small_model: "test/test-model",
     provider: {
@@ -257,7 +257,7 @@ const writeConfig = Effect.fn("test.writeConfig")(function* (dir: string, config
   const fs = yield* FSUtil.Service
   yield* fs.writeWithDirs(
     path.join(dir, "opencode.json"),
-    JSON.stringify({ $schema: "https://app.kilo.ai/config.json", ...config }),
+    JSON.stringify({ $schema: "https://app.tavern.ai/config.json", ...config }),
   )
 })
 

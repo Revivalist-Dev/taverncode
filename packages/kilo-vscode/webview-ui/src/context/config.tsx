@@ -374,7 +374,7 @@ export const ConfigProvider: ParentComponent = (props) => {
       return
     }
     // Split so per-project settings (e.g. commit_message.prompt) land in the
-    // workspace's kilo.json instead of the global one. Send one message so the
+    // workspace's tavern.json instead of the global one. Send one message so the
     // extension confirms only after both scopes are saved.
     const split = splitConfigByScope(changes)
     const next = deepMerge(split.global as Config, globals)

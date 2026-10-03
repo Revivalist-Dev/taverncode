@@ -1,2 +1,2 @@
-// kilocode_change - new file
-export { SuggestTool } from "../kilocode/suggestion/tool"
+// taverncode_change - new file
+export { SuggestTool } from "../taverncode/suggestion/tool"

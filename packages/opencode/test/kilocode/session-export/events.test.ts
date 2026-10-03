@@ -6,8 +6,8 @@ import type {
   LlmRequestCompleted,
   LlmRequestStarted,
   SessionDegraded,
-} from "@/kilocode/session-export/events"
-import type { BatchEnvelope } from "@/kilocode/session-export/envelope"
+} from "@/taverncode/session-export/events"
+import type { BatchEnvelope } from "@/taverncode/session-export/envelope"
 
 describe("event types", () => {
   test("envelope shape is well-formed", () => {
@@ -38,7 +38,7 @@ describe("event types", () => {
       userMessageId: "u1",
       agent: "claude",
       modeId: "build",
-      model: { providerId: "kilo", modelId: "free-1", isFree: true },
+      model: { providerId: "tavern", modelId: "free-1", isFree: true },
       input: {
         system: ["You are..."],
         messages: [],

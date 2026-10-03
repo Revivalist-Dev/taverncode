@@ -1,5 +1,5 @@
 import { createMemo, createSignal } from "solid-js"
-import type { Model, Provider } from "@kilocode/sdk/v2/client"
+import type { Model, Provider } from "@taverncode/sdk/v2/client"
 import { saveModelState, type ModelRef, type Snapshot } from "../../../client"
 import { useConfig } from "../../../context/config"
 import { hasGateway, visible } from "./privacy"
@@ -25,8 +25,8 @@ export type ModelField = "model" | "small_model"
 const cap = 1_000_000
 
 function order(a: Provider, b: Provider) {
-  if (a.id === "kilo") return -1
-  if (b.id === "kilo") return 1
+  if (a.id === "tavern") return -1
+  if (b.id === "tavern") return 1
   return a.name.localeCompare(b.name)
 }
 

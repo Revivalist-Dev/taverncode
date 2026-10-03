@@ -5,7 +5,7 @@ import { Glob } from "@opencode-ai/core/util/glob"
 import { Schema } from "effect"
 import { Command } from "@/command"
 import { configEntryNameFromPath } from "@/config/entry-name"
-import { WorkflowsMigrator } from "@/kilocode/workflows-migrator"
+import { WorkflowsMigrator } from "@/taverncode/workflows-migrator"
 
 export const Info = Schema.Struct({
   name: Schema.String,

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { MaxCostNudge } from "../../../src/kilocode/cost/max-cost-nudge"
+import { MaxCostNudge } from "../../../src/taverncode/cost/max-cost-nudge"
 
 const sid = "ses_1"
 

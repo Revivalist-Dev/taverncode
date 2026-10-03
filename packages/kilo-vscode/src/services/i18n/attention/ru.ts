@@ -1,13 +1,13 @@
 export const dict = {
-  "kilocode:attention.done": "Kilo завершил задачу.",
-  "kilocode:attention.question": "Kilo ждёт вашего ответа.",
-  "kilocode:attention.permission": "Kilo требуется разрешение.",
-  "kilocode:attention.error": "Kilo остановил задачу из-за ошибки.",
-  "kilocode:attention.show": "Показать",
-  "kilocode:attention.workspace": "Рабочая область",
-  "kilocode:attention.session": "Сессия",
-  "kilocode:attention.test": "Это тестовое уведомление от Kilo Code.",
-  "kilocode:attention.unsupported": "Уведомления операционной системы не поддерживаются на этой платформе.",
-  "kilocode:attention.identity":
+  "taverncode:attention.done": "Tavern завершил задачу.",
+  "taverncode:attention.question": "Tavern ждёт вашего ответа.",
+  "taverncode:attention.permission": "Tavern требуется разрешение.",
+  "taverncode:attention.error": "Tavern остановил задачу из-за ошибки.",
+  "taverncode:attention.show": "Показать",
+  "taverncode:attention.workspace": "Рабочая область",
+  "taverncode:attention.session": "Сессия",
+  "taverncode:attention.test": "Это тестовое уведомление от Tavern Code.",
+  "taverncode:attention.unsupported": "Уведомления операционной системы не поддерживаются на этой платформе.",
+  "taverncode:attention.identity":
     "Не удалось определить идентификатор уведомлений этого редактора, поэтому нативные уведомления недоступны. Уведомления VS Code продолжают работать.",
 }

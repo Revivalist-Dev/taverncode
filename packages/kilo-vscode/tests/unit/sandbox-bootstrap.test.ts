@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
-import { createKiloClient } from "@kilocode/sdk/v2/client"
+import { createKiloClient } from "@taverncode/sdk/v2/client"
 import { ensureSandbox } from "../../src/agent-manager/sandbox-bootstrap"
 
 type State = {

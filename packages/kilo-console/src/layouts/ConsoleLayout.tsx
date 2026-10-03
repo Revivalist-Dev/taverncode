@@ -10,7 +10,7 @@ type Props = {
 
 export function ConsoleLayout(props: Props) {
   return (
-    <div class="console-shell kilo-console dark">
+    <div class="console-shell tavern-console dark">
       <AppHeader />
       <div class="console-body">
         <AppSidebar path={props.path} />

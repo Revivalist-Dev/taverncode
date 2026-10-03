@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Regression tests for https://github.com/Kilo-Org/kilocode/issues/9186
 //
@@ -11,7 +11,7 @@
 import { describe, expect, it } from "bun:test"
 import * as Config from "../../src/config/config"
 import { Schema } from "effect"
-import { KilocodeConfig } from "../../src/kilocode/config/config"
+import { KilocodeConfig } from "../../src/taverncode/config/config"
 
 describe("Config.Info — null sentinels for custom provider deletes", () => {
   it("accepts a null model value inside a provider", () => {

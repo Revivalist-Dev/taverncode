@@ -3,7 +3,7 @@ import path from "node:path"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import type { Provider } from "../../src/provider/provider"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
 import { MessageV2 } from "../../src/session/message-v2"
 import { MessageID, PartID, SessionID } from "../../src/session/schema"
 

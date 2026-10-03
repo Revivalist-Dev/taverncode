@@ -1,5 +1,5 @@
-import type { KiloClient, SessionStatus } from "@kilocode/sdk/v2/client"
-import { sameDirectory } from "../kilo-provider-utils"
+import type { KiloClient, SessionStatus } from "@taverncode/sdk/v2/client"
+import { sameDirectory } from "../tavern-provider-utils"
 
 export class SessionAbort {
   private active = new Map<string, Set<string>>()
@@ -47,7 +47,7 @@ export class SessionAbort {
       result.status === "rejected" ? [{ dir: dirs[index], error: result.reason }] : [],
     )
     if (failures.length > 0) {
-      console.error("[Kilo New] KiloProvider: Failed to abort session in one or more directories:", failures)
+      console.error("[Tavern New] KiloProvider: Failed to abort session in one or more directories:", failures)
       return false
     }
     if (known) this.active.delete(sessionID)

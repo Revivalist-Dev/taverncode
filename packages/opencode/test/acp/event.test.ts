@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test"
 import type { AgentSideConnection } from "@agentclientprotocol/sdk"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import type { Event, Message, KiloClient, Part, SessionMessageResponse, ToolPart } from "@kilocode/sdk/v2"
+import type { Event, Message, KiloClient, Part, SessionMessageResponse, ToolPart } from "@taverncode/sdk/v2"
 import { Effect, ManagedRuntime } from "effect"
 import { ACPEvent } from "@/acp/event"
 import * as ACPService from "@/acp/service"
@@ -319,7 +319,7 @@ async function createKnownSession(
 }
 
 describe("acp event routing", () => {
-  // kilocode_change start
+  // taverncode_change start
   it("waits for the current turn's idle after receiving a stale idle", async () => {
     const harness = createHarness()
     const called = Promise.withResolvers<void>()
@@ -364,7 +364,7 @@ describe("acp event routing", () => {
       harness.subscription.stop()
     }
   })
-  // kilocode_change end
+  // taverncode_change end
 
   it("routes message.part.delta by sessionID without cross-session pollution", async () => {
     const harness = createHarness()

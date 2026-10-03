@@ -54,7 +54,7 @@ function createCtx(existing: ExistingGlobal = { disabled_providers: [] }, merged
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => ({ data: { authenticated: false } }),
       },
       global: {
@@ -549,7 +549,7 @@ describe("fetchProviderData", () => {
     { name: "uses the first allowed model when the default is empty", recommended: "", expected: "org/first" },
     {
       name: "ignores a default outside the organization catalog",
-      recommended: "kilo-auto/free",
+      recommended: "tavern-auto/free",
       expected: "org/first",
     },
     { name: "ignores inherited catalog properties", recommended: "toString", expected: "org/first" },
@@ -560,7 +560,7 @@ describe("fetchProviderData", () => {
       expected: undefined,
     },
     {
-      name: "does not retain a default without a Kilo provider",
+      name: "does not retain a default without a Tavern provider",
       missing: true,
       recommended: "org/default",
       expected: undefined,
@@ -583,8 +583,8 @@ describe("fetchProviderData", () => {
                   ? []
                   : [
                       {
-                        id: "kilo",
-                        name: "Kilo Gateway",
+                        id: "tavern",
+                        name: "Tavern Gateway",
                         models: item.empty
                           ? {}
                           : { "org/first": { id: "org/first" }, "org/default": { id: "org/default" } },
@@ -592,51 +592,51 @@ describe("fetchProviderData", () => {
                     ]),
                 { ...external, key: "sk-test" },
               ],
-              connected: item.missing ? ["anthropic"] : ["kilo", "anthropic"],
-              default: { ...(item.recommended === undefined ? {} : { kilo: item.recommended }), anthropic: "claude" },
+              connected: item.missing ? ["anthropic"] : ["tavern", "anthropic"],
+              default: { ...(item.recommended === undefined ? {} : { tavern: item.recommended }), anthropic: "claude" },
             },
           }),
           auth: async () => ({ data: {} }),
         },
-        kilo: {
+        tavern: {
           authStatus: async () => ({ data: { authenticated: true, type: "oauth", organizationId: "org" } }),
         },
         config: {
           providers: async () => {
             calls++
-            return { data: { default: { kilo: "org/first", anthropic: "unrelated" } } }
+            return { data: { default: { tavern: "org/first", anthropic: "unrelated" } } }
           },
         },
       } as unknown as Parameters<typeof fetchProviderData>[0]
 
       const result = await fetchProviderData(client, "/workspace")
-      expect(result.response.default.kilo).toBe(item.expected)
+      expect(result.response.default.tavern).toBe(item.expected)
       expect(result.response.default.anthropic).toBe("claude")
       expect(result.response.all.find((provider) => provider.id === "anthropic")).toEqual(external)
-      expect(result.response.connected).toEqual(item.missing ? ["anthropic"] : ["kilo", "anthropic"])
-      expect(result.authStates).toEqual({ kilo: "oauth", anthropic: "api" })
+      expect(result.response.connected).toEqual(item.missing ? ["anthropic"] : ["tavern", "anthropic"])
+      expect(result.authStates).toEqual({ tavern: "oauth", anthropic: "api" })
       expect(result.organizationId).toBe("org")
       expect(result.ready).toBe(true)
       expect(calls).toBe(0)
     })
   }
 
-  it.each([false, true])("removes unverified Kilo data without auth context (failure: %s)", async (fail) => {
+  it.each([false, true])("removes unverified Tavern data without auth context (failure: %s)", async (fail) => {
     const client = {
       provider: {
         list: async () => ({
           data: {
             all: [
-              { id: "kilo", models: { "kilo-auto/free": {} } },
+              { id: "tavern", models: { "tavern-auto/free": {} } },
               { id: "external", models: { model: {} } },
             ],
-            connected: ["kilo", "external"],
-            default: { kilo: "kilo-auto/free", external: "model" },
+            connected: ["tavern", "external"],
+            default: { tavern: "tavern-auto/free", external: "model" },
           },
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => {
           if (fail) throw new Error("Context unavailable")
           return { data: undefined }
@@ -656,14 +656,14 @@ describe("fetchProviderData", () => {
     let calls = 0
     const client = {
       provider: {
-        list: async () => ({ data: { all: [], connected: [], default: { kilo: "kilo-auto/free" } } }),
+        list: async () => ({ data: { all: [], connected: [], default: { tavern: "tavern-auto/free" } } }),
         auth: async () => ({ data: {} }),
       },
-      kilo: { authStatus: async () => ({ data: { authenticated: true, type: "oauth" } }) },
+      tavern: { authStatus: async () => ({ data: { authenticated: true, type: "oauth" } }) },
       config: {
         providers: async () => {
           calls++
-          return { data: { default: { kilo: "unexpected" } } }
+          return { data: { default: { tavern: "unexpected" } } }
         },
       },
     } as unknown as Parameters<typeof fetchProviderData>[0]
@@ -672,7 +672,7 @@ describe("fetchProviderData", () => {
     expect(result.ready).toBe(true)
     expect(result.organizationId).toBeNull()
     expect(calls).toBe(0)
-    expect(result.response.default).toEqual({ kilo: "kilo-auto/free" })
+    expect(result.response.default).toEqual({ tavern: "tavern-auto/free" })
   })
 
   it("derives api auth state and strips keys from provider payloads", async () => {
@@ -696,7 +696,7 @@ describe("fetchProviderData", () => {
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => ({ data: { authenticated: false } }),
       },
     } as unknown as Parameters<typeof fetchProviderData>[0]
@@ -708,41 +708,41 @@ describe("fetchProviderData", () => {
     expect("key" in item).toBe(false)
   })
 
-  it("uses local Kilo auth status instead of profile availability", async () => {
+  it("uses local Tavern auth status instead of profile availability", async () => {
     const client = {
       provider: {
         list: async () => ({
           data: {
-            all: [{ id: "kilo", name: "Kilo Gateway", source: "custom", env: [], models: {} }],
-            connected: ["kilo"],
-            default: { kilo: "kilo-auto/frontier" },
+            all: [{ id: "tavern", name: "Tavern Gateway", source: "custom", env: [], models: {} }],
+            connected: ["tavern"],
+            default: { tavern: "tavern-auto/frontier" },
           },
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => ({ data: { authenticated: true, type: "oauth" } }),
       },
     } as unknown as Parameters<typeof fetchProviderData>[0]
 
     const result = await fetchProviderData(client, "/tmp")
 
-    expect(result.authStates).toEqual({ kilo: "oauth" })
+    expect(result.authStates).toEqual({ tavern: "oauth" })
   })
 
-  it("does not infer Kilo speech access without stored Gateway auth", async () => {
+  it("does not infer Tavern speech access without stored Gateway auth", async () => {
     const client = {
       provider: {
         list: async () => ({
           data: {
-            all: [{ id: "kilo", name: "Kilo Gateway", source: "config", key: "configured", env: [], models: {} }],
-            connected: ["kilo"],
-            default: { kilo: "kilo-auto/frontier" },
+            all: [{ id: "tavern", name: "Tavern Gateway", source: "config", key: "configured", env: [], models: {} }],
+            connected: ["tavern"],
+            default: { tavern: "tavern-auto/frontier" },
           },
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => ({ data: { authenticated: false } }),
       },
     } as unknown as Parameters<typeof fetchProviderData>[0]
@@ -782,7 +782,7 @@ describe("fetchProviderData", () => {
         }),
         auth: async () => ({ data: {} }),
       },
-      kilo: {
+      tavern: {
         authStatus: async () => ({ data: { authenticated: false } }),
       },
     } as unknown as Parameters<typeof fetchProviderData>[0]

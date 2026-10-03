@@ -13,13 +13,13 @@ import { Glob } from "bun"
 import path from "path"
 
 const ROOT = path.resolve(import.meta.dir, "..")
-const OUTPUT = path.join(ROOT, "packages/kilo-docs/source-links.md")
+const OUTPUT = path.join(ROOT, "packages/tavern-docs/source-links.md")
 
 const check = process.argv.includes("--check")
 
 const DIRS = [
-  path.join(ROOT, "packages/kilo-vscode/src"),
-  path.join(ROOT, "packages/kilo-vscode/webview-ui"),
+  path.join(ROOT, "packages/tavern-vscode/src"),
+  path.join(ROOT, "packages/tavern-vscode/webview-ui"),
   path.join(ROOT, "packages/opencode/src"),
 ]
 
@@ -34,8 +34,8 @@ const URL_RE = /https?:\/\/[^\s"'`)\]},;*\\<>]+/g
 const EXCLUDE_PATTERNS = [
   // Localhost and internal
   /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)/,
-  /^https?:\/\/kilo\.internal/,
-  /^https?:\/\/dev\.kilo\.ai/,
+  /^https?:\/\/tavern\.internal/,
+  /^https?:\/\/dev\.tavern\.ai/,
   /^https?:\/\/tauri\.localhost/,
   // Example/placeholder URLs
   /^https?:\/\/example\.com/,
@@ -43,15 +43,15 @@ const EXCLUDE_PATTERNS = [
   /^https?:\/\/api\.myprovider\.com/,
   /^https?:\/\/synthetic\.new/,
   // API endpoints (not user-facing)
-  /^https?:\/\/api\.kilo\.ai\/api\//,
-  /^https?:\/\/supermassive-black-hole\.kiloapps\.io\/v1\/session-export\//, // kilocode_change
+  /^https?:\/\/api\.tavern\.ai\/api\//,
+  /^https?:\/\/supermassive-black-hole\.kiloapps\.io\/v1\/session-export\//, // taverncode_change
   /^https?:\/\/ingest\.kilosessions\.ai/,
   /^https?:\/\/api\.openai\.com/,
   /^https?:\/\/api\.github\.com/,
   /^https?:\/\/api\.githubcopilot\.com/,
-  /^https?:\/\/[^/]+\.openai\.azure\.com\/openai/, // kilocode_change
-  /^https?:\/\/cognitiveservices\.azure\.com\//, // kilocode_change - Azure CLI OAuth scope, not a link
-  /^https?:\/\/ai\.azure\.com\//, // kilocode_change - Azure CLI OAuth scope, not a link
+  /^https?:\/\/[^/]+\.openai\.azure\.com\/openai/, // taverncode_change
+  /^https?:\/\/cognitiveservices\.azure\.com\//, // taverncode_change - Azure CLI OAuth scope, not a link
+  /^https?:\/\/ai\.azure\.com\//, // taverncode_change - Azure CLI OAuth scope, not a link
   /^https?:\/\/api\.cloudflare\.com/,
   /^https?:\/\/api\.releases\.hashicorp\.com/,
   /^https?:\/\/auth\.openai\.com/,
@@ -88,14 +88,14 @@ const SKIP_DIRS = ["node_modules", ".storybook", "stories", "test", "tests", "__
 const SKIP_PATH_SEGMENTS = ["continuedev"]
 
 // Individual files to skip (data files full of non-user-facing URLs)
-const SKIP_FILES = ["check-forbidden-strings.ts"] // kilocode_change
+const SKIP_FILES = ["check-forbidden-strings.ts"] // taverncode_change
 
 function shouldExclude(url: string): boolean {
   return EXCLUDE_PATTERNS.some((re) => re.test(url))
 }
 
 function shouldSkipFile(filepath: string): boolean {
-  if (filepath === "packages/opencode/src/cli/cmd/account.ts") return true // kilocode_change - command is not registered in Kilo
+  if (filepath === "packages/opencode/src/cli/cmd/account.ts") return true // taverncode_change - command is not registered in Tavern
   const rel = path.relative(ROOT, filepath)
   const parts = rel.split(path.sep)
   if (parts.some((p) => SKIP_DIRS.includes(p))) return true
@@ -103,17 +103,17 @@ function shouldSkipFile(filepath: string): boolean {
   if (/\.test\.[jt]sx?$/.test(filepath)) return true
   if (/\.spec\.[jt]sx?$/.test(filepath)) return true
   if (/\.stories\.[jt]sx?$/.test(filepath)) return true
-  if (parts.includes("i18n") && path.basename(filepath) !== "en.ts") return true // kilocode_change
+  if (parts.includes("i18n") && path.basename(filepath) !== "en.ts") return true // taverncode_change
   const basename = path.basename(filepath)
   if (SKIP_FILES.includes(basename)) return true
   return false
 }
 
-// kilocode_change start
+// taverncode_change start
 function source(filepath: string): string {
   return path.relative(ROOT, filepath).replaceAll(path.sep, "/")
 }
-// kilocode_change end
+// taverncode_change end
 
 function clean(url: string): string {
   return url.replace(/[.),:;]+$/, "").replace(/<\/?\w+>$/, "")
@@ -126,7 +126,7 @@ async function extract(): Promise<Map<string, Set<string>>> {
     for (const ext of EXTENSIONS) {
       const glob = new Glob(`**/*.${ext}`)
       for await (const entry of glob.scan({ cwd: dir, absolute: true })) {
-        // kilocode_change start
+        // taverncode_change start
         const file = source(entry)
         if (shouldSkipFile(file)) continue
         const content = await Bun.file(entry).text()
@@ -138,7 +138,7 @@ async function extract(): Promise<Map<string, Set<string>>> {
             links.get(url)!.add(file)
           }
         }
-        // kilocode_change end
+        // taverncode_change end
       }
     }
   }
@@ -174,12 +174,12 @@ if (check) {
     .text()
     .catch(() => "")
   if (committed === output) {
-    console.log("packages/kilo-docs/source-links.md is up to date.")
+    console.log("packages/tavern-docs/source-links.md is up to date.")
     process.exit(0)
   }
   console.error(
     [
-      "ERROR: packages/kilo-docs/source-links.md is out of date.",
+      "ERROR: packages/tavern-docs/source-links.md is out of date.",
       "",
       "Run the following command locally and commit the result:",
       "",
@@ -191,4 +191,4 @@ if (check) {
 }
 
 await Bun.write(OUTPUT, output)
-console.log(`Wrote ${sorted.length} unique URLs to packages/kilo-docs/source-links.md`)
+console.log(`Wrote ${sorted.length} unique URLs to packages/tavern-docs/source-links.md`)

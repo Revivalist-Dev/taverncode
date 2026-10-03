@@ -11,15 +11,15 @@ import path from "node:path"
 
 describe("planDisplayPath", () => {
   it("returns a relative path unchanged", () => {
-    expect(planDisplayPath(".kilo/plans/my-plan.md", "/repo")).toBe(".kilo/plans/my-plan.md")
+    expect(planDisplayPath(".tavern/plans/my-plan.md", "/repo")).toBe(".tavern/plans/my-plan.md")
   })
 
   it("returns absolute path inside repo as repo-relative", () => {
-    expect(planDisplayPath("/repo/.kilo/plans/my-plan.md", "/repo")).toBe(".kilo/plans/my-plan.md")
+    expect(planDisplayPath("/repo/.tavern/plans/my-plan.md", "/repo")).toBe(".tavern/plans/my-plan.md")
   })
 
   it("returns absolute path inside repo with trailing slash on root as repo-relative", () => {
-    expect(planDisplayPath("/repo/.kilo/plans/my-plan.md", "/repo/")).toBe(".kilo/plans/my-plan.md")
+    expect(planDisplayPath("/repo/.tavern/plans/my-plan.md", "/repo/")).toBe(".tavern/plans/my-plan.md")
   })
 
   it("returns absolute path outside repo unchanged", () => {
@@ -27,7 +27,7 @@ describe("planDisplayPath", () => {
   })
 
   it("handles Windows absolute paths inside root", () => {
-    expect(planDisplayPath("C:\\repo\\.kilo\\plans\\plan.md", "C:\\repo")).toBe(".kilo\\plans\\plan.md")
+    expect(planDisplayPath("C:\\repo\\.tavern\\plans\\plan.md", "C:\\repo")).toBe(".tavern\\plans\\plan.md")
   })
 
   it("handles Windows absolute paths outside root", () => {

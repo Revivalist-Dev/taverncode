@@ -2,12 +2,12 @@ import { request, type IncomingMessage, type Server } from "http"
 
 const host = "127.0.0.1"
 
-// The callback port is a machine-wide singleton: a second `kilo mcp auth` for the same
+// The callback port is a machine-wide singleton: a second `tavern mcp auth` for the same
 // server cannot bind it while the first attempt waits for its browser tab. The newer
 // attempt asks the process that holds the listener to stand down, takes the port, and the
 // replaced flow is reported by name instead of waiting for a callback that cannot arrive.
 const TAKEOVER_QUERY = "kilo_callback_takeover"
-export const TAKEOVER_HEADER = "x-kilo-oauth-callback"
+export const TAKEOVER_HEADER = "x-tavern-oauth-callback"
 export const TAKEOVER_VALUE = "released"
 const TAKEOVER_TIMEOUT_MS = 2_000
 const TAKEOVER_RETRY_MS = 100
@@ -66,7 +66,7 @@ export function isReplaced(error: unknown): boolean {
  * takeover header makes it a non-simple request: a browser must clear a CORS preflight first,
  * and this listener never answers one, so a cross-origin GET from a web page cannot release an
  * authorization that is in flight. A DNS-rebinding page is same-origin with the listener as the
- * browser sees it, so the header alone does not prove the caller is a Kilo process: the request
+ * browser sees it, so the header alone does not prove the caller is a Tavern process: the request
  * must also address this listener's own host (or a loopback name), never the rebound name.
  */
 export function isTakeoverRequest(req: IncomingMessage, url: URL): boolean {
@@ -84,7 +84,7 @@ export function takeoverUrl(host: string, port: number, path: string): string {
 
 /**
  * Ask the process that holds the callback listener to release it. A listener that does not
- * answer with the takeover header (an older Kilo build, or an unrelated program on the
+ * answer with the takeover header (an older Tavern build, or an unrelated program on the
  * port) is left alone, so the caller keeps reporting the port as occupied.
  */
 export function takeover(host: string, port: number, path: string): Promise<boolean> {
@@ -128,7 +128,7 @@ async function bind(deps: Deps, host: string, cfg: { port: number; path: string 
       if (!occupied(err) || attempt >= TAKEOVER_ATTEMPTS) throw err
       if (attempt === 0) {
         if (!(await takeover(host, cfg.port, cfg.path))) throw err
-        deps.info("took over the oauth callback listener from another Kilo attempt", {
+        deps.info("took over the oauth callback listener from another Tavern attempt", {
           host,
           port: cfg.port,
           path: cfg.path,
@@ -150,7 +150,7 @@ export function listen(srv: Server, host: string, port: number): Promise<void> {
       if (err.code === "EADDRINUSE") {
         reject(
           new Error(
-            `OAuth callback port ${port} is already in use. Close the other Kilo process or configure a different MCP OAuth redirect URI, then retry.`,
+            `OAuth callback port ${port} is already in use. Close the other Tavern process or configure a different MCP OAuth redirect URI, then retry.`,
           ),
         )
         return

@@ -104,7 +104,7 @@ async function prepare(name: string, oauth = false) {
   )
 }
 
-describe("Kilo persona in generated metadata requests", () => {
+describe("Tavern persona in generated metadata requests", () => {
   test.each(["title", "branch-name"])("omits the persona for %s generation", async (name) => {
     const result = await prepare(name)
 
@@ -166,11 +166,11 @@ describe("LLM request output tokens", () => {
 
   const adaptive = { high: { reasoning: { enabled: true, effort: "high" }, verbosity: "high" } }
 
-  it.instance("requests the full output limit for Claude on the Kilo gateway", () =>
+  it.instance("requests the full output limit for Claude on the Tavern gateway", () =>
     Effect.gen(function* () {
       const mdl = claude({
         id: "anthropic/claude-opus-5.5",
-        npm: "@kilocode/kilo-gateway",
+        npm: "@taverncode/tavern-gateway",
         output: 128_000,
         variants: adaptive,
       })
@@ -181,9 +181,9 @@ describe("LLM request output tokens", () => {
 
   it.instance("requests the full output limit for Claude-family aliases", () =>
     Effect.gen(function* () {
-      for (const npm of ["@kilocode/kilo-gateway", "@ai-sdk/anthropic"]) {
+      for (const npm of ["@taverncode/tavern-gateway", "@ai-sdk/anthropic"]) {
         for (const family of ["claude", "Claude-Sonnet"]) {
-          const mdl = { ...claude({ id: "kilo-auto/frontier", npm, output: 128_000 }), family }
+          const mdl = { ...claude({ id: "tavern-auto/frontier", npm, output: 128_000 }), family }
           expect(yield* run({ model: mdl })).toBe(128_000)
         }
       }
@@ -205,8 +205,8 @@ describe("LLM request output tokens", () => {
   it.instance("keeps the default for mixed auto routes with a Claude candidate", () =>
     Effect.gen(function* () {
       const mdl = {
-        ...claude({ id: "kilo-auto/efficient", npm: "@kilocode/kilo-gateway", output: 65_536 }),
-        family: "kilo-auto",
+        ...claude({ id: "tavern-auto/efficient", npm: "@taverncode/tavern-gateway", output: 65_536 }),
+        family: "tavern-auto",
         autoRouting: { models: ["anthropic/claude-sonnet-5", "google/gemini-2.5-flash"] },
       }
       expect(yield* run({ model: mdl })).toBe(32_000)
@@ -247,11 +247,11 @@ describe("LLM request output tokens", () => {
         npm: "@openrouter/ai-sdk-provider",
         output: 128_000,
       })
-      const other = claude({ id: "openai/gpt-5.6", npm: "@kilocode/kilo-gateway", output: 128_000 })
-      const kilo = claude({ id: "anthropic/claude-opus-5.5", npm: "@kilocode/kilo-gateway", output: 128_000 })
+      const other = claude({ id: "openai/gpt-5.6", npm: "@taverncode/tavern-gateway", output: 128_000 })
+      const tavern = claude({ id: "anthropic/claude-opus-5.5", npm: "@taverncode/tavern-gateway", output: 128_000 })
       expect(yield* run({ model: openrouter })).toBe(32_000)
       expect(yield* run({ model: other })).toBe(32_000)
-      expect(yield* run({ model: kilo, flags: { outputTokenMax: 48_000 } })).toBe(48_000)
+      expect(yield* run({ model: tavern, flags: { outputTokenMax: 48_000 } })).toBe(48_000)
     }),
   )
 })
@@ -280,12 +280,12 @@ describe("LLM request headers", () => {
           })
 
           expect(result.headers).toMatchObject({
-            "x-opencode-project": ctx.project.id,
-            "x-opencode-session": "ses_test",
-            "x-opencode-request": "msg_test",
-            "x-opencode-client": "test",
+            "x-tavern-project": ctx.project.id,
+            "x-tavern-session": "ses_test",
+            "x-tavern-request": "msg_test",
+            "x-tavern-client": "test",
           })
-          expect(Object.keys(result.headers).filter((key) => /^x-kilo-/i.test(key))).toEqual([])
+          expect(Object.keys(result.headers).filter((key) => /^x-tavern-/i.test(key))).toEqual([])
           expect(result.headers).not.toHaveProperty("x-session-affinity")
           expect(result.headers).not.toHaveProperty("X-Session-Id")
         }),
@@ -294,9 +294,9 @@ describe("LLM request headers", () => {
   }
 
   for (const entry of [
-    { name: "kilo", npm: model.api.npm },
+    { name: "tavern", npm: model.api.npm },
     { name: "test", npm: model.api.npm },
-    { name: "kilo", npm: "@kilocode/kilo-gateway" },
+    { name: "tavern", npm: "@taverncode/tavern-gateway" },
   ]) {
     it.instance(`uses generic headers for ${entry.name} with ${entry.npm}`, () =>
       Effect.gen(function* () {
@@ -322,10 +322,10 @@ describe("LLM request headers", () => {
           "X-Session-Id": "ses_test",
           "x-parent-session-id": "ses_parent",
         })
-        expect(Object.keys(result.headers).filter((key) => /^x-(kilo|opencode)-/i.test(key))).toEqual([])
-        if (entry.npm === "@kilocode/kilo-gateway") {
+        expect(Object.keys(result.headers).filter((key) => /^x-(tavern|opencode)-/i.test(key))).toEqual([])
+        if (entry.npm === "@taverncode/tavern-gateway") {
           expect(result.headers).toMatchObject({
-            "x-kilocode-mode": "code",
+            "x-taverncode-mode": "code",
             "X-KILOCODE-TASKID": "ses_test",
             "X-KILOCODE-PARENT-TASKID": "ses_parent",
           })

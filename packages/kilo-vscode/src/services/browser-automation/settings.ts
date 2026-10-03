@@ -1,7 +1,7 @@
 import * as os from "os"
 import * as path from "path"
 
-export const PLAYWRIGHT_OUTPUT_DIR = path.join(os.tmpdir(), "kilo-playwright-mcp")
+export const PLAYWRIGHT_OUTPUT_DIR = path.join(os.tmpdir(), "tavern-playwright-mcp")
 
 /**
  * Build the Playwright MCP launch command.

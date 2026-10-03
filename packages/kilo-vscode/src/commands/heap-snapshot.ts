@@ -3,7 +3,7 @@ import type { KiloConnectionService } from "../services/cli-backend/connection-s
 
 export function registerHeapSnapshot(context: vscode.ExtensionContext, connectionService: KiloConnectionService): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand("kilo-code.new.takeHeapSnapshot", async () => {
+    vscode.commands.registerCommand("tavern-code.new.takeHeapSnapshot", async () => {
       try {
         const file = await snapshot(connectionService)
         vscode.window.showInformationMessage(`Heap snapshot written to ${file}`)
@@ -19,8 +19,8 @@ async function snapshot(connectionService: KiloConnectionService) {
   const cfg = connectionService.getServerConfig()
   if (!cfg) throw new Error("CLI server is not connected")
 
-  const auth = Buffer.from(`kilo:${cfg.password}`).toString("base64")
-  const res = await fetch(`${cfg.baseUrl}/kilocode/heap/snapshot`, {
+  const auth = Buffer.from(`tavern:${cfg.password}`).toString("base64")
+  const res = await fetch(`${cfg.baseUrl}/taverncode/heap/snapshot`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${auth}`,

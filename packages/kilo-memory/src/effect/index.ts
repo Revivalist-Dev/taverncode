@@ -8,7 +8,7 @@ import { MemoryPaths } from "./paths"
 import { MemoryTimers } from "./timers"
 import { MemoryDisabledError } from "./errors"
 
-/** Context-bound Kilo adapter over the root-bound package primitives. Prefer ctx inputs at runtime edges. */
+/** Context-bound Tavern adapter over the root-bound package primitives. Prefer ctx inputs at runtime edges. */
 export namespace KiloMemory {
   export type Input =
     | {

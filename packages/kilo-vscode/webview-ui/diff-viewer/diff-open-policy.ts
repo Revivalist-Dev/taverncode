@@ -1,8 +1,8 @@
-import { EXTREME_DIFF_CHANGED_LINES, MAX_EAGER_DIFF_BYTES } from "@kilocode/kilo-ui/pierre"
+import { EXTREME_DIFF_CHANGED_LINES, MAX_EAGER_DIFF_BYTES } from "@taverncode/tavern-ui/pierre"
 import type { WorktreeFileDiff } from "../src/types/messages"
 
 // Shared with the inline file diff viewer so both agree on what is too large
-// to render eagerly. See packages/kilo-ui/src/pierre/index.ts.
+// to render eagerly. See packages/tavern-ui/src/pierre/index.ts.
 export { EXTREME_DIFF_CHANGED_LINES }
 
 export const LONG_DIFF_MARKER_FILE_COUNT = 50

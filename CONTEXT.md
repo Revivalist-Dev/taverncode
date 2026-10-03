@@ -55,7 +55,7 @@ One process-local execution span that promotes eligible input and runs required 
 The bounded projection of a Core-executed tool result persisted in Session history and replayed to the model. A tool may shape this projection semantically, but the Tool Registry enforces the final size limit.
 
 **Managed Tool Output File**:
-A temporary file created under Kilo's shared tool-output directory to retain complete output that was too large for Session history.
+A temporary file created under Tavern's shared tool-output directory to retain complete output that was too large for Session history.
 
 **Model Request Options**:
 Provider-semantic model settings selected from the Catalog and active Session variant before the LLM protocol adapter encodes them for a provider request.
@@ -158,7 +158,7 @@ _Avoid_: Response envelope
 - Effect client construction accepts an explicit `baseUrl` and obtains `HttpClient.HttpClient` from the Effect environment. It does not install fetch or duplicate per-call transport policy; callers transform/provide the client for headers, tracing, retries, recording, and tests, while fiber interruption owns cancellation.
 - Promise and Effect emitters each own their generated public type modules. The **SDK Contract IR**, not a physically shared generated type package, is the common source; this permits zero-Effect wire types and rich decoded Effect types to evolve independently.
 - Promise and Effect network clients ship from `@opencode-ai/client` behind isolated root and `/effect` exports. The root has no runtime path to Effect; `/effect` imports only Effect, Schema, and Protocol.
-- The Effect-native scoped host belongs to `@opencode-ai/sdk-next`, which will assume the existing `@kilocode/sdk` name after legacy consumers migrate. Client remains network-only and SDK depends one-way on Client.
+- The Effect-native scoped host belongs to `@opencode-ai/sdk-next`, which will assume the existing `@taverncode/sdk` name after legacy consumers migrate. Client remains network-only and SDK depends one-way on Client.
 - SDK executes Server's assembled `HttpRouter` in memory. It opens no listener and performs no network I/O, while preserving Server routing, middleware, codecs, handlers, and errors.
 - The Effect Client and SDK re-export their decoded datatype facade from Schema so callers do not depend on internal package locations or Core's versioned names.
 - A capability intended for both networked and **Embedded OpenCode** belongs in the authoritative public `HttpApi`; embedded-only same-process capabilities extend **Embedded OpenCode** separately.

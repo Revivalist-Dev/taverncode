@@ -2,12 +2,12 @@ import { describe, expect, test } from "bun:test"
 import { afterEach, mock, spyOn } from "bun:test"
 import { Effect } from "effect"
 import { ProjectV2 } from "@opencode-ai/core/project"
-import { RemoteCommand } from "../../../src/kilo-sessions/remote-command"
-import { RemoteModelCatalog } from "../../../src/kilo-sessions/remote-model-catalog"
-import { RemoteSender } from "../../../src/kilo-sessions/remote-sender"
-import type { PrLink } from "../../../src/kilo-sessions/pr-link"
-import type { RemoteWS } from "../../../src/kilo-sessions/remote-ws"
-import type { RemoteProtocol } from "../../../src/kilo-sessions/remote-protocol"
+import { RemoteCommand } from "../../../src/tavern-sessions/remote-command"
+import { RemoteModelCatalog } from "../../../src/tavern-sessions/remote-model-catalog"
+import { RemoteSender } from "../../../src/tavern-sessions/remote-sender"
+import type { PrLink } from "../../../src/tavern-sessions/pr-link"
+import type { RemoteWS } from "../../../src/tavern-sessions/remote-ws"
+import type { RemoteProtocol } from "../../../src/tavern-sessions/remote-protocol"
 import type { SessionPrompt } from "../../../src/session/prompt"
 import { Question } from "../../../src/question"
 import { QuestionID } from "../../../src/question/schema"
@@ -17,8 +17,8 @@ import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { MessageID, SessionID } from "../../../src/session/schema"
 import { Session } from "../../../src/session/session"
-import { Suggestion } from "../../../src/kilocode/suggestion"
-import { KiloSessionPromptQueue } from "../../../src/kilocode/session/prompt-queue"
+import { Suggestion } from "../../../src/taverncode/suggestion"
+import { KiloSessionPromptQueue } from "../../../src/taverncode/session/prompt-queue"
 import { mkdir, symlink, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { tmpdir } from "../../fixture/fixture"
@@ -124,7 +124,7 @@ function catalogModel(providerID: string, modelID: string, name: string, reasoni
   }
 }
 
-// kilocode_change start
+// taverncode_change start
 const client = process.env.KILO_CLIENT
 afterEach(() => {
   mock.restore()
@@ -134,7 +134,7 @@ afterEach(() => {
   }
   process.env.KILO_CLIENT = client
 })
-// kilocode_change end
+// taverncode_change end
 
 describe("RemoteSender", () => {
   test("subscribe adds bus subscription, event forwarded", () => {
@@ -1342,7 +1342,7 @@ describe("RemoteSender", () => {
     await provideStarted
   })
 
-  // kilocode_change start
+  // taverncode_change start
   test("send_message normalizes string model without prefix", async () => {
     const { conn, sent } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
@@ -1374,14 +1374,14 @@ describe("RemoteSender", () => {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
         model: {
-          providerID: ProviderV2.ID.make("kilo"),
+          providerID: ProviderV2.ID.make("tavern"),
           modelID: ModelV2.ID.make("anthropic/claude-sonnet-4-20250514"),
         },
       },
     ])
   })
 
-  test("send_message keeps kilocode-prefixed model unchanged before internal conversion", async () => {
+  test("send_message keeps taverncode-prefixed model unchanged before internal conversion", async () => {
     const { conn } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
     const sender = RemoteSender.create({
@@ -1395,12 +1395,12 @@ describe("RemoteSender", () => {
 
     sender.handle({
       type: "command",
-      id: "req_model_kilocode",
+      id: "req_model_taverncode",
       command: "send_message",
       data: {
         sessionID: "ses_x",
         parts: [{ type: "text", text: "hello" }],
-        model: "kilocode/gpt-5-mini",
+        model: "taverncode/gpt-5-mini",
       },
     })
 
@@ -1410,7 +1410,7 @@ describe("RemoteSender", () => {
       {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: ProviderV2.ID.make("kilo"), modelID: ModelV2.ID.make("gpt-5-mini") },
+        model: { providerID: ProviderV2.ID.make("tavern"), modelID: ModelV2.ID.make("gpt-5-mini") },
       },
     ])
   })
@@ -1514,7 +1514,7 @@ describe("RemoteSender", () => {
     expect(calls[0]?.variant).toBeUndefined()
   })
 
-  test("send_message does not special-case kilo-prefixed model", async () => {
+  test("send_message does not special-case tavern-prefixed model", async () => {
     const { conn, sent } = fakeConn()
     const calls: SessionPrompt.PromptInput[] = []
     const sender = RemoteSender.create({
@@ -1533,7 +1533,7 @@ describe("RemoteSender", () => {
       data: {
         sessionID: "ses_x",
         parts: [{ type: "text", text: "hello" }],
-        model: "kilo/gpt-5-mini",
+        model: "tavern/gpt-5-mini",
       },
     })
 
@@ -1544,7 +1544,7 @@ describe("RemoteSender", () => {
       {
         sessionID: SessionID.make("ses_x"),
         parts: [{ type: "text", text: "hello" }],
-        model: { providerID: ProviderV2.ID.make("kilo"), modelID: ModelV2.ID.make("kilo/gpt-5-mini") },
+        model: { providerID: ProviderV2.ID.make("tavern"), modelID: ModelV2.ID.make("tavern/gpt-5-mini") },
       },
     ])
   })
@@ -1605,7 +1605,7 @@ describe("RemoteSender", () => {
     expect(sent[0]).toEqual({ type: "response", id: "req_no_message_id", result: {} })
     expect(calls[0]?.messageID).toBeUndefined()
   })
-  // kilocode_change end
+  // taverncode_change end
 
   test("question_reply sends response after work completes", async () => {
     const { conn, sent } = fakeConn()
@@ -2446,7 +2446,7 @@ describe("RemoteSender", () => {
   })
 })
 
-// kilocode_change start - remote slash command discovery and execution
+// taverncode_change start - remote slash command discovery and execution
 describe("RemoteSender slash commands", () => {
   // Wraps a Connection to expose a promise that resolves when a response with the
   // given id is sent. Keeps new tests deterministic without setTimeout polling.
@@ -2856,7 +2856,7 @@ describe("RemoteSender slash commands", () => {
   test("exit_cli rejects invalid, missing, unresolved, and unavailable sessions before ACK", async () => {
     const { conn, sent } = fakeConn()
     const lookups: string[] = []
-    // kilocode_change - K1 W1: the new exit_cli handler requires hasSession
+    // taverncode_change - K1 W1: the new exit_cli handler requires hasSession
     // (owns-check) + detachSession + cancelPrompt + ownedCount seams. The
     // default test seam has hasSession=false and detachSession resolves, so
     // the only path that completes is "not owned" — matching the new
@@ -2977,7 +2977,7 @@ describe("RemoteSender slash commands", () => {
           get: async (id) => info(id),
           children: async () => [],
         },
-        // kilocode_change - K1 W1: owns the target so the new detach path
+        // taverncode_change - K1 W1: owns the target so the new detach path
         // runs; no other sessions remain (ownedCount=0) and the callback is
         // registered, so the exit path completes and the microtask fires.
         hasSession: () => true,
@@ -3029,7 +3029,7 @@ describe("RemoteSender slash commands", () => {
         get: async (id) => info(id),
         children: async () => [],
       },
-      // kilocode_change - K1 W1: owns both targets; zero remaining after
+      // taverncode_change - K1 W1: owns both targets; zero remaining after
       // each detach; registered callback; the exit path completes.
       hasSession: () => true,
       detachSession: async () => {},
@@ -3086,7 +3086,7 @@ describe("RemoteSender slash commands", () => {
         get: async (id) => info(id),
         children: async () => [],
       },
-      // kilocode_change - K1 W1: owns the target; zero remaining; the
+      // taverncode_change - K1 W1: owns the target; zero remaining; the
       // callback is the throwing one above.
       hasSession: () => true,
       detachSession: async () => {},
@@ -3569,7 +3569,7 @@ describe("RemoteSender slash commands", () => {
       // The K2 contract: no `attachSession` seam exists on the handler. The
       // sender must rely entirely on the attach seam — and the child is
       // responsible for the on-boot attach via the KILO_REMOTE_ATTACH_SESSION
-      // init branch in kilo-sessions.ts.
+      // init branch in tavern-sessions.ts.
       attachSession: async () => undefined,
     })
 
@@ -3761,7 +3761,7 @@ describe("RemoteSender slash commands", () => {
     expect(order).toEqual(["detach:ses_current", "EXIT"])
   })
 
-  test("exit_cli keeps the headless host alive when zero sessions remain and no callback is registered (kilo remote)", async () => {
+  test("exit_cli keeps the headless host alive when zero sessions remain and no callback is registered (tavern remote)", async () => {
     const { conn, sent } = fakeConn()
     const order: string[] = []
     const sender = RemoteSender.create({
@@ -3932,7 +3932,7 @@ describe("RemoteSender slash commands", () => {
       data: {
         protocolVersion: 1,
         agent: "build",
-        model: { providerID: "kilo", modelID: "kilo-auto/efficient", variant: "high" },
+        model: { providerID: "tavern", modelID: "tavern-auto/efficient", variant: "high" },
         orgId: org,
       },
     })
@@ -3943,8 +3943,8 @@ describe("RemoteSender slash commands", () => {
       {
         agent: "build",
         model: {
-          id: ModelV2.ID.make("kilo-auto/efficient"),
-          providerID: ProviderV2.ID.make("kilo"),
+          id: ModelV2.ID.make("tavern-auto/efficient"),
+          providerID: ProviderV2.ID.make("tavern"),
           variant: "high",
         },
         metadata: { orgId: org },
@@ -3978,7 +3978,7 @@ describe("RemoteSender slash commands", () => {
 
     for (const [id, data] of [
       ["req_agent", { protocolVersion: 1, agent: "plan" }],
-      ["req_model", { protocolVersion: 1, model: { providerID: "kilo", modelID: "m1" } }],
+      ["req_model", { protocolVersion: 1, model: { providerID: "tavern", modelID: "m1" } }],
       ["req_org", { protocolVersion: 1, orgId: org }],
     ] as const) {
       const response = expectResponse(conn, sent, id)
@@ -3989,7 +3989,7 @@ describe("RemoteSender slash commands", () => {
 
     expect(createCalls).toEqual([
       { agent: "plan" },
-      { model: { id: ModelV2.ID.make("m1"), providerID: ProviderV2.ID.make("kilo") } },
+      { model: { id: ModelV2.ID.make("m1"), providerID: ProviderV2.ID.make("tavern") } },
       { metadata: { orgId: org } },
     ])
   })
@@ -4068,7 +4068,7 @@ describe("RemoteSender slash commands", () => {
         data: {
           protocolVersion: 1,
           agent: "build",
-          model: { providerID: "kilo", modelID: "kilo-auto/efficient", variant: "high" },
+          model: { providerID: "tavern", modelID: "tavern-auto/efficient", variant: "high" },
           orgId: org,
         },
       })
@@ -4079,8 +4079,8 @@ describe("RemoteSender slash commands", () => {
         {
           agent: "build",
           model: {
-            id: ModelV2.ID.make("kilo-auto/efficient"),
-            providerID: ProviderV2.ID.make("kilo"),
+            id: ModelV2.ID.make("tavern-auto/efficient"),
+            providerID: ProviderV2.ID.make("tavern"),
             variant: "high",
           },
           metadata: { orgId: org },
@@ -4340,7 +4340,7 @@ describe("RemoteSender slash commands", () => {
     const titles: { sessionID: string; title: string }[] = []
     const warnings: unknown[][] = []
     const sid = SessionID.make("ses_renamed")
-    const { clear, consumeRenameAdoption } = await import("../../../src/kilo-sessions/rename-adoptions")
+    const { clear, consumeRenameAdoption } = await import("../../../src/tavern-sessions/rename-adoptions")
     clear(sid)
 
     const sender = RemoteSender.create({
@@ -4445,7 +4445,7 @@ describe("RemoteSender slash commands", () => {
     const { conn } = fakeConn()
     const sid = SessionID.make("ses_rename_fail")
     const { clear, consumeRenameAdoption, markRenameAdopted } = await import(
-      "../../../src/kilo-sessions/rename-adoptions"
+      "../../../src/tavern-sessions/rename-adoptions"
     )
     clear(sid)
 
@@ -5108,4 +5108,4 @@ describe("RemoteSender slash commands", () => {
     },
   )
 })
-// kilocode_change end
+// taverncode_change end

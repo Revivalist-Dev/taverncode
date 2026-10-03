@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { resolveKiloGatewayBaseUrl, resolveKiloOpenRouterBaseUrl } from "../../src/api/url"
 
-describe("Kilo API URL resolvers", () => {
+describe("Tavern API URL resolvers", () => {
   test("resolves production route bases", () => {
-    expect(resolveKiloGatewayBaseUrl()).toBe("https://api.kilo.ai/api/gateway/")
-    expect(resolveKiloOpenRouterBaseUrl()).toBe("https://api.kilo.ai/api/openrouter/")
+    expect(resolveKiloGatewayBaseUrl()).toBe("https://api.tavern.ai/api/gateway/")
+    expect(resolveKiloOpenRouterBaseUrl()).toBe("https://api.tavern.ai/api/openrouter/")
   })
 
   test("normalizes root API base overrides", () => {
@@ -14,7 +14,7 @@ describe("Kilo API URL resolvers", () => {
     )
   })
 
-  test("replaces existing Kilo API route paths", () => {
+  test("replaces existing Tavern API route paths", () => {
     expect(resolveKiloGatewayBaseUrl({ baseURL: "https://example.test/api/openrouter/" })).toBe(
       "https://example.test/api/gateway/",
     )

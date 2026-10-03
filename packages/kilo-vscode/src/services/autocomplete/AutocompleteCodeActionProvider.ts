@@ -15,13 +15,13 @@ export class AutocompleteCodeActionProvider implements vscode.CodeActionProvider
     _token: vscode.CancellationToken,
   ): vscode.ProviderResult<(vscode.CodeAction | vscode.Command)[]> {
     const action = new vscode.CodeAction(
-      t("kilocode:autocomplete.codeAction.title"),
+      t("taverncode:autocomplete.codeAction.title"),
       this.providedCodeActionKinds["quickfix"],
     )
     action.command = {
       command: this.pending()
-        ? "kilo-code.new.autocomplete.nextEdit.acceptOrJump"
-        : "kilo-code.new.autocomplete.generateSuggestions",
+        ? "tavern-code.new.autocomplete.nextEdit.acceptOrJump"
+        : "tavern-code.new.autocomplete.generateSuggestions",
       title: "",
       arguments: [document.uri, range],
     }

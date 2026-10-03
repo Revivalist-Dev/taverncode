@@ -12,7 +12,7 @@ import {
 } from "../../src/agent-manager/continue-in-worktree"
 import { WorktreeManager, type CreateWorktreeResult } from "../../src/agent-manager/WorktreeManager"
 import { forkText } from "../../src/agent-manager/fork-handoff"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 
 const noop = () => {}
 const log = noop as (...args: unknown[]) => void
@@ -65,7 +65,7 @@ function session(id: string): Session {
 }
 
 function result(path: string): CreateWorktreeResult {
-  return { path, branch: "kilo/test" } as CreateWorktreeResult
+  return { path, branch: "tavern/test" } as CreateWorktreeResult
 }
 
 /** Build a minimal ContinueContext with overrides. */

@@ -45,10 +45,10 @@ async function finish(result: ReturnType<typeof streamText>) {
   throw new Error("missing finish-step")
 }
 
-describe("Kilo Gateway response metadata", () => {
+describe("Tavern Gateway response metadata", () => {
   test("surfaces Anthropic terminal cost and routed model", async () => {
     const sdk = createKilo({
-      kilocodeToken: "test",
+      taverncodeToken: "test",
       fetch: async () =>
         response([
           {
@@ -80,7 +80,7 @@ describe("Kilo Gateway response metadata", () => {
 
   test("surfaces OpenAI Responses terminal cost and routed model", async () => {
     const sdk = createKilo({
-      kilocodeToken: "test",
+      taverncodeToken: "test",
       fetch: async () =>
         response([
           {
@@ -111,7 +111,7 @@ describe("Kilo Gateway response metadata", () => {
 
   test("surfaces OpenRouter Responses model and upstream cost", async () => {
     const sdk = createKilo({
-      kilocodeToken: "test",
+      taverncodeToken: "test",
       fetch: async () =>
         response([
           {
@@ -157,7 +157,7 @@ describe("Kilo Gateway response metadata", () => {
 
   test("preserves OpenRouter Messages model and upstream cost", async () => {
     const sdk = createKilo({
-      kilocodeToken: "test",
+      taverncodeToken: "test",
       fetch: async () =>
         response([
           {
@@ -202,7 +202,7 @@ describe("Kilo Gateway response metadata", () => {
 
   test("exposes raw chunks only when requested", async () => {
     const sdk = createKilo({
-      kilocodeToken: "test",
+      taverncodeToken: "test",
       fetch: async () =>
         response([
           {

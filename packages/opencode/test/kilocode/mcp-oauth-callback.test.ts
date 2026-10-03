@@ -1,6 +1,6 @@
 import { describe, expect, test, afterEach } from "bun:test"
 import { createServer, request, type Server } from "http"
-import * as KiloOAuthCallback from "../../src/kilocode/mcp-oauth-callback"
+import * as KiloOAuthCallback from "../../src/taverncode/mcp-oauth-callback"
 import { McpOAuthCallback } from "../../src/mcp/oauth-callback"
 import { parseRedirectUri } from "../../src/mcp/oauth-provider"
 
@@ -39,7 +39,7 @@ function takeoverFrom(port: number, hostHeader: string): Promise<{ released: boo
 
 type Later = { server: Server | undefined; port: number; path: string }
 
-describe("Kilo MCP OAuth callback", () => {
+describe("Tavern MCP OAuth callback", () => {
   afterEach(async () => {
     await McpOAuthCallback.stop()
   })
@@ -74,7 +74,7 @@ describe("Kilo MCP OAuth callback", () => {
 
     // The earlier attempt owns the listener and waits for its browser tab.
     await McpOAuthCallback.ensureRunning(uri)
-    const earlier = McpOAuthCallback.waitForCallback("state-of-the-earlier-attempt", "kilo").then(
+    const earlier = McpOAuthCallback.waitForCallback("state-of-the-earlier-attempt", "tavern").then(
       () => undefined,
       (error: unknown) => error,
     )
@@ -114,7 +114,7 @@ describe("Kilo MCP OAuth callback", () => {
 
     // The earlier attempt owns the listener and waits for its browser tab.
     await McpOAuthCallback.ensureRunning(uri)
-    const settled = McpOAuthCallback.waitForCallback("state-of-the-earlier-attempt", "kilo").then(
+    const settled = McpOAuthCallback.waitForCallback("state-of-the-earlier-attempt", "tavern").then(
       (code) => code,
       (error: unknown) => error,
     )
@@ -139,7 +139,7 @@ describe("Kilo MCP OAuth callback", () => {
 
     // The earlier attempt owns the listener and waits for its browser tab.
     await McpOAuthCallback.ensureRunning(uri)
-    const settled = McpOAuthCallback.waitForCallback("state-of-a-rebound-attempt", "kilo").then(
+    const settled = McpOAuthCallback.waitForCallback("state-of-a-rebound-attempt", "tavern").then(
       (code) => code,
       (error: unknown) => error,
     )

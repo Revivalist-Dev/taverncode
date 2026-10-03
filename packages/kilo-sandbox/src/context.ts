@@ -3,7 +3,7 @@ import { canonicalize, canonicalizeEntry, matches, normalize } from "./path"
 import type { Profile } from "./profile"
 import { withProxy } from "./proxy"
 
-export const CurrentProfile = Context.Reference<Profile | undefined>("@kilocode/sandbox/CurrentProfile", {
+export const CurrentProfile = Context.Reference<Profile | undefined>("@taverncode/sandbox/CurrentProfile", {
   defaultValue: () => undefined,
 })
 

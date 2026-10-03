@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 
-const INTEGRATED_BROWSER = "kilo-code.new.agentManager.browser"
-const BROWSER_AUTOMATION = "kilo-code.new.browserAutomation"
+const INTEGRATED_BROWSER = "tavern-code.new.agentManager.browser"
+const BROWSER_AUTOMATION = "tavern-code.new.browserAutomation"
 
 /**
  * Read the Chrome preference for the Agent Manager Integrated Browser.

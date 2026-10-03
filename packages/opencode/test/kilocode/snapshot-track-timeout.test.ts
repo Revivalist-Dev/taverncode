@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Unit tests for KiloSnapshotTrack.wrap — the slow-repo guard that sits
 // on top of Snapshot.track(). These tests inject fake hooks so we don't
@@ -11,8 +11,8 @@ import { Deferred, Duration, Effect, Fiber } from "effect"
 import * as TestClock from "effect/testing/TestClock"
 import path from "path"
 import { PartID, type MessageID, type SessionID } from "../../src/session/schema"
-import { KiloSnapshotTrack } from "../../src/kilocode/snapshot/track"
-import { KiloPartLifecycle } from "../../src/kilocode/session/part-lifecycle"
+import { KiloSnapshotTrack } from "../../src/taverncode/snapshot/track"
+import { KiloPartLifecycle } from "../../src/taverncode/session/part-lifecycle"
 import { AppRuntime } from "../../src/effect/app-runtime"
 import { GlobalBus, type GlobalEvent } from "../../src/bus/global"
 import { InstanceRef } from "../../src/effect/instance-ref"
@@ -1053,7 +1053,7 @@ describe("KiloSnapshotTrack persistDisable", () => {
           progressDelayMs: 2,
         })
 
-        const file = path.join(test.directory, ".kilo", "kilo.jsonc")
+        const file = path.join(test.directory, ".tavern", "tavern.jsonc")
         const text = yield* Effect.tryPromise(() => Bun.file(file).text())
         expect(JSON.parse(text).snapshot).toBe(false)
         expect(state.disabledForSession).toBe(true)

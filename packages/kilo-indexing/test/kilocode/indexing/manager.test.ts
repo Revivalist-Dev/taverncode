@@ -158,7 +158,7 @@ describe("CodeIndexManager", () => {
   })
 
   test("initializes an unauthenticated OpenAI-compatible endpoint without auth headers", async () => {
-    const root = await mkdtemp(join(tmpdir(), "kilo-keyless-indexing-"))
+    const root = await mkdtemp(join(tmpdir(), "tavern-keyless-indexing-"))
     const workspace = join(root, "workspace")
     const cache = join(root, "cache")
     const requests: Array<{ authorization: string | null; apiKey: string | null }> = []

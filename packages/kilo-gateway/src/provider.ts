@@ -19,16 +19,16 @@ export function buildRequestHeaders(defaultHeaders: Record<string, string>, requ
 }
 
 /**
- * Create a KiloCode provider instance
+ * Create a TavernCode provider instance
  *
- * This provider wraps the OpenRouter SDK with KiloCode-specific configuration
+ * This provider wraps the OpenRouter SDK with TavernCode-specific configuration
  * including custom authentication, headers, and base URL.
  *
  * @example
  * ```typescript
  * const provider = createKilo({
- *   kilocodeToken: "your-token-here",
- *   kilocodeOrganizationId: "org-123"
+ *   taverncodeToken: "your-token-here",
+ *   taverncodeOrganizationId: "org-123"
  * })
  *
  * const model = provider.languageModel("anthropic/claude-sonnet-4")
@@ -44,8 +44,8 @@ export function createKilo(options: KiloProviderOptions = {}): KiloProvider {
   const customHeaders = {
     ...getDefaultHeaders(),
     ...buildKiloHeaders(undefined, {
-      kilocodeOrganizationId: options.kilocodeOrganizationId,
-      kilocodeTesterWarningsDisabledUntil: undefined,
+      taverncodeOrganizationId: options.taverncodeOrganizationId,
+      taverncodeTesterWarningsDisabledUntil: undefined,
     }),
     ...options.headers,
   }

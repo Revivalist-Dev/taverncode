@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { FSUtil } from "@opencode-ai/core/fs-util"
-import type { Resolved } from "@/kilocode/reference"
+import type { Resolved } from "@/taverncode/reference"
 
 export namespace KiloReference {
   export const contains = Effect.fn("KiloReference.contains")(function* (input: {

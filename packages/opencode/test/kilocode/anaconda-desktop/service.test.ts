@@ -3,15 +3,15 @@ import { Auth } from "@/auth"
 import { InstanceStore } from "@/project/instance-store"
 import { ModelCache } from "@/provider/model-cache"
 import { Effect, Layer, Redacted, Ref } from "effect"
-import * as Discovery from "../../../src/kilocode/anaconda-desktop/discovery"
+import * as Discovery from "../../../src/taverncode/anaconda-desktop/discovery"
 import {
   decodeMetadata,
   PROVIDER_ID,
   type Metadata,
   type ReadyStatus,
-} from "../../../src/kilocode/anaconda-desktop/domain"
-import * as DesktopPlatform from "../../../src/kilocode/anaconda-desktop/platform"
-import * as Desktop from "../../../src/kilocode/anaconda-desktop/service"
+} from "../../../src/taverncode/anaconda-desktop/domain"
+import * as DesktopPlatform from "../../../src/taverncode/anaconda-desktop/platform"
+import * as Desktop from "../../../src/taverncode/anaconda-desktop/service"
 import { testEffect } from "../../lib/effect"
 
 const it = testEffect(Layer.empty)

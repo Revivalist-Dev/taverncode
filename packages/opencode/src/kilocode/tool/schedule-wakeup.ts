@@ -1,4 +1,4 @@
-import { Wakeup } from "@/kilocode/wakeup"
+import { Wakeup } from "@/taverncode/wakeup"
 import { InstanceState } from "@/effect/instance-state"
 import { Tool } from "@/tool/tool"
 import { Effect, Schema } from "effect"

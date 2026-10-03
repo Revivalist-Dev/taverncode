@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Effect, Layer } from "effect"
 import { Command } from "../../src/command"
-import { parseReviewCommand, reviewCommand } from "../../src/kilocode/review/command"
+import { parseReviewCommand, reviewCommand } from "../../src/taverncode/review/command"
 import { provideTmpdirInstance } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 
@@ -91,16 +91,16 @@ describe("review command", () => {
 
   test("documents worktree metadata candidate precedence", () => {
     const text = cmd.template as string
-    expect(text).toContain("git rev-parse --git-path kilo-agent-manager-metadata.json")
-    expect(text).toContain("`.kilo/metadata.json` in the current worktree checkout")
-    expect(text).toContain("`.kilocode/metadata.json` in the current worktree checkout")
-    const admin = text.indexOf("git rev-parse --git-path kilo-agent-manager-metadata.json")
-    const kilo = text.indexOf("`.kilo/metadata.json` in the current worktree checkout")
-    const kilocode = text.indexOf("`.kilocode/metadata.json` in the current worktree checkout")
-    expect(admin).toBeLessThan(kilo)
-    expect(kilo).toBeLessThan(kilocode)
+    expect(text).toContain("git rev-parse --git-path tavern-agent-manager-metadata.json")
+    expect(text).toContain("`.tavern/metadata.json` in the current worktree checkout")
+    expect(text).toContain("`.taverncode/metadata.json` in the current worktree checkout")
+    const admin = text.indexOf("git rev-parse --git-path tavern-agent-manager-metadata.json")
+    const tavern = text.indexOf("`.tavern/metadata.json` in the current worktree checkout")
+    const taverncode = text.indexOf("`.taverncode/metadata.json` in the current worktree checkout")
+    expect(admin).toBeLessThan(tavern)
+    expect(tavern).toBeLessThan(taverncode)
     expect(text).toContain("use `lstat`, not `stat`")
-    expect(text).toContain("immediate `.kilo` or `.kilocode` directory")
+    expect(text).toContain("immediate `.tavern` or `.taverncode` directory")
     expect(text).toContain("do not follow it; skip that candidate and continue")
     expect(text).toContain("linked worktree")
     expect(text).toContain("may be outside the checkout")

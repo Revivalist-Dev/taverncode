@@ -1,4 +1,4 @@
-import { Wakeup } from "@/kilocode/wakeup"
+import { Wakeup } from "@/taverncode/wakeup"
 import { Tool } from "@/tool/tool"
 import { Effect, Schema } from "effect"
 import DESCRIPTION from "./cancel-wakeup.txt"

@@ -7,7 +7,7 @@ import {
   replyOnce,
   type RecoverablePermission,
   type PermissionContext,
-} from "../../src/kilo-provider/handlers/permission-handler"
+} from "../../src/tavern-provider/handlers/permission-handler"
 import { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
 
 /** Transient transport failures carry no HTTP status and are safe to retry. */
@@ -113,23 +113,23 @@ describe("recoveryDirs", () => {
 
   it("returns workspace root plus each unique worktree directory", () => {
     const dirs = new Map([
-      ["s1", "/workspace/.kilo/worktrees/alpha"],
-      ["s2", "/workspace/.kilo/worktrees/beta"],
-      ["s3", "/workspace/.kilo/worktrees/alpha"],
+      ["s1", "/workspace/.tavern/worktrees/alpha"],
+      ["s2", "/workspace/.tavern/worktrees/beta"],
+      ["s3", "/workspace/.tavern/worktrees/alpha"],
     ])
     expect(recoveryDirs("/workspace", dirs)).toEqual([
       "/workspace",
-      "/workspace/.kilo/worktrees/alpha",
-      "/workspace/.kilo/worktrees/beta",
+      "/workspace/.tavern/worktrees/alpha",
+      "/workspace/.tavern/worktrees/beta",
     ])
   })
 
   it("includes extra worktree directories", () => {
-    const dirs = new Map([["s1", "/workspace/.kilo/worktrees/alpha"]])
-    expect(recoveryDirs("/workspace", dirs, ["/workspace/.kilo/worktrees/beta", "/workspace"])).toEqual([
+    const dirs = new Map([["s1", "/workspace/.tavern/worktrees/alpha"]])
+    expect(recoveryDirs("/workspace", dirs, ["/workspace/.tavern/worktrees/beta", "/workspace"])).toEqual([
       "/workspace",
-      "/workspace/.kilo/worktrees/alpha",
-      "/workspace/.kilo/worktrees/beta",
+      "/workspace/.tavern/worktrees/alpha",
+      "/workspace/.tavern/worktrees/beta",
     ])
   })
 })
@@ -189,12 +189,12 @@ describe("handlePermissionResponse", () => {
     "acknowledges %s for an untracked child without an SSE event",
     async (response) => {
       const { fake, messages, replies, permDirs } = ctx({ tracked: ["parent"] })
-      permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+      permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
       await handlePermissionResponse(fake, "p1", "child", response, [], [])
 
       expect(replies).toEqual([
-        { requestID: "p1", reply: response, directory: "/workspace/.kilo/worktrees/feature", interactive: true },
+        { requestID: "p1", reply: response, directory: "/workspace/.tavern/worktrees/feature", interactive: true },
       ])
       expect(messages).toEqual([{ type: "permissionResolved", permissionID: "p1", sessionID: "child", response }])
       expect(permDirs.has("p1")).toBe(false)
@@ -203,37 +203,37 @@ describe("handlePermissionResponse", () => {
 
   it("uses the recorded SSE directory instead of a stale session fallback", async () => {
     const { fake, replies, permDirs } = ctx({ tracked: ["s1"] })
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "once", [], [])
 
     expect(replies).toEqual([
-      { requestID: "p1", reply: "once", directory: "/workspace/.kilo/worktrees/feature", interactive: true },
+      { requestID: "p1", reply: "once", directory: "/workspace/.tavern/worktrees/feature", interactive: true },
     ])
   })
 
   it("saves selected rules and replies in the recorded SSE directory", async () => {
     const { fake, saves, replies, permDirs } = ctx({ tracked: ["s1"] })
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "reject", ["bun *"], ["rm *"])
 
     expect(saves).toEqual([
       {
         requestID: "p1",
-        directory: "/workspace/.kilo/worktrees/feature",
+        directory: "/workspace/.tavern/worktrees/feature",
         approvedAlways: ["bun *"],
         deniedAlways: ["rm *"],
       },
     ])
     expect(replies).toEqual([
-      { requestID: "p1", reply: "reject", directory: "/workspace/.kilo/worktrees/feature", interactive: true },
+      { requestID: "p1", reply: "reject", directory: "/workspace/.tavern/worktrees/feature", interactive: true },
     ])
   })
 
   it("forwards reject feedback as the reply message", async () => {
     const { fake, replies, permDirs } = ctx({ tracked: ["s1"] })
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "reject", [], [], "use tabs, not spaces")
 
@@ -241,7 +241,7 @@ describe("handlePermissionResponse", () => {
       {
         requestID: "p1",
         reply: "reject",
-        directory: "/workspace/.kilo/worktrees/feature",
+        directory: "/workspace/.tavern/worktrees/feature",
         interactive: true,
         message: "use tabs, not spaces",
       },
@@ -253,14 +253,14 @@ describe("handlePermissionResponse", () => {
       cause: { status: 404, body: { name: "NotFoundError" } },
     })
     const { fake, messages, saves, replies, permDirs } = ctx({ tracked: ["s1"], errors: { save: error } })
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "once", ["bun *"], [])
 
     expect(saves).toEqual([
       {
         requestID: "p1",
-        directory: "/workspace/.kilo/worktrees/feature",
+        directory: "/workspace/.tavern/worktrees/feature",
         approvedAlways: ["bun *"],
         deniedAlways: [],
       },
@@ -275,12 +275,12 @@ describe("handlePermissionResponse", () => {
       cause: { status: 404, body: { name: "NotFoundError" } },
     })
     const { fake, messages, replies, permDirs } = ctx({ tracked: ["s1"], errors: { reply: error } })
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "once", [], [])
 
     expect(replies).toEqual([
-      { requestID: "p1", reply: "once", directory: "/workspace/.kilo/worktrees/feature", interactive: true },
+      { requestID: "p1", reply: "once", directory: "/workspace/.tavern/worktrees/feature", interactive: true },
     ])
     expect(permDirs.has("p1")).toBe(false)
     expect(messages).toEqual([{ type: "permissionError", permissionID: "p1", stale: true }])
@@ -292,7 +292,7 @@ describe("handlePermissionResponse", () => {
     })
     const { fake, messages, permDirs } = ctx({ tracked: ["s1"], errors: { reply: error } })
     const spy = spyOn(console, "error").mockImplementation(() => {})
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "once", [], [])
     spy.mockRestore()
@@ -305,19 +305,19 @@ describe("handlePermissionResponse", () => {
     const error = new Error("The operation was aborted due to timeout")
     const { fake, messages, permDirs, queries } = ctx({ tracked: ["s1"], errors: { save: error } })
     const spy = spyOn(console, "error").mockImplementation(() => {})
-    permDirs.set("p1", "/workspace/.kilo/worktrees/feature")
+    permDirs.set("p1", "/workspace/.tavern/worktrees/feature")
 
     await handlePermissionResponse(fake, "p1", "s1", "once", ["bun *"], [])
     spy.mockRestore()
 
-    expect(queries).toContain("/workspace/.kilo/worktrees/feature")
+    expect(queries).toContain("/workspace/.tavern/worktrees/feature")
     expect(permDirs.has("p1")).toBe(false)
     expect(messages).toEqual([{ type: "permissionError", permissionID: "p1", stale: true }])
   })
 
   it("keeps an aborted rule save retryable while the request is still pending", async () => {
     const error = new Error("The operation was aborted due to timeout")
-    const dir = "/workspace/.kilo/worktrees/feature"
+    const dir = "/workspace/.tavern/worktrees/feature"
     const { fake, messages, permDirs } = ctx({
       tracked: ["s1"],
       errors: { save: error },
@@ -453,45 +453,45 @@ describe("fetchAndSendPendingPermissions", () => {
 
   it("queries workspace root plus each unique worktree directory", async () => {
     const dirs = new Map([
-      ["s1", "/workspace/.kilo/worktrees/alpha"],
-      ["s2", "/workspace/.kilo/worktrees/beta"],
+      ["s1", "/workspace/.tavern/worktrees/alpha"],
+      ["s2", "/workspace/.tavern/worktrees/beta"],
     ])
     const { fake, queries } = ctx({ tracked: ["s1", "s2"], dirs })
     await fetchAndSendPendingPermissions(fake)
     expect(queries).toContain("/workspace")
-    expect(queries).toContain("/workspace/.kilo/worktrees/alpha")
-    expect(queries).toContain("/workspace/.kilo/worktrees/beta")
+    expect(queries).toContain("/workspace/.tavern/worktrees/alpha")
+    expect(queries).toContain("/workspace/.tavern/worktrees/beta")
     expect(queries).toHaveLength(3)
   })
 
   it("queries extra Agent Manager worktree directories", async () => {
     const { fake, queries, permDirs } = ctx({
       tracked: ["s1"],
-      extra: ["/workspace/.kilo/worktrees/late"],
-      permsPerDir: { "/workspace/.kilo/worktrees/late": [pending("p1", "s1")] },
+      extra: ["/workspace/.tavern/worktrees/late"],
+      permsPerDir: { "/workspace/.tavern/worktrees/late": [pending("p1", "s1")] },
     })
     await fetchAndSendPendingPermissions(fake)
-    expect(queries).toEqual(["/workspace", "/workspace/.kilo/worktrees/late"])
-    expect(permDirs.get("p1")).toBe("/workspace/.kilo/worktrees/late")
+    expect(queries).toEqual(["/workspace", "/workspace/.tavern/worktrees/late"])
+    expect(permDirs.get("p1")).toBe("/workspace/.tavern/worktrees/late")
   })
 
   it("preserves cached routes for directories that fail to list", async () => {
-    const dirs = new Map([["s1", "/workspace/.kilo/worktrees/failing"]])
+    const dirs = new Map([["s1", "/workspace/.tavern/worktrees/failing"]])
     const error = new Error("temporary failure")
     const { fake, permDirs } = ctx({
       tracked: ["s1"],
       dirs,
-      errors: { list: { "/workspace/.kilo/worktrees/failing": error } },
+      errors: { list: { "/workspace/.tavern/worktrees/failing": error } },
     })
     const spy = spyOn(console, "error").mockImplementation(() => {})
     permDirs.set("workspace-stale", "/workspace")
-    permDirs.set("worktree-pending", "/workspace/.kilo/worktrees/failing")
+    permDirs.set("worktree-pending", "/workspace/.tavern/worktrees/failing")
 
     await fetchAndSendPendingPermissions(fake)
     spy.mockRestore()
 
     expect(permDirs.has("workspace-stale")).toBe(false)
-    expect(permDirs.get("worktree-pending")).toBe("/workspace/.kilo/worktrees/failing")
+    expect(permDirs.get("worktree-pending")).toBe("/workspace/.tavern/worktrees/failing")
   })
 
   it("retries a transient list failure during recovery", async () => {
@@ -529,12 +529,12 @@ describe("fetchAndSendPendingPermissions", () => {
 
   it("deduplicates directories", async () => {
     const dirs = new Map([
-      ["s1", "/workspace/.kilo/worktrees/alpha"],
-      ["s2", "/workspace/.kilo/worktrees/alpha"],
+      ["s1", "/workspace/.tavern/worktrees/alpha"],
+      ["s2", "/workspace/.tavern/worktrees/alpha"],
     ])
     const { fake, queries } = ctx({ tracked: ["s1", "s2"], dirs })
     await fetchAndSendPendingPermissions(fake)
-    expect(queries.filter((d) => d === "/workspace/.kilo/worktrees/alpha")).toHaveLength(1)
+    expect(queries.filter((d) => d === "/workspace/.tavern/worktrees/alpha")).toHaveLength(1)
   })
 
   it("forwards permissions from worktree directories", async () => {

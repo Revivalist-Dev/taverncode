@@ -1,15 +1,15 @@
 ---
 title: "Settings"
-description: "Configure Kilo Code settings and preferences"
+description: "Configure Tavern Code settings and preferences"
 ---
 
 # Settings
 
-The VS Code extension can be configured through the Settings window, opened by pressing the gear icon in Kilo Code. Changes apply across extension surfaces, including the sidebar and Agent Manager. The CLI can also use the same JSONC config files when you use it directly.
+The VS Code extension can be configured through the Settings window, opened by pressing the gear icon in Tavern Code. Changes apply across extension surfaces, including the sidebar and Agent Manager. The CLI can also use the same JSONC config files when you use it directly.
 
 ## Configuring with the Agent
 
-The fastest way to change your Kilo configuration is to ask the agent to do it for you. The agent has a built-in skill that understands the full `kilo.jsonc` schema and can read, create, and update your config files directly.
+The fastest way to change your Tavern configuration is to ask the agent to do it for you. The agent has a built-in skill that understands the full `tavern.jsonc` schema and can read, create, and update your config files directly.
 
 **Examples of things you can ask:**
 
@@ -27,18 +27,18 @@ This is especially useful for complex configuration like custom model definition
 
 ## Managing Settings
 
-Kilo reads JSONC config from a **global** location (`~/.config/kilo/kilo.jsonc`) and from your **project** (`kilo.jsonc`, or `.kilo/kilo.jsonc`). All clients — CLI, VS Code, and JetBrains — read the same files.
+Tavern reads JSONC config from a **global** location (`~/.config/tavern/tavern.jsonc`) and from your **project** (`tavern.jsonc`, or `.tavern/tavern.jsonc`). All clients — CLI, VS Code, and JetBrains — read the same files.
 
-If `kilo.json` or the legacy `opencode.json`, `opencode.jsonc`, or `config.json` files exist in the same locations, Kilo reads and deep-merges them as well. Clearing a setting in the Settings UI (for example, setting a model back to "Not set") removes it from every config file that contains it.
+If `tavern.json` or the legacy `opencode.json`, `opencode.jsonc`, or `config.json` files exist in the same locations, Tavern reads and deep-merges them as well. Clearing a setting in the Settings UI (for example, setting a model back to "Not set") removes it from every config file that contains it.
 
 {% callout type="warning" %}
-**Migrating from opencode?** Kilo no longer falls back to opencode configuration stored in `.opencode` directories (such as `~/.config/opencode` or a project `./.opencode/`). To keep using it, move your global config into `~/.config/kilo/` and any project config into `./.kilo/`.
+**Migrating from opencode?** Tavern no longer falls back to opencode configuration stored in `.opencode` directories (such as `~/.config/opencode` or a project `./.opencode/`). To keep using it, move your global config into `~/.config/tavern/` and any project config into `./.tavern/`.
 {% /callout %}
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-The VS Code extension provides a **Settings webview UI** accessible from Kilo Code by clicking the gear icon ({% codicon name="gear" /%}). The UI is organized into tabs including Providers, Auto-Approve, Models, and more.
+The VS Code extension provides a **Settings webview UI** accessible from Tavern Code by clicking the gear icon ({% codicon name="gear" /%}). The UI is organized into tabs including Providers, Auto-Approve, Models, and more.
 
 This UI reads and writes to the same underlying JSONC config files used across extension surfaces. Changes apply to the sidebar, Agent Manager, and the CLI when used directly.
 
@@ -46,10 +46,10 @@ This UI reads and writes to the same underlying JSONC config files used across e
 
 There are two primary config files:
 
-- **Global config:** `~/.config/kilo/kilo.jsonc` — applies to all projects. On Windows, this is `C:\Users\<username>\.config\kilo\kilo.jsonc`.
-- **Project config:** `kilo.jsonc` in your project root, or `.kilo/kilo.jsonc` for a cleaner setup. The `.kilo/` version takes priority if both exist.
+- **Global config:** `~/.config/tavern/tavern.jsonc` — applies to all projects. On Windows, this is `C:\Users\<username>\.config\tavern\tavern.jsonc`.
+- **Project config:** `tavern.jsonc` in your project root, or `.tavern/tavern.jsonc` for a cleaner setup. The `.tavern/` version takes priority if both exist.
 
-Use **Local Config** or **Global Config** in the Settings header to open the matching config file from VS Code. If multiple config files are available, choose the exact file from the picker. If the recommended file does not exist yet, Kilo creates it before opening it.
+Use **Local Config** or **Global Config** in the Settings header to open the matching config file from VS Code. If multiple config files are available, choose the exact file from the picker. If the recommended file does not exist yet, Tavern creates it before opening it.
 
 {% callout type="warning" %}
 If you check config files into version control, make sure they do not contain API keys or other secrets (e.g., `provider.*.options.apiKey`). Use environment variables for credentials instead.
@@ -57,7 +57,7 @@ If you check config files into version control, make sure they do not contain AP
 
 ### Voice Transcription Model
 
-When the Kilo provider is enabled and you are signed in, choose the transcription model under **Models** > **Speech to Text Model**. This stores `experimental.speech_to_text_model` in your global Kilo CLI config:
+When the Tavern provider is enabled and you are signed in, choose the transcription model under **Models** > **Speech to Text Model**. This stores `experimental.speech_to_text_model` in your global Tavern CLI config:
 
 ```json
 {
@@ -69,7 +69,7 @@ When the Kilo provider is enabled and you are signed in, choose the transcriptio
 
 ### Voice Transcription Source
 
-By default both the model list and the audio go to Kilo Gateway. Set **Models** > **Speech to Text Base URL** to send them to any OpenAI-compatible transcription API instead, with an optional bearer token:
+By default both the model list and the audio go to Tavern Gateway. Set **Models** > **Speech to Text Base URL** to send them to any OpenAI-compatible transcription API instead, with an optional bearer token:
 
 ```json
 {
@@ -81,13 +81,13 @@ By default both the model list and the audio go to Kilo Gateway. Set **Models** 
 }
 ```
 
-Models are read from `{base_url}/models` and audio is posted to `{base_url}/audio/transcriptions`. Leave the base URL empty to use Kilo Gateway. See [Voice Transcription](/docs/code-with-ai/features/speech-to-text) for details.
+Models are read from `{base_url}/models` and audio is posted to `{base_url}/audio/transcriptions`. Leave the base URL empty to use Tavern Gateway. See [Voice Transcription](/docs/code-with-ai/features/speech-to-text) for details.
 
 ### Prompt-Training Model Visibility
 
-Enable **Hide Prompt-Training Models** under **Models** to remove Kilo Gateway models whose providers may use your prompts for training from model lists. Models from other providers and models without explicit prompt-training metadata remain visible. The setting is disabled by default.
+Enable **Hide Prompt-Training Models** under **Models** to remove Tavern Gateway models whose providers may use your prompts for training from model lists. Models from other providers and models without explicit prompt-training metadata remain visible. The setting is disabled by default.
 
-You can also enable it in `kilo.jsonc`:
+You can also enable it in `tavern.jsonc`:
 
 ```json
 {
@@ -99,7 +99,7 @@ You can also enable it in `kilo.jsonc`:
 
 Choose the model used for automatic and manual compaction under **Models** > **Compaction Model**. Leave it unset to use the chat model. The Compaction section in **Settings → Context** links to this selector.
 
-This stores `agent.compaction.model` in `kilo.jsonc`:
+This stores `agent.compaction.model` in `tavern.jsonc`:
 
 ```json
 {
@@ -113,7 +113,7 @@ This stores `agent.compaction.model` in `kilo.jsonc`:
 
 ### Reasoning Blocks
 
-Reasoning blocks show the agent's thinking. Choose a mode for **Reasoning Blocks** in the Display tab, or set `reasoning_display` in `kilo.jsonc`:
+Reasoning blocks show the agent's thinking. Choose a mode for **Reasoning Blocks** in the Display tab, or set `reasoning_display` in `tavern.jsonc`:
 
 ```json
 {
@@ -131,7 +131,7 @@ Older configs that set `auto_collapse_reasoning: true` map to `preview`. That bo
 
 ### Terminal Command Blocks
 
-Terminal command blocks stay expanded by default in the VS Code chat UI. Choose **Collapsed** for **Terminal Command Blocks** in the Display tab, or set `terminal_command_display` in `kilo.jsonc`, to start them collapsed:
+Terminal command blocks stay expanded by default in the VS Code chat UI. Choose **Collapsed** for **Terminal Command Blocks** in the Display tab, or set `terminal_command_display` in `tavern.jsonc`, to start them collapsed:
 
 ```json
 {
@@ -143,7 +143,7 @@ Valid values are `expanded` and `collapsed`.
 
 ### Code Edit and Tool Blocks
 
-Code edit and diff blocks start collapsed. Choose **Expanded** for **Code Edit Blocks** in the Display tab, or set `code_edit_display` in `kilo.jsonc`. MCP and generic tool blocks also start collapsed, controlled by `mcp_tool_display`:
+Code edit and diff blocks start collapsed. Choose **Expanded** for **Code Edit Blocks** in the Display tab, or set `code_edit_display` in `tavern.jsonc`. MCP and generic tool blocks also start collapsed, controlled by `mcp_tool_display`:
 
 ```json
 {
@@ -161,7 +161,7 @@ Onboarding asks you to pick a work style. The choice sets display defaults and, 
 - **Review first** expands reasoning, terminal, and code edit blocks, collapses MCP and generic tool blocks, and shows auto-approval reasons. It also allows read-only commands and asks before edits, external directory access, and other commands.
 - **High autonomy** uses a reasoning preview, collapses terminal, code edit, and tool blocks, and hides auto-approval reasons. It leaves permissions unchanged.
 
-Onboarding only fills settings and permission rules that are not already configured, so an existing `kilo.jsonc` or customized settings are preserved.
+Onboarding only fills settings and permission rules that are not already configured, so an existing `tavern.jsonc` or customized settings are preserved.
 
 You can change both choices later:
 
@@ -172,7 +172,7 @@ Display changes apply as a draft. Click **Save** to keep them or **Discard** to 
 
 ### Markdown Diff Rendering
 
-Markdown files in Kilo diff viewers can be shown as rendered Markdown instead of a raw text diff. Use the eye/code toggle in a Markdown file header, or set `kilo-code.new.diff.renderMarkdown` to `true` to render Markdown files by default.
+Markdown files in Tavern diff viewers can be shown as rendered Markdown instead of a raw text diff. Use the eye/code toggle in a Markdown file header, or set `tavern-code.new.diff.renderMarkdown` to `true` to render Markdown files by default.
 
 ### Web Search
 
@@ -180,12 +180,12 @@ See [Web Search Availability](/docs/automate/tools#web-search-availability) for 
 
 ### Export and Import
 
-You can export and import settings from the **About Kilo Code** tab in the Settings UI:
+You can export and import settings from the **About Tavern Code** tab in the Settings UI:
 
-- **Export**: Saves your global config as a `kilo-settings.json` file. Review it before sharing, because config values are exported as-is.
+- **Export**: Saves your global config as a `tavern-settings.json` file. Review it before sharing, because config values are exported as-is.
 - **Import**: Loads a previously exported JSON file into the settings draft. Changes are not applied immediately — you can review them and click Save or Discard, just like any manual edit.
 
-Config files are also plain-text and portable — you can copy `~/.config/kilo/kilo.jsonc` between machines directly.
+Config files are also plain-text and portable — you can copy `~/.config/tavern/tavern.jsonc` between machines directly.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -193,15 +193,15 @@ Config files are also plain-text and portable — you can copy `~/.config/kilo/k
 In the CLI, settings are managed via **JSONC config files** directly. Config files are plain-text and portable -- you can copy them between machines.
 
 {% callout type="warning" %}
-If you check `kilo.jsonc` into version control, make sure it does not contain API keys or other secrets (e.g., `provider.*.options.apiKey`). Use environment variables for credentials instead.
+If you check `tavern.jsonc` into version control, make sure it does not contain API keys or other secrets (e.g., `provider.*.options.apiKey`). Use environment variables for credentials instead.
 {% /callout %}
 
 ### Config File Locations
 
 There are two primary config files:
 
-- **Global config:** `~/.config/kilo/kilo.jsonc` -- applies to all projects. On Windows, this is `C:\Users\<username>\.config\kilo\kilo.jsonc`.
-- **Project config:** `kilo.jsonc` in the root of your project -- overrides global settings for that project.
+- **Global config:** `~/.config/tavern/tavern.jsonc` -- applies to all projects. On Windows, this is `C:\Users\<username>\.config\tavern\tavern.jsonc`.
+- **Project config:** `tavern.jsonc` in the root of your project -- overrides global settings for that project.
 
 Both files use the [JSONC](https://code.visualstudio.com/docs/languages/json#_json-with-comments) format (JSON with comments).
 
@@ -209,12 +209,12 @@ Both files use the [JSONC](https://code.visualstudio.com/docs/languages/json#_js
 
 Settings are resolved through an 8-level precedence system (lowest to highest priority):
 
-1. **Legacy Kilocode** -- migrated settings from the VSCode extension
+1. **Legacy Taverncode** -- migrated settings from the VSCode extension
 2. **Remote well-known** -- remotely fetched defaults
-3. **Global** -- `~/.config/kilo/kilo.jsonc`
+3. **Global** -- `~/.config/tavern/tavern.jsonc`
 4. **Custom** -- additional custom config paths
-5. **Project** -- `kilo.jsonc` in the project root
-6. **`.kilo` directory** -- config from a `.kilo/` directory in the project
+5. **Project** -- `tavern.jsonc` in the project root
+6. **`.tavern` directory** -- config from a `.tavern/` directory in the project
 7. **Inline environment** -- environment variable overrides
 8. **Managed / Enterprise** -- enterprise-managed configuration (highest priority)
 
@@ -222,16 +222,16 @@ Higher-priority levels override lower ones. This allows organizations to enforce
 
 ### Schema Auto-Injection
 
-When you create or open a `kilo.jsonc` file, the CLI automatically injects a `$schema` property pointing to the config JSON schema. This gives you **autocompletion and validation** in any editor that supports JSON Schema (VS Code, JetBrains, etc.).
+When you create or open a `tavern.jsonc` file, the CLI automatically injects a `$schema` property pointing to the config JSON schema. This gives you **autocompletion and validation** in any editor that supports JSON Schema (VS Code, JetBrains, etc.).
 
 ### Export and Import
 
-There is no traditional export/import of settings -- the JSONC config files themselves are portable. Copy `~/.config/kilo/kilo.jsonc` or `kilo.jsonc` to another machine and you're done.
+There is no traditional export/import of settings -- the JSONC config files themselves are portable. Copy `~/.config/tavern/tavern.jsonc` or `tavern.jsonc` to another machine and you're done.
 
 For **session** export and import, use the CLI commands:
 
-- `kilo export` -- export session data
-- `kilo import` -- import session data
+- `tavern export` -- export session data
+- `tavern import` -- import session data
 
 {% /tab %}
 {% /tabs %}
@@ -242,11 +242,11 @@ On macOS and Linux, the VS Code extension includes a dedicated **Sandboxing** se
 
 See [Sandboxing](/docs/getting-started/settings/sandboxing) for setup instructions, the exact filesystem and network boundaries, and platform limitations.
 
-## Kilo Swarm
+## Tavern Swarm
 
-Kilo Swarm lets a main session and its task descendants, including nested subagents, exchange messages on a shared board. It uses the existing Task tool, not a separate agent runtime. The board is not shared with unrelated sessions, even in the same repository or worktree.
+Tavern Swarm lets a main session and its task descendants, including nested subagents, exchange messages on a shared board. It uses the existing Task tool, not a separate agent runtime. The board is not shared with unrelated sessions, even in the same repository or worktree.
 
-Kilo Swarm is on by default. Turn it off in the VS Code or JetBrains **Agent Behaviour** settings, or set `shared_agent_board` to `false` in `kilo.jsonc`.
+Tavern Swarm is on by default. Turn it off in the VS Code or JetBrains **Agent Behaviour** settings, or set `shared_agent_board` to `false` in `tavern.jsonc`.
 
 Use it when agents can benefit from discoveries during work:
 
@@ -259,7 +259,7 @@ Straightforward tasks can stay solo. Enabling the board does not mean agents are
 
 All participants can read the board history, including messages addressed to others. Recipient selection is not a privacy boundary. Peer messages do not grant user approval or change permissions; `HOLD` and `VETO` are advisory, not controls that pause or cancel work.
 
-When a main session has board messages, open the **Board** icon in its task header (VS Code) or session header (JetBrains, which also offers a **View Kilo Swarm** session menu action) to read them, refresh them, or reset the board. Only the owning top-level session can view or reset its board; child sessions and cloud sessions cannot. Reset clears visible messages only and does not stop agents or clear conversations. See [Kilo Swarm communication](/docs/automate/agent-manager#kilo-swarm-communication) for the board dialog, ownership rules, and recipient-state warnings.
+When a main session has board messages, open the **Board** icon in its task header (VS Code) or session header (JetBrains, which also offers a **View Tavern Swarm** session menu action) to read them, refresh them, or reset the board. Only the owning top-level session can view or reset its board; child sessions and cloud sessions cannot. Reset clears visible messages only and does not stop agents or clear conversations. See [Tavern Swarm communication](/docs/automate/agent-manager#tavern-swarm-communication) for the board dialog, ownership rules, and recipient-state warnings.
 
 ## Experimental Features
 
@@ -275,9 +275,9 @@ Available experimental settings include:
 - **Paste summary** - summarize large clipboard pastes before including them
 - **Batch tool** - allow the agent to batch multiple tool calls in one step
 - **Claude Code Migration** - import supported global Claude Code configuration once (off by default)
-- **OpenTelemetry** - enable Kilo telemetry and optional OTLP export when configured
+- **OpenTelemetry** - enable Tavern telemetry and optional OTLP export when configured
 
-Advanced options not exposed in the UI can be configured via the `experimental` key in `kilo.jsonc`:
+Advanced options not exposed in the UI can be configured via the `experimental` key in `tavern.jsonc`:
 
 ```json
 {
@@ -290,14 +290,14 @@ Advanced options not exposed in the UI can be configured via the `experimental` 
 }
 ```
 
-Refer to the auto-generated `$schema` in your `kilo.jsonc` for the full list of available options.
+Refer to the auto-generated `$schema` in your `tavern.jsonc` for the full list of available options.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-The CLI does not expose these options through an IDE settings panel. Configure model behavior, permissions, telemetry, and other advanced options directly in JSONC config files. Refer to the auto-generated `$schema` in your `kilo.jsonc` for the full list of available options.
+The CLI does not expose these options through an IDE settings panel. Configure model behavior, permissions, telemetry, and other advanced options directly in JSONC config files. Refer to the auto-generated `$schema` in your `tavern.jsonc` for the full list of available options.
 
-Telemetry is enabled by default. Set `experimental.openTelemetry` to `false` in `kilo.jsonc` to opt out. If `OTEL_EXPORTER_OTLP_ENDPOINT` is set in the environment, the CLI also exports OpenTelemetry traces and logs to that OTLP HTTP endpoint.
+Telemetry is enabled by default. Set `experimental.openTelemetry` to `false` in `tavern.jsonc` to opt out. If `OTEL_EXPORTER_OTLP_ENDPOINT` is set in the environment, the CLI also exports OpenTelemetry traces and logs to that OTLP HTTP endpoint.
 
 {% /tab %}
 {% /tabs %}
@@ -312,8 +312,8 @@ Enable **Claude Code Migration** in **Settings → Experimental** to import supp
 
 The migration imports:
 
-- Global instructions from `~/.claude/CLAUDE.md` into Kilo's global `AGENTS.md`.
+- Global instructions from `~/.claude/CLAUDE.md` into Tavern's global `AGENTS.md`.
 - Standalone skills from `~/.claude/skills/` that contain only a `SKILL.md`.
 - Top-level MCP server definitions from `~/.claude.json`, disabled until you enable them.
 
-Existing Kilo content takes precedence; conflicts and unsupported items are skipped. Your original Claude files are not changed or deleted. After the attempt, Kilo stops loading global Claude instructions and skills as a fallback, but project-level compatibility such as a repository's `CLAUDE.md` is unaffected. A notification reports the outcome and points to a receipt with imported, skipped, and failed items.
+Existing Tavern content takes precedence; conflicts and unsupported items are skipped. Your original Claude files are not changed or deleted. After the attempt, Tavern stops loading global Claude instructions and skills as a fallback, but project-level compatibility such as a repository's `CLAUDE.md` is unaffected. A notification reports the outcome and points to a receipt with imported, skipped, and failed items.

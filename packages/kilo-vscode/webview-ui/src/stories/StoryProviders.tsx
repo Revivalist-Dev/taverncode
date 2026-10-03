@@ -18,29 +18,29 @@ import { ProviderContext } from "../context/provider"
 import { flattenModels, findModel as _findModel } from "../context/provider-utils"
 import { ConfigProvider, ConfigContext } from "../context/config"
 import { DisplayProvider } from "../context/display"
-import { DataProvider, type OpenDiffFn, type OpenFileFn } from "@kilocode/kilo-ui/context/data"
-import { DiffComponentProvider } from "@kilocode/kilo-ui/context/diff"
-import { CodeComponentProvider } from "@kilocode/kilo-ui/context/code"
-import { FileComponentProvider } from "@kilocode/kilo-ui/context/file"
-import { DialogProvider } from "@kilocode/kilo-ui/context/dialog"
-import { MarkedProvider } from "@kilocode/kilo-ui/context/marked"
-import { I18nProvider, pluralCategory, pluralKey } from "@kilocode/kilo-ui/context"
-import type { UiI18nPluralKey } from "@kilocode/kilo-ui/context"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { Code } from "@kilocode/kilo-ui/code"
-import { File } from "@kilocode/kilo-ui/file"
+import { DataProvider, type OpenDiffFn, type OpenFileFn } from "@taverncode/tavern-ui/context/data"
+import { DiffComponentProvider } from "@taverncode/tavern-ui/context/diff"
+import { CodeComponentProvider } from "@taverncode/tavern-ui/context/code"
+import { FileComponentProvider } from "@taverncode/tavern-ui/context/file"
+import { DialogProvider } from "@taverncode/tavern-ui/context/dialog"
+import { MarkedProvider } from "@taverncode/tavern-ui/context/marked"
+import { I18nProvider, pluralCategory, pluralKey } from "@taverncode/tavern-ui/context"
+import type { UiI18nPluralKey } from "@taverncode/tavern-ui/context"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { Code } from "@taverncode/tavern-ui/code"
+import { File } from "@taverncode/tavern-ui/file"
 import { SessionContext } from "../context/session"
 import { NotificationsContext } from "../context/notifications"
 import { LanguageContext } from "../context/language"
 import { IndexingProvider } from "../context/indexing"
-import { KiloEmbeddingModelsProvider } from "../context/kilo-embedding-models"
+import { KiloEmbeddingModelsProvider } from "../context/tavern-embedding-models"
 import { MemoryProvider } from "../context/memory"
 import { TranscriptSearchProvider } from "../context/transcript-search"
-import { dict as uiEn } from "@kilocode/kilo-ui/i18n/en"
+import { dict as uiEn } from "@taverncode/tavern-ui/i18n/en"
 import { dict as appEn } from "../i18n/en"
 import { dict as amEn } from "../../agent-manager/i18n/en"
-import { dict as kiloEn } from "@kilocode/kilo-i18n/en"
-import { hasIndexingPlugin } from "@kilocode/kilo-indexing/detect"
+import { dict as kiloEn } from "@taverncode/tavern-i18n/en"
+import { hasIndexingPlugin } from "@taverncode/tavern-indexing/detect"
 import { resolveTemplate } from "../context/language-utils"
 import type {
   Config,
@@ -71,13 +71,13 @@ const plural = (key: UiI18nPluralKey, count: number, params?: Record<string, str
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Mock providers — pre-loaded Kilo Gateway model for stories
+// Mock providers — pre-loaded Tavern Gateway model for stories
 // ---------------------------------------------------------------------------
 
 const MOCK_PROVIDERS = {
-  kilo: {
-    id: "kilo",
-    name: "Kilo",
+  tavern: {
+    id: "tavern",
+    name: "Tavern",
     env: [] as string[],
     models: {
       "anthropic/claude-sonnet-4-6": {
@@ -108,15 +108,15 @@ const MockProviderProvider: ParentComponent<{ kiloAuth?: boolean; training?: boo
   )
   const value = {
     providers: () => MOCK_PROVIDERS as any,
-    connected: () => ["kilo"],
+    connected: () => ["tavern"],
     defaults: () => ({}),
     organizationId: () => null,
     ready: () => true,
-    defaultSelection: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    defaultSelection: () => ({ providerID: "tavern", modelID: "anthropic/claude-sonnet-4-6" }),
     models,
     findModel: (sel: any) => _findModel(models(), sel),
     authMethods: () => ({}),
-    authStates: () => (props.kiloAuth ? { kilo: "oauth" } : {}) as Record<string, ProviderAuthState>,
+    authStates: () => (props.kiloAuth ? { tavern: "oauth" } : {}) as Record<string, ProviderAuthState>,
     isModelValid: () => true,
   }
   return <ProviderContext.Provider value={value}>{props.children}</ProviderContext.Provider>
@@ -234,8 +234,8 @@ export function mockSessionValue(overrides?: {
     scopedPermissions: (sid?: string) => (sid ? permissions.filter((p) => p.sessionID === sid) : permissions),
     scopedQuestions: (sid?: string) => (sid ? qs.filter((q) => q.sessionID === sid) : qs),
     scopedSuggestions: (sid?: string) => (sid ? suggestions.filter((item) => item.sessionID === sid) : suggestions),
-    selected: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
-    modelForAgent: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    selected: () => ({ providerID: "tavern", modelID: "anthropic/claude-sonnet-4-6" }),
+    modelForAgent: () => ({ providerID: "tavern", modelID: "anthropic/claude-sonnet-4-6" }),
     selectModel: noop,
     preferredSelection: () => undefined,
     preferencesReady: () => true,

@@ -1,6 +1,6 @@
 // Copy of @opencode-ai/ui/theme/context.tsx with two changes:
-// 1. Imports DEFAULT_THEMES from our local default-themes (which includes Kilo themes)
-// 2. Default theme changed from "oc-1" to "kilo"
+// 1. Imports DEFAULT_THEMES from our local default-themes (which includes Tavern themes)
+// 2. Default theme changed from "oc-1" to "tavern"
 import { onMount, onCleanup, createEffect } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { DesktopTheme } from "@opencode-ai/ui/theme/types"
@@ -10,7 +10,7 @@ import { createSimpleContext } from "@opencode-ai/ui/context/helper"
 
 export type ColorScheme = "light" | "dark" | "system"
 
-const DEFAULT_THEME_ID = "kilo"
+const DEFAULT_THEME_ID = "tavern"
 
 const STORAGE_KEYS = {
   THEME_ID: "opencode-theme-id",

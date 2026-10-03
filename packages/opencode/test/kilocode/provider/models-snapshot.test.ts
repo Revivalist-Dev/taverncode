@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { parseModelsSnapshot } from "../../../src/kilocode/provider/models-snapshot-shape"
+import { parseModelsSnapshot } from "../../../src/taverncode/provider/models-snapshot-shape"
 
 const fixture = {
   anthropic: {

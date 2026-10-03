@@ -1,6 +1,6 @@
 import type * as vscode from "vscode"
 
-const KEY = "kilo.sandbox.newSessionDefault"
+const KEY = "tavern.sandbox.newSessionDefault"
 
 type Listener = (enabled: boolean, revision: number) => void
 

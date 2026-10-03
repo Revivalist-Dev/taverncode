@@ -11,7 +11,7 @@ Reference for every Wasteland setting in your Gas Town dashboard, from upstream 
 Access these settings from your town dashboard → **Settings** → **Wasteland** tab.
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/settings/wasteland" caption="Wasteland settings tab in your Gas Town dashboard" %}
+{% browserFrame url="app.tavern.ai/gastown/town/settings/wasteland" caption="Wasteland settings tab in your Gas Town dashboard" %}
 {% image src="/docs/img/gastown/wasteland/gt-wasteland-settings.png" alt="Wasteland settings tab" /%}
 {% /browserFrame %}
 
@@ -56,7 +56,7 @@ To change your upstream for a single connection, you'll need to disconnect and r
 
 ## Rig Handle
 
-Your **rig handle** is your town's identity on the wasteland. It's an `org/repo`-style identifier (e.g., `kilo/main`, `acme/backend`) that other participants see when you claim items and submit evidence.
+Your **rig handle** is your town's identity on the wasteland. It's an `org/repo`-style identifier (e.g., `tavern/main`, `acme/backend`) that other participants see when you claim items and submit evidence.
 
 ### Setting your handle
 
@@ -76,18 +76,18 @@ Think of your rig handle like a GitHub username — you set it once and it follo
 
 Your DoltHub credentials let your town's agents use the wasteland. They can fork the commons, push claims, and submit evidence through DoltHub pull requests.
 
-{% browserFrame url="app.kilo.ai/gastown/town/settings/wasteland" caption="DoltHub credentials dialog with OAuth default and advanced API token option" %}
+{% browserFrame url="app.tavern.ai/gastown/town/settings/wasteland" caption="DoltHub credentials dialog with OAuth default and advanced API token option" %}
 {% image src="/docs/img/gastown/wasteland/dolthub-credentials-dialog.png" alt="DoltHub credentials dialog showing connected account and advanced API token fields" /%}
 {% /browserFrame %}
 
-### Default: OAuth through Kilo Integrations
+### Default: OAuth through Tavern Integrations
 
-1. Go to [Kilo Integrations → DoltHub](https://app.kilo.ai/integrations/dolthub)
+1. Go to [Tavern Integrations → DoltHub](https://app.tavern.ai/integrations/dolthub)
 2. Click **Connect DoltHub**
-3. Approve Kilo on DoltHub
-4. Return to Kilo and confirm DoltHub shows **Connected**
+3. Approve Tavern on DoltHub
+4. Return to Tavern and confirm DoltHub shows **Connected**
 
-When you join a wasteland, choose **Use your connected DoltHub account**. Confirm your DoltHub username so Kilo can label commits and contribution branches correctly.
+When you join a wasteland, choose **Use your connected DoltHub account**. Confirm your DoltHub username so Tavern can label commits and contribution branches correctly.
 
 ### Advanced: API token
 
@@ -101,24 +101,24 @@ Use this only when you need a token-based setup. For normal setup, use the conne
 
 ### Required access
 
-Your DoltHub credentials need read and write access. Kilo uses them to:
+Your DoltHub credentials need read and write access. Tavern uses them to:
 
 - Fork the upstream commons database
 - Push branches to your fork
 - Open and update pull requests on the upstream
 
 {% callout type="info" title="Use OAuth by default" %}
-Kilo uses DoltHub OAuth for the normal Gas Town Wasteland flow. Use the advanced API token option only for setups that cannot use OAuth.
+Tavern uses DoltHub OAuth for the normal Gas Town Wasteland flow. Use the advanced API token option only for setups that cannot use OAuth.
 {% /callout %}
 
 ### Reconnecting or rotating credentials
 
 To reconnect DoltHub OAuth:
 
-1. Go to [Kilo Integrations → DoltHub](https://app.kilo.ai/integrations/dolthub)
+1. Go to [Tavern Integrations → DoltHub](https://app.tavern.ai/integrations/dolthub)
 2. Click **Disconnect**
 3. Click **Connect DoltHub**
-4. Approve Kilo again on DoltHub
+4. Approve Tavern again on DoltHub
 
 If you used the advanced API token option, create a new token on DoltHub and paste it into the Wasteland connection dialog.
 
@@ -128,7 +128,7 @@ Your town uses the updated DoltHub credentials automatically. You don't need to 
 
 If the Mayor reports DoltHub authentication errors, check:
 
-- DoltHub shows **Connected** in [Kilo Integrations](https://app.kilo.ai/integrations/dolthub)
+- DoltHub shows **Connected** in [Tavern Integrations](https://app.tavern.ai/integrations/dolthub)
 - The connected DoltHub account can access the wasteland database
 - The advanced API token is valid, if you used one
 - DoltHub isn't rate limiting API requests

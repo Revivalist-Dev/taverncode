@@ -22,7 +22,7 @@ function git(args: string[]) {
 }
 
 async function repo(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-health-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-health-"))
   tempDirs.push(dir)
   git(["git", "init", "-b", "main", dir])
   git(["git", "-C", dir, "config", "user.email", "test@test.com"])
@@ -33,9 +33,9 @@ async function repo(): Promise<string> {
   return dir
 }
 
-/** Add a real worktree under `.kilo/worktrees/<name>` on its own branch. */
+/** Add a real worktree under `.tavern/worktrees/<name>` on its own branch. */
 async function worktree(root: string, name: string): Promise<string> {
-  const target = path.join(root, ".kilo", "worktrees", name)
+  const target = path.join(root, ".tavern", "worktrees", name)
   await fs.mkdir(path.dirname(target), { recursive: true })
   git(["git", "-C", root, "worktree", "add", "-b", name, target])
   return target
@@ -191,7 +191,7 @@ describe("reconcileWorktrees", () => {
   it("reports untracked directories as orphans without deleting them", async () => {
     const h = await harness()
     const leftover = path.join(h.manager.worktreesDir, "leftover")
-    await fs.mkdir(path.join(leftover, ".kilo-dev"), { recursive: true })
+    await fs.mkdir(path.join(leftover, ".tavern-dev"), { recursive: true })
     const broken = path.join(h.manager.worktreesDir, "broken")
     await fs.mkdir(broken, { recursive: true })
     await fs.writeFile(path.join(broken, ".git"), "gitdir: /nowhere\n")
@@ -203,7 +203,7 @@ describe("reconcileWorktrees", () => {
       { path: leftover, kind: "leftover" },
     ])
     // Reported, never removed.
-    expect(await fs.readdir(leftover)).toEqual([".kilo-dev"])
+    expect(await fs.readdir(leftover)).toEqual([".tavern-dev"])
     expect(await fs.readdir(broken)).toEqual([".git"])
   })
 
@@ -318,7 +318,7 @@ describe("reconcileWorktrees", () => {
   it("resolves rows stored as relative paths", async () => {
     const h = await harness()
     await worktree(h.root, "relative")
-    h.state.addWorktree({ branch: "relative", path: ".kilo/worktrees/relative", parentBranch: "main" })
+    h.state.addWorktree({ branch: "relative", path: ".tavern/worktrees/relative", parentBranch: "main" })
 
     const report = await h.run()
 

@@ -35,7 +35,7 @@ describe("sandbox FileSystem", () => {
   let outside = ""
 
   beforeAll(async () => {
-    root = await realpath(await mkdtemp(path.join(tmpdir(), "kilo-sandbox-filesystem-")))
+    root = await realpath(await mkdtemp(path.join(tmpdir(), "tavern-sandbox-filesystem-")))
     allowed = path.join(root, "allowed")
     outside = path.join(root, "outside.txt")
     await writeFile(outside, "outside")

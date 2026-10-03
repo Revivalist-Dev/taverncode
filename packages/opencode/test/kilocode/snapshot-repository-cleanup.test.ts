@@ -14,8 +14,8 @@ import { ProjectTable } from "@opencode-ai/core/project/sql"
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { SessionTable } from "@opencode-ai/core/session/sql"
 import { SessionID } from "../../src/session/schema"
-import { KiloSnapshotCleanup } from "../../src/kilocode/snapshot/cleanup"
-import { KiloSnapshotPrepare } from "../../src/kilocode/snapshot/prepare"
+import { KiloSnapshotCleanup } from "../../src/taverncode/snapshot/cleanup"
+import { KiloSnapshotPrepare } from "../../src/taverncode/snapshot/prepare"
 import { tmpdirScoped, testInstanceStoreLayer } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 import path from "path"
@@ -58,7 +58,7 @@ const item = (base: string, project = "project", name = "worktree", directory = 
   root: path.join(base, "snapshots"),
   project,
   directory,
-  worktree: path.join(directory, ".kilo", "worktrees", name),
+  worktree: path.join(directory, ".tavern", "worktrees", name),
 })
 
 const repo = (input: ReturnType<typeof item>) =>
@@ -184,7 +184,7 @@ it.live("rejects paths outside the managed worktrees directory", () =>
   Effect.gen(function* () {
     const base = yield* tmpdirScoped()
     const input = item(base, "project", "outside")
-    const outside = path.join(input.directory, ".kilo", "worktrees-evil", "outside")
+    const outside = path.join(input.directory, ".tavern", "worktrees-evil", "outside")
     yield* write(path.join(outside, "sentinel"), "keep")
 
     expect(Exit.isFailure(yield* remove({ ...input, worktree: outside }).pipe(Effect.exit))).toBe(true)
@@ -478,19 +478,19 @@ it.live("rejects a dangling managed worktree symlink", () =>
   }),
 )
 
-for (const name of [".kilo", "worktrees"]) {
+for (const name of [".tavern", "worktrees"]) {
   it.live(`rejects a symlinked managed ${name} directory`, () =>
     Effect.gen(function* () {
       const base = yield* tmpdirScoped()
       const input = item(base, `managed-${name}`, `managed-${name}`)
       const outside = path.join(base, `outside-${name}`)
       yield* write(path.join(outside, "sentinel"), "keep")
-      if (name === ".kilo") {
+      if (name === ".tavern") {
         yield* write(path.join(input.directory, "placeholder"), "")
         yield* link(outside, path.join(input.directory, name))
       } else {
-        yield* write(path.join(input.directory, ".kilo", "placeholder"), "")
-        yield* link(outside, path.join(input.directory, ".kilo", name))
+        yield* write(path.join(input.directory, ".tavern", "placeholder"), "")
+        yield* link(outside, path.join(input.directory, ".tavern", name))
       }
 
       expect(Exit.isFailure(yield* remove(input).pipe(Effect.exit))).toBe(true)

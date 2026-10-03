@@ -3,7 +3,7 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { Effect, Layer } from "effect"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { Agent } from "../../src/agent/agent"
-import { KiloToolRegistry } from "../../src/kilocode/tool/registry"
+import { KiloToolRegistry } from "../../src/taverncode/tool/registry"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { ToolRegistry } from "../../src/tool/registry"
@@ -45,7 +45,7 @@ describe("apply_patch model selection", () => {
           const agent = yield* agents.get("build")
           const registry = yield* ToolRegistry.Service
           const tools = yield* registry.tools({
-            providerID: ProviderV2.ID.make("kilo"),
+            providerID: ProviderV2.ID.make("tavern"),
             modelID: ModelV2.ID.make("routed-model"),
             family: "gpt-codex",
             agent,

@@ -45,8 +45,8 @@ const VALID_BENCH_RESPONSE = JSON.stringify({
 const VALID_AUTO_ROUTING_RESPONSE = JSON.stringify({
   data: [
     {
-      id: "kilo-auto/efficient",
-      name: "Kilo Auto Efficient",
+      id: "tavern-auto/efficient",
+      name: "Tavern Auto Efficient",
       context_length: 128000,
       max_completion_tokens: 16384,
       architecture: {
@@ -88,7 +88,7 @@ test("returns empty models and error when both auth and public requests return 4
   const orig = globalThis.fetch
   stubFetch(async () => new Response("Unauthorized", { status: 401, statusText: "Unauthorized" }))
 
-  const result = await fetchKiloModels({ kilocodeToken: "bad-token" })
+  const result = await fetchKiloModels({ taverncodeToken: "bad-token" })
 
   ;(globalThis as any).fetch = orig
 
@@ -112,7 +112,7 @@ test("falls back to public endpoint on 401 and returns models", async () => {
   })
 
   const result = await fetchKiloModels({
-    kilocodeToken: "expired-token",
+    taverncodeToken: "expired-token",
   })
 
   ;(globalThis as any).fetch = orig
@@ -123,14 +123,14 @@ test("falls back to public endpoint on 401 and returns models", async () => {
 })
 
 test.each([
-  { kilocodeToken: "expired-token", kilocodeOrganizationId: "org-123" },
-  { kilocodeOrganizationId: "org-123" },
-  { kilocodeToken: "expired-token", baseURL: "https://api.kilo.ai/api/organizations/org-123" },
-  { kilocodeToken: "expired-token", baseURL: "https://gateway.test/api/organizations/org-123" },
-  { kilocodeToken: "https://gateway.test/api/organizations/org-token:expired-token" },
+  { taverncodeToken: "expired-token", taverncodeOrganizationId: "org-123" },
+  { taverncodeOrganizationId: "org-123" },
+  { taverncodeToken: "expired-token", baseURL: "https://api.tavern.ai/api/organizations/org-123" },
+  { taverncodeToken: "expired-token", baseURL: "https://gateway.test/api/organizations/org-123" },
+  { taverncodeToken: "https://gateway.test/api/organizations/org-token:expired-token" },
   {
-    kilocodeToken: "https://gateway.test/api/organizations/org-token:expired-token",
-    baseURL: "https://api.kilo.ai/api/openrouter",
+    taverncodeToken: "https://gateway.test/api/organizations/org-token:expired-token",
+    baseURL: "https://api.tavern.ai/api/openrouter",
   },
 ])("never retries an organization-scoped 401 against the public catalog: %j", async (options) => {
   const fetch = spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 401 }))
@@ -145,7 +145,7 @@ test.each([
 test("preserves a successful empty organization catalog", async () => {
   const fetch = spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ data: [] }))
   try {
-    expect(await fetchKiloModels({ kilocodeToken: "token", kilocodeOrganizationId: "org-123" })).toEqual({ models: {} })
+    expect(await fetchKiloModels({ taverncodeToken: "token", taverncodeOrganizationId: "org-123" })).toEqual({ models: {} })
     expect(fetch).toHaveBeenCalledTimes(1)
   } finally {
     fetch.mockRestore()
@@ -237,7 +237,7 @@ test("preserves Auto Efficient routing metadata as a dedicated model field", asy
   ;(globalThis as any).fetch = orig
 
   expect(result.error).toBeUndefined()
-  expect(result.models["kilo-auto/efficient"].autoRouting).toEqual({
+  expect(result.models["tavern-auto/efficient"].autoRouting).toEqual({
     models: ["google/gemini-2.5-flash", "anthropic/claude-sonnet-4.6"],
   })
 })
@@ -399,7 +399,7 @@ test("fetches and filters the transcription catalog", async () => {
     )
   })
 
-  const result = await fetchKiloTranscriptionModels({ kilocodeToken: "token" })
+  const result = await fetchKiloTranscriptionModels({ taverncodeToken: "token" })
 
   ;(globalThis as any).fetch = orig
 
@@ -423,7 +423,7 @@ test("keeps organization catalog errors from silently falling back to personal m
     return new Response("Forbidden", { status: 403 })
   })
 
-  const result = await fetchKiloTranscriptionModels({ kilocodeToken: "token", kilocodeOrganizationId: "org-1" })
+  const result = await fetchKiloTranscriptionModels({ taverncodeToken: "token", taverncodeOrganizationId: "org-1" })
 
   ;(globalThis as any).fetch = orig
 

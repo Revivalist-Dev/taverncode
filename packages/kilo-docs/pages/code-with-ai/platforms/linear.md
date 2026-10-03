@@ -1,11 +1,11 @@
 ---
 title: "Linear"
-description: "Using Kilo Code in Linear"
+description: "Using Tavern Code in Linear"
 ---
 
-# Kilo for Linear
+# Tavern for Linear
 
-**Kilo for Linear** connects Kilo Code to your Linear workspace, so you can trigger implementations, debug issues, and investigate bugs directly from your project management tool. Mention `@kilo` on any issue and the bot gets to work.
+**Tavern for Linear** connects Tavern Code to your Linear workspace, so you can trigger implementations, debug issues, and investigate bugs directly from your project management tool. Mention `@tavern` on any issue and the bot gets to work.
 
 ---
 
@@ -16,7 +16,7 @@ description: "Using Kilo Code in Linear"
 Tag the bot on any Linear issue and tell it to implement the fix:
 
 ```
-@kilo please fix
+@tavern please fix
 ```
 
 The bot will:
@@ -26,60 +26,60 @@ The bot will:
 - Show a thinking/processing animation in Linear while it works
 - Link the resulting pull request back to the issue
 
-{% image src="/docs/img/connect/linear/linear-fix-issue.png" alt="Asking @kilo to fix an issue in Linear" width="800" /%}
+{% image src="/docs/img/connect/linear/linear-fix-issue.png" alt="Asking @tavern to fix an issue in Linear" width="800" /%}
 
 ### Apply changes across multiple repositories
 
 If a fix or upgrade needs to land in several repos at once:
 
 ```
-@kilo please fix this in the cloud, landing, and handbook repos
+@tavern please fix this in the cloud, landing, and handbook repos
 ```
 
 The bot handles each repository independently, creating separate branches and pull requests for each.
 
-{% image src="/docs/img/connect/linear/linear-multi-repo.png" alt="Asking @kilo to apply changes across multiple repositories from Linear" width="800" /%}
+{% image src="/docs/img/connect/linear/linear-multi-repo.png" alt="Asking @tavern to apply changes across multiple repositories from Linear" width="800" /%}
 
 ### Get help understanding an issue
 
 Before jumping into a fix, ask the bot to analyze the problem:
 
 ```
-@kilo what could be the cause of this issue?
+@tavern what could be the cause of this issue?
 ```
 
 The bot examines the issue context and searches the connected codebase to surface likely causes.
 
-{% image src="/docs/img/connect/linear/linear-understand-issue.png" alt="Asking @kilo to analyze the cause of a Linear issue" width="800" /%}
+{% image src="/docs/img/connect/linear/linear-understand-issue.png" alt="Asking @tavern to analyze the cause of a Linear issue" width="800" /%}
 
 ---
 
 ## How It Works
 
-1. **Mention `@kilo`** in a comment on a Linear issue
-2. **Kilo reads the issue context** — title, description, labels, and comment thread
+1. **Mention `@tavern`** in a comment on a Linear issue
+2. **Tavern reads the issue context** — title, description, labels, and comment thread
 3. **A Cloud Agent spins up** to process the request (you'll see a thinking animation in Linear while this happens)
-4. **Kilo responds** with an answer or opens a pull request with the implementation
+4. **Tavern responds** with an answer or opens a pull request with the implementation
 
-When Kilo creates a pull request, it links back to the Linear issue so everything stays connected.
+When Tavern creates a pull request, it links back to the Linear issue so everything stays connected.
 
 ---
 
 ## Prerequisites
 
-- A Kilo Code account with available credits
-- Your GitHub or GitLab integration configured via the Integrations tab at [app.kilo.ai](https://app.kilo.ai)
+- A Tavern Code account with available credits
+- Your GitHub or GitLab integration configured via the Integrations tab at [app.tavern.ai](https://app.tavern.ai)
 - Access to a Linear workspace where you can install integrations
 
 ---
 
 ## Setup
 
-1. Go to [app.kilo.ai](https://app.kilo.ai) and navigate to the **Integrations** tab
+1. Go to [app.tavern.ai](https://app.tavern.ai) and navigate to the **Integrations** tab
 2. Set up the **Linear** integration
-3. Authorize Kilo to access your Linear workspace
+3. Authorize Tavern to access your Linear workspace
 
-Once connected, `@kilo` is available as a mention in any issue across your Linear workspace.
+Once connected, `@tavern` is available as a mention in any issue across your Linear workspace.
 
 ---
 
@@ -101,7 +101,7 @@ When a bug report is unclear or the root cause isn't obvious, ask the bot to ana
 
 ## Cost
 
-Kilo Code credits are consumed the same way as any other Kilo interface. Credit usage depends on the model selected and the complexity of the task.
+Tavern Code credits are consumed the same way as any other Tavern interface. Credit usage depends on the model selected and the complexity of the task.
 
 ---
 
@@ -116,7 +116,7 @@ Kilo Code credits are consumed the same way as any other Kilo interface. Credit 
 ## Troubleshooting
 
 **The bot isn't responding to mentions.**
-Confirm that the Linear integration is set up in the Integrations tab at [app.kilo.ai](https://app.kilo.ai) and that the bot has access to your workspace.
+Confirm that the Linear integration is set up in the Integrations tab at [app.tavern.ai](https://app.tavern.ai) and that the bot has access to your workspace.
 
 **The bot can't access the repository.**
 Make sure your GitHub or GitLab integration is configured and that the relevant repositories are authorized.

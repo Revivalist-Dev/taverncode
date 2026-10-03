@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
-import { SessionExport } from "@/kilocode/session-export"
-import { getKillSwitchReason, resetEligibility } from "@/kilocode/session-export/eligibility"
+import { SessionExport } from "@/taverncode/session-export"
+import { getKillSwitchReason, resetEligibility } from "@/taverncode/session-export/eligibility"
 
 describe("SessionExport worker respawn", () => {
   let feature: string | undefined
@@ -187,7 +187,7 @@ class FakeWorker {
 function request(sessionId: string, workspaceKey?: string): Parameters<typeof SessionExport.beforeRequest>[0] {
   return {
     input: {
-      model: { api: { npm: "@kilocode/kilo-gateway" }, isFree: true, providerId: "kilo", modelId: "free-1" },
+      model: { api: { npm: "@taverncode/tavern-gateway" }, isFree: true, providerId: "tavern", modelId: "free-1" },
       org: { type: "personal" },
     },
     requestMeta: {

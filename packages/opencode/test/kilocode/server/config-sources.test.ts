@@ -59,7 +59,7 @@ function set(key: keyof typeof process.env, value: string | undefined) {
 
 async function sources(dir: string) {
   const response = await Server.Default().app.request("/config/sources", {
-    headers: { "x-kilo-directory": dir },
+    headers: { "x-tavern-directory": dir },
   })
   expect(response.status).toBe(200)
   return (await response.json()) as Body
@@ -76,12 +76,12 @@ describe("config source routes", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Bun.write(path.join(dir, "env.json"), "{}")
-        await Bun.write(path.join(dir, "kilo.json"), "{}")
+        await Bun.write(path.join(dir, "tavern.json"), "{}")
 
-        for (const root of [".opencode", ".kilocode", ".kilo"]) {
+        for (const root of [".opencode", ".taverncode", ".tavern"]) {
           const local = path.join(dir, root)
           await fs.mkdir(local, { recursive: true })
-          await Bun.write(path.join(local, "kilo.jsonc"), "{}")
+          await Bun.write(path.join(local, "tavern.jsonc"), "{}")
         }
 
         const extra = path.join(dir, "extra")
@@ -90,17 +90,17 @@ describe("config source routes", () => {
 
         const managed = path.join(dir, "managed")
         await fs.mkdir(managed, { recursive: true })
-        await Bun.write(path.join(managed, "kilo.json"), "{}")
+        await Bun.write(path.join(managed, "tavern.json"), "{}")
       },
     })
 
     const envFile = path.join(tmp.path, "env.json")
-    const projectFile = path.join(tmp.path, "kilo.json")
-    const opencodeFile = path.join(tmp.path, ".opencode", "kilo.jsonc")
-    const kilocodeFile = path.join(tmp.path, ".kilocode", "kilo.jsonc")
-    const configFile = path.join(tmp.path, ".kilo", "kilo.jsonc")
+    const projectFile = path.join(tmp.path, "tavern.json")
+    const opencodeFile = path.join(tmp.path, ".opencode", "tavern.jsonc")
+    const taverncodeFile = path.join(tmp.path, ".taverncode", "tavern.jsonc")
+    const configFile = path.join(tmp.path, ".tavern", "tavern.jsonc")
     const extraFile = path.join(tmp.path, "extra", "opencode.json")
-    const managedFile = path.join(tmp.path, "managed", "kilo.json")
+    const managedFile = path.join(tmp.path, "managed", "tavern.json")
 
     process.env.KILO_CONFIG = envFile
     Flag.KILO_CONFIG = envFile
@@ -112,8 +112,8 @@ describe("config source routes", () => {
     const inline = body.sources.find((source) => source.source === "KILO_CONFIG_CONTENT")
 
     expect(order(body, envFile)).toBeLessThan(order(body, projectFile))
-    expect(order(body, projectFile)).toBeLessThan(order(body, kilocodeFile))
-    expect(order(body, kilocodeFile)).toBeLessThan(order(body, configFile))
+    expect(order(body, projectFile)).toBeLessThan(order(body, taverncodeFile))
+    expect(order(body, taverncodeFile)).toBeLessThan(order(body, configFile))
     expect(body.sources.some((source) => source.path === opencodeFile)).toBe(false)
     expect(order(body, configFile)).toBeLessThan(order(body, extraFile))
     expect(inline?.order).toBeGreaterThan(order(body, extraFile))
@@ -137,9 +137,9 @@ describe("config source routes", () => {
   test("shows project config disabled by environment", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        await Bun.write(path.join(dir, "kilo.json"), "{}")
-        await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-        await Bun.write(path.join(dir, ".kilo", "kilo.json"), "{}")
+        await Bun.write(path.join(dir, "tavern.json"), "{}")
+        await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+        await Bun.write(path.join(dir, ".tavern", "tavern.json"), "{}")
       },
     })
 
@@ -147,8 +147,8 @@ describe("config source routes", () => {
 
     const body = await sources(tmp.path)
 
-    expect(body.sources.some((source) => source.path === path.join(tmp.path, "kilo.json"))).toBe(false)
-    expect(body.sources.some((source) => source.path === path.join(tmp.path, ".kilo", "kilo.json"))).toBe(false)
+    expect(body.sources.some((source) => source.path === path.join(tmp.path, "tavern.json"))).toBe(false)
+    expect(body.sources.some((source) => source.path === path.join(tmp.path, ".tavern", "tavern.json"))).toBe(false)
     expect(body.sources.find((source) => source.source === "KILO_DISABLE_PROJECT_CONFIG")).toMatchObject({
       kind: "runtime-env",
       scope: "env",

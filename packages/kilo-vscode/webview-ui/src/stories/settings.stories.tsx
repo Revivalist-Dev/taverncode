@@ -7,7 +7,7 @@ import { onMount, createSignal } from "solid-js"
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
 import { StoryProviders, mockSessionValue, t } from "./StoryProviders"
 import { SessionContext } from "../context/session"
-import { KiloEmbeddingModelsContext } from "../context/kilo-embedding-models"
+import { KiloEmbeddingModelsContext } from "../context/tavern-embedding-models"
 import Settings from "../components/settings/Settings"
 import ProvidersTab from "../components/settings/ProvidersTab"
 import ModelsTab from "../components/settings/ModelsTab"
@@ -19,7 +19,7 @@ import McpEditView from "../components/settings/McpEditView"
 import type { AgentConfig, CommandConfig, Config } from "../types/messages"
 import IndexingTab from "../components/settings/IndexingTab"
 import CustomProviderDialog from "../components/settings/CustomProviderDialog"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { SidebarEmptyState } from "../components/chat/SidebarEmptyState"
 import { WorkStyleContext, type WorkStyleContextValue } from "../context/work-style"
 
@@ -291,7 +291,7 @@ export const AgentBehaviourEditCustomMode: Story = {
       reviewer: {
         description: "Review code for quality and best practices",
         prompt: "You are a code reviewer. Focus on code quality, best practices, and potential bugs.",
-        model: "kilo/anthropic/claude-sonnet-4-6",
+        model: "tavern/anthropic/claude-sonnet-4-6",
         variant: "high",
         temperature: 0.3,
         permission: {
@@ -685,11 +685,11 @@ export const IndexingScopeSwitch: Story = {
 }
 
 export const IndexingKiloModelPreset: Story = {
-  name: "IndexingTab - Kilo stale custom model fallback",
+  name: "IndexingTab - Tavern stale custom model fallback",
   render: () => {
     const cfg: Config = {
       indexing: {
-        provider: "kilo",
+        provider: "tavern",
         model: "custom/model",
         dimension: 2048,
       },
@@ -715,7 +715,7 @@ export const IndexingKiloModelPreset: Story = {
 }
 
 export const IndexingKiloCatalogLoading: Story = {
-  name: "IndexingTab - Kilo catalog loading",
+  name: "IndexingTab - Tavern catalog loading",
   render: () => {
     const [saved, setSaved] = createSignal<Record<string, unknown>>({})
     const cfg: Config = {
@@ -732,7 +732,7 @@ export const IndexingKiloCatalogLoading: Story = {
             <IndexingTab />
           </div>
         </StoryProviders>
-        <pre data-testid="indexing-kilo-loading-save">{JSON.stringify(saved(), null, 2)}</pre>
+        <pre data-testid="indexing-tavern-loading-save">{JSON.stringify(saved(), null, 2)}</pre>
       </>
     )
   },

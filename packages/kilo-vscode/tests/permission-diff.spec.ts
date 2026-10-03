@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 const STORY_ID = "composite-webview--permission-dock-edit"
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 test("edit approval diff shows line numbers in compact viewer", async ({ page }) => {
   await page.setViewportSize({ width: 420, height: 720 })

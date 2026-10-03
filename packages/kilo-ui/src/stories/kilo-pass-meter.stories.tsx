@@ -1,9 +1,9 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { KiloPassMeter } from "../components/kilo-pass-meter"
+import { KiloPassMeter } from "../components/tavern-pass-meter"
 
 const meta: Meta<typeof KiloPassMeter> = {
-  title: "Components/Kilo Pass Meter",
+  title: "Components/Tavern Pass Meter",
   component: KiloPassMeter,
   decorators: [
     (Story) => (
@@ -28,7 +28,7 @@ const render = (used: number, paid: number, bonus: number) => (
     paidLabel="Paid"
     bonusLabel="Bonus"
     format={format}
-    aria-label="Kilo Pass monthly usage"
+    aria-label="Tavern Pass monthly usage"
   />
 )
 

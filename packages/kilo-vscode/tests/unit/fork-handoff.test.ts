@@ -3,10 +3,10 @@ import { forkText, recordForkHandoff } from "../../src/agent-manager/fork-handof
 
 describe("fork handoff", () => {
   it("describes retained context without assuming a new task", () => {
-    const text = forkText({ directory: "/repo/.kilo/worktrees/feature" })
+    const text = forkText({ directory: "/repo/.tavern/worktrees/feature" })
 
     expect(text).toContain("This session was forked from an existing session in the current repository or worktree.")
-    expect(text).toContain("Use this as the current working directory: /repo/.kilo/worktrees/feature")
+    expect(text).toContain("Use this as the current working directory: /repo/.tavern/worktrees/feature")
     expect(text).toContain("this location supersedes any earlier repository or worktree location")
     expect(text).toContain("The prior conversation context was retained intentionally.")
     expect(text).toContain("continue the same task, explore an alternative approach, or provide new instructions")
@@ -20,18 +20,18 @@ describe("fork handoff", () => {
     await recordForkHandoff({
       client: client as never,
       sessionId: "session-fork",
-      directory: "/repo/.kilo/worktrees/feature",
+      directory: "/repo/.tavern/worktrees/feature",
     })
 
     expect(promptAsync).toHaveBeenCalledWith(
       {
         sessionID: "session-fork",
-        directory: "/repo/.kilo/worktrees/feature",
+        directory: "/repo/.tavern/worktrees/feature",
         noReply: true,
         parts: [
           {
             type: "text",
-            text: forkText({ directory: "/repo/.kilo/worktrees/feature" }),
+            text: forkText({ directory: "/repo/.tavern/worktrees/feature" }),
             synthetic: true,
           },
         ],

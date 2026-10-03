@@ -1,20 +1,20 @@
-import { RemoteCommand } from "@/kilo-sessions/remote-command"
-import { RemoteExit } from "@/kilo-sessions/remote-exit"
-import { RemoteModelCatalog } from "@/kilo-sessions/remote-model-catalog"
-import { RemoteSessionLog } from "@/kilo-sessions/remote-session-log"
-import { RemoteProtocol } from "@/kilo-sessions/remote-protocol"
-// kilocode_change - set_pr_link: parse the app-supplied PR URL into a per-session link.
-import { enabled as prEnabled, parsePrUrl, type PrLink } from "@/kilo-sessions/pr-link"
-import { consumeRenameAdoption, markRenameAdopted } from "@/kilo-sessions/rename-adoptions"
-import type { RemoteWS } from "@/kilo-sessions/remote-ws"
+import { RemoteCommand } from "@/tavern-sessions/remote-command"
+import { RemoteExit } from "@/tavern-sessions/remote-exit"
+import { RemoteModelCatalog } from "@/tavern-sessions/remote-model-catalog"
+import { RemoteSessionLog } from "@/tavern-sessions/remote-session-log"
+import { RemoteProtocol } from "@/tavern-sessions/remote-protocol"
+// taverncode_change - set_pr_link: parse the app-supplied PR URL into a per-session link.
+import { enabled as prEnabled, parsePrUrl, type PrLink } from "@/tavern-sessions/pr-link"
+import { consumeRenameAdoption, markRenameAdopted } from "@/tavern-sessions/rename-adoptions"
+import type { RemoteWS } from "@/tavern-sessions/remote-ws"
 import { GlobalBus } from "@/bus/global"
-import { RemoteAttachments } from "@/kilocode/remote-attachments"
+import { RemoteAttachments } from "@/taverncode/remote-attachments"
 import { Session } from "@/session/session"
 import type { MessageV2 } from "@/session/message-v2"
 import { SessionPrompt } from "@/session/prompt"
 import { Question } from "@/question"
-import { Suggestion } from "@/kilocode/suggestion" // kilocode_change
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { Suggestion } from "@/taverncode/suggestion" // taverncode_change
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
 import { Permission } from "@/permission"
 import { PermissionV1 } from "@opencode-ai/core/v1/permission"
 import { MessageID, SessionID } from "@/session/schema"
@@ -29,10 +29,10 @@ import { readdir } from "node:fs/promises"
 import { isAbsolute, join, relative, sep } from "path"
 import { Filesystem } from "@/util/filesystem"
 
-type Provide = typeof import("@/kilocode/instance").provide
+type Provide = typeof import("@/taverncode/instance").provide
 
 async function provide<R>(input: { directory: string; fn: () => R }): Promise<R> {
-  const { provide } = await import("@/kilocode/instance")
+  const { provide } = await import("@/taverncode/instance")
   return provide(input)
 }
 
@@ -59,12 +59,12 @@ const DropQueuedMessageData = z.object({
   messageID: z.string().startsWith("msg"),
 })
 
-// kilocode_change start - set_pr_link: the app-controlled per-session PR link.
+// taverncode_change start - set_pr_link: the app-controlled per-session PR link.
 // `{ prUrl }` is parsed into a PrLink; `{ cleared: true }` withdraws the link.
 const SetPrLinkData = z.union([z.object({ prUrl: z.string() }), z.object({ cleared: z.literal(true) })])
-// kilocode_change end
+// taverncode_change end
 
-// kilocode_change start - create_session: strict v1 request with optional inheritance fields
+// taverncode_change start - create_session: strict v1 request with optional inheritance fields
 const CreateSessionModel = z.object({
   providerID: z.string().min(1),
   modelID: z.string().min(1),
@@ -77,7 +77,7 @@ const CreateSessionRequest = z
     model: CreateSessionModel.optional(),
     orgId: z.string().uuid().optional(),
     directory: z.string().min(1).max(RemoteCommand.MAX_STRING_LENGTH).optional(),
-    // kilocode_change - cloneFromKiloSessionId: optional cloud-session import.
+    // taverncode_change - cloneFromKiloSessionId: optional cloud-session import.
     // The old wire form omits this field and performs a fresh sessionCreate;
     // remove the fresh-create branch when every shipped CLI advertises sessionClone.
     cloneFromKiloSessionId: z.string().min(1).optional(),
@@ -98,19 +98,19 @@ const SessionRenamedData = z.object({
   sessionId: z.string().min(1),
   title: z.string().min(1),
 })
-// kilocode_change end
+// taverncode_change end
 
 const decodeSessionID = Schema.decodeUnknownOption(SessionID)
 
-// kilocode_change start - redact anything but the error class so messages/credentials
+// taverncode_change start - redact anything but the error class so messages/credentials
 // never end up in logs
 function errorName(error: unknown): string {
   if (error instanceof Error && error.name) return error.name
   return typeof error
 }
-// kilocode_change end
+// taverncode_change end
 
-// kilocode_change - k1: resolve a client-supplied directory path under the
+// taverncode_change - k1: resolve a client-supplied directory path under the
 // launch directory. Reuses Filesystem.resolve (canonicalize) and
 // Filesystem.contains (lexical containment on canonical paths) so a symlink
 // that escapes the launch directory is rejected, not a bespoke check.
@@ -133,7 +133,7 @@ function resolveUnderLaunch(launchDir: string, relative: string | undefined): st
   return requestedReal
 }
 
-// kilocode_change - create_session cloud-import error mapping. The import seam
+// taverncode_change - create_session cloud-import error mapping. The import seam
 // rejects with a tagged error carrying the upstream `status` (or a
 // "CloudSessionImportUnauthorized" tag for missing credentials). Map those to
 // the exact wire literals; never surface the upstream message (it may embed
@@ -147,7 +147,7 @@ function importErrorText(error: unknown): string {
   return "cloud session import failed"
 }
 
-// kilocode_change start — lazy init to avoid circular dependency
+// taverncode_change start — lazy init to avoid circular dependency
 // (Server → RemoteRoutes → RemoteSender → SessionPrompt at module load time)
 type RemotePromptInput = Omit<SessionPrompt.PromptInput, "model"> & {
   model?: string | RemoteModelCatalog.ModelRef
@@ -158,7 +158,7 @@ function getRemotePromptInput() {
     model: z.union([z.string(), RemoteModelCatalog.ModelRef]).optional(),
   }))
 }
-// kilocode_change end
+// taverncode_change end
 function normalizeModel(model: string | RemoteModelCatalog.ModelRef | undefined) {
   if (!model) return undefined
   if (typeof model !== "string") {
@@ -168,8 +168,8 @@ function normalizeModel(model: string | RemoteModelCatalog.ModelRef | undefined)
     }
   }
   return {
-    providerID: ProviderV2.ID.make("kilo"),
-    modelID: ModelV2.ID.make(model.startsWith("kilocode/") ? model.slice("kilocode/".length) : model),
+    providerID: ProviderV2.ID.make("tavern"),
+    modelID: ModelV2.ID.make(model.startsWith("taverncode/") ? model.slice("taverncode/".length) : model),
   }
 }
 
@@ -209,19 +209,19 @@ export namespace RemoteSender {
     session?: {
       readonly get: (sessionID: SessionID) => Promise<Session.Info>
       readonly children: (sessionID: SessionID) => Promise<Session.Info[]>
-      // kilocode_change start - injectable create hook for create_session.
+      // taverncode_change start - injectable create hook for create_session.
       // Production forwards {agent, model, metadata} to Session.Service.create.
       readonly create?: (input?: CreateSessionInput) => Promise<Session.Info>
-      // kilocode_change - injectable remove hook used to roll back an orphan
+      // taverncode_change - injectable remove hook used to roll back an orphan
       // root session when the spawn fails after creation. The default
       // delegates to Session.Service.remove and only swallows its own errors
       // so the original spawn failure is what reaches the caller.
       readonly remove?: (sessionID: SessionID) => Promise<void>
-      // kilocode_change - injectable setTitle for system session.renamed handling
+      // taverncode_change - injectable setTitle for system session.renamed handling
       readonly setTitle?: (input: { sessionID: SessionID; title: string }) => Promise<void>
-      // kilocode_change end
+      // taverncode_change end
     }
-    // kilocode_change - K1 W1: in-process attach/detach/ownership/cancel
+    // taverncode_change - K1 W1: in-process attach/detach/ownership/cancel
     // seams. All four are optional and default to a lazy import of
     // `KiloSessions` (production wires them in `enableRemote`, so the
     // default branch is never hit there; tests that don't care about
@@ -238,7 +238,7 @@ export namespace RemoteSender {
     hasSession?: (sessionID: SessionID) => boolean
     ownedCount?: () => number
     cancelPrompt?: (sessionID: SessionID) => Promise<void>
-    // kilocode_change - injectable cloud-session import seam for create_session
+    // taverncode_change - injectable cloud-session import seam for create_session
     // clone requests. Takes the cloud session id and returns the imported
     // local Session.Info plus a `finalize` closure that restores workspace
     // files and writes session_diff storage keys; the caller must run
@@ -262,7 +262,7 @@ export namespace RemoteSender {
     // returns the input so the existing remote-sender suite continues to
     // exercise schema/ordering paths without touching the network.
     attachments?: (sessionID: SessionID) => RemoteAttachments.Result | undefined
-    // kilocode_change - set_pr_link: per-session PR link seam. `value` is the
+    // taverncode_change - set_pr_link: per-session PR link seam. `value` is the
     // parsed link, or undefined to withdraw the link the session owns. The
     // default records/clears the command session's own link; tests inject this.
     setPrLink?: (value: PrLink | undefined, sessionId: SessionID) => Promise<void>
@@ -347,7 +347,7 @@ export namespace RemoteSender {
         return AppRuntime.runPromise(Session.Service.use((svc) => svc.children(sessionID)))
       },
     }
-    // kilocode_change start - orphan rollback for create_session: when
+    // taverncode_change start - orphan rollback for create_session: when
     // sessionCreate succeeds but the spawn fails, the newly-created root
     // session would otherwise stay in the DB with no child to serve it. The
     // default remove() delegates to Session.Service.remove and swallows its
@@ -358,11 +358,11 @@ export namespace RemoteSender {
         const { AppRuntime } = await import("@/effect/app-runtime")
         await AppRuntime.runPromise(Session.Service.use((svc) => svc.remove(id)))
       })
-    // kilocode_change end
-    // kilocode_change - K1 W1: session create + in-process attach seams used by
+    // taverncode_change end
+    // taverncode_change - K1 W1: session create + in-process attach seams used by
     // create_session. Production wires `attachSession` to
     // `KiloSessions.attachRemoteSession` from inside `enableRemote` (see
-    // kilo-sessions.ts). Test fixtures inject stubs via the Options object.
+    // tavern-sessions.ts). Test fixtures inject stubs via the Options object.
     // When omitted, the create_session / exit_cli handlers treat the seam
     // as a wiring bug (a missing seam is never a runtime fallback).
     const sessionCreate =
@@ -380,13 +380,13 @@ export namespace RemoteSender {
     const attachSession =
       options.attachSession ??
       (async (id: SessionID, opts?: { requireShare?: boolean }) => {
-        const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+        const { KiloSessions } = await import("@/tavern-sessions/tavern-sessions")
         await KiloSessions.attachRemoteSession(id, opts)
       })
     const detachSession =
       options.detachSession ??
       (async (id: SessionID) => {
-        const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+        const { KiloSessions } = await import("@/tavern-sessions/tavern-sessions")
         await KiloSessions.detachRemoteSession(id)
       })
     const hasSession = options.hasSession ?? (() => false)
@@ -397,12 +397,12 @@ export namespace RemoteSender {
         const { AppRuntime } = await import("@/effect/app-runtime")
         await AppRuntime.runPromise(SessionPrompt.Service.use((svc) => svc.cancel(id)))
       })
-    // kilocode_change end
-    // kilocode_change start - injectable slash command discovery + execution
+    // taverncode_change end
+    // taverncode_change start - injectable slash command discovery + execution
     const commands = options.commands ?? RemoteCommand.live()
     const remoteExit = options.remoteExit ?? RemoteExit
-    // kilocode_change end
-    // kilocode_change start - set_pr_link default: record the app-supplied link
+    // taverncode_change end
+    // taverncode_change start - set_pr_link default: record the app-supplied link
     // against the command's own session, never the worktree, so it can never fan
     // out to another session in the same checkout. `recordSessionLink` refuses a
     // link whose host/owner/repo is not the session worktree's remote (a fork or
@@ -418,17 +418,17 @@ export namespace RemoteSender {
         await run({
           directory: info?.directory ?? options.directory,
           fn: async () => {
-            const { clearSessionLink, recordSessionLink } = await import("@/kilo-sessions/pr-link")
+            const { clearSessionLink, recordSessionLink } = await import("@/tavern-sessions/pr-link")
             if (!value) {
               await clearSessionLink(sessionId)
               return
             }
-            const { Instance } = await import("@/kilocode/instance")
+            const { Instance } = await import("@/taverncode/instance")
             await recordSessionLink(sessionId, { link: value, evidence: "user" }, Instance.worktree)
           },
         })
       })
-    // kilocode_change end
+    // taverncode_change end
 
     const sub =
       options.subscribe ??
@@ -722,7 +722,7 @@ export namespace RemoteSender {
     }
 
     function dispatch(msg: RemoteProtocol.Command) {
-      // kilocode_change start - slash command discovery and execution
+      // taverncode_change start - slash command discovery and execution
       if (msg.command === "list_commands") {
         const parsed = RemoteCommand.ListRequest.safeParse(msg.data)
         const session = msg.sessionId ? decodeSessionID(msg.sessionId) : Option.none<SessionID>()
@@ -747,7 +747,7 @@ export namespace RemoteSender {
         })()
         return
       }
-      // kilocode_change - k1: connection-scoped directory listing for the
+      // taverncode_change - k1: connection-scoped directory listing for the
       // instance-picker folder tree. Lists exactly one level, directories
       // only, with symlink escapes skipped.
       if (msg.command === "list_directories") {
@@ -883,9 +883,9 @@ export namespace RemoteSender {
         return
       }
       if (msg.command === "exit_cli") {
-        // kilocode_change - K1 W1: `exit_cli` now means "detach THIS remote
+        // taverncode_change - K1 W1: `exit_cli` now means "detach THIS remote
         // session and (if this is the last interactive session) close the
-        // CLI." It is NOT "terminate the CLI." A headless `kilo remote` host
+        // CLI." It is NOT "terminate the CLI." A headless `tavern remote` host
         // never invokes the RemoteExit callback (it is never registered for
         // headless mode), so the same command cleanly handles both the
         // interactive TUI shutdown path and the per-session-detach path
@@ -910,7 +910,7 @@ export namespace RemoteSender {
         //      attachedState.union() (NOT mobile subscriptions).
         //   6. If zero remain + a RemoteExit callback is registered, ACK
         //      then invoke the callback in a microtask so the response can
-        //      flush first. If zero remain + no callback (headless `kilo
+        //      flush first. If zero remain + no callback (headless `tavern
         //      remote`), ACK and keep the host alive (the host keeps
         //      advertising and can create a new session from zero). If
         //      sessions remain, ACK and keep the process alive.
@@ -947,7 +947,7 @@ export namespace RemoteSender {
             // so the trace exists even if a later step fails.
             RemoteSessionLog.end(options.log, { sessionID: target, reason: "detached" })
             // 3. Snapshot remaining sessions AFTER detach. Headless hosts
-            //    (`kilo remote`) never register a RemoteExit callback, so
+            //    (`tavern remote`) never register a RemoteExit callback, so
             //    `exit` is undefined there and the host stays alive.
             const remaining = ownedCount()
             options.conn.send({ type: "response", id: msg.id, result: {} })
@@ -974,13 +974,13 @@ export namespace RemoteSender {
         return
       }
       if (msg.command === "create_session") {
-        // kilocode_change - K1 W1: in-process create_session. Optional wire
+        // taverncode_change - K1 W1: in-process create_session. Optional wire
         // fields (agent/model/orgId) ride protocolVersion 1; orgId lands in
         // session metadata so the first kilo_meta carries the claim. Handler
         // (a) accepts an absent `sessionId` (instance-picker path), (b)
         // resolves the target directory from that session or options.directory,
         // (c) attaches in-process; attach failures roll back via sessionRemove.
-        // kilocode_change - clone: an optional cloneFromKiloSessionId imports a
+        // taverncode_change - clone: an optional cloneFromKiloSessionId imports a
         // cloud session in-process (importFromCloud) instead of a fresh
         // sessionCreate; a missing importFromCloud seam is a wiring bug, never
         // a fallback to sessionCreate.
@@ -1025,7 +1025,7 @@ export namespace RemoteSender {
             : {}),
           ...(parsed.data.orgId ? { metadata: { orgId: parsed.data.orgId } } : {}),
         }
-        // kilocode_change - k1: a present `directory` starts the session in a
+        // taverncode_change - k1: a present `directory` starts the session in a
         // contained relative path under the launch directory. Resolve it before
         // the create try/catch so a bad path is a request error ("invalid
         // create_session directory"), not a create failure. Old clients omit
@@ -1168,8 +1168,8 @@ export namespace RemoteSender {
         })()
         return
       }
-      // kilocode_change end
-      // kilocode_change start - sessionless list_models for the pre-session instance picker
+      // taverncode_change end
+      // taverncode_change start - sessionless list_models for the pre-session instance picker
       if (msg.command === "list_models") {
         const parsed = RemoteModelCatalog.Request.safeParse(msg.data)
         // Accept an absent sessionId (the mobile instance-picker path asks for the
@@ -1211,7 +1211,7 @@ export namespace RemoteSender {
         })()
         return
       }
-      // kilocode_change end
+      // taverncode_change end
       if (msg.command === "send_message") {
         const parsed = getRemotePromptInput().safeParse(msg.data)
         if (!parsed.success) {
@@ -1270,7 +1270,7 @@ export namespace RemoteSender {
         dispatchQuick(msg, directoryFor(session.value), () => cancel(session.value))
         return
       }
-      // kilocode_change start - drop a queued (not yet running) remote message
+      // taverncode_change start - drop a queued (not yet running) remote message
       if (msg.command === "drop_queued_message") {
         const parsed = DropQueuedMessageData.safeParse(msg.data)
         const session = msg.sessionId ? decodeSessionID(msg.sessionId) : Option.none<SessionID>()
@@ -1293,7 +1293,7 @@ export namespace RemoteSender {
         })
         return
       }
-      // kilocode_change end
+      // taverncode_change end
       if (msg.command === "question_reply") {
         const parsed = QuestionData.safeParse(msg.data)
         if (!parsed.success) {
@@ -1373,7 +1373,7 @@ export namespace RemoteSender {
         })
         return
       }
-      // kilocode_change start - set_pr_link: the app (or the cloud) knows the PR.
+      // taverncode_change start - set_pr_link: the app (or the cloud) knows the PR.
       // A link is per session, so the command must name the session that owns it:
       // without one there is no owner, and we fail closed (write nothing) rather
       // than pin the link to a worktree every session would inherit. A parsed URL
@@ -1410,7 +1410,7 @@ export namespace RemoteSender {
         })()
         return
       }
-      // kilocode_change end
+      // taverncode_change end
       options.conn.send({
         type: "response",
         id: msg.id,
@@ -1472,7 +1472,7 @@ export namespace RemoteSender {
                 directory: info.directory,
                 fn: async () => {
                   // Mark before setTitle: Session.Event.Updated publishes inside
-                  // setTitle and the kilo-sessions consumer is deferred, so a
+                  // setTitle and the tavern-sessions consumer is deferred, so a
                   // post-write mark races the title broadcast. Clear on failure
                   // (same consume-on-failure pattern ensureTitle uses for auto-titles)
                   // so a later local write to this title is not skipped as an adoption.

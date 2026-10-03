@@ -9,16 +9,16 @@ import { Session } from "@/session/session"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
 import type { DeepMutable } from "@opencode-ai/core/schema"
 import { MessageTable, PartTable } from "@opencode-ai/core/session/sql"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { Identifier } from "@/id/id"
 import {
   SessionImportValidationError,
   fetchCloudSessionForImport,
   getToken,
   prepareSessionImport,
-} from "@kilocode/kilo-gateway"
-import { baseKey } from "@/kilocode/session-portability/cumulative-diff"
-import { extractSessionDiffs, restoreSessionDiffs } from "@/kilocode/session-portability/session-diff-restore"
+} from "@taverncode/tavern-gateway"
+import { baseKey } from "@/taverncode/session-portability/cumulative-diff"
+import { extractSessionDiffs, restoreSessionDiffs } from "@/taverncode/session-portability/session-diff-restore"
 import * as Log from "@opencode-ai/core/util/log"
 
 const log = Log.create({ service: "import-cloud-session" })
@@ -30,7 +30,7 @@ const log = Log.create({ service: "import-cloud-session" })
  * typed errors that the callers translate into their own wire shapes.
  */
 export namespace CloudSessionImportInProcess {
-  // Missing kilo credentials (auth absent or no token).
+  // Missing tavern credentials (auth absent or no token).
   export class Unauthorized extends Schema.TaggedErrorClass<Unauthorized>()("CloudSessionImportUnauthorized", {}) {}
 
   // The cloud fetch returned a non-ok status; carries the upstream status and
@@ -64,7 +64,7 @@ export namespace CloudSessionImportInProcess {
     const database = yield* Database.Service
     const workspaceID = yield* WorkspaceRef
 
-    const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new Unauthorized()))
+    const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new Unauthorized()))
     const token = getToken(info)
     if (!token) return yield* Effect.fail(new Unauthorized())
 

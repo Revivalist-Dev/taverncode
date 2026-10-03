@@ -1,11 +1,11 @@
 /**
- * Runtime contract tests for kilo-vscode's dependencies on @kilocode/kilo-ui.
+ * Runtime contract tests for tavern-vscode's dependencies on @taverncode/tavern-ui.
  *
  * These tests import the upstream UI modules directly and verify at runtime
- * that the exports kilo-vscode depends on still exist with the expected shape.
+ * that the exports tavern-vscode depends on still exist with the expected shape.
  *
  * Because the upstream modules use SolidJS JSX (jsxImportSource: "solid-js"),
- * they must be loaded from within packages/kilo-ui/ where bun picks up the
+ * they must be loaded from within packages/tavern-ui/ where bun picks up the
  * correct tsconfig. We use Bun.spawnSync to run a small check script in that
  * context.
  *
@@ -18,31 +18,31 @@ import fs from "node:fs"
 import path from "node:path"
 
 const MONOREPO_ROOT = path.resolve(import.meta.dir, "../../../..")
-const KILO_UI_DIR = path.join(MONOREPO_ROOT, "packages/kilo-ui")
-const WORKER_URL = path.join(MONOREPO_ROOT, "packages/kilo-vscode/tests/setup/worker-url.ts")
+const KILO_UI_DIR = path.join(MONOREPO_ROOT, "packages/tavern-ui")
+const WORKER_URL = path.join(MONOREPO_ROOT, "packages/tavern-vscode/tests/setup/worker-url.ts")
 const BASIC_TOOL_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/components/basic-tool.tsx")
 const DATA_CONTEXT_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/context/data.tsx")
 const MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/ui/src/components/message-part.tsx")
-const KILO_MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/message-part.tsx")
-const KILO_MESSAGE_HIGHLIGHT_FILE = path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/message-highlight.ts")
-const KILO_BASIC_TOOL_CSS_FILE = path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/basic-tool.css")
-const KILO_MESSAGE_PART_CSS_FILE = path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/message-part.css")
-const SHELL_ROLLING_FILE = path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/shell-rolling-results.tsx")
+const KILO_MESSAGE_PART_FILE = path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/message-part.tsx")
+const KILO_MESSAGE_HIGHLIGHT_FILE = path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/message-highlight.ts")
+const KILO_BASIC_TOOL_CSS_FILE = path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/basic-tool.css")
+const KILO_MESSAGE_PART_CSS_FILE = path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/message-part.css")
+const SHELL_ROLLING_FILE = path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/shell-rolling-results.tsx")
 const ASSISTANT_MESSAGE_FILE = path.join(
   MONOREPO_ROOT,
-  "packages/kilo-vscode/webview-ui/src/components/chat/AssistantMessage.tsx",
+  "packages/tavern-vscode/webview-ui/src/components/chat/AssistantMessage.tsx",
 )
-const TASK_HEADER_FILE = path.join(MONOREPO_ROOT, "packages/kilo-vscode/webview-ui/src/components/chat/TaskHeader.tsx")
+const TASK_HEADER_FILE = path.join(MONOREPO_ROOT, "packages/tavern-vscode/webview-ui/src/components/chat/TaskHeader.tsx")
 const CONTEXT_TAB_FILE = path.join(
   MONOREPO_ROOT,
-  "packages/kilo-vscode/webview-ui/src/components/settings/ContextTab.tsx",
+  "packages/tavern-vscode/webview-ui/src/components/settings/ContextTab.tsx",
 )
 const PROMPT_INPUT_FILE = path.join(
   MONOREPO_ROOT,
-  "packages/kilo-vscode/webview-ui/src/components/chat/PromptInput.tsx",
+  "packages/tavern-vscode/webview-ui/src/components/chat/PromptInput.tsx",
 )
-const TRANSCRIPT_PARTS_FILE = path.join(MONOREPO_ROOT, "packages/kilo-vscode/webview-ui/src/utils/transcript-parts.ts")
-const CHAT_LAYOUT_FILE = path.join(MONOREPO_ROOT, "packages/kilo-vscode/webview-ui/src/styles/chat-layout.css")
+const TRANSCRIPT_PARTS_FILE = path.join(MONOREPO_ROOT, "packages/tavern-vscode/webview-ui/src/utils/transcript-parts.ts")
+const CHAT_LAYOUT_FILE = path.join(MONOREPO_ROOT, "packages/tavern-vscode/webview-ui/src/styles/chat-layout.css")
 
 function check(code: string): { ok: boolean; output: string } {
   const result = Bun.spawnSync(["bun", "--preload", WORKER_URL, "--conditions=browser", "-e", code], {
@@ -59,7 +59,7 @@ function check(code: string): { ok: boolean; output: string } {
 }
 
 /**
- * Tool names that kilo-vscode overrides or uses directly.
+ * Tool names that tavern-vscode overrides or uses directly.
  * Sources:
  *   - VscodeToolOverrides.tsx: "bash"
  *   - TaskToolExpanded.tsx:    "task"
@@ -68,7 +68,7 @@ function check(code: string): { ok: boolean; output: string } {
 const TOOL_NAMES_WE_DEPEND_ON = ["bash", "task", "read", "write", "glob", "edit", "todowrite"]
 
 describe("ToolRegistry tool name contract (runtime)", () => {
-  it("all tools used by kilo-vscode are registered in ToolRegistry", () => {
+  it("all tools used by tavern-vscode are registered in ToolRegistry", () => {
     const names = JSON.stringify(TOOL_NAMES_WE_DEPEND_ON)
     const result = check(`
       const hist = { state: null, length: 1, replaceState(s) { hist.state = s }, pushState(s) { hist.state = s }, go() {} }
@@ -133,7 +133,7 @@ describe("DataProvider contract (runtime)", () => {
   })
 
   it("DataProvider accepts onOpenFile prop and exports OpenFileFn (source)", () => {
-    // onOpenFile and OpenFileFn are `kilocode_change` additions — TypeScript types
+    // onOpenFile and OpenFileFn are `taverncode_change` additions — TypeScript types
     // erased at runtime, so we verify via source analysis
     const src = fs.readFileSync(DATA_CONTEXT_FILE, "utf-8")
     expect(src).toContain("onOpenFile")
@@ -142,7 +142,7 @@ describe("DataProvider contract (runtime)", () => {
   })
 
   it("DataProvider accepts onOpenDiff prop and exports OpenDiffFn (source)", () => {
-    // onOpenDiff and OpenDiffFn are `kilocode_change` additions — TypeScript types
+    // onOpenDiff and OpenDiffFn are `taverncode_change` additions — TypeScript types
     // erased at runtime, so we verify via source analysis
     const src = fs.readFileSync(DATA_CONTEXT_FILE, "utf-8")
     expect(src).toContain("onOpenDiff")
@@ -317,7 +317,7 @@ describe("Expanded tool motion and typography (source)", () => {
   it("uses the assistant markdown line-height ratio for reasoning output", () => {
     const css = fs.readFileSync(KILO_MESSAGE_PART_CSS_FILE, "utf-8")
     const block = css.match(
-      /html\[data-theme="kilo-vscode"\] \[data-component="reasoning-part"\][\s\S]*?(?=@keyframes reasoning-pulse)/,
+      /html\[data-theme="tavern-vscode"\] \[data-component="reasoning-part"\][\s\S]*?(?=@keyframes reasoning-pulse)/,
     )?.[0]
     expect(block).toMatch(/\[data-component="markdown"\]\s*\{[^}]*line-height:\s*160%;/)
   })
@@ -573,8 +573,8 @@ describe("Collapsed deferred tool details contract (source)", () => {
 })
 
 describe("Deferred tool card remount contract (source)", () => {
-  const wrapper = fs.readFileSync(path.join(MONOREPO_ROOT, "packages/kilo-ui/src/components/basic-tool.tsx"), "utf-8")
-  const scroll = fs.readFileSync(path.join(MONOREPO_ROOT, "packages/kilo-ui/src/hooks/create-auto-scroll.tsx"), "utf-8")
+  const wrapper = fs.readFileSync(path.join(MONOREPO_ROOT, "packages/tavern-ui/src/components/basic-tool.tsx"), "utf-8")
+  const scroll = fs.readFileSync(path.join(MONOREPO_ROOT, "packages/tavern-ui/src/hooks/create-auto-scroll.tsx"), "utf-8")
 
   it("mounts a remembered-open deferred card with its body in the same frame", () => {
     // Otherwise every virtualizer remount of an expanded diff paints a

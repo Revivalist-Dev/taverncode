@@ -71,7 +71,7 @@ describe("Extension — package.json command sync", () => {
     // Commands generated via template literals can't be extracted by regex,
     // so verify the dynamic registration pattern exists in source instead.
     const dynamic: Record<string, string> = {
-      "kilo-code.new.agentManager.jumpTo": "registerCommand(`kilo-code.new.agentManager.jumpTo${",
+      "tavern-code.new.agentManager.jumpTo": "registerCommand(`tavern-code.new.agentManager.jumpTo${",
     }
 
     const missing: string[] = []
@@ -94,74 +94,74 @@ describe("Extension — package.json command sync", () => {
   })
 
   /**
-   * All declared commands must use the kilo-code.new. prefix.
-   * The legacy kilo-code.* namespace (without .new.) belongs to the old
+   * All declared commands must use the tavern-code.new. prefix.
+   * The legacy tavern-code.* namespace (without .new.) belongs to the old
    * extension and must not be reintroduced.
    */
-  it("all declared commands use the kilo-code.new. prefix", () => {
-    const bad = declared.filter((cmd) => !cmd.startsWith("kilo-code.new."))
+  it("all declared commands use the tavern-code.new. prefix", () => {
+    const bad = declared.filter((cmd) => !cmd.startsWith("tavern-code.new."))
     expect(
       bad,
-      `Commands without "kilo-code.new." prefix — use the namespaced form:\n` + bad.map((b) => `  - ${b}`).join("\n"),
+      `Commands without "tavern-code.new." prefix — use the namespaced form:\n` + bad.map((b) => `  - ${b}`).join("\n"),
     ).toEqual([])
   })
 
   it("scopes Agent Manager search to the panel and leaves the integrated terminal alone", () => {
     const binding = pkg.contributes?.keybindings?.find(
-      (item: { command: string }) => item.command === "kilo-code.new.agentManager.search",
+      (item: { command: string }) => item.command === "tavern-code.new.agentManager.search",
     )
     expect(binding).toMatchObject({
       key: "ctrl+f",
       mac: "cmd+f",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && !terminalFocus",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' && !terminalFocus",
     })
   })
 
   it("keeps Agent Manager session and terminal shortcuts focus-aware", () => {
     const terminal = pkg.contributes?.keybindings?.find(
-      (item: { command: string }) => item.command === "kilo-code.new.agentManager.showTerminal",
+      (item: { command: string }) => item.command === "tavern-code.new.agentManager.showTerminal",
     )
     const create = pkg.contributes?.keybindings?.find(
-      (item: { command: string }) => item.command === "kilo-code.new.agentManager.newTerminalTab",
+      (item: { command: string }) => item.command === "tavern-code.new.agentManager.newTerminalTab",
     )
     const sessionCreate = pkg.contributes?.keybindings?.find(
-      (item: { command: string }) => item.command === "kilo-code.new.agentManager.newTab",
+      (item: { command: string }) => item.command === "tavern-code.new.agentManager.newTab",
     )
     expect(terminal).toMatchObject({
       key: "ctrl+/",
       mac: "cmd+/",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && !kilo-code.new.sidebarFocused",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' && !tavern-code.new.sidebarFocused",
     })
     expect(create).toMatchObject({
       key: "ctrl+shift+t",
       mac: "cmd+shift+t",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && !kilo-code.new.agentManagerSideTerminalFocused",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' && !tavern-code.new.agentManagerSideTerminalFocused",
     })
     expect(sessionCreate).toMatchObject({
       key: "ctrl+t",
       mac: "cmd+t",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && !kilo-code.new.agentManagerSideTerminalFocused",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' && !tavern-code.new.agentManagerSideTerminalFocused",
     })
     const terminalCreate = pkg.contributes?.keybindings?.find(
       (item: { command: string; key?: string; mac?: string; when?: string }) =>
-        item.command === "kilo-code.new.agentManager.newSideTerminal" && item.key === "ctrl+t",
+        item.command === "tavern-code.new.agentManager.newSideTerminal" && item.key === "ctrl+t",
     )
     expect(terminalCreate).toMatchObject({
       key: "ctrl+t",
       mac: "cmd+t",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' && kilo-code.new.agentManagerSideTerminalFocused",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' && tavern-code.new.agentManagerSideTerminalFocused",
     })
     expect(
       pkg.contributes?.keybindings?.some(
         (item: { command: string }) =>
-          item.command === "kilo-code.new.agentManager.newTerminal" ||
-          item.command === "kilo-code.new.agentManager.newMainTerminal",
+          item.command === "tavern-code.new.agentManager.newTerminal" ||
+          item.command === "tavern-code.new.agentManager.newMainTerminal",
       ),
     ).toBe(false)
   })
 
   it("declares the Agent Manager terminal destination setting", () => {
-    const setting = pkg.contributes?.configuration?.properties?.["kilo-code.new.agentManager.terminalButtonDestination"]
+    const setting = pkg.contributes?.configuration?.properties?.["tavern-code.new.agentManager.terminalButtonDestination"]
     expect(setting).toMatchObject({
       type: "string",
       scope: "application",
@@ -173,48 +173,48 @@ describe("Extension — package.json command sync", () => {
 
   it("scopes the open PR shortcut to Agent Manager", () => {
     const binding = pkg.contributes?.keybindings?.find(
-      (item: { command: string }) => item.command === "kilo-code.new.agentManager.openPR",
+      (item: { command: string }) => item.command === "tavern-code.new.agentManager.openPR",
     )
     expect(binding).toMatchObject({
       key: "ctrl+shift+r",
       mac: "cmd+shift+r",
-      when: "activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel'",
+      when: "activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel'",
     })
   })
 
-  it("scopes agent mode shortcuts to focused Kilo webviews", () => {
+  it("scopes agent mode shortcuts to focused Tavern webviews", () => {
     const bindings = pkg.contributes?.keybindings?.filter(
       (item: { command: string }) =>
-        item.command === "kilo-code.new.cycleAgentMode" || item.command === "kilo-code.new.cyclePreviousAgentMode",
+        item.command === "tavern-code.new.cycleAgentMode" || item.command === "tavern-code.new.cyclePreviousAgentMode",
     )
     const when =
-      "kilo-code.new.sidebarFocused || activeWebviewPanelId == 'kilo-code.new.AgentManagerPanel' || activeWebviewPanelId == 'kilo-code.new.TabPanel'"
+      "tavern-code.new.sidebarFocused || activeWebviewPanelId == 'tavern-code.new.AgentManagerPanel' || activeWebviewPanelId == 'tavern-code.new.TabPanel'"
 
     expect(bindings).toHaveLength(2)
     expect(bindings).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ command: "kilo-code.new.cycleAgentMode", when }),
-        expect.objectContaining({ command: "kilo-code.new.cyclePreviousAgentMode", when }),
+        expect.objectContaining({ command: "tavern-code.new.cycleAgentMode", when }),
+        expect.objectContaining({ command: "tavern-code.new.cyclePreviousAgentMode", when }),
       ]),
     )
   })
 
-  it("routes task-close commands to the focused Kilo surface", () => {
+  it("routes task-close commands to the focused Tavern surface", () => {
     const commands = pkg.contributes?.commands ?? []
     expect(commands).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ command: "kilo-code.new.closeTask", title: "Close Task", category: "Kilo Code" }),
+        expect.objectContaining({ command: "tavern-code.new.closeTask", title: "Close Task", category: "Tavern Code" }),
         expect.objectContaining({
-          command: "kilo-code.new.closeAllTasks",
+          command: "tavern-code.new.closeAllTasks",
           title: "Close All Tasks",
-          category: "Kilo Code",
+          category: "Tavern Code",
         }),
       ]),
     )
 
     const source = fs.readFileSync(EXTENSION_FILE, "utf-8")
-    const closeTask = sliceBlock(source, source.indexOf('vscode.commands.registerCommand("kilo-code.new.closeTask"'))
-    const closeAll = sliceBlock(source, source.indexOf('vscode.commands.registerCommand("kilo-code.new.closeAllTasks"'))
+    const closeTask = sliceBlock(source, source.indexOf('vscode.commands.registerCommand("tavern-code.new.closeTask"'))
+    const closeAll = sliceBlock(source, source.indexOf('vscode.commands.registerCommand("tavern-code.new.closeAllTasks"'))
     expect(closeTask).toContain('taskTarget().postMessage({ type: "action", action: "closeTask" })')
     expect(closeAll).toContain('taskTarget().postMessage({ type: "action", action: "closeAllTasks" })')
 
@@ -308,7 +308,7 @@ describe("Extension — KiloProvider handler wiring", () => {
 
   it("new and restored tabs use shared setup and retain disposal", () => {
     expect(ext).toContain("openKiloInNewTab(context, tabPanels, attach)")
-    for (const name of ["function openKiloInNewTab", '"kilo-code.new.TabPanel"']) {
+    for (const name of ["function openKiloInNewTab", '"tavern-code.new.TabPanel"']) {
       const start = ext.indexOf(name)
       expect(start, `${name} must exist`).toBeGreaterThan(-1)
       const body = sliceBlock(ext, start)
@@ -324,7 +324,7 @@ describe("Extension — editor panel placement", () => {
   const ext = fs.readFileSync(EXTENSION_FILE, "utf-8")
   const settings = fs.readFileSync(SETTINGS_PROVIDER_FILE, "utf-8")
 
-  it("opens Kilo as a tab in the active editor group", () => {
+  it("opens Tavern as a tab in the active editor group", () => {
     const fn = ext.indexOf("function openKiloInNewTab")
     expect(fn, "openKiloInNewTab must exist").toBeGreaterThan(-1)
     const body = sliceBlock(ext, fn)
@@ -384,7 +384,7 @@ describe("KiloProvider — remote focus lifecycle", () => {
 })
 
 describe("KiloProvider — continueInWorktree error fallback", () => {
-  const helper = fs.readFileSync(path.join(ROOT, "src/kilo-provider/continue-worktree.ts"), "utf-8")
+  const helper = fs.readFileSync(path.join(ROOT, "src/tavern-provider/continue-worktree.ts"), "utf-8")
 
   it("sends error progress when handler is missing", () => {
     expect(helper, "must send error status back to webview").toContain('"error"')

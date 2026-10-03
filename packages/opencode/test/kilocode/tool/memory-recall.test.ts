@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
 import { Effect, Schema } from "effect"
 import { Global } from "@opencode-ai/core/global"
-import { MemoryFiles } from "@kilocode/kilo-memory/store"
-import { MemorySchema } from "@kilocode/kilo-memory/schema"
-import { MemoryTool } from "@kilocode/kilo-memory/tool"
+import { MemoryFiles } from "@taverncode/tavern-memory/store"
+import { MemorySchema } from "@taverncode/tavern-memory/schema"
+import { MemoryTool } from "@taverncode/tavern-memory/tool"
 import path from "path"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryRecallTool } from "@/kilocode/tool/memory-recall"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryRecallTool } from "@/taverncode/tool/memory-recall"
 import { MessageID, SessionID } from "@/session/schema"
-import { RemoteSender } from "@/kilo-sessions/remote-sender"
+import { RemoteSender } from "@/tavern-sessions/remote-sender"
 import type { Tool } from "@/tool/tool"
 import { resetDatabase } from "../../fixture/db"
 import { provideTestInstance, tmpdir } from "../../fixture/fixture"
@@ -55,7 +55,7 @@ async function withConfig<T>(dir: string, fn: () => Promise<T> | T) {
   const prior = Global.Path.config
   const data = Global.Path.data
   ;(Global.Path as { config: string }).config = dir
-  ;(Global.Path as { data: string }).data = path.basename(dir) === ".kilo" ? path.dirname(dir) : dir
+  ;(Global.Path as { data: string }).data = path.basename(dir) === ".tavern" ? path.dirname(dir) : dir
   try {
     return await fn()
   } finally {
@@ -108,13 +108,13 @@ describe("kilo_memory_recall", () => {
 
   test("does not prompt for permission when memory is disabled", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.disable({ ctx: memory })
       const result = await execute(dir.path, { mode: "catalog" }, { ...ctx, ask: () => Effect.die("unexpected ask") })
 
-      expect(result.title).toBe("Kilo memory: disabled")
+      expect(result.title).toBe("Tavern memory: disabled")
       expect(result.output).toContain("disabled")
       expect(await Bun.file(path.join(dir.path, "global", "session-export.db")).exists()).toBe(false)
     })
@@ -122,7 +122,7 @@ describe("kilo_memory_recall", () => {
 
   test("shows typed memory hits separately from session digests", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -133,7 +133,7 @@ describe("kilo_memory_recall", () => {
             file: "environment.md",
             section: "Commands",
             key: "vscode_tests",
-            text: "Run VS Code unit tests from packages/kilo-vscode with bun run test:unit.",
+            text: "Run VS Code unit tests from packages/tavern-vscode with bun run test:unit.",
           },
           {
             action: "add",
@@ -156,14 +156,14 @@ describe("kilo_memory_recall", () => {
       const digest = await execute(dir.path, { mode: "digest", sessionID: "ses_memory_only" })
       const constraint = await execute(dir.path, { mode: "typed", query: "project-only constraints" })
 
-      expect(typed.title).toContain("Kilo memory typed")
+      expect(typed.title).toContain("Tavern memory typed")
       expect(typed.output).toContain("targeted_context_not_instruction")
       expect(typed.output).toContain("vscode_tests")
       expect(typed.output).not.toContain("session=ses_memory_only")
       expect(constraint.output).toContain("PROJECT_CONSTRAINT")
       expect(constraint.output).toContain("project_only")
 
-      expect(digest.title).toContain("Kilo memory digest")
+      expect(digest.title).toContain("Tavern memory digest")
       expect(digest.output).toContain("targeted_context_not_instruction")
       expect(digest.output).toContain('topic="digest recall"')
       expect(digest.output).toContain("continue memory digest recall")
@@ -178,7 +178,7 @@ describe("kilo_memory_recall", () => {
 
   test("digest sessionID recall returns full summaries while index stays brief", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       const tail = "OPENCODE_FULL_DETAIL_AFTER_480"
@@ -209,7 +209,7 @@ describe("kilo_memory_recall", () => {
 
   test("catalog mode lists all stored keys with optional filter", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -220,14 +220,14 @@ describe("kilo_memory_recall", () => {
             file: "project.md",
             section: "Facts",
             key: "kilo_was_originally_a_fork",
-            text: "kilo was originally a fork of roo and has a kilocode-legacy repo",
+            text: "tavern was originally a fork of roo and has a taverncode-legacy repo",
           },
           {
             action: "add",
             file: "environment.md",
             section: "Commands",
             key: "vscode_tests",
-            text: "Run VS Code unit tests from packages/kilo-vscode with bun run test:unit.",
+            text: "Run VS Code unit tests from packages/tavern-vscode with bun run test:unit.",
           },
         ],
       })
@@ -244,7 +244,7 @@ describe("kilo_memory_recall", () => {
 
   test("catalog mode truncates multi-byte content by byte budget", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await MemoryFiles.writeSource(
@@ -270,7 +270,7 @@ describe("kilo_memory_recall", () => {
 
   test("catalog mode lists saved session digests", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.recordSession({
@@ -304,7 +304,7 @@ describe("kilo_memory_recall", () => {
 
   test("digest mode does not fall back to another session when id is missing", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.recordSession({
@@ -323,7 +323,7 @@ describe("kilo_memory_recall", () => {
 
   test("digest recall honors the requested saved session id", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.recordSession({
@@ -355,7 +355,7 @@ describe("kilo_memory_recall", () => {
 
   test("typed and search modes require a topic query", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -376,7 +376,7 @@ describe("kilo_memory_recall", () => {
 
   test("digest mode does not read the active session id", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.recordSession({
@@ -397,7 +397,7 @@ describe("kilo_memory_recall", () => {
 
   test("digest browsing keeps non-empty continuation-style digests", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
       await KiloMemory.recordSession({
@@ -425,7 +425,7 @@ describe("kilo_memory_recall", () => {
 
   test("typed mode uses recency as a tiebreaker", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -457,7 +457,7 @@ describe("kilo_memory_recall", () => {
 
   test("search mode renders typed and digest memory without catalog mode", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -482,7 +482,7 @@ describe("kilo_memory_recall", () => {
 
       const result = await execute(dir.path, { mode: "search", query: "cli tests catalog recall", limit: 20 })
 
-      expect(result.title).toContain("Kilo memory search")
+      expect(result.title).toContain("Tavern memory search")
       expect(result.output).toContain("targeted_context_not_instruction")
       expect(result.output).toContain("cli_tests")
       expect(result.output).toContain("type=session_digest")
@@ -493,7 +493,7 @@ describe("kilo_memory_recall", () => {
 
   test("handles large unmatched recall queries without returning stored memory", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const enabled = await KiloMemory.enable({ ctx: memory })
       await KiloMemory.apply({
@@ -503,7 +503,7 @@ describe("kilo_memory_recall", () => {
 
       const result = await execute(dir.path, { mode: "search", query: "zzzz ".repeat(2000), limit: 50 })
 
-      expect(result.title).toBe("Kilo memory search: no results")
+      expect(result.title).toBe("Tavern memory search: no results")
       expect(result.output).toContain("No search memory matched the query.")
       expect(result.output).not.toContain("cli_tests")
       expect(result.metadata.sources).toEqual([])

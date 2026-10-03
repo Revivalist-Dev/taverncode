@@ -16,15 +16,15 @@ describe("diagnostics", () => {
   it("reports tools, counts, and every worktree with its reason", () => {
     const text = diagnostics({
       root: "/repo",
-      worktreesDir: "/repo/.kilo/worktrees",
+      worktreesDir: "/repo/.tavern/worktrees",
       probes,
       report: report({
         entries: [
-          { id: "a", path: "/repo/.kilo/worktrees/a", branch: "alive", health: "ok", sessions: 1 },
-          { id: "b", path: "/repo/.kilo/worktrees/b", branch: "gone-dir", health: "absent-restorable", sessions: 2 },
-          { id: "c", path: "/repo/.kilo/worktrees/c", branch: "broken", health: "unregistered", sessions: 0 },
+          { id: "a", path: "/repo/.tavern/worktrees/a", branch: "alive", health: "ok", sessions: 1 },
+          { id: "b", path: "/repo/.tavern/worktrees/b", branch: "gone-dir", health: "absent-restorable", sessions: 2 },
+          { id: "c", path: "/repo/.tavern/worktrees/c", branch: "broken", health: "unregistered", sessions: 0 },
         ],
-        orphans: [{ path: "/repo/.kilo/worktrees/leftover", kind: "leftover" }],
+        orphans: [{ path: "/repo/.tavern/worktrees/leftover", kind: "leftover" }],
         pruned: true,
         dropped: ["d"],
       }),
@@ -42,9 +42,9 @@ describe("diagnostics", () => {
     expect(text).toContain("  pruned this pass: true")
     expect(text).toContain("  state entries dropped: 1")
     // Row labels match what the UI shows, so a report can be matched to a row.
-    expect(text).toContain("[ok] Alive row — /repo/.kilo/worktrees/a (sessions=1)")
-    expect(text).toContain("[unregistered] broken — /repo/.kilo/worktrees/c (sessions=0 quarantined)")
-    expect(text).toContain("[leftover] /repo/.kilo/worktrees/leftover")
+    expect(text).toContain("[ok] Alive row — /repo/.tavern/worktrees/a (sessions=1)")
+    expect(text).toContain("[unregistered] broken — /repo/.tavern/worktrees/c (sessions=0 quarantined)")
+    expect(text).toContain("[leftover] /repo/.tavern/worktrees/leftover")
   })
 
   it("counts a worktree parked by both pollers once", () => {
@@ -52,23 +52,23 @@ describe("diagnostics", () => {
     // usually parked by both. The report is about worktrees, not about loops.
     const text = diagnostics({
       root: "/repo",
-      worktreesDir: "/repo/.kilo/worktrees",
+      worktreesDir: "/repo/.tavern/worktrees",
       probes,
       report: report({
-        entries: [{ id: "a", path: "/repo/.kilo/worktrees/a", branch: "stuck", health: "ok", sessions: 0 }],
+        entries: [{ id: "a", path: "/repo/.tavern/worktrees/a", branch: "stuck", health: "ok", sessions: 0 }],
       }),
       quarantined: [...new Set(["a", "a"])],
       labels: new Map(),
     })
 
     expect(text).toContain("  quarantined: 1")
-    expect(text).toContain("[ok] stuck — /repo/.kilo/worktrees/a (sessions=0 quarantined)")
+    expect(text).toContain("[ok] stuck — /repo/.tavern/worktrees/a (sessions=0 quarantined)")
   })
 
   it("says plainly when a failed tool is the reason everything looks broken", () => {
     const text = diagnostics({
       root: "/repo",
-      worktreesDir: "/repo/.kilo/worktrees",
+      worktreesDir: "/repo/.tavern/worktrees",
       probes: [{ name: "git", ms: 5000, error: "spawn git ENOENT" }],
       report: report({
         entries: [{ id: "a", path: "/a", branch: "x", health: "unavailable", sessions: 0 }],
@@ -86,7 +86,7 @@ describe("diagnostics", () => {
   it("does not pretend to know health before the first reconcile", () => {
     const text = diagnostics({
       root: "/repo",
-      worktreesDir: "/repo/.kilo/worktrees",
+      worktreesDir: "/repo/.tavern/worktrees",
       probes,
       report: undefined,
       quarantined: [],
@@ -141,7 +141,7 @@ describe("runDoctor", () => {
     })
 
     // A command that reveals nothing looks like a command that did nothing.
-    expect(lines).toEqual(["Kilo Agent Manager — no project is open."])
+    expect(lines).toEqual(["Tavern Agent Manager — no project is open."])
     expect(revealed).toBe(1)
   })
 

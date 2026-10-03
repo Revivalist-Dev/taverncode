@@ -1,9 +1,9 @@
 import { Global } from "@opencode-ai/core/global"
 import * as Log from "@opencode-ai/core/util/log"
-import { MemoryInstance } from "@kilocode/kilo-memory/effect/instance"
-import { MemoryLog } from "@kilocode/kilo-memory/effect/log"
-import { MemoryPaths } from "@kilocode/kilo-memory/effect/paths"
-import { bind } from "@/kilocode/instance"
+import { MemoryInstance } from "@taverncode/tavern-memory/effect/instance"
+import { MemoryLog } from "@taverncode/tavern-memory/effect/log"
+import { MemoryPaths } from "@taverncode/tavern-memory/effect/paths"
+import { bind } from "@/taverncode/instance"
 import { MemoryEvents } from "./events"
 
 const log = Log.create({ service: "memory" })

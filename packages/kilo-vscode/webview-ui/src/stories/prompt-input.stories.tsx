@@ -18,9 +18,9 @@ import { SessionContext } from "../context/session"
 import { PromptInput } from "../components/chat/PromptInput"
 import { SandboxTooltipContent } from "../components/shared/SandboxButton"
 import { contextDrafts } from "../utils/draft-store"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 
 const agents = [
   { name: "code", description: "Write, edit and review code", mode: "primary" as const },
@@ -180,7 +180,7 @@ const codeContexts = [
   },
   {
     id: "context-2",
-    filePath: "packages/kilo-vscode/webview-ui/src/components/chat/PromptInput.tsx",
+    filePath: "packages/tavern-vscode/webview-ui/src/components/chat/PromptInput.tsx",
     startLine: 12,
     endLine: 18,
     text: "export const PromptInput: Component<PromptInputProps> = (props) => {",
@@ -189,7 +189,7 @@ const codeContexts = [
 
 const manyContexts = Array.from({ length: 8 }, (_, index) => ({
   id: `many-${index}`,
-  filePath: `packages/kilo-vscode/src/services/code-actions/file-${index}.ts`,
+  filePath: `packages/tavern-vscode/src/services/code-actions/file-${index}.ts`,
   startLine: index * 10 + 1,
   endLine: index * 10 + 12,
   text: `export function action${index}() {\n  return ${index}\n}`,

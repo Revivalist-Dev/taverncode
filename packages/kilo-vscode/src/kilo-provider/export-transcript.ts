@@ -1,6 +1,6 @@
 import * as path from "path"
 import * as vscode from "vscode"
-import type { KiloClient, Message, Part, Session } from "@kilocode/sdk/v2/client"
+import type { KiloClient, Message, Part, Session } from "@taverncode/sdk/v2/client"
 import { fetchMessagePage } from "./message-page"
 
 type Item = {

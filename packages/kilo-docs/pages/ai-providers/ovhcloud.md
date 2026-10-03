@@ -1,10 +1,10 @@
 ---
-title: "Using OVHcloud AI Endpoints with Kilo Code"
-description: "Connect OVHcloud's European AI Endpoints to Kilo Code for sovereign, GDPR-compliant model access. Setup guide for VS Code and the CLI."
+title: "Using OVHcloud AI Endpoints with Tavern Code"
+description: "Connect OVHcloud's European AI Endpoints to Tavern Code for sovereign, GDPR-compliant model access. Setup guide for VS Code and the CLI."
 sidebar_label: OVHcloud AI Endpoints
 ---
 
-# Using OVHcloud AI Endpoints with Kilo Code
+# Using OVHcloud AI Endpoints with Tavern Code
 
 OVHcloud is a French leading Cloud provider in Europe with data sovereignty and privacy.
 
@@ -24,19 +24,19 @@ You can report any bugs or feedbacks by chatting with us in our [Discord server]
 2.  **Navigate to Public Cloud:** Go to the Public Cloud section, and create a new project. Navigate to AI Endpoints in the _AI & Machine Learning_ section.
 3.  **Create a Key:** Click to _API keys_ and create a new key.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add OVHcloud AI Endpoints and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -44,7 +44,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export OVHCLOUD_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

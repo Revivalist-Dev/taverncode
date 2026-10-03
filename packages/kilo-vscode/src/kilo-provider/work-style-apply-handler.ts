@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import type { Config } from "@kilocode/sdk/v2/client"
+import type { Config } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../services/cli-backend/connection-service"
 import type { WorkStyle, WorkStyleConfig, WorkStyleState } from "../shared/work-style-presets"
 import { applyWorkStyle, type WorkStyleSettingSnapshot } from "./work-style-apply"
@@ -14,7 +14,7 @@ function inspect(config: vscode.WorkspaceConfiguration, key: string): WorkStyleS
 }
 
 async function apply(connection: KiloConnectionService, directory: string, style: WorkStyle) {
-  const settings = vscode.workspace.getConfiguration("kilo-code.new")
+  const settings = vscode.workspace.getConfiguration("tavern-code.new")
   return applyWorkStyle(style, {
     read: async () => {
       const client = await connection.getClientAsync(directory)
@@ -40,7 +40,7 @@ export async function handleWorkStyleApplyMessage(input: {
 }): Promise<boolean> {
   if (input.message.type !== "applyWorkStyle") return false
   if (input.message.style !== "human-in-the-loop" && input.message.style !== "autonomous") {
-    console.error("[Kilo New] Invalid style in applyWorkStyle message")
+    console.error("[Tavern New] Invalid style in applyWorkStyle message")
     input.post({ type: "workStyleApplyFailed", message: "Invalid work style", rollbackFailed: false })
     return true
   }

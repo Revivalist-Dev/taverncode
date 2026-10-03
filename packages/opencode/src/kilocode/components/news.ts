@@ -1,4 +1,4 @@
-import type { KilocodeNotification } from "@kilocode/kilo-gateway"
+import type { KilocodeNotification } from "@taverncode/tavern-gateway"
 
 export namespace News {
   export const key = "news_read_ids"

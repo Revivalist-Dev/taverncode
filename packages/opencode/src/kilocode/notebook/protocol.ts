@@ -169,9 +169,9 @@ export const Failure = Schema.Struct({
 export type Failure = Schema.Schema.Type<typeof Failure>
 
 export const Event = {
-  Requested: BusEvent.define("kilocode.notebook.requested", Request),
+  Requested: BusEvent.define("taverncode.notebook.requested", Request),
   Cancelled: BusEvent.define(
-    "kilocode.notebook.cancelled",
+    "taverncode.notebook.cancelled",
     Schema.Struct({
       requestID: RequestID,
       sessionID: SessionID,

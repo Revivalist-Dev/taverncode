@@ -1,12 +1,12 @@
-import { Button } from "@kilocode/kilo-ui/button"
-import { Card } from "@kilocode/kilo-ui/card"
-import { Collapsible } from "@kilocode/kilo-ui/collapsible"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { ProviderIcon } from "@kilocode/kilo-ui/provider-icon"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Tag } from "@kilocode/kilo-ui/tag"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Card } from "@taverncode/tavern-ui/card"
+import { Collapsible } from "@taverncode/tavern-ui/collapsible"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { ProviderIcon } from "@taverncode/tavern-ui/provider-icon"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Tag } from "@taverncode/tavern-ui/tag"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { Component, For, Show, createMemo, createSignal, onCleanup } from "solid-js"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -145,7 +145,7 @@ const ProvidersTab: Component = () => {
 
   function connectProvider(item: Provider) {
     if (item.id === KILO_PROVIDER_ID) {
-      // Route Kilo Gateway sign-in through the Profile view so the user sees
+      // Route Tavern Gateway sign-in through the Profile view so the user sees
       // the full device-auth UI (URL, QR, code, timer, cancel). Triggering
       // `startLogin()` from here alone would run the flow silently with no
       // way to recover if the browser is dismissed.
@@ -168,7 +168,7 @@ const ProvidersTab: Component = () => {
   return (
     <div>
       <Show when={!disabledIds().has(KILO_PROVIDER_ID)}>
-        {/* Kilo Gateway — always at the top, not editable */}
+        {/* Tavern Gateway — always at the top, not editable */}
         <Card>
           <div
             style={{
@@ -182,12 +182,12 @@ const ProvidersTab: Component = () => {
             <ProviderIcon id={providerIcon(KILO_PROVIDER_ID)} width={20} height={20} />
             <span
               style={{
-                "font-size": "var(--kilo-font-size-14)",
+                "font-size": "var(--tavern-font-size-14)",
                 "font-weight": "500",
                 color: "var(--vscode-foreground)",
               }}
             >
-              Kilo Gateway
+              Tavern Gateway
             </span>
             <Show
               when={kiloLoggedIn()}
@@ -203,7 +203,7 @@ const ProvidersTab: Component = () => {
         </Card>
       </Show>
 
-      {/* Connected providers (excluding Kilo) */}
+      {/* Connected providers (excluding Tavern) */}
       <h4 style={{ "margin-top": "16px", "margin-bottom": "8px" }}>
         {language.t("settings.providers.section.connected")}
       </h4>
@@ -214,7 +214,7 @@ const ProvidersTab: Component = () => {
             <div
               style={{
                 padding: "16px 0",
-                "font-size": "var(--kilo-font-size-14)",
+                "font-size": "var(--tavern-font-size-14)",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
               }}
             >
@@ -240,7 +240,7 @@ const ProvidersTab: Component = () => {
                   <ProviderIcon id={providerIcon(item)} width={20} height={20} />
                   <span
                     style={{
-                      "font-size": "var(--kilo-font-size-14)",
+                      "font-size": "var(--tavern-font-size-14)",
                       "font-weight": "500",
                       color: "var(--vscode-foreground)",
                       overflow: "hidden",
@@ -256,7 +256,7 @@ const ProvidersTab: Component = () => {
                   <Show when={!canDisconnect(item)}>
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-14)",
+                        "font-size": "var(--tavern-font-size-14)",
                         color: "var(--text-base, var(--vscode-descriptionForeground))",
                         "padding-right": "12px",
                       }}
@@ -324,7 +324,7 @@ const ProvidersTab: Component = () => {
                     <ProviderIcon id={providerIcon(item)} width={20} height={20} />
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-14)",
+                        "font-size": "var(--tavern-font-size-14)",
                         "font-weight": "500",
                         color: "var(--vscode-foreground)",
                       }}
@@ -336,7 +336,7 @@ const ProvidersTab: Component = () => {
                     {(key) => (
                       <span
                         style={{
-                          "font-size": "var(--kilo-font-size-12)",
+                          "font-size": "var(--tavern-font-size-12)",
                           color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                           "padding-left": "32px",
                         }}
@@ -372,7 +372,7 @@ const ProvidersTab: Component = () => {
               <ProviderIcon id="synthetic" width={20} height={20} />
               <span
                 style={{
-                  "font-size": "var(--kilo-font-size-14)",
+                  "font-size": "var(--tavern-font-size-14)",
                   "font-weight": "500",
                   color: "var(--vscode-foreground)",
                 }}
@@ -383,7 +383,7 @@ const ProvidersTab: Component = () => {
             </div>
             <span
               style={{
-                "font-size": "var(--kilo-font-size-12)",
+                "font-size": "var(--tavern-font-size-12)",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                 "padding-left": "32px",
               }}
@@ -425,7 +425,7 @@ const ProvidersTab: Component = () => {
             <Icon name="providers" size="small" />
             <span
               style={{
-                "font-size": "var(--kilo-font-size-14)",
+                "font-size": "var(--tavern-font-size-14)",
                 "font-weight": "500",
               }}
             >
@@ -442,7 +442,7 @@ const ProvidersTab: Component = () => {
           <Collapsible.Trigger>
             <span
               style={{
-                "font-size": "var(--kilo-font-size-12)",
+                "font-size": "var(--tavern-font-size-12)",
                 "font-weight": "500",
                 color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
               }}
@@ -455,7 +455,7 @@ const ProvidersTab: Component = () => {
             <Card style={{ "margin-top": "8px" }}>
               <div
                 style={{
-                  "font-size": "var(--kilo-font-size-12)",
+                  "font-size": "var(--tavern-font-size-12)",
                   color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                   "padding-bottom": "8px",
                   "border-bottom": "1px solid var(--border-weak-base)",
@@ -516,7 +516,7 @@ const ProvidersTab: Component = () => {
                       <ProviderIcon id={providerIcon(id)} width={20} height={20} />
                       <span
                         style={{
-                          "font-size": "var(--kilo-font-size-14)",
+                          "font-size": "var(--tavern-font-size-14)",
                           "font-weight": "500",
                           color: "var(--vscode-foreground)",
                           overflow: "hidden",

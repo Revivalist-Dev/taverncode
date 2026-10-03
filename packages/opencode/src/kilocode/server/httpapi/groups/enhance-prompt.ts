@@ -38,7 +38,7 @@ export const EnhancePromptApi = HttpApi.make("enhance-prompt")
       .annotateMerge(
         OpenApi.annotations({
           title: "enhance-prompt",
-          description: "Kilo enhance prompt routes.",
+          description: "Tavern enhance prompt routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -47,8 +47,8 @@ export const EnhancePromptApi = HttpApi.make("enhance-prompt")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

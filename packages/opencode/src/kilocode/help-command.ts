@@ -1,7 +1,7 @@
 import { cmd } from "../cli/cmd/cmd"
 import { generateHelp } from "./help"
 import type { Argv } from "yargs"
-import { markLazyCommandSelection } from "@/kilocode/cli/lazy-commands"
+import { markLazyCommandSelection } from "@/taverncode/cli/lazy-commands"
 
 export function createHelpCommand(root?: () => Argv) {
   return cmd({

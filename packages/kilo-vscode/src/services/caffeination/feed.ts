@@ -1,5 +1,5 @@
 import { realpathSync } from "node:fs"
-import type { SessionStatus } from "@kilocode/sdk/v2/client"
+import type { SessionStatus } from "@taverncode/sdk/v2/client"
 import type { SSEPayload } from "../cli-backend/sdk-sse-adapter"
 
 type Snapshot = {
@@ -77,7 +77,7 @@ export function feed(opts: {
       promise: Promise.resolve()
         .then<Snapshot>(() => (opts.watching() ? opts.load(dir) : { status: {}, wake: {} }))
         .catch((error: unknown) => {
-          console.warn(`[Kilo New] Keep-awake status refresh failed for ${dir}:`, error)
+          console.warn(`[Tavern New] Keep-awake status refresh failed for ${dir}:`, error)
           // Keep the last known wake set: a transient failure must not release
           // the inhibitor while wakeups may still be pending.
           return { status: {}, wake: undefined }

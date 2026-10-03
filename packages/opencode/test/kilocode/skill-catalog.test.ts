@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -33,7 +33,7 @@ function count(text: string, value: string) {
 it.instance("exposes the available skill catalog once in model context", () =>
   Effect.gen(function* () {
     const instance = yield* TestInstance
-    const dir = path.join(instance.directory, ".kilo", "skill", "catalog-skill")
+    const dir = path.join(instance.directory, ".tavern", "skill", "catalog-skill")
     yield* Effect.promise(() => fs.mkdir(dir, { recursive: true }))
     yield* Effect.promise(() =>
       Bun.write(

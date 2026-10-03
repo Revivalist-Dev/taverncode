@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { VtScreen } from "../../src/kilocode/cli/cmd/tui/vt/vt-screen"
+import { VtScreen } from "../../src/taverncode/cli/cmd/tui/vt/vt-screen"
 
 const ESC = "\x1b"
 const CSI = ESC + "["

@@ -1,5 +1,5 @@
 /**
- * Parse KiloCode URL from token
+ * Parse TavernCode URL from token
  * Some tokens contain encoded base URL information
  */
 export function getKiloUrlFromToken(defaultUrl: string, token: string): string {
@@ -17,7 +17,7 @@ export function getKiloUrlFromToken(defaultUrl: string, token: string): string {
 }
 
 /**
- * Validate KiloCode token format
+ * Validate TavernCode token format
  */
 export function isValidKilocodeToken(token: string): boolean {
   if (!token || typeof token !== "string") return false
@@ -29,6 +29,6 @@ export function isValidKilocodeToken(token: string): boolean {
 /**
  * Get API key from options or environment
  */
-export function getApiKey(options: { kilocodeToken?: string; apiKey?: string }): string | undefined {
-  return options.kilocodeToken ?? options.apiKey
+export function getApiKey(options: { taverncodeToken?: string; apiKey?: string }): string | undefined {
+  return options.taverncodeToken ?? options.apiKey
 }

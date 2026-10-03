@@ -1,11 +1,11 @@
 ---
 title: "JetBrains Plugin Architecture"
-description: "Architecture of the Kilo JetBrains split-mode plugin"
+description: "Architecture of the Tavern JetBrains split-mode plugin"
 ---
 
 # JetBrains Plugin Architecture
 
-The JetBrains plugin (`packages/kilo-jetbrains/`) is a split-mode Swing client of [Kilo CLI runtime](/docs/contributing/architecture/cli-runtime). Frontend module renders IDE UI. Backend module owns project-local logic and one bundled `kilo serve` server. Shared module defines cross-process RPC contracts and serializable payloads.
+The JetBrains plugin (`packages/tavern-jetbrains/`) is a split-mode Swing client of [Tavern CLI runtime](/docs/contributing/architecture/cli-runtime). Frontend module renders IDE UI. Backend module owns project-local logic and one bundled `tavern serve` server. Shared module defines cross-process RPC contracts and serializable payloads.
 
 {% callout type="info" title="Scope" %}
 This page describes repository-defined plugin architecture and development checks. It does not claim Marketplace rollout state or remote-host deployment configuration.
@@ -35,10 +35,10 @@ flowchart LR
     app["Backend app service"]
     conn["KiloConnectionService"]
     workspaces["Directory workspace cache"]
-    cli["Extracted kilo serve --port 0"]
+    cli["Extracted tavern serve --port 0"]
   end
 
-  runtime["Kilo CLI runtime"]
+  runtime["Tavern CLI runtime"]
 
   swing --> rpcClient --> rpcImpl --> app
   app --> conn --> cli --> runtime
@@ -63,17 +63,17 @@ Frontend calls RPC from coroutines, not Event Dispatch Thread (EDT). Swing creat
 Backend extracts CLI resource from plugin JAR into IntelliJ system path:
 
 ```text
-<PathManager.getSystemPath()>/kilo/bin/kilo
-<PathManager.getSystemPath()>/kilo/bin/kilo.exe   # Windows
+<PathManager.getSystemPath()>/tavern/bin/tavern
+<PathManager.getSystemPath()>/tavern/bin/tavern.exe   # Windows
 ```
 
-It chooses platform resource by OS and CPU architecture, reuses extracted binary when resource size matches, and can force re-extraction during reinstall flow. This editor-owned child is separate from detached local daemon managed by `kilo daemon`.
+It chooses platform resource by OS and CPU architecture, reuses extracted binary when resource size matches, and can force re-extraction during reinstall flow. This editor-owned child is separate from detached local daemon managed by `tavern daemon`.
 
 | Area | Behavior |
 |---|---|
-| Spawn | Runs extracted binary as `kilo serve --port 0` |
+| Spawn | Runs extracted binary as `tavern serve --port 0` |
 | Port | CLI server prefers `4096`, then asks OS for free port; backend reads listening line from stdout |
-| Authentication | Generates random 32-byte hex password and passes `KILO_SERVER_PASSWORD`; username defaults to `kilo` |
+| Authentication | Generates random 32-byte hex password and passes `KILO_SERVER_PASSWORD`; username defaults to `tavern` |
 | Environment | Sets JetBrains client/platform metadata, question tool enablement, telemetry level, Claude Code disable flag, and default edit/bash ask permissions unless overridden |
 | Ownership | Backend app service owns CLI manager and connection lifecycle |
 | Shutdown | Kills process descendants, then process; uses forced termination after timeout when needed |
@@ -108,7 +108,7 @@ Backend connection service uses bundled OkHttp clients and `/global/event` SSE.
 
 Backend workspace manager caches workspace clients by directory path. Root project and worktree are same routing shape: worktree is alternate directory key. First lookup creates workspace object and starts load; disconnect clears cache.
 
-This mirrors CLI `InstanceStore`: directory remains isolation key while one editor-owned `kilo serve` process serves multiple workspace contexts.
+This mirrors CLI `InstanceStore`: directory remains isolation key while one editor-owned `tavern serve` process serves multiple workspace contexts.
 
 ## Remote development constraints
 
@@ -126,7 +126,7 @@ Split mode changes path and UI assumptions:
 
 JetBrains Kotlin toolchain is Java 21. Gradle commands report missing or incompatible Java clearly; check Java only when diagnosing that failure mode.
 
-| Check | Command from `packages/kilo-jetbrains/` |
+| Check | Command from `packages/tavern-jetbrains/` |
 |---|---|
 | Typecheck | `./gradlew typecheck` |
 | Tests | `./gradlew test` |
@@ -140,7 +140,7 @@ Run `Plugin DevKit | Code | Frontend and Backend API Usage` inspection when movi
 
 ## Icon skill
 
-For plugin icon creation, modification, or review, use the `icon-jetbrains` skill at `.kilo/skills/icon-jetbrains/SKILL.md` together with `packages/kilo-jetbrains/AGENTS.md`. The skill covers IntelliJ New UI SVG roles, sizing, palette, dark variants, and icon validation guidance.
+For plugin icon creation, modification, or review, use the `icon-jetbrains` skill at `.tavern/skills/icon-jetbrains/SKILL.md` together with `packages/tavern-jetbrains/AGENTS.md`. The skill covers IntelliJ New UI SVG roles, sizing, palette, dark variants, and icon validation guidance.
 
 ## Source map
 
@@ -148,13 +148,13 @@ Paths below are relative to [`Kilo-Org/kilocode`](https://github.com/Kilo-Org/ki
 
 | Concern | Source path |
 |---|---|
-| Split modules | `packages/kilo-jetbrains/settings.gradle.kts` and module XML descriptors |
-| Contributor constraints | `packages/kilo-jetbrains/AGENTS.md` and the `jetbrains-ui`/`jetbrains-session`/`jetbrains-arch`/`jetbrains-dev` skills under `.kilo/skills/` |
-| CLI lifecycle | `packages/kilo-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/cli/KiloBackendCliManager.kt` |
-| Connection recovery | `packages/kilo-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/app/KiloBackendConnectionService.kt` |
-| Workspace cache | `packages/kilo-jetbrains/backend/src/main/kotlin/ai/kilocode/backend/workspace/KiloBackendWorkspaceManager.kt` |
-| Kotlin client generation | `packages/kilo-jetbrains/backend/build.gradle.kts` |
-| RPC contracts | `packages/kilo-jetbrains/shared/src/main/kotlin/ai/kilocode/rpc/` |
+| Split modules | `packages/tavern-jetbrains/settings.gradle.kts` and module XML descriptors |
+| Contributor constraints | `packages/tavern-jetbrains/AGENTS.md` and the `jetbrains-ui`/`jetbrains-session`/`jetbrains-arch`/`jetbrains-dev` skills under `.tavern/skills/` |
+| CLI lifecycle | `packages/tavern-jetbrains/backend/src/main/kotlin/ai/taverncode/backend/cli/KiloBackendCliManager.kt` |
+| Connection recovery | `packages/tavern-jetbrains/backend/src/main/kotlin/ai/taverncode/backend/app/KiloBackendConnectionService.kt` |
+| Workspace cache | `packages/tavern-jetbrains/backend/src/main/kotlin/ai/taverncode/backend/workspace/KiloBackendWorkspaceManager.kt` |
+| Kotlin client generation | `packages/tavern-jetbrains/backend/build.gradle.kts` |
+| RPC contracts | `packages/tavern-jetbrains/shared/src/main/kotlin/ai/taverncode/rpc/` |
 
 ## Related pages
 

@@ -4,10 +4,10 @@ import path from "node:path"
 import { Effect, Semaphore } from "effect"
 import { Global } from "@opencode-ai/core/global"
 import { Database } from "@opencode-ai/core/database/database"
-import { backendSupport, run as runSandbox, unrestricted, type Profile } from "@kilocode/sandbox"
+import { backendSupport, run as runSandbox, unrestricted, type Profile } from "@taverncode/sandbox"
 import { Bus } from "@/bus"
 import { GlobalBus } from "@/bus/global"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { Config } from "@/config/config"
 import { InstanceState } from "@/effect/instance-state"
 import type { InstanceContext } from "@/project/instance-context"
@@ -297,7 +297,7 @@ const snapshot = Effect.fn("SandboxPolicy.snapshot")(function* (sessionID: Sessi
     Effect.gen(function* () {
       const existing = yield* read(directory, sessionID)
       if (existing) return { directory, state: existing }
-      // A session's create-time kilocode.sandbox toggle takes precedence over the config default, so a
+      // A session's create-time taverncode.sandbox toggle takes precedence over the config default, so a
       // session moved or created with an explicit choice keeps that choice instead of resetting. The
       // persisted per-directory preference (last toggled state) is the next precedence, so new sessions
       // inherit the last /sandbox choice. The config default applies when neither is present.

@@ -6,7 +6,7 @@ const root = path.resolve(import.meta.dir, "../..")
 const preview = fs.readFileSync(path.join(root, "webview-ui/src/components/shared/ModelPreview.tsx"), "utf8")
 const selector = fs.readFileSync(path.join(root, "webview-ui/src/components/shared/ModelSelector.tsx"), "utf8")
 const agent = fs.readFileSync(path.join(root, "webview-ui/agent-manager/MultiModelSelector.tsx"), "utf8")
-const icons = fs.readFileSync(path.join(root, "../kilo-ui/src/components/icon.tsx"), "utf8")
+const icons = fs.readFileSync(path.join(root, "../tavern-ui/src/components/icon.tsx"), "utf8")
 const styles = fs.readFileSync(path.join(root, "webview-ui/src/styles/model-selector.css"), "utf8")
 
 describe("model preview data collection line", () => {

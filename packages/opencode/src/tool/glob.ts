@@ -7,7 +7,7 @@ import { assertExternalDirectoryEffect } from "./external-directory"
 import DESCRIPTION from "./glob.txt"
 import * as Tool from "./tool"
 
-// kilocode_change start — support absolute glob patterns (e.g. ~/.config/kilo/command/*.md)
+// taverncode_change start — support absolute glob patterns (e.g. ~/.config/tavern/command/*.md)
 function normalize(p: string) {
   return p.replaceAll("\\", "/")
 }
@@ -23,7 +23,7 @@ function split(pattern: string) {
   const next = normalized.slice(cut + 1)
   return { dir, pattern: next || "*" }
 }
-// kilocode_change end
+// taverncode_change end
 
 export const Parameters = Schema.Struct({
   pattern: Schema.String.annotate({ description: "The glob pattern to match files against" }),
@@ -43,7 +43,7 @@ export const GlobTool = Tool.define(
       execute: (params: { pattern: string; path?: string }, ctx: Tool.Context) =>
         Effect.gen(function* () {
           const ins = yield* InstanceState.context
-          const absolute = split(params.pattern) // kilocode_change
+          const absolute = split(params.pattern) // taverncode_change
           yield* ctx.ask({
             permission: "glob",
             patterns: [params.pattern],
@@ -54,10 +54,10 @@ export const GlobTool = Tool.define(
             },
           })
 
-          // kilocode_change start
+          // taverncode_change start
           const base = absolute?.dir ?? params.path ?? ins.directory
           const search = path.isAbsolute(base) ? base : path.resolve(ins.directory, base)
-          // kilocode_change end
+          // taverncode_change end
           const info = yield* fs.stat(search).pipe(Effect.catch(() => Effect.succeed(undefined)))
           if (info?.type === "File") {
             throw new Error(`glob path must be a directory: ${search}`)
@@ -68,16 +68,16 @@ export const GlobTool = Tool.define(
           })
 
           const limit = 100
-          // kilocode_change start - retain bounded-search metadata from Core ripgrep.
+          // taverncode_change start - retain bounded-search metadata from Core ripgrep.
           const result = yield* ripgrep.glob({
             cwd: search,
-            pattern: absolute?.pattern ?? params.pattern, // kilocode_change - absolute patterns are split into cwd + relative glob
+            pattern: absolute?.pattern ?? params.pattern, // taverncode_change - absolute patterns are split into cwd + relative glob
             limit,
-            signal: ctx.abort, // kilocode_change - stop ripgrep when the tool call is cancelled
+            signal: ctx.abort, // taverncode_change - stop ripgrep when the tool call is cancelled
           })
           const files = result.items
           const truncated = result.truncated
-          // kilocode_change end
+          // taverncode_change end
 
           const output = []
           if (files.length === 0) output.push("No files found")
@@ -89,7 +89,7 @@ export const GlobTool = Tool.define(
                 `(Results are truncated: showing first ${limit} results. Consider using a more specific path or pattern.)`,
               )
             }
-            if (result.partial) output.push("", "(Some discovered files could not be read.)") // kilocode_change
+            if (result.partial) output.push("", "(Some discovered files could not be read.)") // taverncode_change
           }
 
           return {

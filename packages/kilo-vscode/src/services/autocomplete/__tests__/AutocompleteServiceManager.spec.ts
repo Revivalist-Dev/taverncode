@@ -267,7 +267,7 @@ describe("AutocompleteServiceManager (less mocked logic)", () => {
         .mockReturnValueOnce(notebook as any)
       ;(manager as any).settings = {
         enableAutoTrigger: true,
-        provider: "kilo",
+        provider: "tavern",
         model: "inception/mercury-next-edit",
       }
 

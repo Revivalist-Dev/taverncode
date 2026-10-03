@@ -1,4 +1,4 @@
-import type { AnacondaDesktopStatus } from "@kilocode/sdk/v2/client"
+import type { AnacondaDesktopStatus } from "@taverncode/sdk/v2/client"
 
 export type AnacondaDesktopAction = "status" | "open" | "sync"
 

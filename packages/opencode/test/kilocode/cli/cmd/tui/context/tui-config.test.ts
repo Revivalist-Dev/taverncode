@@ -8,8 +8,8 @@ import { createEffect, createRoot } from "solid-js"
 import { createBindingLookup } from "@opentui/keymap/extras"
 import { TuiKeybind } from "@tui/config/keybind"
 import { TuiConfig } from "@tui/config"
-import { KiloTuiConfig } from "@/kilocode/cli/cmd/tui/context/tui-config"
-import { KiloTerminalTitle } from "@/kilocode/cli/cmd/tui/terminal-title"
+import { KiloTuiConfig } from "@/taverncode/cli/cmd/tui/context/tui-config"
+import { KiloTerminalTitle } from "@/taverncode/cli/cmd/tui/terminal-title"
 
 function cfg(input: Partial<TuiConfig.Info>): TuiConfig.Info {
   return input as TuiConfig.Info
@@ -25,7 +25,7 @@ function resolve(input: TuiConfig.Info): TuiConfig.Resolved {
       notifications: input.attention?.notifications ?? true,
       sound: input.attention?.sound ?? true,
       volume: input.attention?.volume ?? 0.4,
-      sound_pack: input.attention?.sound_pack ?? "kilo.default",
+      sound_pack: input.attention?.sound_pack ?? "tavern.default",
       sounds: input.attention?.sounds ?? {},
     },
     keybinds: createBindingLookup(TuiKeybind.toBindingConfig(keybinds), {
@@ -45,7 +45,7 @@ function resolve(input: TuiConfig.Info): TuiConfig.Resolved {
 
 describe("KiloTuiConfig.makeStore", () => {
   test("reactive reads update when set() reconciles a new config", () => {
-    const store = KiloTuiConfig.makeStore(resolve(cfg({ keybinds: { app_exit: "ctrl+c" }, theme: "kilo" })))
+    const store = KiloTuiConfig.makeStore(resolve(cfg({ keybinds: { app_exit: "ctrl+c" }, theme: "tavern" })))
 
     const exits: Array<string | undefined> = []
     const themes: Array<string | undefined> = []
@@ -59,16 +59,16 @@ describe("KiloTuiConfig.makeStore", () => {
       createEffect(() => icons.push(store.config.title_icon))
       createEffect(() =>
         titles.push(
-          KiloTerminalTitle.format({ base: "Kilo CLI", indicator: "working", icon: store.config.title_icon }),
+          KiloTerminalTitle.format({ base: "Tavern CLI", indicator: "working", icon: store.config.title_icon }),
         ),
       )
     })
 
     // Initial tracked reads.
     expect(exits).toEqual(["ctrl+c"])
-    expect(themes).toEqual(["kilo"])
+    expect(themes).toEqual(["tavern"])
     expect(icons).toEqual(["none"])
-    expect(titles).toEqual(["Kilo CLI"])
+    expect(titles).toEqual(["Tavern CLI"])
 
     store.set(cfg({ keybinds: { app_exit: "ctrl+q", leader: "ctrl+x" }, theme: "nord", title_icon: "emojis" }))
 
@@ -80,9 +80,9 @@ describe("KiloTuiConfig.makeStore", () => {
 
     // Tracked reactive reads re-ran with the new values (the hot-reload contract).
     expect(exits).toEqual(["ctrl+c", "ctrl+q"])
-    expect(themes).toEqual(["kilo", "nord"])
+    expect(themes).toEqual(["tavern", "nord"])
     expect(icons).toEqual(["none", "emojis"])
-    expect(titles).toEqual(["Kilo CLI", "💭 Kilo CLI"])
+    expect(titles).toEqual(["Tavern CLI", "💭 Tavern CLI"])
 
     dispose()
   })
@@ -96,7 +96,7 @@ describe("KiloTuiConfig.makeStore", () => {
   })
 
   test("set() does not re-notify a tracked read when its value is unchanged", () => {
-    const store = KiloTuiConfig.makeStore(resolve(cfg({ keybinds: { app_exit: "ctrl+c" }, theme: "kilo" })))
+    const store = KiloTuiConfig.makeStore(resolve(cfg({ keybinds: { app_exit: "ctrl+c" }, theme: "tavern" })))
 
     const exits: Array<string | undefined> = []
     let dispose!: () => void

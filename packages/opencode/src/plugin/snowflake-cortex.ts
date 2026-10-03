@@ -1,7 +1,7 @@
-import type { Hooks, PluginInput } from "@kilocode/plugin"
+import type { Hooks, PluginInput } from "@taverncode/plugin"
 import { OAUTH_DUMMY_KEY } from "../auth"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
-import { KiloOauthCallbackPage as OauthCallbackPage } from "@opencode-ai/core/kilocode/oauth/page" // kilocode_change - Kilo-branded callback page
+import { KiloOauthCallbackPage as OauthCallbackPage } from "@opencode-ai/core/taverncode/oauth/page" // taverncode_change - Tavern-branded callback page
 import { createServer } from "http"
 import open from "open"
 

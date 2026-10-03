@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
-import type { Part, StepFinishPart } from "@kilocode/sdk/v2"
-import { RoutedModelMeta } from "../../src/kilocode/cli/cmd/tui/routes/session/routed-model-meta"
-import { KiloRoutedModel } from "../../src/kilocode/session/routed-model"
+import type { Part, StepFinishPart } from "@taverncode/sdk/v2"
+import { RoutedModelMeta } from "../../src/taverncode/cli/cmd/tui/routes/session/routed-model-meta"
+import { KiloRoutedModel } from "../../src/taverncode/session/routed-model"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { LLMAISDK } from "../../src/session/llm/ai-sdk"
@@ -57,7 +57,7 @@ describe("session routed model", () => {
         finishReason: "stop",
         rawFinishReason: "stop",
         usage: {},
-        providerMetadata: { openrouter: { routed: true }, kilocode: { existing: true } },
+        providerMetadata: { openrouter: { routed: true }, taverncode: { existing: true } },
       }),
     ])
 
@@ -66,7 +66,7 @@ describe("session routed model", () => {
     if (event.type !== "step-finish") throw new Error("expected step-finish")
     expect(event.providerMetadata).toEqual({
       openrouter: { routed: true },
-      kilocode: { existing: true, routedModelID: "openai/gpt-5.5-20260423" },
+      taverncode: { existing: true, routedModelID: "openai/gpt-5.5-20260423" },
     })
   })
 
@@ -104,13 +104,13 @@ describe("session routed model", () => {
     expect(KiloRoutedModel.displayName("o3")).toBe("o3")
   })
 
-  test("shows compact labels only for Kilo auto selections", () => {
+  test("shows compact labels only for Tavern auto selections", () => {
     const model = { providerID: "openai", modelID: "gpt-5.5" }
     const parts = [reason, finish(model)]
 
     const routed = RoutedModelMeta.info(undefined, parts, false, {
-      providerID: "kilo",
-      modelID: "kilo-auto/efficient",
+      providerID: "tavern",
+      modelID: "tavern-auto/efficient",
     })
     expect(routed.labels.get("reasoning")).toBe("gpt-5.5")
     expect(routed.footer).toBe("gpt-5.5")
@@ -126,11 +126,11 @@ describe("session routed model", () => {
 
     const same = RoutedModelMeta.info(
       undefined,
-      [reason, finish({ providerID: "kilo", modelID: "kilo-auto/efficient" })],
+      [reason, finish({ providerID: "tavern", modelID: "tavern-auto/efficient" })],
       false,
       {
-        providerID: "kilo",
-        modelID: "kilo-auto/efficient",
+        providerID: "tavern",
+        modelID: "tavern-auto/efficient",
       },
     )
     expect(same.labels.size).toBe(0)
@@ -142,8 +142,8 @@ describe("session routed model", () => {
     const parts = [text, finish({ providerID: "qwen", modelID: "qwen/qwen3.7-plus" })]
 
     const routed = RoutedModelMeta.info(undefined, parts, false, {
-      providerID: "kilo",
-      modelID: "kilo-auto/efficient",
+      providerID: "tavern",
+      modelID: "tavern-auto/efficient",
     })
     expect(routed.labels.size).toBe(0)
     expect(routed.footer).toBe("qwen 3.7-plus")
@@ -160,8 +160,8 @@ describe("session routed model", () => {
     ]
 
     const routed = RoutedModelMeta.info(undefined, parts, false, {
-      providerID: "kilo",
-      modelID: "kilo-auto/efficient",
+      providerID: "tavern",
+      modelID: "tavern-auto/efficient",
     })
     expect(routed.labels.get("reasoning")).toBe("qwen 3.7-plus")
     expect(routed.labels.has("reasoning-2")).toBe(false)
@@ -170,22 +170,22 @@ describe("session routed model", () => {
     expect(routed.consumed.has("last")).toBe(false)
   })
 
-  test("reads routed model only for selected Kilo auto models", () => {
-    const meta = { kilocode: { routedModelID: "openai/gpt-5.5-20260423" } }
+  test("reads routed model only for selected Tavern auto models", () => {
+    const meta = { taverncode: { routedModelID: "openai/gpt-5.5-20260423" } }
 
     expect(
       KiloRoutedModel.readAuto(meta, {
-        providerID: ProviderV2.ID.kilo,
-        modelID: "kilo-auto/efficient",
+        providerID: ProviderV2.ID.tavern,
+        modelID: "tavern-auto/efficient",
       }),
     ).toEqual({
-      providerID: ProviderV2.ID.kilo,
+      providerID: ProviderV2.ID.tavern,
       modelID: ModelV2.ID.make("openai/gpt-5.5-20260423"),
     })
 
     expect(
       KiloRoutedModel.readAuto(meta, {
-        providerID: ProviderV2.ID.kilo,
+        providerID: ProviderV2.ID.tavern,
         modelID: "openai/gpt-5.5",
       }),
     ).toBeUndefined()

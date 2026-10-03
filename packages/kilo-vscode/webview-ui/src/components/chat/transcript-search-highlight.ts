@@ -1,13 +1,13 @@
 /**
  * Highlights every rendered occurrence of the current transcript search query
- * using the CSS Custom Highlight API (same technique as kilo-ui's code find
+ * using the CSS Custom Highlight API (same technique as tavern-ui's code find
  * widget). Operates only on currently mounted DOM — virtualized rows that
  * aren't rendered yet are covered by the row-level match list in MessageList,
  * not by this highlighter.
  */
 
-const MATCH_NAME = "kilo-transcript-search-match"
-const ACTIVE_NAME = "kilo-transcript-search-match-active"
+const MATCH_NAME = "tavern-transcript-search-match"
+const ACTIVE_NAME = "tavern-transcript-search-match-active"
 
 interface HighlightCtor {
   new (...ranges: Range[]): unknown

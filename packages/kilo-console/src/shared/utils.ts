@@ -1,4 +1,4 @@
-import type { Provider, ToolListItem } from "@kilocode/sdk/v2/client"
+import type { Provider, ToolListItem } from "@taverncode/sdk/v2/client"
 import type { Snapshot } from "../client"
 
 export type McpMap = NonNullable<Snapshot["effective"]["mcp"]>

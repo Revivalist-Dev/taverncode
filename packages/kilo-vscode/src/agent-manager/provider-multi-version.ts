@@ -1,4 +1,4 @@
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { PLATFORM } from "./constants"
 import type { ProjectContext } from "./project/context"
 import type { AgentManagerInMessage } from "./types"

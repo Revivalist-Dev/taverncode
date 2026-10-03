@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
-import type { AnacondaDesktopStatus } from "@kilocode/sdk/v2"
-import { DOWNLOAD_URL } from "../../../../src/kilocode/anaconda-desktop/domain"
-import { setupView } from "../../../../src/kilocode/anaconda-desktop/tui/model"
+import type { AnacondaDesktopStatus } from "@taverncode/sdk/v2"
+import { DOWNLOAD_URL } from "../../../../src/taverncode/anaconda-desktop/domain"
+import { setupView } from "../../../../src/taverncode/anaconda-desktop/tui/model"
 
 const ready = (toolcall: "supported" | "unsupported" | "unknown" = "supported"): AnacondaDesktopStatus => ({
   type: "ready",

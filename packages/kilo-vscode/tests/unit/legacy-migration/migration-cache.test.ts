@@ -6,13 +6,13 @@ import {
   type MigrationCache,
   type MigrationCacheEntry,
   type MigrationContext,
-} from "../../../src/kilo-provider/handlers/migration"
+} from "../../../src/tavern-provider/handlers/migration"
 
 function makeContext(cache: MigrationCache, sent: unknown[] = []): MigrationContext {
   return {
     client: null,
     extensionContext: {
-      globalStorageUri: { fsPath: "/storage/kilocode.kilo-code" },
+      globalStorageUri: { fsPath: "/storage/taverncode.tavern-code" },
       get secrets() {
         throw new Error("Roo import must not access SecretStorage")
       },

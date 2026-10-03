@@ -26,7 +26,7 @@ function command(launch: Launch) {
 
 function relay() {
   if (typeof KILO_SANDBOX_NETWORK_RELAY_PATH === "undefined") {
-    return { path: fileURLToPath(new URL("./kilo-sandbox-network-relay.ts", import.meta.url)), environment: {} }
+    return { path: fileURLToPath(new URL("./tavern-sandbox-network-relay.ts", import.meta.url)), environment: {} }
   }
   const target = KILO_SANDBOX_NETWORK_RELAY_PATH.startsWith(".")
     ? fileURLToPath(new URL(KILO_SANDBOX_NETWORK_RELAY_PATH, import.meta.url))

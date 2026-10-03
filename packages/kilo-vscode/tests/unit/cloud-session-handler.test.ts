@@ -3,7 +3,7 @@ import {
   handleImportAndSend,
   handleRequestCloudSessionData,
   type CloudSessionContext,
-} from "../../src/kilo-provider/handlers/cloud-session"
+} from "../../src/tavern-provider/handlers/cloud-session"
 
 function stalled(options?: { signal?: AbortSignal }) {
   return new Promise<never>((_resolve, reject) => {
@@ -14,7 +14,7 @@ function stalled(options?: { signal?: AbortSignal }) {
 function context(sent: unknown[]) {
   return {
     client: {
-      kilo: {
+      tavern: {
         cloud: {
           session: {
             get: (_params: { id: string }, options?: { signal?: AbortSignal }) => stalled(options),
@@ -40,7 +40,7 @@ describe("cloud session preview handler", () => {
     const ctx: CloudSessionContext = {
       ...context(sent),
       client: {
-        kilo: {
+        tavern: {
           cloud: {
             session: { import: async () => ({ data: { id: "local", time: { created: 1, updated: 1 } } }) },
           },

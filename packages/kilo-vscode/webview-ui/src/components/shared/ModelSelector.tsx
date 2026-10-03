@@ -1,7 +1,7 @@
 /**
  * ModelSelector component
  * Popover-based selector for choosing a provider/model in the chat prompt area.
- * Uses kilo-ui Popover component (Phase 4.5 of UI implementation plan).
+ * Uses tavern-ui Popover component (Phase 4.5 of UI implementation plan).
  *
  * ModelSelectorBase — reusable core that accepts value/onSelect props.
  * ModelSelector    — thin wrapper wired to session context for chat usage.
@@ -21,11 +21,11 @@ import {
 import type { Accessor, Component } from "solid-js"
 import { Virtualizer, type VirtualizerHandle } from "virtua/solid"
 import { PopupSelector } from "./PopupSelector"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tag } from "@kilocode/kilo-ui/tag"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tag } from "@taverncode/tavern-ui/tag"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useProvider } from "../../context/provider"
 import type { EnrichedModel } from "../../context/provider"
 import { useSession, SessionContext } from "../../context/session"
@@ -122,7 +122,7 @@ export interface ModelSelectorBaseProps {
   allowClear?: boolean
   /** Label shown for the clear option */
   clearLabel?: string
-  /** Include the kilo-auto/small model in the list — defaults to false */
+  /** Include the tavern-auto/small model in the list — defaults to false */
   includeAutoSmall?: boolean
   /** Override the provider catalog for constrained selectors. */
   models?: EnrichedModel[]
@@ -231,8 +231,8 @@ export const ModelSelectorBase: Component<ModelSelectorBaseProps> = (props) => {
     window.addEventListener("mouseup", onUp)
   }
 
-  // Only show models from Kilo Gateway or connected providers.
-  // kilo-auto/small is excluded unless includeAutoSmall is explicitly true.
+  // Only show models from Tavern Gateway or connected providers.
+  // tavern-auto/small is excluded unless includeAutoSmall is explicitly true.
   const visibleModels = createMemo(() => {
     if (props.models) return props.models
     const c = connected()

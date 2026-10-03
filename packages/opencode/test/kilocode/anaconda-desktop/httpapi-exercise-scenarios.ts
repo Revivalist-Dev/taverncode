@@ -2,7 +2,7 @@ import { object } from "../../server/httpapi-exercise/assertions"
 import { http } from "../../server/httpapi-exercise/dsl"
 import type { Scenario } from "../../server/httpapi-exercise/types"
 
-const root = "/kilocode/anaconda-desktop"
+const root = "/taverncode/anaconda-desktop"
 const invalid = (path: string) => `${path}?directory=one&directory=two`
 
 export const anacondaDesktopScenarios: Scenario[] = [

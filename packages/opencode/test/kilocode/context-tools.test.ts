@@ -10,7 +10,7 @@ import { Session } from "../../src/session/session"
 import { SessionCompaction } from "../../src/session/compaction"
 import { Tool } from "@/tool/tool"
 import { Truncate } from "@/tool/truncate"
-import { CompactTool, ContextInfoTool } from "../../src/kilocode/tool/context"
+import { CompactTool, ContextInfoTool } from "../../src/taverncode/tool/context"
 import { disposeAllInstances } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 
@@ -111,7 +111,7 @@ afterEach(async () => {
   await disposeAllInstances()
 })
 
-describe("kilocode.tool.context", () => {
+describe("taverncode.tool.context", () => {
   describe("get_context_info", () => {
     it.instance("reports context information for a completed step", () =>
       Effect.gen(function* () {

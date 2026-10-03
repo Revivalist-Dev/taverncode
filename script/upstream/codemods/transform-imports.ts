@@ -2,11 +2,11 @@
 /**
  * jscodeshift codemod: Transform import statements
  *
- * Transforms imports from opencode packages to kilo packages:
- * - opencode-ai -> @kilocode/cli
- * - @opencode-ai/cli -> @kilocode/cli
- * - @opencode-ai/sdk -> @kilocode/sdk
- * - @opencode-ai/plugin -> @kilocode/plugin
+ * Transforms imports from opencode packages to tavern packages:
+ * - opencode-ai -> @taverncode/cli
+ * - @opencode-ai/cli -> @taverncode/cli
+ * - @opencode-ai/sdk -> @taverncode/sdk
+ * - @opencode-ai/plugin -> @taverncode/plugin
  *
  * Usage with jscodeshift:
  *   npx jscodeshift -t script/upstream/codemods/transform-imports.ts src/
@@ -21,18 +21,18 @@ import { info, success, warn } from "../utils/logger"
 import { defaultConfig } from "../utils/config"
 
 const IMPORT_MAPPINGS: Record<string, string> = {
-  "opencode-ai": "@kilocode/cli",
-  "@opencode-ai/cli": "@kilocode/cli",
-  "@opencode-ai/sdk": "@kilocode/sdk",
-  "@opencode-ai/plugin": "@kilocode/plugin",
+  "@taverncode/cli": "@taverncode/cli",
+  "@taverncode/cli": "@taverncode/cli",
+  "@taverncode/sdk": "@taverncode/sdk",
+  "@taverncode/plugin": "@taverncode/plugin",
 }
 
 /**
  * Get the transformed module specifier, handling subpaths.
  * Examples:
- *   "@opencode-ai/sdk" -> "@kilocode/sdk"
- *   "@opencode-ai/sdk/v2" -> "@kilocode/sdk/v2"
- *   "@opencode-ai/sdk/v2/client" -> "@kilocode/sdk/v2/client"
+ *   "@taverncode/sdk" -> "@taverncode/sdk"
+ *   "@taverncode/sdk/v2" -> "@taverncode/sdk/v2"
+ *   "@taverncode/sdk/v2/client" -> "@taverncode/sdk/v2/client"
  */
 function getTransformedModule(specifier: string): string | undefined {
   // Check exact match first
@@ -40,7 +40,7 @@ function getTransformedModule(specifier: string): string | undefined {
     return IMPORT_MAPPINGS[specifier]
   }
 
-  // Check for subpath imports (e.g., @opencode-ai/sdk/v2)
+  // Check for subpath imports (e.g., @taverncode/sdk/v2)
   for (const [from, to] of Object.entries(IMPORT_MAPPINGS)) {
     if (specifier.startsWith(from + "/")) {
       return to + specifier.slice(from.length)

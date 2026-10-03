@@ -26,7 +26,7 @@ import iconv from "iconv-lite"
  * so UTF BOMs are handled explicitly in {@link encode} to round-trip cleanly.
  *
  * Consumers should import this module as a namespace:
- *   import * as Encoding from "../kilocode/encoding"
+ *   import * as Encoding from "../taverncode/encoding"
  */
 
 export const DEFAULT = "utf-8"

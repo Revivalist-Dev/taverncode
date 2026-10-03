@@ -7,7 +7,7 @@ import {
   isSafeId,
   normalizeMcpEntry,
   substituteParams,
-} from "../../src/kilocode/marketplace/installer"
+} from "../../src/taverncode/marketplace/installer"
 import { tmpdir } from "../fixture/fixture"
 
 describe("marketplace installer helpers", () => {

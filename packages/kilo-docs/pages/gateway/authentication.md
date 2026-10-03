@@ -1,11 +1,11 @@
 ---
 title: "Authentication"
-description: "Learn how to authenticate with the Kilo AI Gateway using API keys, session tokens, and Bring Your Own Key (BYOK)."
+description: "Learn how to authenticate with the Tavern AI Gateway using API keys, session tokens, and Bring Your Own Key (BYOK)."
 ---
 
 # Authentication
 
-The Kilo AI Gateway supports multiple authentication methods depending on your use case.
+The Tavern AI Gateway supports multiple authentication methods depending on your use case.
 
 ## API key authentication
 
@@ -15,7 +15,7 @@ The primary authentication method is a Bearer token passed in the `Authorization
 Authorization: Bearer <your_api_key>
 ```
 
-API keys are JWT tokens tied to your Kilo account. See [how to get your API key](/docs/getting-started/setup-authentication#kilo-gateway-api-key) for step-by-step instructions.
+API keys are JWT tokens tied to your Tavern account. See [how to get your API key](/docs/getting-started/setup-authentication#tavern-gateway-api-key) for step-by-step instructions.
 
 ### Using your API key
 
@@ -25,8 +25,8 @@ API keys are JWT tokens tied to your Kilo account. See [how to get your API key]
 ```typescript
 import { createOpenAI } from "@ai-sdk/openai"
 
-const kilo = createOpenAI({
-  baseURL: "https://api.kilo.ai/api/gateway",
+const tavern = createOpenAI({
+  baseURL: "https://api.tavern.ai/api/gateway",
   apiKey: process.env.KILO_API_KEY,
 })
 ```
@@ -39,7 +39,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.getenv("KILO_API_KEY"),
-    base_url="https://api.kilo.ai/api/gateway",
+    base_url="https://api.tavern.ai/api/gateway",
 )
 ```
 
@@ -47,7 +47,7 @@ client = OpenAI(
 {% tab label="cURL" %}
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"model": "anthropic/claude-sonnet-4.5", "messages": [{"role": "user", "content": "Hello"}]}'
@@ -61,7 +61,7 @@ curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
 When making requests on behalf of an organization, include the organization ID in the request header:
 
 ```
-X-KiloCode-OrganizationId: your_org_id
+X-TavernCode-OrganizationId: your_org_id
 ```
 
 Organization tokens are scoped with a 15-minute expiry and enforce the organization's policies, including model allow lists, provider restrictions, and per-user spending limits.
@@ -74,7 +74,7 @@ Free models include models tagged with `:free` in their model ID, such as `minim
 
 ## Bring Your Own Key (BYOK)
 
-BYOK lets you use your own provider API keys with the Kilo AI Gateway. When a BYOK key is configured, requests are sent to the provider using your key. You are billed directly by the provider -- Kilo does not add any markup.
+BYOK lets you use your own provider API keys with the Tavern AI Gateway. When a BYOK key is configured, requests are sent to the provider using your key. You are billed directly by the provider -- Tavern does not add any markup.
 
 ### Supported BYOK providers
 
@@ -107,11 +107,11 @@ BYOK lets you use your own provider API keys with the Kilo AI Gateway. When a BY
 
 ### How BYOK works
 
-1. Add your provider API key in the [Kilo dashboard](https://app.kilo.ai) or through your Kilo Code extension settings
+1. Add your provider API key in the [Tavern dashboard](https://app.tavern.ai) or through your Tavern Code extension settings
 2. Keys are encrypted at rest using AES-256 encryption
 3. When you make a request for a model from that provider, the gateway automatically uses your key
-4. Usage is tracked but not billed to your Kilo balance (cost is set to $0)
-5. If your BYOK key fails, the request will not automatically fall back to Kilo's keys
+4. Usage is tracked but not billed to your Tavern balance (cost is set to $0)
+5. If your BYOK key fails, the request will not automatically fall back to Tavern's keys
 
 BYOK keys can be configured at the personal level or at the organization level. Organization-level keys apply to all members of the organization and require owner or billing manager access to manage.
 
@@ -123,7 +123,7 @@ The gateway accepts the following headers:
 |---|---|---|
 | `Authorization` | Yes (unless free model) | `Bearer <api_key>` |
 | `Content-Type` | Yes | `application/json` |
-| `X-KiloCode-OrganizationId` | No | Organization context for org-scoped requests |
-| `X-KiloCode-TaskId` | No | Task identifier for prompt cache keying |
-| `X-KiloCode-Version` | No | Client version string |
-| `x-kilocode-mode` | No | Mode hint for `kilo-auto` model routing |
+| `X-TavernCode-OrganizationId` | No | Organization context for org-scoped requests |
+| `X-TavernCode-TaskId` | No | Task identifier for prompt cache keying |
+| `X-TavernCode-Version` | No | Client version string |
+| `x-taverncode-mode` | No | Mode hint for `tavern-auto` model routing |

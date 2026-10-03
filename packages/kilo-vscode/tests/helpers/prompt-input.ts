@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 export async function open(page: Page) {
   await page.goto(`/iframe.html?id=prompt-input--default-420&viewMode=story&globals=${GLOBALS}`, { waitUntil: "load" })

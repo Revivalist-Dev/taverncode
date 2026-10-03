@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { forkTargetDirectory } from "@/kilocode/server/routes/fork-routing"
+import { forkTargetDirectory } from "@/taverncode/server/routes/fork-routing"
 
 function url(path: string) {
   return new URL(path, "http://localhost")
@@ -7,15 +7,15 @@ function url(path: string) {
 
 describe("forkTargetDirectory", () => {
   test("honors the explicit directory query on a fork request", () => {
-    expect(forkTargetDirectory("POST", url("/session/ses_abc/fork?directory=/repo/.kilo/worktrees/x"), {})).toBe(
-      "/repo/.kilo/worktrees/x",
+    expect(forkTargetDirectory("POST", url("/session/ses_abc/fork?directory=/repo/.tavern/worktrees/x"), {})).toBe(
+      "/repo/.tavern/worktrees/x",
     )
   })
 
-  test("falls back to the x-kilo-directory header when no query is present", () => {
+  test("falls back to the x-tavern-directory header when no query is present", () => {
     expect(
-      forkTargetDirectory("POST", url("/session/ses_abc/fork"), { "x-kilo-directory": "/repo/.kilo/worktrees/y" }),
-    ).toBe("/repo/.kilo/worktrees/y")
+      forkTargetDirectory("POST", url("/session/ses_abc/fork"), { "x-tavern-directory": "/repo/.tavern/worktrees/y" }),
+    ).toBe("/repo/.tavern/worktrees/y")
   })
 
   test("returns undefined when the fork request carries no target directory", () => {

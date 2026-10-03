@@ -1,11 +1,11 @@
 ---
 title: "Custom Rules"
-description: "Define custom rules for Kilo Code behavior"
+description: "Define custom rules for Tavern Code behavior"
 ---
 
 # Custom Rules
 
-Custom rules provide a powerful way to define project-specific and global behaviors and constraints for the Kilo Code AI agent. With custom rules, you can ensure consistent formatting, restrict access to sensitive files, enforce coding standards, and customize the AI's behavior for your specific project needs or across all projects.
+Custom rules provide a powerful way to define project-specific and global behaviors and constraints for the Tavern Code AI agent. With custom rules, you can ensure consistent formatting, restrict access to sensitive files, enforce coding standards, and customize the AI's behavior for your specific project needs or across all projects.
 
 ## Overview
 
@@ -21,7 +21,7 @@ Custom rules can be written in plain text, but Markdown format is recommended fo
 
 ## Rule Types
 
-Kilo Code supports two types of custom rules:
+Tavern Code supports two types of custom rules:
 
 - **Project Rules**: Apply only to the current project workspace
 - **Global Rules**: Apply across all projects and workspaces
@@ -33,35 +33,35 @@ Kilo Code supports two types of custom rules:
 
 ### Project Rules
 
-Project rules are configured via the `instructions` key in your project's `kilo.jsonc` file. You can edit this file directly or use the **Settings** webview to manage the `instructions` configuration. Each entry points to a file path or glob pattern:
+Project rules are configured via the `instructions` key in your project's `tavern.jsonc` file. You can edit this file directly or use the **Settings** webview to manage the `instructions` configuration. Each entry points to a file path or glob pattern:
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
-  "instructions": [".kilo/rules/formatting.md", ".kilo/rules/*.md"],
+  "instructions": [".tavern/rules/formatting.md", ".tavern/rules/*.md"],
 }
 ```
 
-You can also place rule files in the **`.kilo/`** directory structure:
+You can also place rule files in the **`.tavern/`** directory structure:
 
 ```
 project/
-├── .kilo/
+├── .tavern/
 │   ├── rules/
 │   │   ├── formatting.md
 │   │   ├── restricted_files.md
 │   │   └── naming_conventions.md
-├── kilo.json
+├── tavern.json
 ├── src/
 └── ...
 ```
 
 ### Global Rules
 
-Global rules are configured via the `instructions` key in your global `kilo.jsonc` config file (typically at `~/.config/kilo/kilo.jsonc`).
+Global rules are configured via the `instructions` key in your global `tavern.jsonc` config file (typically at `~/.config/tavern/tavern.jsonc`).
 
 {% callout type="note" title="Migration" %}
-The extension is backward compatible with `.kilocode/rules/` directories. Existing rules will continue to work, but migrating to `kilo.jsonc` is recommended.
+The extension is backward compatible with `.taverncode/rules/` directories. Existing rules will continue to work, but migrating to `tavern.jsonc` is recommended.
 {% /callout %}
 
 {% /tab %}
@@ -69,35 +69,35 @@ The extension is backward compatible with `.kilocode/rules/` directories. Existi
 
 ### Project Rules
 
-Project rules are configured via the `instructions` key in your project's `kilo.jsonc` file. Each entry points to a file path or glob pattern:
+Project rules are configured via the `instructions` key in your project's `tavern.jsonc` file. Each entry points to a file path or glob pattern:
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
-  "instructions": [".kilo/rules/formatting.md", ".kilo/rules/*.md"],
+  "instructions": [".tavern/rules/formatting.md", ".tavern/rules/*.md"],
 }
 ```
 
-You can also place rule files in the **`.kilo/`** directory structure:
+You can also place rule files in the **`.tavern/`** directory structure:
 
 ```
 project/
-├── .kilo/
+├── .tavern/
 │   ├── rules/
 │   │   ├── formatting.md
 │   │   ├── restricted_files.md
 │   │   └── naming_conventions.md
-├── kilo.json
+├── tavern.json
 ├── src/
 └── ...
 ```
 
 ### Global Rules
 
-Global rules are configured via the `instructions` key in your global `kilo.jsonc` config file (typically at `~/.config/kilo/kilo.jsonc`).
+Global rules are configured via the `instructions` key in your global `tavern.jsonc` config file (typically at `~/.config/tavern/tavern.jsonc`).
 
 {% callout type="note" title="Migration" %}
-The CLI is backward compatible with `.kilocode/rules/` directories. Existing rules will continue to work, but migrating to `kilo.jsonc` is recommended.
+The CLI is backward compatible with `.taverncode/rules/` directories. Existing rules will continue to work, but migrating to `tavern.jsonc` is recommended.
 {% /callout %}
 
 {% /tab %}
@@ -108,19 +108,19 @@ The CLI is backward compatible with `.kilocode/rules/` directories. Existing rul
 {% tabs %}
 {% tab label="VSCode" %}
 
-Rules are managed by editing the `instructions` array in your `kilo.jsonc` config file. You can also use the **Settings** webview in VS Code to edit the configuration.
+Rules are managed by editing the `instructions` array in your `tavern.jsonc` config file. You can also use the **Settings** webview in VS Code to edit the configuration.
 
 - **Add a rule**: Add a file path or glob pattern to the `instructions` array
 - **Remove a rule**: Remove the entry from the array
-- **Disable a rule temporarily**: Comment out the line in `kilo.jsonc` (JSONC supports `//` comments)
+- **Disable a rule temporarily**: Comment out the line in `tavern.jsonc` (JSONC supports `//` comments)
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
   "instructions": [
-    ".kilo/rules/formatting.md",
-    // ".kilo/rules/experimental.md"  -- temporarily disabled
-    ".kilo/rules/naming_conventions.md",
+    ".tavern/rules/formatting.md",
+    // ".tavern/rules/experimental.md"  -- temporarily disabled
+    ".tavern/rules/naming_conventions.md",
   ],
 }
 ```
@@ -128,19 +128,19 @@ Rules are managed by editing the `instructions` array in your `kilo.jsonc` confi
 {% /tab %}
 {% tab label="CLI" %}
 
-Rules are managed by editing the `instructions` array in your `kilo.jsonc` config file directly.
+Rules are managed by editing the `instructions` array in your `tavern.jsonc` config file directly.
 
 - **Add a rule**: Add a file path or glob pattern to the `instructions` array
 - **Remove a rule**: Remove the entry from the array
-- **Disable a rule temporarily**: Comment out the line in `kilo.jsonc` (JSONC supports `//` comments)
+- **Disable a rule temporarily**: Comment out the line in `tavern.jsonc` (JSONC supports `//` comments)
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
   "instructions": [
-    ".kilo/rules/formatting.md",
-    // ".kilo/rules/experimental.md"  -- temporarily disabled
-    ".kilo/rules/naming_conventions.md",
+    ".tavern/rules/formatting.md",
+    // ".tavern/rules/experimental.md"  -- temporarily disabled
+    ".tavern/rules/naming_conventions.md",
   ],
 }
 ```
@@ -153,29 +153,29 @@ Rules are managed by editing the `instructions` array in your `kilo.jsonc` confi
 {% tabs %}
 {% tab label="VSCode" %}
 
-Rules are loaded in the order they appear in the `instructions` array in `kilo.jsonc`:
+Rules are loaded in the order they appear in the `instructions` array in `tavern.jsonc`:
 
-1. **Global instructions** from the global `kilo.jsonc` config
-2. **Project instructions** from the project's `kilo.jsonc`
+1. **Global instructions** from the global `tavern.jsonc` config
+2. **Project instructions** from the project's `tavern.jsonc`
 
 Files matched by glob patterns are loaded in filesystem order. Project-level instructions take precedence over global instructions for conflicting directives.
 
 {% callout type="note" title="Backward Compatibility" %}
-If `.kilocode/rules/` directories exist in your project, their contents are automatically included for backward compatibility. To fully migrate, move your rule files and reference them in `kilo.jsonc`.
+If `.taverncode/rules/` directories exist in your project, their contents are automatically included for backward compatibility. To fully migrate, move your rule files and reference them in `tavern.jsonc`.
 {% /callout %}
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Rules are loaded in the order they appear in the `instructions` array in `kilo.jsonc`:
+Rules are loaded in the order they appear in the `instructions` array in `tavern.jsonc`:
 
-1. **Global instructions** from the global `kilo.jsonc` config
-2. **Project instructions** from the project's `kilo.jsonc`
+1. **Global instructions** from the global `tavern.jsonc` config
+2. **Project instructions** from the project's `tavern.jsonc`
 
 Files matched by glob patterns are loaded in filesystem order. Project-level instructions take precedence over global instructions for conflicting directives.
 
 {% callout type="note" title="Backward Compatibility" %}
-If `.kilocode/rules/` directories exist in your project, their contents are automatically included for backward compatibility. To fully migrate, move your rule files and reference them in `kilo.jsonc`.
+If `.taverncode/rules/` directories exist in your project, their contents are automatically included for backward compatibility. To fully migrate, move your rule files and reference them in `tavern.jsonc`.
 {% /callout %}
 
 {% /tab %}
@@ -188,34 +188,34 @@ If `.kilocode/rules/` directories exist in your project, their contents are auto
 
 ### Using the Settings UI or Config File
 
-1. Create a `kilo.jsonc` file in your project root (if it doesn't exist)
-2. Create a `.kilo/rules/` directory (or any directory you prefer)
+1. Create a `tavern.jsonc` file in your project root (if it doesn't exist)
+2. Create a `.tavern/rules/` directory (or any directory you prefer)
 3. Write your rule as a Markdown file in that directory
-4. Add the file path or a glob pattern to the `instructions` array in `kilo.jsonc`
+4. Add the file path or a glob pattern to the `instructions` array in `tavern.jsonc`
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
-  "instructions": [".kilo/rules/my-new-rule.md"],
+  "instructions": [".tavern/rules/my-new-rule.md"],
 }
 ```
 
-Rules are applied on the next interaction. You can also edit `kilo.jsonc` through the **Settings** webview in VS Code.
+Rules are applied on the next interaction. You can also edit `tavern.jsonc` through the **Settings** webview in VS Code.
 
 {% /tab %}
 {% tab label="CLI" %}
 
 ### Using the Config File
 
-1. Create a `kilo.jsonc` file in your project root (if it doesn't exist)
-2. Create a `.kilo/rules/` directory (or any directory you prefer)
+1. Create a `tavern.jsonc` file in your project root (if it doesn't exist)
+2. Create a `.tavern/rules/` directory (or any directory you prefer)
 3. Write your rule as a Markdown file in that directory
-4. Add the file path or a glob pattern to the `instructions` array in `kilo.jsonc`
+4. Add the file path or a glob pattern to the `instructions` array in `tavern.jsonc`
 
 ```jsonc
-// kilo.jsonc
+// tavern.jsonc
 {
-  "instructions": [".kilo/rules/my-new-rule.md"],
+  "instructions": [".tavern/rules/my-new-rule.md"],
 }
 ```
 
@@ -250,7 +250,7 @@ Files in the list contain sensitive data, they MUST NOT be read
 
 This rule prevents the AI from reading or accessing sensitive files, even if explicitly requested to do so.
 
-{% image src="/docs/img/custom-rules/custom-rules.png" alt="Kilo Code ignores request to read sensitive file" width="600" /%}
+{% image src="/docs/img/custom-rules/custom-rules.png" alt="Tavern Code ignores request to read sensitive file" width="600" /%}
 
 ## Use Cases
 

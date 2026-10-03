@@ -1,8 +1,8 @@
-# Feature Parity Plan — Kilo Code VS Code Extension (Rebuild)
+# Feature Parity Plan — Tavern Code VS Code Extension (Rebuild)
 
 ## Overview
 
-This extension is a **ground-up rebuild** of the [old Kilo Code extension](https://github.com/Kilo-Org/kilocode-legacy) using Kilo CLI as the backend. Rather than migrating the old extension's codebase, we started fresh with a Solid.js webview, a CLI server manager, and a message-based protocol between extension host and webview. This new extension lives in the [kilocode monorepo](https://github.com/Kilo-Org/kilocode/tree/main/packages/kilo-vscode).
+This extension is a **ground-up rebuild** of the [old Tavern Code extension](https://github.com/Kilo-Org/kilocode-legacy) using Tavern CLI as the backend. Rather than migrating the old extension's codebase, we started fresh with a Solid.js webview, a CLI server manager, and a message-based protocol between extension host and webview. This new extension lives in the [taverncode monorepo](https://github.com/Kilo-Org/kilocode/tree/main/packages/tavern-vscode).
 
 This document tracks remaining work needed for feature parity with the old extension. Each feature links to its detailed parity requirement doc. Features sourced from the [GitHub project board](https://github.com/orgs/Kilo-Org/projects/25/views/1) include issue links.
 
@@ -26,7 +26,7 @@ This document tracks remaining work needed for feature parity with the old exten
 |---|---|---|---|
 | [Authentication & Enterprise](non-agent-features/authentication-organization-enterprise-enforcement.md) | Org feature flags, MDM policy enforcement | CLI handles its auth; extension handles org/MDM | P1 |
 | [Auto-Purge](non-agent-features/auto-purge.md) | Scheduled cleanup of old session/task storage | Extension-side (storage ownership TBD) | P3 |
-| [Cloud Task Support](non-agent-features/cloud-task-support.md) | Upload local sessions to cloud, real-time sync, conflict resolution | Kilo cloud API + CLI; extension provides UI | P2 |
+| [Cloud Task Support](non-agent-features/cloud-task-support.md) | Upload local sessions to cloud, real-time sync, conflict resolution | Tavern cloud API + CLI; extension provides UI | P2 |
 | [Code Reviews](non-agent-features/code-reviews.md) | Local review mode, automated AI review of uncommitted/branch changes | CLI (partial); extension for VS Code review UX | P2 |
 | [Codebase Indexing & Semantic Search](non-agent-features/codebase-indexing-semantic-search.md) | Vector indexing, semantic search, embeddings infrastructure | CLI has grep/glob endpoints; semantic indexing is extension or cloud | P2 |
 | [Contribution Tracking](non-agent-features/contribution-tracking.md) | AI attribution tracking, line fingerprinting, reporting | Extension-side | P3 |
@@ -95,7 +95,7 @@ Open issues from the [GitHub project board](https://github.com/orgs/Kilo-Org/pro
 | [Publish to OpenVSX](infrastructure/openvsx-publish.md) | Add `ovsx publish` step to CI/CD pipeline after VS Code Marketplace publish | P3 |
 | [HTTP Request Timeouts](infrastructure/http-request-timeouts.md) | Add timeouts to SDK calls (only health check has timeout currently) | P1 |
 | [VSCode Error Notifications](infrastructure/vscode-error-notifications.md) | Error notifications for CLI start failure, SSE disconnect | P1 |
-| [Dedicated Output Channel](infrastructure/dedicated-output-channel.md) | General "Kilo Code" output channel and centralized logging utility | P2 |
+| [Dedicated Output Channel](infrastructure/dedicated-output-channel.md) | General "Tavern Code" output channel and centralized logging utility | P2 |
 
 ### CLI-Side (tracked here for awareness)
 
@@ -114,7 +114,7 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 ### Security
 
 - [ ] **Review and tighten CSP** — The current policy in [`KiloProvider._getHtmlForWebview()`](../src/KiloProvider.ts:829) has several areas to audit:
-  - `style-src 'unsafe-inline'` is broadly permissive — investigate whether nonce-based style loading is feasible now that kilo-ui styles are bundled
+  - `style-src 'unsafe-inline'` is broadly permissive — investigate whether nonce-based style loading is feasible now that tavern-ui styles are bundled
   - `connect-src http://127.0.0.1:* http://localhost:*` allows connections to _any_ localhost port — tighten to the actual CLI server port once known at runtime
   - `img-src … https:` allows images from any HTTPS origin — scope to `${webview.cspSource} data:` unless external images are explicitly needed
   - `'wasm-unsafe-eval'` in `script-src` was added for shiki — confirm it is still required and document the reason
@@ -136,7 +136,7 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 
 ### Packaging & Marketplace
 
-- [ ] **Bundle size audit** — With kilo-ui and its transitive dependencies (shiki, marked, katex, dompurify, etc.) now bundled, measure `dist/webview.js` size and verify the total `.vsix` package size is acceptable
+- [ ] **Bundle size audit** — With tavern-ui and its transitive dependencies (shiki, marked, katex, dompurify, etc.) now bundled, measure `dist/webview.js` size and verify the total `.vsix` package size is acceptable
 - [ ] **`.vscodeignore` review** — Ensure only necessary files are included in the package (no `docs/`, `src/`, test artifacts, or development scripts)
 - [ ] **Marketplace metadata** — Verify [`README.md`](../README.md), [`CHANGELOG.md`](../CHANGELOG.md), publisher name, extension icon, and [`package.json`](../package.json) fields (`displayName`, `description`, `categories`, `keywords`, `repository`) are production-ready
 - [ ] **`activationEvents` review** — Confirm the extension only activates when needed (not `*`), to avoid impacting VS Code startup time
@@ -144,7 +144,7 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 
 ### Logging & Observability
 
-- [ ] **Dedicated output channel** — All logging currently goes to `console.log` mixed with other extensions ([details](infrastructure/dedicated-output-channel.md)). Create a dedicated "Kilo Code" output channel before production
+- [ ] **Dedicated output channel** — All logging currently goes to `console.log` mixed with other extensions ([details](infrastructure/dedicated-output-channel.md)). Create a dedicated "Tavern Code" output channel before production
 - [ ] **Remove or guard verbose logging** — Many `console.log` calls with emojis and debug detail exist in [`KiloProvider.ts`](../src/KiloProvider.ts). Gate behind a debug flag or move to the output channel at appropriate log levels
 
 ---
@@ -159,13 +159,13 @@ Before publishing this extension to the VS Code Marketplace or deploying to user
 - **CLI backend owns**: agent orchestration, MCP lifecycle, tool execution, search/grep/glob, session storage, permissions runtime, custom commands, skills, and fast edits.
 - **Extension owns**: VS Code API integrations (code actions, inline completions, terminal, SCM, settings sync), webview rendering, auth mediation, and any feature not supported by CLI.
 
-### kilo-ui Shared Library
+### tavern-ui Shared Library
 
-- **kilo-ui shared library**: The webview now heavily uses `@kilocode/kilo-ui` for UI components. A `DataBridge` component in App.tsx adapts the session store to kilo-ui's `DataProvider` expected shape, enabling shared components like `<KiloMessage>` to work with the extension's data model.
+- **tavern-ui shared library**: The webview now heavily uses `@taverncode/tavern-ui` for UI components. A `DataBridge` component in App.tsx adapts the session store to tavern-ui's `DataProvider` expected shape, enabling shared components like `<KiloMessage>` to work with the extension's data model.
 
 ### Key Differences from Old Extension
 
 - No `Task.ts` or `webviewMessageHandler.ts` — the CLI server replaces the old in-process agent loop.
-- Permissions flow through CLI's ask/reply model, not extension-side approval queues. Permissions are rendered through kilo-ui's DataProvider pattern, not a standalone PermissionDialog.
+- Permissions flow through CLI's ask/reply model, not extension-side approval queues. Permissions are rendered through tavern-ui's DataProvider pattern, not a standalone PermissionDialog.
 - Session history is CLI-managed, not stored in VS Code global state.
 - MCP servers are configured and managed by the CLI, not the extension.

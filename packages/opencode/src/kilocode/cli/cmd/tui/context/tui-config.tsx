@@ -2,7 +2,7 @@
  * Reactive TUI config provider with hot reload.
  *
  * Replaces the static upstream `TuiConfigProvider` so declarative TUI settings apply live when
- * changed from the Kilo Console. Fetched config stays serializable and is resolved into a fresh
+ * changed from the Tavern Console. Fetched config stays serializable and is resolved into a fresh
  * OpenTUI keymap lookup before the reactive store is reconciled.
  */
 import { createContext, useContext, type ParentProps } from "solid-js"
@@ -10,7 +10,7 @@ import { createStore, reconcile } from "solid-js/store"
 import { LeaderTimeoutDefault, TuiConfig, TuiConfigProvider, useTuiConfig } from "@tui/config"
 import { TuiKeybind } from "@tui/config/keybind"
 import { createBindingLookup } from "@opentui/keymap/extras"
-import { KiloTitleIcon } from "@/kilocode/cli/cmd/tui/title-icon"
+import { KiloTitleIcon } from "@/taverncode/cli/cmd/tui/title-icon"
 
 export type SetTuiConfig = (next: TuiConfig.Info) => void
 
@@ -30,7 +30,7 @@ export namespace KiloTuiConfig {
           notifications: next.attention?.notifications ?? true,
           sound: next.attention?.sound ?? true,
           volume: next.attention?.volume ?? 0.4,
-          sound_pack: next.attention?.sound_pack ?? "kilo.default",
+          sound_pack: next.attention?.sound_pack ?? "tavern.default",
           sounds: next.attention?.sounds ?? {},
         },
         keybinds: createBindingLookup(TuiKeybind.toBindingConfig(keybinds), {

@@ -2,14 +2,14 @@ import z from "zod"
 import path from "path"
 import { realpathSync } from "node:fs"
 import { Effect, Schema } from "effect"
-import { type IndexingTelemetryEvent, type VectorStoreSearchResult } from "@kilocode/kilo-indexing/engine"
-import { toIndexingConfigInput, type IndexingConfig } from "@kilocode/kilo-indexing/config"
-import { hasIndexingPlugin } from "@kilocode/kilo-indexing/detect"
-import { IndexingStatus, disabledIndexingStatus } from "@kilocode/kilo-indexing/status"
-import { Telemetry } from "@kilocode/kilo-telemetry"
-import { fetchKiloEmbeddingModelCatalog } from "@kilocode/kilo-gateway"
-import { allowed, message } from "@opencode-ai/core/kilocode/fff"
-import { Instance } from "@/kilocode/instance"
+import { type IndexingTelemetryEvent, type VectorStoreSearchResult } from "@taverncode/tavern-indexing/engine"
+import { toIndexingConfigInput, type IndexingConfig } from "@taverncode/tavern-indexing/config"
+import { hasIndexingPlugin } from "@taverncode/tavern-indexing/detect"
+import { IndexingStatus, disabledIndexingStatus } from "@taverncode/tavern-indexing/status"
+import { Telemetry } from "@taverncode/tavern-telemetry"
+import { fetchKiloEmbeddingModelCatalog } from "@taverncode/tavern-gateway"
+import { allowed, message } from "@opencode-ai/core/taverncode/fff"
+import { Instance } from "@/taverncode/instance"
 import { Bus } from "@/bus"
 import { Config } from "@/config/config"
 import { AppRuntime } from "@/effect/app-runtime"
@@ -28,7 +28,7 @@ import { LanceDBRuntime } from "./lancedb"
 import { indexingWithKiloDefault, resolveKiloIndexingAuth, type KiloIndexingAuth } from "./indexing-auth"
 import { primaryWorktree } from "./primary-worktree"
 
-const log = Log.create({ service: "kilocode-indexing" })
+const log = Log.create({ service: "taverncode-indexing" })
 const auth = makeRuntime(Auth.Service, Auth.defaultLayer)
 const consent = new Map<string, boolean>()
 const missing = () => disabledIndexingStatus("Indexing plugin is not enabled for this workspace.")
@@ -36,7 +36,7 @@ const noWorkspace = () =>
   disabledIndexingStatus("Codebase indexing is disabled because no workspace folder is open in VS Code.")
 const unsafeRoot = () => disabledIndexingStatus(message)
 const noConsent = () =>
-  disabledIndexingStatus("Codebase indexing is disabled until you enable it for this project in Kilo Settings.")
+  disabledIndexingStatus("Codebase indexing is disabled until you enable it for this project in Tavern Settings.")
 
 export const IndexingModelError = NamedError.create("IndexingModelError", {
   model: Schema.String,
@@ -84,12 +84,12 @@ function pending(): z.infer<typeof IndexingStatus> {
 }
 
 async function kiloAuth(cfg: Config.Info): Promise<KiloIndexingAuth> {
-  const info = await auth.runPromise((svc) => svc.get("kilo"))
+  const info = await auth.runPromise((svc) => svc.get("tavern"))
   return resolveKiloIndexingAuth({ config: cfg, auth: info })
 }
 
 function enrichKilo(input: ReturnType<typeof toIndexingConfigInput>, auth: KiloIndexingAuth) {
-  if (input.embedderProvider !== "kilo") return input
+  if (input.embedderProvider !== "tavern") return input
 
   return {
     ...input,
@@ -100,7 +100,7 @@ function enrichKilo(input: ReturnType<typeof toIndexingConfigInput>, auth: KiloI
 }
 
 async function model(input: ReturnType<typeof toIndexingConfigInput>, auth: KiloIndexingAuth) {
-  if (input.embedderProvider !== "kilo" || !input.enabled) return input
+  if (input.embedderProvider !== "tavern" || !input.enabled) return input
 
   const catalog = await fetchKiloEmbeddingModelCatalog({ baseURL: auth.baseUrl, token: auth.apiKey })
 
@@ -124,7 +124,7 @@ async function model(input: ReturnType<typeof toIndexingConfigInput>, auth: Kilo
   const found = catalog.models.find((item) => item.id === fallback)
   if (!found) {
     if (input.modelId || input.modelDimension) {
-      log.warn("ignoring unsupported Kilo embedding model configuration", { model: input.modelId })
+      log.warn("ignoring unsupported Tavern embedding model configuration", { model: input.modelId })
     }
     return { ...input, modelId: undefined, modelDimension: undefined }
   }
@@ -556,7 +556,7 @@ export namespace KiloIndexing {
       const fallback = await fetchKiloEmbeddingModelCatalog()
       return fallback.models.length > 0 ? fallback : catalog
     } catch (err) {
-      log.warn("falling back to public Kilo embedding model catalog", { err })
+      log.warn("falling back to public Tavern embedding model catalog", { err })
       return fetchKiloEmbeddingModelCatalog()
     }
   }

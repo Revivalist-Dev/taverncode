@@ -1,8 +1,8 @@
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { List } from "@kilocode/kilo-ui/list"
-import { ProviderIcon } from "@kilocode/kilo-ui/provider-icon"
-import { Tag } from "@kilocode/kilo-ui/tag"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { List } from "@taverncode/tavern-ui/list"
+import { ProviderIcon } from "@taverncode/tavern-ui/provider-icon"
+import { Tag } from "@taverncode/tavern-ui/tag"
 import { Show, createMemo } from "solid-js"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -124,8 +124,8 @@ const ProviderSelectDialog = () => {
             >
               <span
                 style={{
-                  "font-size": "var(--kilo-font-size-14)",
-                  "line-height": "var(--kilo-font-size-20)",
+                  "font-size": "var(--tavern-font-size-14)",
+                  "line-height": "var(--tavern-font-size-20)",
                   color: "var(--vscode-foreground)",
                 }}
               >

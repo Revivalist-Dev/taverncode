@@ -10,7 +10,7 @@ import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createKiloClient } from "@taverncode/sdk/v2"
 import { validateSession } from "../../src/cli/tui/validate-session"
 import { InstanceBootstrap } from "../../src/project/bootstrap"
 import { InstanceStore } from "../../src/project/instance-store"
@@ -24,7 +24,7 @@ import { TestLLMServer } from "../lib/llm-server"
 import path from "path"
 import { resetDatabase } from "../fixture/db"
 import { disposeAllInstances, TestInstance, tmpdirScoped } from "../fixture/fixture"
-import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect" // kilocode_change
+import { awaitWithTimeout, pollWithTimeout, testEffect } from "../lib/effect" // taverncode_change
 import { testProviderConfig } from "../lib/test-provider"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -179,14 +179,14 @@ function firstPartText(value: unknown) {
   return record(array(record(value).parts)[0]).text
 }
 
-// kilocode_change start
+// taverncode_change start
 function texts(value: unknown) {
   return array(value)
     .flatMap((item) => array(record(item).parts))
     .map((part) => record(part).text)
     .filter((text): text is string => typeof text === "string")
 }
-// kilocode_change end
+// taverncode_change end
 
 function sessionTitles(value: unknown) {
   return array(value)
@@ -294,7 +294,7 @@ function writeStandardFiles(dir: string) {
 function writeProjectSkill(dir: string) {
   return FSUtil.Service.use((fs) =>
     fs.writeWithDirs(
-      path.join(dir, ".kilo", "skills", "project-rest-skill", "SKILL.md"), // kilocode_change
+      path.join(dir, ".tavern", "skills", "project-rest-skill", "SKILL.md"), // taverncode_change
       `---
 name: project-rest-skill
 description: A project skill visible to REST API prompts.
@@ -368,25 +368,25 @@ describe("HttpApi SDK", () => {
     ({ sdk, directory }) =>
       Effect.gen(function* () {
         const file = yield* call(() => sdk.file.read({ path: "hello.txt" }))
-        const raw = yield* call(() => sdk.v2.fs.read({ path: "hello.txt" })) // kilocode_change
+        const raw = yield* call(() => sdk.v2.fs.read({ path: "hello.txt" })) // taverncode_change
         const session = yield* call(() => sdk.session.create({ title: "sdk" }))
-        const v2session = yield* call(() => sdk.v2.session.create({ agent: "build" })) // kilocode_change
+        const v2session = yield* call(() => sdk.v2.session.create({ agent: "build" })) // taverncode_change
         const listed = yield* call(() => sdk.session.list({ roots: true, limit: 10 }))
 
         expect(file.response!.status).toBe(200)
         expect(file.data).toMatchObject({ content: "hello" })
-        // kilocode_change start
+        // taverncode_change start
         expect(raw.response!.status).toBe(200)
         const body = raw.data
         if (!body) throw new Error("missing V2 file body")
         const content =
           body instanceof Blob ? yield* Effect.promise(() => body.text()) : Buffer.from(body as unknown as Uint8Array).toString()
         expect(content).toBe("hello")
-        // kilocode_change end
+        // taverncode_change end
         expect(session.response!.status).toBe(200)
         expect(session.data).toMatchObject({ title: "sdk" })
-        expect({ status: v2session.response!.status, error: v2session.error }).toEqual({ status: 200, error: undefined }) // kilocode_change
-        expect(v2session.data).toMatchObject({ data: { location: { directory } } }) // kilocode_change
+        expect({ status: v2session.response!.status, error: v2session.error }).toEqual({ status: 200, error: undefined }) // taverncode_change
+        expect(v2session.data).toMatchObject({ data: { location: { directory } } }) // taverncode_change
         expect(listed.response!.status).toBe(200)
         expect(listed.data?.map((item) => item.id)).toContain(session.data?.id)
 
@@ -423,17 +423,17 @@ describe("HttpApi SDK", () => {
         expect(url.searchParams.get("workspace")).toBe(workspaceID)
         expect(url.searchParams.get("location[directory]")).toBe(directory)
         expect(url.searchParams.get("location[workspace]")).toBe(workspaceID)
-        expect(request!.headers.has("x-kilo-directory")).toBe(false)
-        expect(request!.headers.has("x-kilo-workspace")).toBe(false)
+        expect(request!.headers.has("x-tavern-directory")).toBe(false)
+        expect(request!.headers.has("x-tavern-workspace")).toBe(false)
 
-        // kilocode_change start - encoded legacy directory headers still route on payload requests
+        // taverncode_change start - encoded legacy directory headers still route on payload requests
         const legacy = yield* client("raw", undefined, {
-          headers: { "x-kilo-directory": encodeURIComponent(directory) },
+          headers: { "x-tavern-directory": encodeURIComponent(directory) },
         })
         const legacySession = yield* call(() => legacy.v2.session.create({ agent: "build" }))
         expect(legacySession.response!.status).toBe(200)
         expect(legacySession.data).toMatchObject({ data: { location: { directory } } })
-        // kilocode_change end
+        // taverncode_change end
       }),
     ),
   )
@@ -525,18 +525,18 @@ describe("HttpApi SDK", () => {
       Effect.gen(function* () {
         const missingSdk = yield* client("raw", directory, { password: "secret" })
         const missing = yield* capture(() => missingSdk.file.read({ path: "hello.txt" }))
-        // kilocode_change start - match Hono AuthMiddleware username default ("kilo")
+        // taverncode_change start - match Hono AuthMiddleware username default ("tavern")
         const badSdk = yield* client("raw", directory, {
           password: "secret",
-          headers: { authorization: authorization("kilo", "wrong") },
+          headers: { authorization: authorization("tavern", "wrong") },
         })
         const bad = yield* capture(() => badSdk.file.read({ path: "hello.txt" }))
         const goodSdk = yield* client("raw", directory, {
           password: "secret",
-          headers: { authorization: authorization("kilo", "secret") },
+          headers: { authorization: authorization("tavern", "secret") },
         })
         const good = yield* capture(() => goodSdk.file.read({ path: "hello.txt" }))
-        // kilocode_change end
+        // taverncode_change end
 
         return {
           statuses: statuses({ missing, bad, good }),
@@ -779,7 +779,7 @@ describe("HttpApi SDK", () => {
             parts: [{ type: "text", text: "hello" }],
           }),
         )
-        // kilocode_change start
+        // taverncode_change start
         const asyncPrompt = yield* capture(() =>
           sdk.session.promptAsync({
             sessionID,
@@ -801,12 +801,12 @@ describe("HttpApi SDK", () => {
           messageCount: array(messages.data).length,
           messageTexts: texts(messages.data).sort(),
         }
-        // kilocode_change end
+        // taverncode_change end
       }),
     ),
   )
 
-  // kilocode_change start - verify invalid user images fail at the real SDK boundary
+  // taverncode_change start - verify invalid user images fail at the real SDK boundary
   serverPathParity("rejects malformed user image data before persistence", (serverPath) =>
     withStandardProject(serverPath, ({ sdk }) =>
       Effect.gen(function* () {
@@ -870,7 +870,7 @@ describe("HttpApi SDK", () => {
       }),
     ),
   )
-  // kilocode_change end
+  // taverncode_change end
 
   serverPathParity("matches generated SDK prompt streaming through fake LLM", (serverPath) =>
     withFakeLlm(serverPath, ({ sdk, llm }) =>
@@ -906,7 +906,7 @@ describe("HttpApi SDK", () => {
     ),
   )
 
-  // kilocode_change start - verify provider errors remain in successful assistant messages
+  // taverncode_change start - verify provider errors remain in successful assistant messages
   serverPathParity("preserves provider errors through the generated SDK", (serverPath) =>
     withFakeLlm(serverPath, ({ sdk, llm }) =>
       Effect.gen(function* () {
@@ -960,7 +960,7 @@ describe("HttpApi SDK", () => {
       }),
     ),
   )
-  // kilocode_change end
+  // taverncode_change end
 
   httpapi(
     "includes project skills in REST API prompt context",

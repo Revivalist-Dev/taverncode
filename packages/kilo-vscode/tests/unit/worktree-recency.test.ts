@@ -48,10 +48,10 @@ describe("worktree mention recency", () => {
   it("preserves unrelated webview state and uses paths rather than ambiguous IDs", () => {
     const data = storage({ sidebarWidth: 240, localTabs: { project: ["ses_one"] } })
     const history = createWorktreeRecency(data)
-    history.visit("/first/.kilo/worktrees/same")
+    history.visit("/first/.tavern/worktrees/same")
     data.state.value = { ...data.get(), sidebarWidth: 300 }
-    history.visit("/second/.kilo/worktrees/same")
-    expect(history.recent()).toEqual(["/second/.kilo/worktrees/same", "/first/.kilo/worktrees/same"])
+    history.visit("/second/.tavern/worktrees/same")
+    expect(history.recent()).toEqual(["/second/.tavern/worktrees/same", "/first/.tavern/worktrees/same"])
     expect(data.get()).toEqual({
       sidebarWidth: 300,
       localTabs: { project: ["ses_one"] },

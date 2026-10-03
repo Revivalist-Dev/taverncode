@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { bedrockAuth, providerKey, vertexAuth, vertexCredentials, vertexOptions } from "@/kilocode/provider/cloud-auth"
+import { bedrockAuth, providerKey, vertexAuth, vertexCredentials, vertexOptions } from "@/taverncode/provider/cloud-auth"
 
 describe("cloud provider auth", () => {
   test("resolves Bedrock access key credentials", () => {

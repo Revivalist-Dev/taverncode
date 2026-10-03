@@ -54,7 +54,7 @@ async function commit(dir: string) {
 }
 
 async function repo(before = original, after = changed, moved = false) {
-  const dir = await mkdtemp(path.join(tmpdir(), "kilo-pr-context-"))
+  const dir = await mkdtemp(path.join(tmpdir(), "tavern-pr-context-"))
   roots.push(dir)
   await git(dir, "init", "-q", "--template=")
   await mkdir(path.join(dir, "src"))

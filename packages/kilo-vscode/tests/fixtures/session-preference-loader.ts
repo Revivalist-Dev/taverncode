@@ -28,7 +28,7 @@ const cases: Record<string, () => void> = {
     assert.equal(warning.mock.calls.length, 0, "the final request gets a response window")
     jest.advanceTimersByTime(3000)
     assert.equal(warning.mock.calls.length, 1)
-    assert.match(String(warning.mock.calls.at(0)?.at(0)), /\[Kilo New\].*preferences.*4 attempts/)
+    assert.match(String(warning.mock.calls.at(0)?.at(0)), /\[Tavern New\].*preferences.*4 attempts/)
     assert.equal(state.ready(), false, "exhaustion must not synthesize successful empty preferences")
     assert.equal(jest.getTimerCount(), 0)
     jest.advanceTimersByTime(60000)

@@ -16,11 +16,11 @@ import {
   untrack,
   type Component,
 } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
-import { FileIcon } from "@kilocode/kilo-ui/file-icon"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
+import { FileIcon } from "@taverncode/tavern-ui/file-icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import {
   createHold,
   hasPopup,
@@ -487,7 +487,7 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
       },
       {
         name: "caffeinate",
-        description: "Keep the computer awake while Kilo agents work",
+        description: "Keep the computer awake while Tavern agents work",
         hints: ["caffenate", "keep-awake"],
         action: () => vscode.postMessage({ type: "toggleCaffeination" }),
       },

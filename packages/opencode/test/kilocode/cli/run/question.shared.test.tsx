@@ -2,14 +2,14 @@
 import { describe, expect, test } from "bun:test"
 import { BoxRenderable } from "@opentui/core"
 import { extend, testRender } from "@opentui/solid"
-import type { QuestionRequest } from "@kilocode/sdk/v2"
+import type { QuestionRequest } from "@taverncode/sdk/v2"
 import {
   createQuestionBodyState,
   questionConfirm,
   questionSelect,
   questionSetSelected,
 } from "@/cli/cmd/run/question.shared"
-import { questionAdvance } from "@/kilocode/cli/cmd/run/question.shared"
+import { questionAdvance } from "@/taverncode/cli/cmd/run/question.shared"
 import { RunQuestionBody } from "@/cli/cmd/run/footer.question"
 import { RUN_THEME_FALLBACK } from "@/cli/cmd/run/theme"
 

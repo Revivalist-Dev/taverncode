@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
-import type { Event, KiloClient } from "@kilocode/sdk/v2/client"
-import { replyOnce } from "../kilo-provider/handlers/permission-handler"
+import type { Event, KiloClient } from "@taverncode/sdk/v2/client"
+import { replyOnce } from "../tavern-provider/handlers/permission-handler"
 import { retry } from "../services/cli-backend/retry"
 import type { KiloConnectionService } from "../services/cli-backend/connection-service"
 
@@ -24,7 +24,7 @@ export interface AutoApproveController {
   onChange(listener: (active: boolean) => void): { dispose(): void }
 }
 
-const CONFIG = "kilo-code.new.autoApprove"
+const CONFIG = "tavern-code.new.autoApprove"
 const KEY = "enabled"
 
 /**
@@ -79,7 +79,7 @@ export function registerToggleAutoApprove(
           await replyOnce(client, req.id, dir, () => generation === snapshot)
         }
       } catch (err) {
-        console.error("[Kilo New] toggleAutoApprove: failed to list pending permissions:", err)
+        console.error("[Tavern New] toggleAutoApprove: failed to list pending permissions:", err)
       }
     }
 
@@ -107,7 +107,7 @@ export function registerToggleAutoApprove(
     }),
   )
 
-  context.subscriptions.push(vscode.commands.registerCommand("kilo-code.new.toggleAutoApprove", toggle))
+  context.subscriptions.push(vscode.commands.registerCommand("tavern-code.new.toggleAutoApprove", toggle))
 
   return {
     active: () => active,

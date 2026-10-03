@@ -79,7 +79,7 @@ describe("speech-to-text custom source", () => {
     })
   })
 
-  it("posts audio directly to the source instead of the Kilo backend", async () => {
+  it("posts audio directly to the source instead of the Tavern backend", async () => {
     const result = await transcribeSpeech(
       offline,
       { model: "whisper-1", data: Buffer.from("audio").toString("base64"), format: "m4a" },
@@ -94,7 +94,7 @@ describe("speech-to-text custom source", () => {
     expect(result).toEqual({ ok: true, text: "hello there" })
   })
 
-  it("reports a rejected custom key without asking for a Kilo sign-in", async () => {
+  it("reports a rejected custom key without asking for a Tavern sign-in", async () => {
     const denied = `http://localhost:${server.port}/denied`
     const result = await transcribeSpeech(offline, { data: "", format: "m4a" }, "", undefined, {
       baseUrl: denied,
@@ -109,9 +109,9 @@ describe("speech-to-text custom source", () => {
     )
   })
 
-  it("still requires the Kilo backend without a custom source", async () => {
+  it("still requires the Tavern backend without a custom source", async () => {
     const result = await transcribeSpeech(offline, { data: "", format: "m4a" }, "")
-    expect(result).toEqual({ ok: false, error: "Not connected to the Kilo backend", code: "not_connected" })
+    expect(result).toEqual({ ok: false, error: "Not connected to the Tavern backend", code: "not_connected" })
   })
 
   it("parses list and data shaped catalogs and rejects empty ones", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import * as vscode from "vscode"
-import type { TuiAttentionSoundName } from "@kilocode/plugin/tui"
+import type { TuiAttentionSoundName } from "@taverncode/plugin/tui"
 import { AttentionService, type AttentionNotice } from "../../src/services/attention/service"
 import type { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
 import type { SSEPayload } from "../../src/services/cli-backend/sdk-sse-adapter"
@@ -133,7 +133,7 @@ describe("AttentionService", () => {
     test.service.dispose()
   })
 
-  it.each([{ "kilo.goal": { text: "Goal", active: false } }, {}])(
+  it.each([{ "tavern.goal": { text: "Goal", active: false } }, {}])(
     "suppresses active goal completions but retains attention and restores normal completion after %j",
     (metadata) => {
       const test = setup()
@@ -141,7 +141,7 @@ describe("AttentionService", () => {
         event({
           type: "sync",
           name: "session.updated.1",
-          data: { sessionID: "s1", info: { metadata: { "kilo.goal": { text: "Goal", active: true } } } },
+          data: { sessionID: "s1", info: { metadata: { "tavern.goal": { text: "Goal", active: true } } } },
         }),
       )
       test.event(event({ type: "session.status", properties: { sessionID: "s1", status: { type: "busy" } } }))
@@ -173,11 +173,11 @@ describe("AttentionService", () => {
     test.service.dispose()
   })
 
-  it("shows a VS Code notification when input is needed and Kilo is hidden", () => {
+  it("shows a VS Code notification when input is needed and Tavern is hidden", () => {
     const test = setup({ notifications: true, capture: false })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
 
-    expect(test.messages).toEqual([{ message: "Kilo needs your input.", style: "info" }])
+    expect(test.messages).toEqual([{ message: "Tavern needs your input.", style: "info" }])
     test.service.dispose()
     test.restore()
   })
@@ -186,13 +186,13 @@ describe("AttentionService", () => {
     const test = setup({
       notifications: true,
       capture: false,
-      details: async () => ({ workspace: "kilo-vscode", session: "Add notifications" }),
+      details: async () => ({ workspace: "tavern-vscode", session: "Add notifications" }),
     })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
     await Bun.sleep(0)
 
     expect(test.messages).toEqual([
-      { message: "Kilo needs your input. Workspace: kilo-vscode | Session: Add notifications", style: "info" },
+      { message: "Tavern needs your input. Workspace: tavern-vscode | Session: Add notifications", style: "info" },
     ])
     test.service.dispose()
     test.restore()
@@ -205,8 +205,8 @@ describe("AttentionService", () => {
     test.event(event({ type: "permission.asked", properties: { id: "p1", sessionID: "s1" } }))
 
     expect(test.messages).toEqual([
-      { message: "Kilo task completed.", style: "info" },
-      { message: "Kilo needs permission.", style: "warning" },
+      { message: "Tavern task completed.", style: "info" },
+      { message: "Tavern needs permission.", style: "warning" },
     ])
     test.service.dispose()
     test.restore()
@@ -219,7 +219,7 @@ describe("AttentionService", () => {
       osNotifications: true,
       focused: false,
       os: (notice) => alerts.push(notice),
-      details: async () => ({ workspace: "kilo-vscode", session: "Add notifications" }),
+      details: async () => ({ workspace: "tavern-vscode", session: "Add notifications" }),
       capture: false,
     })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }), "C:\\repo")
@@ -228,10 +228,10 @@ describe("AttentionService", () => {
     // The OS toast is a transient, informational ping; the VS Code notification
     // persists as an actionable "Show" entry for when the user returns.
     expect(alerts).toEqual([
-      { message: "Kilo needs your input.", workspace: "kilo-vscode", session: "Add notifications" },
+      { message: "Tavern needs your input.", workspace: "tavern-vscode", session: "Add notifications" },
     ])
     expect(test.messages).toEqual([
-      { message: "Kilo needs your input. Workspace: kilo-vscode | Session: Add notifications", style: "info" },
+      { message: "Tavern needs your input. Workspace: tavern-vscode | Session: Add notifications", style: "info" },
     ])
     test.service.dispose()
     test.restore()
@@ -241,7 +241,7 @@ describe("AttentionService", () => {
     const test = setup({ notifications: true, osNotifications: true, focused: false, capture: false })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
 
-    expect(test.messages).toEqual([{ message: "Kilo needs your input.", style: "info" }])
+    expect(test.messages).toEqual([{ message: "Tavern needs your input.", style: "info" }])
     test.service.dispose()
     test.restore()
   })
@@ -254,7 +254,7 @@ describe("AttentionService", () => {
       visible: () => visible,
       details: async () => {
         visible = true
-        return { workspace: "kilo-vscode", session: "Add notifications" }
+        return { workspace: "tavern-vscode", session: "Add notifications" }
       },
     })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
@@ -276,7 +276,7 @@ describe("AttentionService", () => {
       os: (notice) => alerts.push(notice),
       details: async () => {
         focused = true
-        return { workspace: "kilo-vscode", session: "Add notifications" }
+        return { workspace: "tavern-vscode", session: "Add notifications" }
       },
     })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
@@ -284,13 +284,13 @@ describe("AttentionService", () => {
 
     expect(alerts).toEqual([])
     expect(test.messages).toEqual([
-      { message: "Kilo needs your input. Workspace: kilo-vscode | Session: Add notifications", style: "info" },
+      { message: "Tavern needs your input. Workspace: tavern-vscode | Session: Add notifications", style: "info" },
     ])
     test.service.dispose()
     test.restore()
   })
 
-  it("focuses Kilo when the notification action is selected", async () => {
+  it("focuses Tavern when the notification action is selected", async () => {
     const ids: string[] = []
     const test = setup({
       notifications: true,
@@ -306,7 +306,7 @@ describe("AttentionService", () => {
     test.restore()
   })
 
-  it("suppresses VS Code notifications while Kilo is visible", () => {
+  it("suppresses VS Code notifications while Tavern is visible", () => {
     const test = setup({ notifications: true, visible: true, capture: false })
     test.event(event({ type: "permission.asked", properties: { id: "p1", sessionID: "s1" } }))
 
@@ -315,12 +315,12 @@ describe("AttentionService", () => {
     test.restore()
   })
 
-  it("notifies when a different Kilo session is visible", () => {
+  it("notifies when a different Tavern session is visible", () => {
     const test = setup({ notifications: true, visible: (sessionID) => sessionID === "s2", capture: false })
     test.event(event({ type: "question.asked", properties: { id: "q1", sessionID: "s1" } }))
     test.event(event({ type: "question.asked", properties: { id: "q2", sessionID: "s2" } }))
 
-    expect(test.messages).toEqual([{ message: "Kilo needs your input.", style: "info" }])
+    expect(test.messages).toEqual([{ message: "Tavern needs your input.", style: "info" }])
     test.service.dispose()
     test.restore()
   })
@@ -373,7 +373,7 @@ describe("AttentionService", () => {
     expect(test.messages).toEqual([])
     test.event(event({ type: "session.turn.close", properties: { sessionID: "s1", reason: "interrupted" } }))
 
-    expect(test.messages).toEqual([{ message: "Kilo task stopped due to an error.", style: "error" }])
+    expect(test.messages).toEqual([{ message: "Tavern task stopped due to an error.", style: "error" }])
     test.service.dispose()
     test.restore()
   })
@@ -388,7 +388,7 @@ describe("AttentionService", () => {
     test.event(event({ type: "session.status", properties: { sessionID: "s1", status: { type: "retry" } } }))
     test.event(event({ type: "session.turn.close", properties: { sessionID: "s1", reason: "completed" } }))
 
-    expect(test.messages).toEqual([{ message: "Kilo task completed.", style: "info" }])
+    expect(test.messages).toEqual([{ message: "Tavern task completed.", style: "info" }])
     test.service.dispose()
     test.restore()
   })
@@ -450,14 +450,14 @@ describe("attention defaults", () => {
     }
     const properties = manifest.contributes.configuration.properties
 
-    expect(properties["kilo-code.new.attention.enabled"]?.default).toBe(false)
-    expect(properties["kilo-code.new.attention.notifications"]?.default).toBe(false)
-    expect(properties["kilo-code.new.attention.OSNotifications"]?.default).toBe(false)
-    expect(properties["kilo-code.new.attention.sound"]?.default).toBe("default")
-    expect(properties["kilo-code.new.attention.sound"]?.enum).toEqual(["default", "system", ...CustomSoundIDs])
-    expect(properties["kilo-code.new.sounds.agentEnabled"]).toBeUndefined()
-    expect(properties["kilo-code.new.sounds.permissionsEnabled"]).toBeUndefined()
-    expect(properties["kilo-code.new.sounds.errorsEnabled"]).toBeUndefined()
+    expect(properties["tavern-code.new.attention.enabled"]?.default).toBe(false)
+    expect(properties["tavern-code.new.attention.notifications"]?.default).toBe(false)
+    expect(properties["tavern-code.new.attention.OSNotifications"]?.default).toBe(false)
+    expect(properties["tavern-code.new.attention.sound"]?.default).toBe("default")
+    expect(properties["tavern-code.new.attention.sound"]?.enum).toEqual(["default", "system", ...CustomSoundIDs])
+    expect(properties["tavern-code.new.sounds.agentEnabled"]).toBeUndefined()
+    expect(properties["tavern-code.new.sounds.permissionsEnabled"]).toBeUndefined()
+    expect(properties["tavern-code.new.sounds.errorsEnabled"]).toBeUndefined()
   })
 
   it("resolves global sound choices safely", () => {

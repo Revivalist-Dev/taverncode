@@ -12,9 +12,9 @@ import { restoreWorktrees } from "../state-recovery"
 import { reconcileWorktrees, summarize, type WorktreeHealthReport } from "../worktree-reconcile"
 import { trackOrphanSizes } from "../orphans/sizing"
 import type { ProjectContext, ProjectInitResult } from "./context"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import type { ProjectRef, SessionRef, WorktreeRef } from "./route"
-import { sessionToWebview } from "../../kilo-provider-utils"
+import { sessionToWebview } from "../../tavern-provider-utils"
 
 export type { ProjectSessionView } from "./session-view"
 import type { ProjectSessionView } from "./session-view"
@@ -241,7 +241,7 @@ export async function collectProjectSessions(
   const byDir = await Promise.all(
     dirs.map(async (entry) => {
       const items = await list(entry.dir).catch((err) => {
-        console.warn(`[Kilo New] Agent Manager: listing sessions for ${entry.dir} failed:`, err)
+        console.warn(`[Tavern New] Agent Manager: listing sessions for ${entry.dir} failed:`, err)
         return [] as Session[]
       })
       return { ...entry, items }

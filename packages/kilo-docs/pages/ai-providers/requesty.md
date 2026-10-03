@@ -1,12 +1,12 @@
 ---
-title: "Using Requesty with Kilo Code"
-description: "Route AI model requests through Requesty in Kilo Code for cost optimization and access to multiple providers from one API key."
+title: "Using Requesty with Tavern Code"
+description: "Route AI model requests through Requesty in Tavern Code for cost optimization and access to multiple providers from one API key."
 sidebar_label: Requesty
 ---
 
-# Using Requesty With Kilo Code
+# Using Requesty With Tavern Code
 
-Kilo Code supports accessing models through the [Requesty](https://www.requesty.ai/) AI platform. Requesty provides an easy and optimized API for interacting with 150+ large language models (LLMs).
+Tavern Code supports accessing models through the [Requesty](https://www.requesty.ai/) AI platform. Requesty provides an easy and optimized API for interacting with 150+ large language models (LLMs).
 
 **Website:** [https://www.requesty.ai/](https://www.requesty.ai/)
 
@@ -15,19 +15,19 @@ Kilo Code supports accessing models through the [Requesty](https://www.requesty.
 1.  **Sign Up/Sign In:** Go to the [Requesty website](https://www.requesty.ai/) and create an account or sign in.
 2.  **Get API Key:** You can get an API key from the [API Management](https://app.requesty.ai/manage-api) section of your Requesty dashboard.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-Open **Settings** (gear icon) inside the Kilo Code extension and go to the **Providers** tab to add Requesty and enter your API key. If you don't see Requesty listed, click **Show more providers**.
+Open **Settings** (gear icon) inside the Tavern Code extension and go to the **Providers** tab to add Requesty and enter your API key. If you don't see Requesty listed, click **Show more providers**.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -35,7 +35,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export REQUESTY_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

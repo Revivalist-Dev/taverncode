@@ -1,4 +1,4 @@
-export const INDEXING_PLUGIN_NAMES = ["kilo-indexing", "@kilocode/kilo-indexing"] as const
+export const INDEXING_PLUGIN_NAMES = ["tavern-indexing", "@taverncode/tavern-indexing"] as const
 
 // RATIONALE: PluginSpec is string | [string, Record] — accept both forms.
 type Candidate = string | readonly [string, ...unknown[]]
@@ -53,7 +53,7 @@ function isPathSpecifier(value: string): boolean {
 
   const normalized = value.replaceAll("\\", "/")
   if (normalized.includes("/node_modules/")) return true
-  if (normalized.includes("/.opencode/") || normalized.includes("/.kilo/") || normalized.includes("/.kilocode/")) {
+  if (normalized.includes("/.opencode/") || normalized.includes("/.tavern/") || normalized.includes("/.taverncode/")) {
     return true
   }
 
@@ -73,11 +73,11 @@ function normalizePath(value: string): string {
     if (head) return head
   }
 
-  const scoped = parts.findIndex((part, i) => part === "@kilocode" && parts[i + 1] === "kilo-indexing")
-  if (scoped >= 0) return "@kilocode/kilo-indexing"
+  const scoped = parts.findIndex((part, i) => part === "@taverncode" && parts[i + 1] === "tavern-indexing")
+  if (scoped >= 0) return "@taverncode/tavern-indexing"
 
-  const workspace = parts.findIndex((part, i) => part === "packages" && parts[i + 1] === "kilo-indexing")
-  if (workspace >= 0) return "@kilocode/kilo-indexing"
+  const workspace = parts.findIndex((part, i) => part === "packages" && parts[i + 1] === "tavern-indexing")
+  if (workspace >= 0) return "@taverncode/tavern-indexing"
 
   return stem(value)
 }

@@ -4,9 +4,9 @@ import { Cause, Effect, Exit, Layer, ManagedRuntime, Queue, Schema } from "effec
 import { MessageID, SessionID } from "../../src/session/schema"
 import { provideTmpdirInstance } from "../fixture/fixture"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
-import { AgentManagerTool, Params } from "../../src/kilocode/tool/agent-manager"
-import { AgentManagerEvent, type AgentManagerStart } from "../../src/kilocode/agent-manager/event"
-import { AgentManager } from "../../src/kilocode/agent-manager/service"
+import { AgentManagerTool, Params } from "../../src/taverncode/tool/agent-manager"
+import { AgentManagerEvent, type AgentManagerStart } from "../../src/taverncode/agent-manager/event"
+import { AgentManager } from "../../src/taverncode/agent-manager/service"
 import { Bus } from "../../src/bus"
 import { Tool } from "../../src/tool/tool"
 import * as ToolJsonSchema from "../../src/tool/json-schema"
@@ -27,16 +27,16 @@ const providers = {
         name: "Reasoning Model",
         variants: { low: {}, high: {} },
       },
-      // "Shared" is also offered by the kilo provider, to exercise provider resolution.
+      // "Shared" is also offered by the tavern provider, to exercise provider resolution.
       "test/shared": { id: "test/shared", providerID: "test", name: "Shared", variants: { low: {}, high: {} } },
     },
   } as unknown as Provider.Info,
-  kilo: {
-    id: "kilo",
-    name: "Kilo Gateway",
+  tavern: {
+    id: "tavern",
+    name: "Tavern Gateway",
     models: {
-      "kilo/shared": { id: "kilo/shared", providerID: "kilo", name: "Shared", variants: { low: {} } },
-      "kilo/only": { id: "kilo/only", providerID: "kilo", name: "Gateway Only", variants: { low: {} } },
+      "tavern/shared": { id: "tavern/shared", providerID: "tavern", name: "Shared", variants: { low: {} } },
+      "tavern/only": { id: "tavern/only", providerID: "tavern", name: "Gateway Only", variants: { low: {} } },
     },
   } as unknown as Provider.Info,
   zeta: {
@@ -63,7 +63,7 @@ const agent: Agent.Info = {
   options: {},
 }
 
-// Default provider is `test`, so resolution should prefer test, then kilo, then others.
+// Default provider is `test`, so resolution should prefer test, then tavern, then others.
 function makeRuntime(defaultProviderID = "test", host: Partial<AgentManager.Interface> = {}) {
   return ManagedRuntime.make(
     Layer.mergeAll(
@@ -358,10 +358,10 @@ describe("agent_manager tool", () => {
   })
 
   test("validates provider selectors at the task level", () => {
-    expect(Schema.is(Params)({ mode: "local", tasks: [{ prompt: "Fix", model: "Shared", provider: "kilo" }] })).toBe(
+    expect(Schema.is(Params)({ mode: "local", tasks: [{ prompt: "Fix", model: "Shared", provider: "tavern" }] })).toBe(
       true,
     )
-    expect(Schema.is(Params)({ mode: "local", tasks: [{ prompt: "Fix", provider: "kilo" }] })).toBe(false)
+    expect(Schema.is(Params)({ mode: "local", tasks: [{ prompt: "Fix", provider: "tavern" }] })).toBe(false)
     expect(Schema.is(Params)({ mode: "local", tasks: [{ prompt: "Fix", model: "Shared", provider: 42 }] })).toBe(false)
   })
 
@@ -572,7 +572,7 @@ describe("agent_manager tool", () => {
     expect(requests).toEqual([{ operation: "overview", sessionID: ctx.sessionID, filter: undefined }])
     expect(JSON.parse(result.output)).toEqual({
       instructions:
-        "This overview is the source of truth. Use sections[].id as sectionID and sessions[].id/session.id as sessionID for action=move. Do not edit .kilo/agent-manager.json.",
+        "This overview is the source of truth. Use sections[].id as sectionID and sessions[].id/session.id as sessionID for action=move. Do not edit .tavern/agent-manager.json.",
       sections: [],
       ungrouped: [
         {
@@ -809,12 +809,12 @@ describe("agent_manager tool", () => {
 
   test("inherits the latest invoking model and variant when omitted", async () => {
     const task = await publish(runtime, { prompt: "Fix" }, [
-      message("msg_current", "kilo", "kilo/shared", "low", 2),
+      message("msg_current", "tavern", "tavern/shared", "low", 2),
       message("msg_old", "test", "reasoning/model", "high", 1),
     ])
 
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/shared")
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/shared")
     expect(task?.variant).toBe("low")
   })
 
@@ -829,7 +829,7 @@ describe("agent_manager tool", () => {
 
   test("explicit model and variant override the invoking selection", async () => {
     const task = await publish(runtime, { prompt: "Fix", model: "test/reasoning/model", variant: "high" }, [
-      message("msg_current", "kilo", "kilo/shared", "low"),
+      message("msg_current", "tavern", "tavern/shared", "low"),
     ])
 
     expect(String(task?.model?.providerID)).toBe("test")
@@ -842,18 +842,18 @@ describe("agent_manager tool", () => {
       message("msg_current", "test", "reasoning/model", "high"),
     ])
 
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/only")
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/only")
     expect(task?.variant).toBeUndefined()
   })
 
   test("inherits the invoking variant when the model override resolves to the invoking model", async () => {
     const task = await publish(runtime, { prompt: "Fix", model: "Shared" }, [
-      message("msg_current", "kilo", "kilo/shared", "low"),
+      message("msg_current", "tavern", "tavern/shared", "low"),
     ])
 
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/shared")
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/shared")
     expect(task?.variant).toBe("low")
   })
 
@@ -908,25 +908,25 @@ describe("agent_manager tool", () => {
   })
 
   test("uses an explicitly selected provider for a shared model name", async () => {
-    const task = await publish(runtime, { prompt: "Fix", model: " Shared ", provider: " kilo " })
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/shared")
+    const task = await publish(runtime, { prompt: "Fix", model: " Shared ", provider: " tavern " })
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/shared")
   })
 
   test("uses the provider of a different default model when that is the user's choice", async () => {
-    const rt = makeRuntime("kilo")
+    const rt = makeRuntime("tavern")
     const task = await publish(rt, { prompt: "Fix", model: "Shared", variant: "low" })
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/shared")
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/shared")
     await rt.dispose()
   })
 
   test("prefers the invoking provider for an explicit model override", async () => {
     const task = await publish(runtime, { prompt: "Fix", model: "Shared", variant: "low" }, [
-      message("msg_current", "kilo", "kilo/only", "low"),
+      message("msg_current", "tavern", "tavern/only", "low"),
     ])
-    expect(String(task?.model?.providerID)).toBe("kilo")
-    expect(String(task?.model?.modelID)).toBe("kilo/shared")
+    expect(String(task?.model?.providerID)).toBe("tavern")
+    expect(String(task?.model?.modelID)).toBe("tavern/shared")
   })
 
   test("uses a stable provider tie-breaker for explicit model overrides", async () => {
@@ -964,14 +964,14 @@ describe("agent_manager tool", () => {
     const result = await runtime.runPromise(
       provideTmpdirInstance(() =>
         tool.execute(
-          { mode: "local", tasks: [{ prompt: "Fix", model: "Reasoning Model", provider: "kilo" }] },
+          { mode: "local", tasks: [{ prompt: "Fix", model: "Reasoning Model", provider: "tavern" }] },
           { ...ctx, ask: (input: unknown) => Effect.sync(() => calls.push(input)) },
         ),
       ).pipe(Effect.scoped),
     )
 
     expect(calls).toEqual([])
-    expect(result.output).toContain('model is not available from provider "kilo": Reasoning Model')
+    expect(result.output).toContain('model is not available from provider "tavern": Reasoning Model')
     expect(result.metadata.count).toBe(0)
   })
 
@@ -1009,15 +1009,15 @@ describe("agent_manager tool", () => {
     expect(result.output).toContain("- Smoke: Shared (test) · high")
   })
 
-  test("falls back to the kilo gateway when the preferred provider lacks the model", async () => {
+  test("falls back to the tavern gateway when the preferred provider lacks the model", async () => {
     const task = await publish(runtime, { prompt: "Fix", model: "Gateway Only" })
-    // Default provider `test` does not offer it; kilo is preferred over zeta.
-    expect(String(task?.model?.providerID)).toBe("kilo")
+    // Default provider `test` does not offer it; tavern is preferred over zeta.
+    expect(String(task?.model?.providerID)).toBe("tavern")
   })
 
   test("narrows to a provider that supports the requested variant", async () => {
-    const rt = makeRuntime("kilo")
-    // kilo is preferred, but only `test`'s Shared has the `high` variant.
+    const rt = makeRuntime("tavern")
+    // tavern is preferred, but only `test`'s Shared has the `high` variant.
     const task = await publish(rt, { prompt: "Fix", model: "Shared", variant: "high" })
     expect(String(task?.model?.providerID)).toBe("test")
     expect(task?.variant).toBe("high")

@@ -1,8 +1,8 @@
-import type { TuiPlugin } from "@kilocode/plugin/tui"
+import type { TuiPlugin } from "@taverncode/plugin/tui"
 import type { InternalTuiPlugin } from "@/plugin/tui/internal"
-import { MemorySidebar } from "@/kilocode/cli/cmd/tui/component/memory-status"
+import { MemorySidebar } from "@/taverncode/cli/cmd/tui/component/memory-status"
 
-const id = "internal:kilo-sidebar-memory"
+const id = "internal:tavern-sidebar-memory"
 
 const tui: TuiPlugin = async (api) => {
   api.slots.register({

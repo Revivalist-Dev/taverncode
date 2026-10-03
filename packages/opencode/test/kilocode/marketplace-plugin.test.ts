@@ -5,12 +5,12 @@ import { Effect } from "effect"
 import { parse } from "jsonc-parser"
 import { Global } from "@opencode-ai/core/global"
 import { Filesystem } from "../../src/util/filesystem"
-import { detect } from "../../src/kilocode/marketplace/detection"
-import { install, remove } from "../../src/kilocode/marketplace/installer"
-import { pluginIdentity } from "../../src/kilocode/marketplace/plugin-spec"
-import { patchPlugin } from "../../src/kilocode/marketplace/plugin-config"
-import { pluginFiles } from "../../src/kilocode/marketplace/paths"
-import type { MarketplaceRemoveResult } from "../../src/kilocode/marketplace/schema"
+import { detect } from "../../src/taverncode/marketplace/detection"
+import { install, remove } from "../../src/taverncode/marketplace/installer"
+import { pluginIdentity } from "../../src/taverncode/marketplace/plugin-spec"
+import { patchPlugin } from "../../src/taverncode/marketplace/plugin-config"
+import { pluginFiles } from "../../src/taverncode/marketplace/paths"
+import type { MarketplaceRemoveResult } from "../../src/taverncode/marketplace/schema"
 import { tmpdir } from "../fixture/fixture"
 
 describe("marketplace plugin helpers", () => {
@@ -48,7 +48,7 @@ describe("marketplace plugin helpers", () => {
     "reports incomplete removal with malformed sibling: %s",
     async (invalid) => {
       await using tmp = await tmpdir()
-      const dir = path.join(tmp.path, ".kilo")
+      const dir = path.join(tmp.path, ".tavern")
       await mkdir(dir, { recursive: true })
       await Bun.write(path.join(dir, "opencode.json"), JSON.stringify({ plugin: ["other-plugin"] }))
       await Bun.write(path.join(dir, "tui.json"), invalid)
@@ -71,17 +71,17 @@ describe("marketplace plugin helpers", () => {
     const directory = path.join(tmp.path, "nested", "child")
     await mkdir(directory, { recursive: true })
     const files = [
-      "kilo.json",
-      "kilo.jsonc",
+      "tavern.json",
+      "tavern.jsonc",
       "opencode.json",
       "opencode.jsonc",
-      ".kilo/kilo.jsonc",
-      ".kilo/opencode.json",
-      ".kilo/tui.jsonc",
-      ".kilocode/kilo.json",
-      "nested/.kilo/opencode.jsonc",
-      "nested/child/.kilo/kilo.json",
-      "nested/child/.kilo/tui.json",
+      ".tavern/tavern.jsonc",
+      ".tavern/opencode.json",
+      ".tavern/tui.jsonc",
+      ".taverncode/tavern.json",
+      "nested/.tavern/opencode.jsonc",
+      "nested/child/.tavern/tavern.json",
+      "nested/child/.tavern/tui.json",
     ].map((file) => path.join(tmp.path, file))
     for (const file of files) {
       await Bun.write(
@@ -112,10 +112,10 @@ describe("marketplace plugin helpers", () => {
     const directory = path.join(tmp.path, "project-child")
     // This sibling is also a string prefix of directory, but is not its ancestor.
     const sibling = path.join(tmp.path, "project")
-    const outside = [path.join(tmp.path, ".kilo", "opencode.json"), path.join(sibling, ".kilo", "tui.json")]
+    const outside = [path.join(tmp.path, ".tavern", "opencode.json"), path.join(sibling, ".tavern", "tui.json")]
     const text = '{"plugin":["pkg@1", "outside-project"]}'
     for (const file of outside) await Bun.write(file, text)
-    const file = path.join(directory, ".kilo", "opencode.json")
+    const file = path.join(directory, ".tavern", "opencode.json")
     await Bun.write(file, '{"plugin":["pkg@1"]}')
     const worktree = mode === "absent" ? undefined : mode === "root" ? path.parse(tmp.path).root : sibling
     const input = { directory, worktree }
@@ -143,8 +143,8 @@ describe("marketplace plugin helpers", () => {
       if (err.code === "ENOENT") return undefined
       throw err
     })
-    const outside = path.join(tmp.path, ".kilo", "opencode.json")
-    const file = path.join(root, ".kilo", "opencode.json")
+    const outside = path.join(tmp.path, ".tavern", "opencode.json")
+    const file = path.join(root, ".tavern", "opencode.json")
     const text = '{"plugin":["pkg@1"]}'
     await Bun.write(outside, text)
     await Bun.write(file, text)
@@ -180,8 +180,8 @@ describe("marketplace plugin helpers", () => {
     )
     try {
       for (const file of files) await Bun.write(file, '{"plugin":["@scope/global-plugin@next"]}')
-      expect(files).toContain(path.join(Global.Path.config, "kilo.json"))
-      expect(files).toContain(path.join(Global.Path.config, "kilo.jsonc"))
+      expect(files).toContain(path.join(Global.Path.config, "tavern.json"))
+      expect(files).toContain(path.join(Global.Path.config, "tavern.jsonc"))
       expect((await detect(input)).global["plugin:@scope/global-plugin"]).toBeDefined()
       expect(
         (await Effect.runPromise(remove(input as never, { id: "@scope/global-plugin", type: "plugin" }, "global")))
@@ -203,8 +203,8 @@ describe("marketplace plugin helpers", () => {
   test("does not mask a removal write failure and succeeds on retry", async () => {
     await using tmp = await tmpdir()
     const input = { directory: tmp.path, worktree: tmp.path }
-    const first = path.join(tmp.path, ".kilo", "opencode.json")
-    const second = path.join(tmp.path, ".kilo", "tui.json")
+    const first = path.join(tmp.path, ".tavern", "opencode.json")
+    const second = path.join(tmp.path, ".tavern", "tui.json")
     for (const file of [first, second]) await Bun.write(file, '{"plugin":["@scope/plugin@1", "other"]}')
     const write = Filesystem.write
     // Inject only the OS write failure, because chmod is ineffective as root.
@@ -235,8 +235,8 @@ describe("marketplace plugin helpers", () => {
   test("does not hide an unreadable config behind a successful removal", async () => {
     await using tmp = await tmpdir()
     const input = { directory: tmp.path, worktree: tmp.path }
-    const file = path.join(tmp.path, ".kilo", "opencode.json")
-    const blocked = path.join(tmp.path, ".kilo", "tui.json")
+    const file = path.join(tmp.path, ".tavern", "opencode.json")
+    const blocked = path.join(tmp.path, ".tavern", "tui.json")
     await Bun.write(file, '{"plugin":["pkg@1"]}')
     // A directory produces a real read error, including when tests run as root.
     await mkdir(blocked)
@@ -256,8 +256,8 @@ describe("marketplace plugin helpers", () => {
     "preflights both install targets before changes: %s",
     async (invalid) => {
       await using tmp = await tmpdir()
-      const server = path.join(tmp.path, ".kilo", "opencode.jsonc")
-      const tui = path.join(tmp.path, ".kilo", "tui.json")
+      const server = path.join(tmp.path, ".tavern", "opencode.jsonc")
+      const tui = path.join(tmp.path, ".tavern", "tui.json")
       const text = '// preserve me\n{"plugin":["other"],}'
       await Bun.write(server, text)
       await Bun.write(tui, invalid)
@@ -283,8 +283,8 @@ describe("marketplace plugin helpers", () => {
 
   test("reports actual partial install writes and retries without duplicate package identities", async () => {
     await using tmp = await tmpdir()
-    const server = path.join(tmp.path, ".kilo", "opencode.json")
-    const tui = path.join(tmp.path, ".kilo", "tui.json")
+    const server = path.join(tmp.path, ".tavern", "opencode.json")
+    const tui = path.join(tmp.path, ".tavern", "tui.json")
     const input = {
       directory: tmp.path,
       worktree: tmp.path,
@@ -314,7 +314,7 @@ describe("marketplace plugin helpers", () => {
 
   test("detects installed plugins from project config", async () => {
     await using tmp = await tmpdir()
-    const dir = path.join(tmp.path, ".kilo")
+    const dir = path.join(tmp.path, ".tavern")
     await mkdir(dir, { recursive: true })
     await Bun.write(
       path.join(dir, "opencode.json"),

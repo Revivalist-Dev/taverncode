@@ -1,4 +1,4 @@
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/taverncode/background-process"
 import { SessionID } from "@/session/schema"
 import { Effect } from "effect"
 

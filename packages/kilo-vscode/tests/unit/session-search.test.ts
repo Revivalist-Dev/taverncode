@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { handleSessionSearch } from "../../src/kilo-provider/session-search"
+import { handleSessionSearch } from "../../src/tavern-provider/session-search"
 
 type Query = Record<string, unknown>
 
@@ -31,11 +31,11 @@ describe("handleSessionSearch", () => {
     await handleSessionSearch({
       client: client as never,
       message: { requestId: "r1", sessionID: "ses_current" },
-      dir: (id) => (id === "ses_current" ? "/repo/.kilo/worktrees/wt-1" : "/repo"),
+      dir: (id) => (id === "ses_current" ? "/repo/.tavern/worktrees/wt-1" : "/repo"),
       post: (msg) => posted.push(msg),
     })
 
-    expect(calls).toEqual([{ worktrees: true, roots: true, directory: "/repo/.kilo/worktrees/wt-1", limit: 5_000 }])
+    expect(calls).toEqual([{ worktrees: true, roots: true, directory: "/repo/.tavern/worktrees/wt-1", limit: 5_000 }])
     expect(posted).toEqual([
       {
         type: "sessionSearchResult",
@@ -89,7 +89,7 @@ describe("handleSessionSearch", () => {
     expect(posted[0]?.sessions.map((s) => s.id)).toEqual(["ses_keep"])
   })
 
-  it.each(["/repo", "/repo/.kilo/worktrees/branch"])("loads older chats in one request from %s", async (dir) => {
+  it.each(["/repo", "/repo/.tavern/worktrees/branch"])("loads older chats in one request from %s", async (dir) => {
     const recent = Array.from({ length: 60 }, (_, index) => session(`ses_${index}`, `Recent ${index}`, 2, "branch"))
     const source = session("ses_old", "Older chat", 1, "main")
     const api = stub([...recent, source])

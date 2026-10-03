@@ -1,12 +1,12 @@
 export const dict = {
-  // Kilo Gateway provider translations
+  // Tavern Gateway provider translations
   "provider.connect.kiloGateway.byok.prefix": "Za više statistika korištenja, koristite ",
-  "provider.connect.kiloGateway.byok.link": "BYOK putem Kilo's Gateway",
+  "provider.connect.kiloGateway.byok.link": "BYOK putem Tavern's Gateway",
   "provider.connect.kiloGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Preporučeno",
-  "settings.providers.note.kilo": "Pristup za 500+ AI modela",
+  "settings.providers.note.tavern": "Pristup za 500+ AI modela",
   "settings.providers.note.opencode": "Odabrani modeli uključujući Claude, GPT, Gemini i još mnogo toga",
   "settings.providers.note.anthropic": "Direktan pristup Claude modelima, uključujući Pro i Max",
   "settings.providers.note.deepseek": "DeepSeek modeli za zadatke rezonovanja i programiranja",
@@ -19,7 +19,7 @@ export const dict = {
   // Desktop translations
   "desktop.menu.reloadWebview": "Ponovno učitavanje webview-a",
   "desktop.updater.installFailed.message": "Neuspjelo instaliranje ažuriranja",
-  "desktop.cli.installed.message": "CLI je instaliran u {{path}}\n\nRestartuj terminal da bi koristio komandu 'kilo'.",
+  "desktop.cli.installed.message": "CLI je instaliran u {{path}}\n\nRestartuj terminal da bi koristio komandu 'tavern'.",
 
   // Reasoning block label
   "ui.reasoning.label": "Rezonovanje",
@@ -45,15 +45,15 @@ export const dict = {
     "MCP server pruža Kilu dodatne alate za rad s vanjskim servisima ili lokalnim programima.",
   "marketplace.install.about.agent": "Agent dodaje višekratnu ulogu s vlastitim uputama i dozvolama.",
   "marketplace.install.about.skill":
-    "Vještina dodaje upute i resurse za određene zadatke koje Kilo može učitati kada su potrebni.",
+    "Vještina dodaje upute i resurse za određene zadatke koje Tavern može učitati kada su potrebni.",
   "marketplace.install.mcp.warning":
-    "MCP serveri mogu pokretati lokalne naredbe ili se povezivati s vanjskim servisima. Kilo će zatražiti dozvolu prije korištenja njihovih alata, osim ako vaše dozvole to automatski dopuštaju.",
+    "MCP serveri mogu pokretati lokalne naredbe ili se povezivati s vanjskim servisima. Tavern će zatražiti dozvolu prije korištenja njihovih alata, osim ako vaše dozvole to automatski dopuštaju.",
   "marketplace.install.project.warning":
     "Datoteke projekta mogu se dodati u kontrolu verzija. Ne čuvajte tajne ovdje osim ako konfiguracija upućuje na varijablu okruženja.",
   "marketplace.install.learnMore": "Saznajte kako funkcionišu instalacije s Marketplacea",
   "marketplace.install.learnMcp": "Saznajte više o MCP-u",
   "marketplace.install.about.plugin":
-    "Dodatak dodaje prilagođene alate i integracije u Kilo. Dodaci se izvršavaju sa svim dozvolama.",
+    "Dodatak dodaje prilagođene alate i integracije u Tavern. Dodaci se izvršavaju sa svim dozvolama.",
   "marketplace.install.plugin.warning":
     "Dodaci izvršavaju kod sa svim dozvolama. Mogu čitati i mijenjati vaše datoteke, pokretati naredbe i pristupati vašim pristupnim podacima i mreži. Instalirajte samo dodatke kojima vjerujete.",
   "marketplace.install.installedAt": "Instalirano u {{path}}",
@@ -123,7 +123,7 @@ export const dict = {
     "Sačekaj da se snapshot završi. Naredni potezi su brzi kada se početni snapshot jednom napravi.",
   "snapshot.slowRepo.answer.disable": "Onemogući za ovaj projekat",
   "snapshot.slowRepo.answer.disable.description":
-    "Isključi Kilo snapshotove za ovaj projekat. Izgubićete poništi/vrati za izmjene koje napravi Kilo, ali git i dalje prati sve.",
+    "Isključi Tavern snapshotove za ovaj projekat. Izgubićete poništi/vrati za izmjene koje napravi Tavern, ali git i dalje prati sve.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Otvori u pregledniku razlika",

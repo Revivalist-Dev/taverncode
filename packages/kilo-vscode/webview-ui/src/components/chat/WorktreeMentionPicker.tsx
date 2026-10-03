@@ -1,6 +1,6 @@
 import { createMemo, onMount } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { List } from "@kilocode/kilo-ui/list"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { List } from "@taverncode/tavern-ui/list"
 import { useLanguage } from "../../context/language"
 import type { WorktreeReference } from "../../hooks/file-mention-utils"
 

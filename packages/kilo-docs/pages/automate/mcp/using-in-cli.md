@@ -1,11 +1,11 @@
 ---
 title: "Using MCP in CLI"
-description: "How to configure and use MCP servers in the Kilo CLI"
+description: "How to configure and use MCP servers in the Tavern CLI"
 ---
 
 # Using MCP in the CLI
 
-The Kilo CLI supports both local and remote MCP servers. Once added, MCP tools are automatically available to the LLM alongside built-in tools.
+The Tavern CLI supports both local and remote MCP servers. Once added, MCP tools are automatically available to the LLM alongside built-in tools.
 
 {% callout type="tip" %}
 MCP servers add to your context, so be careful with which ones you enable. Certain MCP servers with many tools can quickly add up and exceed the context limit.
@@ -13,12 +13,12 @@ MCP servers add to your context, so be careful with which ones you enable. Certa
 
 ## Configuration Location
 
-The CLI accepts several config filenames. The recommended file is `kilo.json`:
+The CLI accepts several config filenames. The recommended file is `tavern.json`:
 
 | Scope | Recommended Path | Also supported |
 |---|---|---|
-| **Global** | `~/.config/kilo/kilo.json` | `kilo.jsonc`, `config.json` |
-| **Project** | `./kilo.json` or `./.kilo/kilo.json` | `kilo.jsonc` |
+| **Global** | `~/.config/tavern/tavern.json` | `tavern.jsonc`, `config.json` |
+| **Project** | `./tavern.json` or `./.tavern/tavern.json` | `tavern.jsonc` |
 
 Project-level configuration takes precedence over global settings.
 
@@ -106,9 +106,9 @@ You can manage MCP servers from the CLI:
 
 | Command | Description |
 |---|---|
-| `kilo mcp list` | List all configured MCP servers |
-| `kilo mcp add` | Add an MCP server |
-| `kilo mcp auth` | Authenticate with an MCP server |
+| `tavern mcp list` | List all configured MCP servers |
+| `tavern mcp add` | Add an MCP server |
+| `tavern mcp auth` | Authenticate with an MCP server |
 
 Inside the interactive TUI, use the `/mcps` slash command to toggle MCP servers on or off.
 
@@ -163,9 +163,9 @@ Add the test MCP server for development:
 
 MCP tools use the same permission system as built-in tools (`allow`, `ask`, `deny`). Each MCP tool's permission key is its namespaced name: `{server}_{tool}` (e.g. `github_create_pull_request`). You can use glob patterns like `github_*` for broad rules.
 
-For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-kilo-code#auto-approve-tools).
+For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-tavern-code#auto-approve-tools).
 
-Connected servers can also add usage instructions to the model context and expose resources, including parameterized resource templates. See [Server instructions and resources](/docs/automate/mcp/using-in-kilo-code#server-instructions-and-resources).
+Connected servers can also add usage instructions to the model context and expose resources, including parameterized resource templates. See [Server instructions and resources](/docs/automate/mcp/using-in-tavern-code#server-instructions-and-resources).
 
 ## Environment Variables
 
@@ -187,4 +187,4 @@ Use `{env:VARIABLE_NAME}` syntax in config files to reference environment variab
 
 ## Finding MCP Servers
 
-Browse community-contributed MCP server configurations and agent skills in the [Kilo Marketplace](https://github.com/Kilo-Org/kilo-marketplace). The marketplace includes ready-to-use configs for popular tools like Figma, Sentry, and more.
+Browse community-contributed MCP server configurations and agent skills in the [Tavern Marketplace](https://github.com/Kilo-Org/tavern-marketplace). The marketplace includes ready-to-use configs for popular tools like Figma, Sentry, and more.

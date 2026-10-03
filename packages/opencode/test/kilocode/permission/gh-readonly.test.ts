@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { hardenExplore, patchAgents } from "../../../src/kilocode/agent"
+import { hardenExplore, patchAgents } from "../../../src/taverncode/agent"
 import { Permission } from "../../../src/permission"
 
 function agents(user: Permission.Ruleset = []) {

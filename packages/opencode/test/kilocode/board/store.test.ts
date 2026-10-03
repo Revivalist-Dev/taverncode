@@ -4,7 +4,7 @@ import { sql } from "drizzle-orm"
 import path from "node:path"
 import { Database } from "@opencode-ai/core/database/database"
 import { SessionTable } from "@opencode-ai/core/session/sql"
-import { BoardStore } from "@/kilocode/board/store"
+import { BoardStore } from "@/taverncode/board/store"
 import { SessionID } from "@/session/schema"
 import { tmpdir } from "../../fixture/fixture"
 

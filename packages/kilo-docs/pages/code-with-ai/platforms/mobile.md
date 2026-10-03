@@ -1,21 +1,21 @@
 ---
 title: "Mobile Apps"
-description: "Using Kilo Code on iOS and Android"
+description: "Using Tavern Code on iOS and Android"
 ---
 
 # Mobile Apps
 
-Use Kilo Code from your phone to keep coding sessions moving while you are away from your desk. The mobile app connects to Cloud Agents and remote sessions from your local CLI or editor extensions.
+Use Tavern Code from your phone to keep coding sessions moving while you are away from your desk. The mobile app connects to Cloud Agents and remote sessions from your local CLI or editor extensions.
 
 {% callout type="info" title="Available on iOS and Android" %}
-Install Kilo Code for [iOS](https://apps.apple.com/app/id6761193135) and [Android](https://play.google.com/store/apps/details?id=com.kilocode.kiloapp).
+Install Tavern Code for [iOS](https://apps.apple.com/app/id6761193135) and [Android](https://play.google.com/store/apps/details?id=com.taverncode.kiloapp).
 {% /callout %}
 
 ## What you can do
 
 The mobile app lets you:
 
-- View and manage Kilo Code sessions, including remote CLI and extension sessions running on your local machine.
+- View and manage Tavern Code sessions, including remote CLI and extension sessions running on your local machine.
 - Spawn Cloud Agents and code directly from the app.
 - Monitor and view all non-remote sessions in one place.
 - Send follow-up messages while a session is still running — they are queued and processed in order.
@@ -25,9 +25,9 @@ The mobile app lets you:
 - Rename a remote CLI session from the app or the CLI — renames sync in both directions.
 - Copy a link to the message on screen from the session header, then open it on the web or another device to continue from the same position.
 - Review GitHub pull requests, GitLab merge requests, and Bitbucket pull requests end to end — diffs, checks, comments, and merging.
-- Start a new session on a connected `kilo remote` CLI instance with the **Run on** picker.
+- Start a new session on a connected `tavern remote` CLI instance with the **Run on** picker.
 - Browse the files an agent produced straight from your phone's file browser — see [Agent artifacts in your file browser](#agent-artifacts-in-your-file-browser).
-- Use the Kilo tools from a signed-in chat, with no key or URL to configure — see [Kilo tools in chat](#kilo-tools-in-chat).
+- Use the Tavern tools from a signed-in chat, with no key or URL to configure — see [Tavern tools in chat](#tavern-tools-in-chat).
 
 ## App actions
 
@@ -46,13 +46,13 @@ Four actions are available from outside the app. On iOS they appear in the **Sho
 
 ### App icon shortcuts and Quick Settings tile
 
-On Android, long-press the Kilo app icon to open the [app shortcuts](https://developer.android.com/guide/topics/ui/shortcuts) **New agent**, **Needs input**, and **Open last session**. On iOS, long-press the app icon to see the same actions as [Home Screen Quick Actions](https://developer.apple.com/design/human-interface-guidelines/home-screen-quick-actions). Each opens the same screen as the matching in-app control.
+On Android, long-press the Tavern app icon to open the [app shortcuts](https://developer.android.com/guide/topics/ui/shortcuts) **New agent**, **Needs input**, and **Open last session**. On iOS, long-press the app icon to see the same actions as [Home Screen Quick Actions](https://developer.apple.com/design/human-interface-guidelines/home-screen-quick-actions). Each opens the same screen as the matching in-app control.
 
 - **New agent** opens the new-agent composer.
 - **Needs input** opens the session that is waiting for input. It appears only while at least one session is waiting and disappears again when nothing is waiting.
 - **Open last session** opens the session you last opened. It is available after a cold start even when your account identity resolves after the chat screen first renders.
 
-On Android, the Kilo [Quick Settings tile](https://developer.android.com/develop/ui/views/quicksettings-tiles) mirrors this state. While a session is waiting, the tile reads **Needs input** and opens the chat of the session that has waited longest; with nothing waiting, it reads **New agent** and opens the new-agent composer. If the backend is unreachable, the tile still opens the last published waiting session and shows no error of its own. Signing out removes **Needs input** and **Open last session** from the app shortcuts and the tile.
+On Android, the Tavern [Quick Settings tile](https://developer.android.com/develop/ui/views/quicksettings-tiles) mirrors this state. While a session is waiting, the tile reads **Needs input** and opens the chat of the session that has waited longest; with nothing waiting, it reads **New agent** and opens the new-agent composer. If the backend is unreachable, the tile still opens the last published waiting session and shows no error of its own. Signing out removes **Needs input** and **Open last session** from the app shortcuts and the tile.
 
 App shortcuts require Android 7.1 (API 25) or later; the Quick Settings tile works on Android 7.0 (API 24) or later.
 
@@ -82,22 +82,22 @@ Web links in model replies ask you to confirm the destination host before openin
 
 The app follows your device language, with English as the fallback. Choose another language from the login screen or **Preferences**. The picker supports search and shows languages in their own scripts. Dates, times, and currency formatting follow the selected language. Switching between left-to-right and right-to-left layouts restarts the app.
 
-## Kilo Pass and billing
+## Tavern Pass and billing
 
-For Kilo Pass pricing, billing, and account management details, use the [Kilo Pass pricing page](https://kilo.ai/pricing/kilo-pass).
+For Tavern Pass pricing, billing, and account management details, use the [Tavern Pass pricing page](https://tavern.ai/pricing/tavern-pass).
 
-On Android, you can buy, restore, and change Kilo Pass tiers through Google Play. Tier changes take effect at the next renewal; your current tier and credits stay in place until then. Google manages cancellation and payment methods for passes purchased through Google Play.
+On Android, you can buy, restore, and change Tavern Pass tiers through Google Play. Tier changes take effect at the next renewal; your current tier and credits stay in place until then. Google manages cancellation and payment methods for passes purchased through Google Play.
 
 {% imageGallery columns="3" width="220px" %}
-{% image src="/docs/img/mobile-apps/home.webp" alt="Kilo Code mobile home screen showing active agent sessions" caption="Start coding tasks and resume active sessions from the mobile home screen." /%}
+{% image src="/docs/img/mobile-apps/home.webp" alt="Tavern Code mobile home screen showing active agent sessions" caption="Start coding tasks and resume active sessions from the mobile home screen." /%}
 
-{% image src="/docs/img/mobile-apps/new-session.webp" alt="Kilo Code mobile new session screen with coding mode selector" caption="Create a new Cloud Agent session and choose the right mode for the task." /%}
+{% image src="/docs/img/mobile-apps/new-session.webp" alt="Tavern Code mobile new session screen with coding mode selector" caption="Create a new Cloud Agent session and choose the right mode for the task." /%}
 
-{% image src="/docs/img/mobile-apps/session-chat.webp" alt="Kilo Code mobile session chat with an active coding task" caption="Review progress and continue coding conversations from the mobile app." /%}
+{% image src="/docs/img/mobile-apps/session-chat.webp" alt="Tavern Code mobile session chat with an active coding task" caption="Review progress and continue coding conversations from the mobile app." /%}
 {% /imageGallery %}
 
 {% imageGallery columns="1" width="220px" %}
-{% image src="/docs/img/mobile-apps/session-filters.webp" alt="Kilo Code mobile session filter panel for Cloud Extension CLI Slack and other platforms" caption="Filter sessions by platform and project, including Cloud, Extension, CLI, Slack, and other sessions." /%}
+{% image src="/docs/img/mobile-apps/session-filters.webp" alt="Tavern Code mobile session filter panel for Cloud Extension CLI Slack and other platforms" caption="Filter sessions by platform and project, including Cloud, Extension, CLI, Slack, and other sessions." /%}
 {% /imageGallery %}
 
 ## Choosing where a session runs
@@ -105,7 +105,7 @@ On Android, you can buy, restore, and change Kilo Pass tiers through Google Play
 The new-session screen includes a **Run on** picker that chooses where your session runs:
 
 - **Cloud Agent** — the managed cloud environment (the default).
-- **A connected instance** — a `kilo remote` CLI running on your own machine. The picker lists the instances currently connected to your account under **Remotes** and **Terminals** groups, each with its own icon. Each connection shows its branch and start date and time when available.
+- **A connected instance** — a `tavern remote` CLI running on your own machine. The picker lists the instances currently connected to your account under **Remotes** and **Terminals** groups, each with its own icon. Each connection shows its branch and start date and time when available.
 
 Remote sessions start with the mode and model selected on the new-session screen; older CLI versions that don't accept those fields fall back to their own defaults. By default, the workspace is the CLI's launch directory. Use **Folder** to choose a child folder, including nested folders, before starting. If the CLI cannot list folders, the app explains this and starts in the launch directory instead. In organization context, the new session belongs to that organization.
 
@@ -143,13 +143,13 @@ Auto-approve applies to one session only, so other sessions keep prompting. Clar
 
 The toggle is kept in memory for the session and never changes your global auto-approve configuration. Signing out or switching accounts turns auto-approve off for every session.
 
-## Kilo tools in chat
+## Tavern tools in chat
 
-A signed-in chat can reach the Kilo tools automatically using your signed-in session — there is no key to paste and no URL to enter. The model sees the available Kilo tools (named `mcp_kilo_*`) and can call them, reading their answers in the reply.
+A signed-in chat can reach the Tavern tools automatically using your signed-in session — there is no key to paste and no URL to enter. The model sees the available Tavern tools (named `mcp_kilo_*`) and can call them, reading their answers in the reply.
 
-Every chat has a **Kilo tools** switch in its Kilo tools sheet. It is on by default, and your choice is kept when you reopen the chat or switch models. With the switch off, the chat sends no Kilo tool to the model and contacts no server.
+Every chat has a **Tavern tools** switch in its Tavern tools sheet. It is on by default, and your choice is kept when you reopen the chat or switch models. With the switch off, the chat sends no Tavern tool to the model and contacts no server.
 
-The Kilo tools sheet names the connection state and offers **Retry** only when retrying can help. If the server is slow, refuses the session, or disappears mid-chat, the chat stays usable and reports what happened; a failed call reaches the model as a failed tool result.
+The Tavern tools sheet names the connection state and offers **Retry** only when retrying can help. If the server is slow, refuses the session, or disappears mid-chat, the chat stays usable and reports what happened; a failed call reaches the model as a failed tool result.
 
 Signing out drops the connection and its tools, and signing in as another user never shows the previous account's tools.
 
@@ -163,14 +163,14 @@ While a model streams reasoning, the composer and subagent spinners still read *
 
 The composer stays editable while the agent is working, so you don't have to wait for a session to finish before sending your next message. Type your follow-up and press **Send** to add it to the session's queue; queued messages are processed in order. While a session is streaming, **Stop** appears only when the composer is empty — with text entered, Send takes its place.
 
-A queued message shows a subtle **Queued** badge on its bubble. The badge clears when the message starts processing or when the queue drains or is cancelled. Queueing works for Cloud Agent sessions and for remote sessions on a connected `kilo remote` CLI instance.
+A queued message shows a subtle **Queued** badge on its bubble. The badge clears when the message starts processing or when the queue drains or is cancelled. Queueing works for Cloud Agent sessions and for remote sessions on a connected `tavern remote` CLI instance.
 
 ## Voice input
 
 Dictate prompts with the microphone in the composer. Voice input uses one of two engines:
 
 - **On-device (default)** — the operating system's speech recognizer.
-- **Kilo Gateway** — turn on **Gateway transcription** in **Preferences** to transcribe through your Kilo account.
+- **Tavern Gateway** — turn on **Gateway transcription** in **Preferences** to transcribe through your Tavern account.
 
 The switch is a two-way choice, not a fallback: the selected engine owns the whole dictation and the other engine is never called. The choice applies to every voice dictation in the app.
 
@@ -180,7 +180,7 @@ While the gateway transcribes, the composer shows **Transcribing...** and the mi
 
 ## Attachments in remote sessions
 
-When you connect the mobile app to a `kilo remote` CLI session, you can share files in both directions.
+When you connect the mobile app to a `tavern remote` CLI session, you can share files in both directions.
 
 ### Sending files from your phone to the CLI
 
@@ -189,15 +189,15 @@ Attach up to **5 files** (each up to **20 MiB**) from your phone to the remote s
 - **Text, images, and PDFs** — the file content is converted to a `data:` URL and handed directly to the model as a file part. The model sees the content as if you had loaded it locally.
 - **Other file types** (binaries, archives, etc.) — the file is saved to a per-session scratch directory on the CLI machine. The session transcript shows the saved path, filename, file size, and MIME type. The agent can inspect the file with the `read` tool for text content or shell utilities for binary content.
 
-Attaching files from the phone is the mobile flow — this is separate from `kilo run --file <path>`, which attaches local files to a local prompt.
+Attaching files from the phone is the mobile flow — this is separate from `tavern run --file <path>`, which attaches local files to a local prompt.
 
 ### Receiving files from the CLI on your phone
 
-While the CLI is connected, the agent can deliver a file to your phone with the `send_file` tool (up to **4 MiB**, remote sessions only). The file appears as a chip on the tool card — tap the chip to open the share sheet and save or forward the file. This tool works only when `kilo remote` is actively connected; it is not available in Cloud Agent sessions.
+While the CLI is connected, the agent can deliver a file to your phone with the `send_file` tool (up to **4 MiB**, remote sessions only). The file appears as a chip on the tool card — tap the chip to open the share sheet and save or forward the file. This tool works only when `tavern remote` is actively connected; it is not available in Cloud Agent sessions.
 
 ## Agent artifacts in your file browser
 
-On iOS and Android, your phone's file browser shows a **Kilo** location alongside your other file providers.
+On iOS and Android, your phone's file browser shows a **Tavern** location alongside your other file providers.
 
 - It lists each agent session as a folder, in the same recency order as the app.
 - Open a session folder to see the files that agent produced. File names match the names shown in the app.
@@ -216,7 +216,7 @@ Open a pull request or merge request from a link to review it without leaving th
 
 Comments you leave on diffs are collected into a pending review on your device and submitted as a single review. To post a regular conversation comment instead, tap **Comment on this pull request** at the bottom of **Discussion**. These comments appear directly in the discussion and are not part of a review, and they work on GitHub pull requests, GitLab merge requests, and Bitbucket pull requests. The comment sheet header shows the provider's own reference, such as `group/sub/repo!12` on GitLab or `workspace/repo#77` on Bitbucket.
 
-Every comment row shows a **Fix with Kilo** pill beside its overflow menu, on diff-line review threads and on conversation comments. Tapping it opens the new-session screen with the composer prefilled with `Please address the following PR comment: <that comment's link>`. The link targets the exact comment, and a comment with no addressable provider URL shows no pill.
+Every comment row shows a **Fix with Tavern** pill beside its overflow menu, on diff-line review threads and on conversation comments. Tapping it opens the new-session screen with the composer prefilled with `Please address the following PR comment: <that comment's link>`. The link targets the exact comment, and a comment with no addressable provider URL shows no pill.
 
 When the request is ready, you can merge it (merge, squash, or rebase), enable or disable auto-merge where the provider supports it, or update the branch, all from the app. Bitbucket's API has no auto-merge, so the app explains that instead of offering it.
 
@@ -269,7 +269,7 @@ The running agent activity on iOS and Android offers **Approve** and **Open** as
 
 The Android app is available now on Google Play.
 
-[Install the Android app →](https://play.google.com/store/apps/details?id=com.kilocode.kiloapp)
+[Install the Android app →](https://play.google.com/store/apps/details?id=com.taverncode.kiloapp)
 
 ## iOS App
 

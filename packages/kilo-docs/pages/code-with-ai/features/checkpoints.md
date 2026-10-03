@@ -5,7 +5,7 @@ description: "Save and restore code states with checkpoints"
 
 # Checkpoints
 
-Checkpoints automatically version your workspace files during Kilo Code tasks, enabling non-destructive exploration of AI suggestions and easy recovery from unwanted changes.
+Checkpoints automatically version your workspace files during Tavern Code tasks, enabling non-destructive exploration of AI suggestions and easy recovery from unwanted changes.
 
 Checkpoints let you:
 
@@ -19,7 +19,7 @@ Checkpoints let you:
 {% tabs %}
 {% tab label="VSCode" %}
 
-Checkpoints (called **snapshots** in the new extension) are enabled by default. They are configured via the `snapshot` key in your config file (`kilo.jsonc` or `~/.config/kilo/kilo.jsonc`):
+Checkpoints (called **snapshots** in the new extension) are enabled by default. They are configured via the `snapshot` key in your config file (`tavern.jsonc` or `~/.config/tavern/tavern.jsonc`):
 
 ```json
 {
@@ -40,7 +40,7 @@ Unlike the legacy extension which used a separate shadow Git repository, the new
 {% /tab %}
 {% tab label="CLI" %}
 
-Checkpoints are controlled by the `snapshot` boolean in your `kilo.jsonc` configuration file:
+Checkpoints are controlled by the `snapshot` boolean in your `tavern.jsonc` configuration file:
 
 ```json
 {
@@ -57,7 +57,7 @@ When enabled, the system automatically captures snapshots at each step of a task
 
 Session history grows over time, and a long list of old sessions gets hard to navigate. **Auto-Cleanup** removes old sessions on a schedule so you do not have to delete history by hand. It is off by default.
 
-Cleanup is a machine-wide policy, owned by the Kilo backend. When enabled, it applies to **all projects and every Kilo client on this machine** (the VS Code extension, the CLI, and JetBrains), not just the window where you turned it on.
+Cleanup is a machine-wide policy, owned by the Tavern backend. When enabled, it applies to **all projects and every Tavern client on this machine** (the VS Code extension, the CLI, and JetBrains), not just the window where you turned it on.
 
 ### Enabling Auto-Cleanup
 
@@ -67,11 +67,11 @@ Cleanup is a machine-wide policy, owned by the Kilo backend. When enabled, it ap
 4. Set **Keep sessions for (days)**, the time session history is kept before cleanup deletes it (default 30 days)
 5. Click **Save** if you made changes
 
-The policy lives in `kilo.json` under the `retention` key, so it applies no matter which client you use next. Archived sessions age out on the same clock as everything else.
+The policy lives in `tavern.json` under the `retention` key, so it applies no matter which client you use next. Archived sessions age out on the same clock as everything else.
 
 Once enabled, the VS Code extension triggers cleanup about once a day while it is running. You can also run it immediately with the **Run Cleanup Now** button, which asks for confirmation first because deletion is permanent. A spinner and live status show the scanning or deleting phase and the number of sessions processed out of the total. During deletion, the status also shows deleted and failed counts. Reopening Settings shows the current progress. After each run, the **Last cleanup** line shows how many sessions were deleted, how many were skipped, and whether anything failed.
 
-A long pass can be halted with the **Stop cleanup** button while it runs. Stopping keeps what the pass already deleted and skips the rest; the **Last cleanup** line marks an interrupted run. After a pass frees a large share of the session database, Kilo also reclaims the disk space, so the storage file shrinks instead of keeping its old size.
+A long pass can be halted with the **Stop cleanup** button while it runs. Stopping keeps what the pass already deleted and skips the rest; the **Last cleanup** line marks an interrupted run. After a pass frees a large share of the session database, Tavern also reclaims the disk space, so the storage file shrinks instead of keeping its old size.
 
 ### What Is Protected
 
@@ -183,7 +183,7 @@ Checkpoints are captured automatically at each step of a task. In the CLI termin
 
 ### Limitations and Considerations
 
-- **Scope**: Checkpoints only capture changes made during active Kilo Code tasks
+- **Scope**: Checkpoints only capture changes made during active Tavern Code tasks
 - **External changes**: Modifications made outside of tasks (manual edits, other tools) aren't included
 - **Large files**: Very large binary files may impact performance
 - **Unsaved work**: Restoration will overwrite any unsaved changes in your workspace
@@ -194,7 +194,7 @@ Checkpoints are captured automatically at each step of a task. In the CLI termin
 
 The snapshot system consists of:
 
-1. **Snapshot Git Repository**: A dedicated Git repository created outside your project at `~/.local/share/kilo/snapshot/<project-id>/<worktree-hash>/`. This stores all snapshot tree objects without affecting your project's Git history. Each worktree gets its own snapshot repository, identified by a hash of the worktree path.
+1. **Snapshot Git Repository**: A dedicated Git repository created outside your project at `~/.local/share/tavern/snapshot/<project-id>/<worktree-hash>/`. This stores all snapshot tree objects without affecting your project's Git history. Each worktree gets its own snapshot repository, identified by a hash of the worktree path.
 
 2. **Step-level Snapshots**: The agent runtime automatically runs `git write-tree` against your workspace before and after each agent step. The resulting tree hashes are stored alongside the conversation messages.
 
@@ -225,7 +225,7 @@ When using the Agent Manager with git worktrees, each worktree gets its own isol
 
 ## Git Installation
 
-Checkpoints require Git to be installed on your system. If Git is unavailable or the workspace is not a Git repository, Kilo skips checkpoints automatically; you do not need to disable them manually.
+Checkpoints require Git to be installed on your system. If Git is unavailable or the workspace is not a Git repository, Tavern skips checkpoints automatically; you do not need to disable them manually.
 
 ### macOS
 

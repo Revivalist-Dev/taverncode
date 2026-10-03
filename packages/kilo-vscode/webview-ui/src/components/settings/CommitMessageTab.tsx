@@ -1,8 +1,8 @@
 import { Component, Show, createSignal, createMemo } from "solid-js"
-import { Switch } from "@kilocode/kilo-ui/switch"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { Card } from "@kilocode/kilo-ui/card"
-import { Select } from "@kilocode/kilo-ui/select"
+import { Switch } from "@taverncode/tavern-ui/switch"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { Card } from "@taverncode/tavern-ui/card"
+import { Select } from "@taverncode/tavern-ui/select"
 import { useConfig } from "../../context/config"
 import { useLanguage, LOCALES, LOCALE_LABELS } from "../../context/language"
 import type { Locale } from "../../context/language"
@@ -41,7 +41,7 @@ const CommitMessageTab: Component = () => {
   return (
     <Card>
       <div style={{ padding: "16px" }}>
-        <p style={{ "font-size": "var(--kilo-font-size-13)", "margin-bottom": "12px" }}>
+        <p style={{ "font-size": "var(--tavern-font-size-13)", "margin-bottom": "12px" }}>
           {language.t("settings.commitMessage.language.description")}
         </p>
         <Select
@@ -55,7 +55,7 @@ const CommitMessageTab: Component = () => {
         />
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             "margin-top": "8px",
           }}

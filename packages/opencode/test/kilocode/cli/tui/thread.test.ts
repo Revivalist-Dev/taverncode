@@ -10,15 +10,15 @@ import {
   resolveThreadDirectory,
   runEmbeddedRemoteExitBridge,
 } from "../../../../src/cli/cmd/tui"
-import { preload, validate } from "../../../../src/kilocode/cli/cmd/tui"
-import { KiloTuiThreadDaemon } from "../../../../src/kilocode/cli/cmd/tui/thread"
-import { DaemonClient } from "../../../../src/kilocode/daemon/client"
+import { preload, validate } from "../../../../src/taverncode/cli/cmd/tui"
+import { KiloTuiThreadDaemon } from "../../../../src/taverncode/cli/cmd/tui/thread"
+import { DaemonClient } from "../../../../src/taverncode/daemon/client"
 
 afterEach(() => {
   mock.restore()
 })
 
-describe("kilo tui thread", () => {
+describe("tavern tui thread", () => {
   test("starts fresh sessions without requesting session validation", async () => {
     await expect(validate({ url: "http://127.0.0.1:0" })).resolves.toBeUndefined()
   })
@@ -98,7 +98,7 @@ describe("kilo tui thread", () => {
           return
         }
         // The title is emitted only after the worker-backed TUI reaches its rendered app.
-        if (state.text.includes("Kilo CLI")) ready.resolve()
+        if (state.text.includes("Tavern CLI")) ready.resolve()
       })
       const exit = proc.onExit((event) => {
         state.exit = event
@@ -115,7 +115,7 @@ describe("kilo tui thread", () => {
 
       try {
         await ready.promise
-        expect(state.text).toContain("Kilo CLI")
+        expect(state.text).toContain("Tavern CLI")
       } finally {
         clearTimeout(timer)
         data.dispose()
@@ -135,7 +135,7 @@ describe("kilo tui thread", () => {
     expect(resolveThreadDirectory(".", root.path, pkg)).toBe(pkg)
   })
 
-  test("uses kilo-dev caller directory when running through package cwd", async () => {
+  test("uses tavern-dev caller directory when running through package cwd", async () => {
     await using root = await tmpdir()
     const pkg = path.join(root.path, "packages", "opencode")
     await fs.mkdir(pkg, { recursive: true })
@@ -203,7 +203,7 @@ describe("kilo tui thread", () => {
       fetch(request) {
         const route = `${request.method} ${new URL(request.url).pathname}`
         calls.push(route)
-        if (route === "POST /kilo/cloud/session/import") return Response.json({ id: local })
+        if (route === "POST /tavern/cloud/session/import") return Response.json({ id: local })
         if (route === `GET /session/${local}`) return Response.json({ id: local })
         return new Response(null, { status: 404 })
       },
@@ -217,7 +217,7 @@ describe("kilo tui thread", () => {
         hostname: url.hostname,
         port: Number(url.port),
         url: url.origin,
-        username: "kilo",
+        username: "tavern",
         password: "test",
         token: "test",
         version: "test",
@@ -225,7 +225,7 @@ describe("kilo tui thread", () => {
         log: path.join(root.path, "daemon.log"),
       },
     })
-    const args = { port: 0, hostname: "127.0.0.1", mdns: false, "mdns-domain": "kilo.local", cors: [] }
+    const args = { port: 0, hostname: "127.0.0.1", mdns: false, "mdns-domain": "tavern.local", cors: [] }
     const start: Parameters<typeof KiloTuiThreadDaemon.attach>[0]["start"] = async (input) => {
       opened.push(input.args.sessionID)
     }
@@ -238,7 +238,7 @@ describe("kilo tui thread", () => {
         start,
       })
 
-      expect(calls).toEqual(["POST /kilo/cloud/session/import", `GET /session/${local}`])
+      expect(calls).toEqual(["POST /tavern/cloud/session/import", `GET /session/${local}`])
       expect(opened).toEqual([local])
     } finally {
       daemon.mockRestore()
@@ -249,9 +249,9 @@ describe("kilo tui thread", () => {
     const seen: string[] = []
     const started: string[] = []
 
-    mock.module("@kilocode/sdk/v2", () => ({
+    mock.module("@taverncode/sdk/v2", () => ({
       createKiloClient: () => ({
-        kilo: {
+        tavern: {
           cloud: {
             session: {
               import: async (input: { sessionId: string }) => {
@@ -273,7 +273,7 @@ describe("kilo tui thread", () => {
         get: async () => ({}),
       },
     }))
-    mock.module("@/kilocode/daemon/client", () => ({
+    mock.module("@/taverncode/daemon/client", () => ({
       DaemonClient: {
         maybe: async () => ({ url: "http://127.0.0.1:4096", headers: {} }),
       },
@@ -286,7 +286,7 @@ describe("kilo tui thread", () => {
     }))
 
     const key = JSON.stringify({ time: Date.now(), rand: Math.random() })
-    const mod = await import(`../../../../src/kilocode/cli/cmd/tui/thread?${key}`)
+    const mod = await import(`../../../../src/taverncode/cli/cmd/tui/thread?${key}`)
 
     const handled = await mod.KiloTuiThreadDaemon.attach({
       args: { session: "ses_cloud", cloudFork: true },

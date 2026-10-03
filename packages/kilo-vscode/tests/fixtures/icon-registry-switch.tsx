@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import { Window } from "happy-dom"
 
-const window = new Window({ url: "https://kilo.test" })
+const window = new Window({ url: "https://tavern.test" })
 Object.assign(globalThis, {
   window,
   document: window.document,
@@ -17,9 +17,9 @@ Object.assign(globalThis, {
 })
 const { createSignal } = await import("solid-js")
 const { render } = await import("solid-js/web")
-const { Icon } = await import("@kilocode/kilo-ui/icon")
+const { Icon } = await import("@taverncode/tavern-ui/icon")
 
-// PRBadge maps `failure` to a kilo-ui icon and `approved` to an upstream icon.
+// PRBadge maps `failure` to a tavern-ui icon and `approved` to an upstream icon.
 // Switching between the two registries after mount used to throw
 // "Cannot read properties of undefined (reading 'viewBox')" and blank the sidebar.
 const [name, setName] = createSignal<"circle-x-outline" | "circle-check">("circle-x-outline")

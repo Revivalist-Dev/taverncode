@@ -25,12 +25,12 @@ const codeMetrics = {
 
 const codeStyle = {
   ...styleVariables,
-  "--diffs-line-height": "var(--kilo-font-size-24)",
+  "--diffs-line-height": "var(--tavern-font-size-24)",
 }
 
 function lineHeight() {
   if (typeof window === "undefined") return codeMetrics.lineHeight
-  const value = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--kilo-font-size-24"))
+  const value = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--tavern-font-size-24"))
   return Number.isFinite(value) ? value : codeMetrics.lineHeight
 }
 

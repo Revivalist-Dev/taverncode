@@ -1,8 +1,8 @@
 import * as fs from "fs"
 import * as path from "path"
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { KiloClient, Session } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../services/cli-backend"
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { resolveLocalDiffTarget } from "../diff/shared/target"
 import { DiffSourceCatalog } from "../diff/sources/catalog"
 import { getDiffMarkdownRender, setDiffMarkdownRender } from "../review-settings"
@@ -25,7 +25,7 @@ import {
 import { Timing } from "./creation-timing"
 import { normalizeBaseBranch } from "./base-branch"
 import { handleBaseUpdate } from "./base-update"
-import { pushFixes } from "../kilo-provider/push-fixes-settings"
+import { pushFixes } from "../tavern-provider/push-fixes-settings"
 import { GitStatsPoller, type LocalStats, type WorktreePresenceResult, type WorktreeStats } from "./GitStatsPoller"
 import { createPollers, type ProjectPollers } from "./project/pollers"
 import { GitOps } from "./GitOps"
@@ -102,7 +102,7 @@ import { createBrowserLifecycle } from "./browser-lifecycle"
 import { handleSessionLifecycle } from "./session-lifecycle"
 import { isRestrictedRoot } from "./home-workspace"
 export class AgentManagerProvider implements Disposable {
-  public static readonly viewType = "kilo-code.new.AgentManagerPanel"
+  public static readonly viewType = "tavern-code.new.AgentManagerPanel"
   private panel: PanelContext | undefined
   private outputChannel: OutputHandle
   private readonly registry: ProjectRegistry
@@ -166,7 +166,7 @@ export class AgentManagerProvider implements Disposable {
       openPanel: () => this.openPanel(true),
       log: (...args) => this.log(...args),
     })
-    this.outputChannel = host.createOutput("Kilo Agent Manager")
+    this.outputChannel = host.createOutput("Tavern Agent Manager")
     this.terminalManager = new SessionTerminalManager(
       (msg) => this.outputChannel.appendLine(`[SessionTerminal] ${msg}`),
       createTerminalHost(),
@@ -321,7 +321,7 @@ export class AgentManagerProvider implements Disposable {
       log: (...args) => this.log(...args),
     })
     this.unsubTool = this.connectionService.onEventFiltered(
-      (event) => (event as { type?: string }).type === "kilocode.agent_manager.start",
+      (event) => (event as { type?: string }).type === "taverncode.agent_manager.start",
       (event, directory) => this.onToolEvent(event, directory),
     )
     this.activity = createWorktreeActivity({
@@ -474,7 +474,7 @@ export class AgentManagerProvider implements Disposable {
     }
     // Counts only — no paths, no branch names.
     if (init.health) this.host.capture("Agent Manager Worktree Health", healthMetrics(init.health))
-    // When the .kilocode → .kilo migration rewrote git worktree refs, nudge
+    // When the .taverncode → .tavern migration rewrote git worktree refs, nudge
     // VS Code's git extension to re-discover them and avoid stale Source Control.
     if (init.refsFixed > 0) {
       this.log(`Migration fixed ${init.refsFixed} git worktree ref(s), refreshing git`)

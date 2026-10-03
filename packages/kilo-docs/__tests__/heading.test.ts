@@ -7,11 +7,11 @@ describe("heading", () => {
     const tag = heading.transform(
       {
         transformAttributes: () => ({}),
-        transformChildren: () => [new Tag("code", {}, ["kilo-auto/frontier"])],
+        transformChildren: () => [new Tag("code", {}, ["tavern-auto/frontier"])],
       },
       {},
     )
 
-    expect(tag.attributes.id).toBe("kilo-autofrontier")
+    expect(tag.attributes.id).toBe("tavern-autofrontier")
   })
 })

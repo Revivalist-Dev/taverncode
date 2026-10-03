@@ -2,7 +2,7 @@ import { expect, test } from "bun:test"
 import { copyFile, mkdir, mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join, resolve } from "node:path"
-import { compare, parse, prune, scan, type Exception, type Finding } from "../../../script/check-kilocode-duplication"
+import { compare, parse, prune, scan, type Exception, type Finding } from "../../../script/check-taverncode-duplication"
 
 const source = `export function summarize(input: readonly number[]) {
   const positive = input.filter((value) => Number.isFinite(value) && value > 0)
@@ -26,11 +26,11 @@ const source = `export function summarize(input: readonly number[]) {
   return Object.freeze(result)
 }
 `
-const first = "packages/kilo-example/src/first.ts"
-const second = "packages/kilo-example/src/second.tsx"
+const first = "packages/tavern-example/src/first.ts"
+const second = "packages/tavern-example/src/second.tsx"
 
 async function fixture(files: Record<string, string>, run: (root: string) => Promise<void>) {
-  const root = await mkdtemp(join(tmpdir(), "kilo-duplication-test-"))
+  const root = await mkdtemp(join(tmpdir(), "tavern-duplication-test-"))
   try {
     for (const [name, content] of Object.entries(files)) {
       const file = join(root, name)
@@ -100,7 +100,7 @@ test(
       await Bun.write(join(root, first), `\n\n\n${source}`)
       const shifted = await scan(root)
       expect(compare(shifted.findings, exceptions)).toEqual([])
-      const third = "packages/kilo-example/src/third.ts"
+      const third = "packages/tavern-example/src/third.ts"
       await Bun.write(join(root, third), source)
       const copied = await scan(root)
       expect(compare(copied.findings, exceptions)).toContainEqual(expect.stringContaining("Unclassified duplication"))
@@ -148,22 +148,22 @@ test(
 )
 
 test(
-  "includes new Kilo packages without counting JetBrains, upstream, generated, locale or fixture files",
+  "includes new Tavern packages without counting JetBrains, upstream, generated, locale or fixture files",
   async () => {
     await fixture(
       {
         [first]: source,
         "packages/ui/src/upstream.ts": source,
-        "packages/kilo-example/src/fixtures/copy.ts": source,
-        "packages/kilo-example/src/i18n/en.ts": source,
-        "packages/kilo-example/src/copy.test.ts": source,
-        "packages/kilo-example/src/copy.gen.ts": source,
-        "packages/kilo-example/src/copy.d.ts": source,
-        "packages/kilo-i18n/src/en.ts": source,
-        "packages/kilo-docs/src/copy.ts": source,
-        "packages/kilo-jetbrains/src/first.ts": source,
-        "packages/kilo-jetbrains/src/second.tsx": source,
-        "packages/kilo-vscode/src/services/autocomplete/continuedev/copy.ts": source,
+        "packages/tavern-example/src/fixtures/copy.ts": source,
+        "packages/tavern-example/src/i18n/en.ts": source,
+        "packages/tavern-example/src/copy.test.ts": source,
+        "packages/tavern-example/src/copy.gen.ts": source,
+        "packages/tavern-example/src/copy.d.ts": source,
+        "packages/tavern-i18n/src/en.ts": source,
+        "packages/tavern-docs/src/copy.ts": source,
+        "packages/tavern-jetbrains/src/first.ts": source,
+        "packages/tavern-jetbrains/src/second.tsx": source,
+        "packages/tavern-vscode/src/services/autocomplete/continuedev/copy.ts": source,
       },
       async (root) => {
         const result = await scan(root)
@@ -184,7 +184,7 @@ test(
           () => "",
           (err: unknown) => String(err),
         ),
-      ).toContain("No Kilo-owned source files")
+      ).toContain("No Tavern-owned source files")
     })
     await fixture({ [first]: `/* jscpd:ignore-start */\n${source}\n/* jscpd:ignore-end */\n` }, async (root) => {
       expect(
@@ -204,8 +204,8 @@ test(
     const css = `.box {\n${Array.from({ length: 20 }, (_, index) => `  --shade-${index}: rgb(${index}, 0, 0);`).join("\n")}\n}\n`
     await fixture(
       {
-        "packages/kilo-example/src/first.css": css,
-        "packages/kilo-example/src/second.css": css,
+        "packages/tavern-example/src/first.css": css,
+        "packages/tavern-example/src/second.css": css,
       },
       async (root) => {
         const result = await scan(root)
@@ -221,7 +221,7 @@ test(
   "the CLI rejects new copies and only prunes resolved debt",
   async () => {
     await fixture({ [first]: source, [second]: source }, async (root) => {
-      const script = "script/check-kilocode-duplication.ts"
+      const script = "script/check-taverncode-duplication.ts"
       await mkdir(join(root, "script"))
       await copyFile(resolve(import.meta.dir, "../../../", script), join(root, script))
       const invoke = async (args: string[] = []) => {
@@ -239,10 +239,10 @@ test(
         return { code, text: stdout + stderr }
       }
       expect((await invoke(["--init"])).code).toBe(0)
-      const baseline = Bun.file(join(root, "script/kilocode-duplication-allowlist.json"))
+      const baseline = Bun.file(join(root, "script/taverncode-duplication-allowlist.json"))
       const initial = await baseline.text()
       expect((await invoke()).code).toBe(0)
-      const third = join(root, "packages/kilo-example/src/third.ts")
+      const third = join(root, "packages/tavern-example/src/third.ts")
       await Bun.write(third, source)
       const failed = await invoke()
       expect(failed.code).toBe(1)

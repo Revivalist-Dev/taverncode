@@ -1,6 +1,6 @@
 import { Component } from "solid-js"
-import { Switch } from "@kilocode/kilo-ui/switch"
-import { Card } from "@kilocode/kilo-ui/card"
+import { Switch } from "@taverncode/tavern-ui/switch"
+import { Card } from "@taverncode/tavern-ui/card"
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
 import SettingsRow from "./SettingsRow"
@@ -65,7 +65,7 @@ const AutocompleteTab: Component<{ onNavigateToModels?: () => void }> = (props) 
         data-slot="autocomplete-models-hint"
         style={{
           "margin-top": "20px",
-          "font-size": "var(--kilo-font-size-12)",
+          "font-size": "var(--tavern-font-size-12)",
           "text-align": "right",
           color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
         }}

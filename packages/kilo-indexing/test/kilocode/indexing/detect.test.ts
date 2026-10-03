@@ -6,7 +6,7 @@ import { hasIndexingPlugin, isIndexingPlugin, normalizePluginName } from "../../
 
 describe("indexing plugin detection", () => {
   test("bundles detect module for browser targets", async () => {
-    const dir = await mkdtemp(`${tmpdir()}/kilo-indexing-detect-`)
+    const dir = await mkdtemp(`${tmpdir()}/tavern-indexing-detect-`)
     const result = await Bun.build({
       entrypoints: [fileURLToPath(new URL("../../../src/detect.ts", import.meta.url))],
       minify: true,
@@ -18,28 +18,28 @@ describe("indexing plugin detection", () => {
   })
 
   test("normalizes supported plugin forms", () => {
-    expect(normalizePluginName("kilo-indexing")).toBe("kilo-indexing")
-    expect(normalizePluginName("kilo-indexing@1.2.3")).toBe("kilo-indexing")
-    expect(normalizePluginName("@kilocode/kilo-indexing")).toBe("@kilocode/kilo-indexing")
-    expect(normalizePluginName("@kilocode/kilo-indexing@1.2.3")).toBe("@kilocode/kilo-indexing")
-    expect(normalizePluginName("../../packages/kilo-indexing")).toBe("@kilocode/kilo-indexing")
-    expect(normalizePluginName("file:///tmp/.opencode/plugin/kilo-indexing.js")).toBe("kilo-indexing")
-    expect(normalizePluginName("file:///tmp/node_modules/@kilocode/kilo-indexing/index.js")).toBe(
-      "@kilocode/kilo-indexing",
+    expect(normalizePluginName("tavern-indexing")).toBe("tavern-indexing")
+    expect(normalizePluginName("tavern-indexing@1.2.3")).toBe("tavern-indexing")
+    expect(normalizePluginName("@taverncode/tavern-indexing")).toBe("@taverncode/tavern-indexing")
+    expect(normalizePluginName("@taverncode/tavern-indexing@1.2.3")).toBe("@taverncode/tavern-indexing")
+    expect(normalizePluginName("../../packages/tavern-indexing")).toBe("@taverncode/tavern-indexing")
+    expect(normalizePluginName("file:///tmp/.opencode/plugin/tavern-indexing.js")).toBe("tavern-indexing")
+    expect(normalizePluginName("file:///tmp/node_modules/@taverncode/tavern-indexing/index.js")).toBe(
+      "@taverncode/tavern-indexing",
     )
-    expect(normalizePluginName("file:///tmp/repo/packages/kilo-indexing/src/index.ts")).toBe("@kilocode/kilo-indexing")
+    expect(normalizePluginName("file:///tmp/repo/packages/tavern-indexing/src/index.ts")).toBe("@taverncode/tavern-indexing")
   })
 
   test("detects supported indexing plugin specifiers", () => {
     const values = [
-      "kilo-indexing",
-      "kilo-indexing@1.2.3",
-      "@kilocode/kilo-indexing",
-      "@kilocode/kilo-indexing@1.2.3",
-      "../../packages/kilo-indexing",
-      "file:///tmp/.opencode/plugin/kilo-indexing.js",
-      "file:///tmp/node_modules/@kilocode/kilo-indexing/index.js",
-      "file:///tmp/repo/packages/kilo-indexing/src/index.ts",
+      "tavern-indexing",
+      "tavern-indexing@1.2.3",
+      "@taverncode/tavern-indexing",
+      "@taverncode/tavern-indexing@1.2.3",
+      "../../packages/tavern-indexing",
+      "file:///tmp/.opencode/plugin/tavern-indexing.js",
+      "file:///tmp/node_modules/@taverncode/tavern-indexing/index.js",
+      "file:///tmp/repo/packages/tavern-indexing/src/index.ts",
     ]
 
     for (const value of values) {
@@ -48,14 +48,14 @@ describe("indexing plugin detection", () => {
   })
 
   test("ignores unrelated plugin specifiers", () => {
-    expect(isIndexingPlugin("@kilocode/kilo-gateway")).toBe(false)
+    expect(isIndexingPlugin("@taverncode/tavern-gateway")).toBe(false)
     expect(isIndexingPlugin("file:///tmp/.opencode/plugin/index.js")).toBe(false)
-    expect(hasIndexingPlugin(["@kilocode/kilo-gateway", "foo@1.0.0"])).toBe(false)
+    expect(hasIndexingPlugin(["@taverncode/tavern-gateway", "foo@1.0.0"])).toBe(false)
   })
 
   test("detects indexing plugin in merged plugin lists", () => {
     expect(
-      hasIndexingPlugin(["@kilocode/kilo-gateway", "file:///tmp/node_modules/@kilocode/kilo-indexing/index.js"]),
+      hasIndexingPlugin(["@taverncode/tavern-gateway", "file:///tmp/node_modules/@taverncode/tavern-indexing/index.js"]),
     ).toBe(true)
   })
 })

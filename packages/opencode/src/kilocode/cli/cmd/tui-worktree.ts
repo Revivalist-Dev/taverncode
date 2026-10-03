@@ -1,6 +1,6 @@
-// kilocode_change - new file
-// Supports `kilo --worktree <name>` (create/reuse a git worktree before the TUI
-// starts, placed at `.kilo/worktrees/<name>` to match Agent Manager's own
+// taverncode_change - new file
+// Supports `tavern --worktree <name>` (create/reuse a git worktree before the TUI
+// starts, placed at `.tavern/worktrees/<name>` to match Agent Manager's own
 // worktrees) and resuming an explicit `--session <id>` in the worktree it was
 // created in.
 import path from "path"
@@ -10,11 +10,11 @@ import { UI } from "@/cli/ui"
 import { Filesystem } from "@/util/filesystem"
 import { errorMessage } from "@/util/error"
 
-const log = Log.create({ service: "kilocode.tui-worktree" })
+const log = Log.create({ service: "taverncode.tui-worktree" })
 
-// Matches packages/kilo-vscode/src/agent-manager/WorktreeManager.ts's placement
-// and its ensureGitExclude(), keeping `.kilo/worktrees/` out of `git status`.
-const KILO_WORKTREE_DIR = ".kilo/worktrees"
+// Matches packages/tavern-vscode/src/agent-manager/WorktreeManager.ts's placement
+// and its ensureGitExclude(), keeping `.tavern/worktrees/` out of `git status`.
+const KILO_WORKTREE_DIR = ".tavern/worktrees"
 
 // Exported for tests.
 export async function ensureGitExclude(root: string) {
@@ -22,7 +22,7 @@ export async function ensureGitExclude(root: string) {
   const current = (await Filesystem.readText(excludePath).catch(() => "")).replace(/\s+$/, "")
   if (current.includes(`${KILO_WORKTREE_DIR}/`)) return
   const prefix = current ? `${current}\n\n` : ""
-  await Filesystem.write(excludePath, `${prefix}# Kilo Code agent worktrees\n${KILO_WORKTREE_DIR}/\n`).catch((err) =>
+  await Filesystem.write(excludePath, `${prefix}# Tavern Code agent worktrees\n${KILO_WORKTREE_DIR}/\n`).catch((err) =>
     log.error("failed to update .git/info/exclude", { excludePath, err }),
   )
 }
@@ -94,20 +94,20 @@ function waitForWorktreeEvent(
   return { promise: deferred.promise, cancel: cleanup }
 }
 
-// Exported for `kilo worktree create` (worktree.ts), which calls this and
+// Exported for `tavern worktree create` (worktree.ts), which calls this and
 // exits instead of going on to launch the TUI.
 export async function resolveWorktree(name: string, root: string, timeoutMs = 10 * 60_000) {
   const { Worktree } = await import("@/worktree")
   const { GlobalBus } = await import("@/bus/global")
   const { InstanceState } = await import("@/effect/instance-state")
-  const { primaryWorktree } = await import("@/kilocode/primary-worktree")
+  const { primaryWorktree } = await import("@/taverncode/primary-worktree")
   const { Git } = await import("@/git")
   const slug = slugify(name)
   if (!slug) throw new Error(`Invalid worktree name "${name}"`)
   return withInstance(root, async (run) => {
     const ctx = await run(InstanceState.context)
     // ctx.worktree is whichever checkout the command runs in. Creating under
-    // it unconditionally would nest `.kilo/worktrees/<name>` inside another
+    // it unconditionally would nest `.tavern/worktrees/<name>` inside another
     // worktree and branch off that worktree's HEAD instead of the primary
     // checkout's — refuse rather than get this wrong.
     const primary = await run(primaryWorktree(ctx.worktree))

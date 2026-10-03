@@ -12,7 +12,7 @@ declare const KILO_SANDBOX_MUTATION_WORKER_PATH: string
 
 function worker() {
   if (typeof KILO_SANDBOX_MUTATION_WORKER_PATH === "undefined") {
-    return { path: fileURLToPath(new URL("./kilo-sandbox-mutation-worker.ts", import.meta.url)), environment: {} }
+    return { path: fileURLToPath(new URL("./tavern-sandbox-mutation-worker.ts", import.meta.url)), environment: {} }
   }
   const path = KILO_SANDBOX_MUTATION_WORKER_PATH.startsWith(".")
     ? fileURLToPath(new URL(KILO_SANDBOX_MUTATION_WORKER_PATH, import.meta.url))
@@ -185,7 +185,7 @@ export const mutate: Runner = (profile, request) =>
     }),
   )
 
-const CurrentRunner = Context.Reference<Runner>("@kilocode/sandbox/CurrentMutationRunner", {
+const CurrentRunner = Context.Reference<Runner>("@taverncode/sandbox/CurrentMutationRunner", {
   defaultValue: () => mutate,
 })
 

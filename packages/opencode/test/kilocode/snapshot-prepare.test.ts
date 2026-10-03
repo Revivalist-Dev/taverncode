@@ -12,15 +12,15 @@ import { FSUtil } from "@opencode-ai/core/fs-util"
 import { Global } from "@opencode-ai/core/global"
 import { Hash } from "@opencode-ai/core/util/hash"
 import { EffectFlock } from "@opencode-ai/core/util/effect-flock"
-import { createKiloClient } from "@kilocode/sdk/v2"
+import { createKiloClient } from "@taverncode/sdk/v2"
 import { Snapshot } from "../../src/snapshot"
 import { Session } from "../../src/session/session"
 import { Server } from "../../src/server/server"
 import { InstanceState } from "../../src/effect/instance-state"
 import { InstanceStore } from "../../src/project/instance-store"
-import { KiloSnapshotCleanup } from "../../src/kilocode/snapshot/cleanup"
-import { KiloSnapshotPrepare } from "../../src/kilocode/snapshot/prepare"
-import { KiloSnapshotMaterialize } from "../../src/kilocode/snapshot/materialize"
+import { KiloSnapshotCleanup } from "../../src/taverncode/snapshot/cleanup"
+import { KiloSnapshotPrepare } from "../../src/taverncode/snapshot/prepare"
+import { KiloSnapshotMaterialize } from "../../src/taverncode/snapshot/materialize"
 import {
   disposeAllInstances,
   provideInstance,
@@ -46,7 +46,7 @@ test("removing a prepared worktree that was never tracked releases only its seed
       await $`git commit -m baseline`.cwd(dir).quiet()
     },
   })
-  const dir = path.join(source.path, ".kilo", "worktrees", "abandoned")
+  const dir = path.join(source.path, ".tavern", "worktrees", "abandoned")
   await $`git worktree add --detach ${dir} HEAD`.cwd(source.path).quiet()
   const ctx = await reloadTestInstance({ directory: dir })
   const gitdir = path.join(Global.Path.data, "snapshot", ctx.project.id, Hash.fast(ctx.worktree))
@@ -54,9 +54,9 @@ test("removing a prepared worktree that was never tracked releases only its seed
   const other = KiloSnapshotMaterialize.ref(path.join(gitdir, "other"))
   const app = Server.Default().app
 
-  const prepared = await app.request("/kilocode/snapshot/prepare", {
+  const prepared = await app.request("/taverncode/snapshot/prepare", {
     method: "POST",
-    headers: { "x-kilo-directory": dir },
+    headers: { "x-tavern-directory": dir },
   })
   expect(prepared.status).toBe(200)
   const hash = (await $`git rev-parse --verify ${pin}`.cwd(source.path).text()).trim()
@@ -85,7 +85,7 @@ test("removing a prepared worktree that was never tracked releases only its seed
     )
   const format = "%(refname)"
   const pins = async () =>
-    (await $`git for-each-ref --format=${format} refs/kilo/materialize`.cwd(source.path).text()).trim()
+    (await $`git for-each-ref --format=${format} refs/tavern/materialize`.cwd(source.path).text()).trim()
   expect(await remove()).toBe(true)
   expect(existsSync(gitdir)).toBe(false)
   expect(await pins()).toBe(other)
@@ -111,8 +111,8 @@ test("prepares a routed worktree once without tracking, then tracks current cont
   const ctx = await reloadTestInstance({ directory: dir })
   const gitdir = path.join(Global.Path.data, "snapshot", ctx.project.id, Hash.fast(ctx.worktree))
   const app = Server.Default().app
-  const headers = { "x-kilo-directory": dir }
-  const route = "/kilocode/snapshot/prepare"
+  const headers = { "x-tavern-directory": dir }
+  const route = "/taverncode/snapshot/prepare"
   expect(existsSync(gitdir)).toBe(false)
 
   const first = await app.request(route, { method: "POST", headers })
@@ -147,7 +147,7 @@ test("prepares a routed worktree once without tracking, then tracks current cont
   const listener = await Server.listen({ hostname: "127.0.0.1", port: 0 })
   try {
     const client = createKiloClient({ baseUrl: listener.url.toString() })
-    const third = await client.kilocode.snapshot.prepare({ directory: dir }, { throwOnError: true })
+    const third = await client.taverncode.snapshot.prepare({ directory: dir }, { throwOnError: true })
     expect(third.response.status).toBe(200)
     expect(third.data).toEqual({ prepared: false, durationMs: expect.any(Number) })
   } finally {
@@ -178,7 +178,7 @@ test("prepares a routed worktree once without tracking, then tracks current cont
   expect(await $`git --git-dir=${gitdir} show ${hash!}:note.txt`.text()).toBe("changed after preparation\n")
   expect(await $`git --git-dir=${gitdir} show ${hash!}:new.txt`.text()).toBe("new file\n")
   expect((await $`git --git-dir=${gitdir} config core.autocrlf`.text()).trim()).toBe("input")
-  expect((await $`git --git-dir=${gitdir} for-each-ref refs/kilo/snapshots`.text()).trim()).not.toBe("")
+  expect((await $`git --git-dir=${gitdir} for-each-ref refs/tavern/snapshots`.text()).trim()).not.toBe("")
   expect(await Bun.file(trace).text()).not.toContain("--no-split-index")
   const alt = path.join(gitdir, "objects", "info", "alternates")
   await Effect.runPromise(
@@ -312,7 +312,7 @@ it.live(
         yield* (yield* InstanceStore.Service).dispose(current)
         yield* snapshot.init().pipe(provideInstance(dir))
         yield* wait
-        expect((yield* git(["--git-dir", gitdir, "for-each-ref", "refs/kilo/snapshots"])).trim()).not.toBe("")
+        expect((yield* git(["--git-dir", gitdir, "for-each-ref", "refs/tavern/snapshots"])).trim()).not.toBe("")
         expect((yield* git(["for-each-ref", ref])).trim()).toBe("")
       }).pipe(provideInstance(dir))
     }),
@@ -384,9 +384,9 @@ test("does not prepare disabled snapshots or directories outside git", async () 
   for (const opts of [{ git: true, config: { snapshot: false } }, {}]) {
     await using tmp = await tmpdir(opts)
     const ctx = await reloadTestInstance({ directory: tmp.path })
-    const response = await Server.Default().app.request("/kilocode/snapshot/prepare", {
+    const response = await Server.Default().app.request("/taverncode/snapshot/prepare", {
       method: "POST",
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-tavern-directory": tmp.path },
     })
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({ prepared: false, durationMs: expect.any(Number) })

@@ -18,7 +18,7 @@ function app() {
 function request(path: string, directory: string, init: RequestInit = {}) {
   return Effect.promise(() => {
     const headers = new Headers(init.headers)
-    headers.set("x-kilo-directory", directory)
+    headers.set("x-tavern-directory", directory)
     return Promise.resolve(app().request(path, { ...init, headers }))
   })
 }
@@ -31,7 +31,7 @@ afterEach(async () => {
   await disposeAllInstances()
 })
 
-describe("Kilo experimental HttpApi", () => {
+describe("Tavern experimental HttpApi", () => {
   it.instance(
     "uses model family metadata for experimental editing tools",
     () =>

@@ -13,8 +13,8 @@ describe("WorktreeStateManager", () => {
 
   beforeEach(() => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), "wtsm-test-"))
-    // Pre-create .kilo dir so fire-and-forget saves don't race on mkdir
-    fs.mkdirSync(path.join(root, ".kilo"), { recursive: true })
+    // Pre-create .tavern dir so fire-and-forget saves don't race on mkdir
+    fs.mkdirSync(path.join(root, ".tavern"), { recursive: true })
     logs.length = 0
     manager = new WorktreeStateManager(root, (msg) => logs.push(msg))
   })
@@ -155,7 +155,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("drops obsolete session prefs while loading state", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(
         file,
         JSON.stringify({
@@ -300,7 +300,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("flush waits for saves queued during an in-flight write", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       const api = fs.promises as unknown as { writeFile: (...args: unknown[]) => Promise<void> }
       const original = api.writeFile
       const gate = {
@@ -336,18 +336,18 @@ describe("WorktreeStateManager", () => {
       expect(data.sessions.second).toBeDefined()
     })
 
-    it("creates .kilo directory if missing", async () => {
+    it("creates .tavern directory if missing", async () => {
       const fresh = path.join(root, "subdir")
       const mgr = new WorktreeStateManager(fresh, () => {})
       mgr.addWorktree({ branch: "test", path: "/tmp/test", parentBranch: "main" })
       await mgr.flush()
       await mgr.save()
 
-      expect(fs.existsSync(path.join(fresh, ".kilo", "agent-manager.json"))).toBe(true)
+      expect(fs.existsSync(path.join(fresh, ".tavern", "agent-manager.json"))).toBe(true)
     })
 
     it("does not overwrite a corrupt state file after load fails", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(file, "{", "utf-8")
 
       const result = await manager.load()
@@ -361,7 +361,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("backs up a corrupt state file before recovery saves", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(file, "{", "utf-8")
 
       const result = await manager.load()
@@ -369,7 +369,7 @@ describe("WorktreeStateManager", () => {
       manager.addSession("local-after-recovery", null)
       await manager.flush()
 
-      const files = fs.readdirSync(path.join(root, ".kilo"))
+      const files = fs.readdirSync(path.join(root, ".tavern"))
       expect(result.status).toBe("failed")
       expect(recovered).toBe(true)
       expect(files.some((item) => item.startsWith("agent-manager.json.corrupt-"))).toBe(true)
@@ -377,7 +377,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("allows saves after a later missing-file reload", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(file, "{", "utf-8")
 
       await manager.load()
@@ -490,7 +490,7 @@ describe("WorktreeStateManager", () => {
       await manager.flush()
       await manager.save()
 
-      const content = fs.readFileSync(path.join(root, ".kilo", "agent-manager.json"), "utf-8")
+      const content = fs.readFileSync(path.join(root, ".tavern", "agent-manager.json"), "utf-8")
       const data = JSON.parse(content)
       expect(data.tabOrder).toBeUndefined()
     })
@@ -554,7 +554,7 @@ describe("WorktreeStateManager", () => {
       await manager.flush()
       await manager.save()
 
-      const content = fs.readFileSync(path.join(root, ".kilo", "agent-manager.json"), "utf-8")
+      const content = fs.readFileSync(path.join(root, ".tavern", "agent-manager.json"), "utf-8")
       const data = JSON.parse(content)
       expect(data.pinnedTabs).toBeUndefined()
     })
@@ -568,7 +568,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("preserves the expanded default from legacy state", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(file, JSON.stringify({ worktrees: {}, sessions: {} }))
 
       await manager.load()
@@ -599,7 +599,7 @@ describe("WorktreeStateManager", () => {
       await manager.flush()
       await manager.save()
 
-      const content = fs.readFileSync(path.join(root, ".kilo", "agent-manager.json"), "utf-8")
+      const content = fs.readFileSync(path.join(root, ".tavern", "agent-manager.json"), "utf-8")
       const data = JSON.parse(content)
       expect(data.sessionsCollapsed).toBe(false)
 
@@ -637,7 +637,7 @@ describe("WorktreeStateManager", () => {
       await manager.flush()
       await manager.save()
 
-      const content = fs.readFileSync(path.join(root, ".kilo", "agent-manager.json"), "utf-8")
+      const content = fs.readFileSync(path.join(root, ".tavern", "agent-manager.json"), "utf-8")
       const data = JSON.parse(content)
       expect(data.sidebarCollapsed).toBeUndefined()
     })
@@ -725,7 +725,7 @@ describe("WorktreeStateManager", () => {
 
   describe("load with corrupt data", () => {
     it("handles malformed JSON gracefully", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(file, "not-valid-json{{{", "utf-8")
 
       await manager.load()
@@ -738,7 +738,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("handles partial data with missing sessions key", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(
         file,
         JSON.stringify({
@@ -755,7 +755,7 @@ describe("WorktreeStateManager", () => {
     })
 
     it("handles partial data with missing worktrees key and local sessions", async () => {
-      const file = path.join(root, ".kilo", "agent-manager.json")
+      const file = path.join(root, ".tavern", "agent-manager.json")
       fs.writeFileSync(
         file,
         JSON.stringify({ sessions: { "s-1": { worktreeId: null, createdAt: new Date().toISOString() } } }),
@@ -769,13 +769,13 @@ describe("WorktreeStateManager", () => {
     })
   })
 
-  describe("legacy .kilocode migration", () => {
-    it("migrates and loads state from .kilocode when .kilo is absent", async () => {
-      // Remove the .kilo dir created in beforeEach
-      fs.rmSync(path.join(root, ".kilo"), { recursive: true, force: true })
+  describe("legacy .taverncode migration", () => {
+    it("migrates and loads state from .taverncode when .tavern is absent", async () => {
+      // Remove the .tavern dir created in beforeEach
+      fs.rmSync(path.join(root, ".tavern"), { recursive: true, force: true })
 
-      // Write state to legacy .kilocode dir (migration will move it to .kilo)
-      const legacyDir = path.join(root, ".kilocode")
+      // Write state to legacy .taverncode dir (migration will move it to .tavern)
+      const legacyDir = path.join(root, ".taverncode")
       fs.mkdirSync(legacyDir, { recursive: true })
       fs.writeFileSync(
         path.join(legacyDir, "agent-manager.json"),
@@ -799,10 +799,10 @@ describe("WorktreeStateManager", () => {
       expect(manager.getWorktrees()[0].branch).toBe("legacy-branch")
     })
 
-    it("skips migration when .kilo state already exists", async () => {
-      // .kilo state already present — migration should skip agent-manager.json
+    it("skips migration when .tavern state already exists", async () => {
+      // .tavern state already present — migration should skip agent-manager.json
       fs.writeFileSync(
-        path.join(root, ".kilo", "agent-manager.json"),
+        path.join(root, ".tavern", "agent-manager.json"),
         JSON.stringify({
           worktrees: {
             "wt-new": {
@@ -817,8 +817,8 @@ describe("WorktreeStateManager", () => {
         "utf-8",
       )
 
-      // Legacy .kilocode state
-      const legacyDir = path.join(root, ".kilocode")
+      // Legacy .taverncode state
+      const legacyDir = path.join(root, ".taverncode")
       fs.mkdirSync(legacyDir, { recursive: true })
       fs.writeFileSync(
         path.join(legacyDir, "agent-manager.json"),
@@ -842,14 +842,14 @@ describe("WorktreeStateManager", () => {
       expect(manager.getWorktrees()[0].branch).toBe("new-branch")
     })
 
-    it("rewrites stale .kilocode paths in worktree entries (unix)", async () => {
+    it("rewrites stale .taverncode paths in worktree entries (unix)", async () => {
       fs.writeFileSync(
-        path.join(root, ".kilo", "agent-manager.json"),
+        path.join(root, ".tavern", "agent-manager.json"),
         JSON.stringify({
           worktrees: {
             "wt-stale": {
               branch: "fix",
-              path: "/repo/.kilocode/worktrees/fix",
+              path: "/repo/.taverncode/worktrees/fix",
               parentBranch: "main",
               createdAt: new Date().toISOString(),
             },
@@ -861,17 +861,17 @@ describe("WorktreeStateManager", () => {
 
       await manager.load()
 
-      expect(manager.getWorktrees()[0].path).toBe(`/repo/.kilo/worktrees/fix`)
+      expect(manager.getWorktrees()[0].path).toBe(`/repo/.tavern/worktrees/fix`)
     })
 
-    it("rewrites stale .kilocode paths with backslashes (windows)", async () => {
+    it("rewrites stale .taverncode paths with backslashes (windows)", async () => {
       fs.writeFileSync(
-        path.join(root, ".kilo", "agent-manager.json"),
+        path.join(root, ".tavern", "agent-manager.json"),
         JSON.stringify({
           worktrees: {
             "wt-win": {
               branch: "fix",
-              path: "C:\\.kilocode\\worktrees\\fix",
+              path: "C:\\.taverncode\\worktrees\\fix",
               parentBranch: "main",
               createdAt: new Date().toISOString(),
             },
@@ -884,7 +884,7 @@ describe("WorktreeStateManager", () => {
       await manager.load()
 
       // Separator style from the stored path is preserved (backslashes stay as backslashes)
-      expect(manager.getWorktrees()[0].path).toBe("C:\\.kilo\\worktrees\\fix")
+      expect(manager.getWorktrees()[0].path).toBe("C:\\.tavern\\worktrees\\fix")
     })
   })
 })

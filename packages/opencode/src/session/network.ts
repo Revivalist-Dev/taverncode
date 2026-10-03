@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { Context, Effect, Layer, Schema, Types } from "effect"
 import { connect } from "node:net"
 import { Bus } from "../bus"
@@ -7,11 +7,11 @@ import { QuestionID } from "../question/schema"
 import { SessionID } from "../session/schema"
 import { InstanceState } from "@/effect/instance-state"
 import { InstanceRef } from "@/effect/instance-ref"
-import { capture } from "@/kilocode/instance"
+import { capture } from "@/taverncode/instance"
 import type { InstanceContext } from "@/project/instance-context"
 import { makeRuntime } from "@/effect/run-service"
 import * as Log from "@opencode-ai/core/util/log"
-import { fn } from "@/kilocode/fn"
+import { fn } from "@/taverncode/fn"
 import { MCP } from "../mcp"
 import { zod } from "@opencode-ai/core/effect-zod"
 import { withStatics } from "@opencode-ai/core/schema"
@@ -33,7 +33,7 @@ export namespace SessionNetwork {
     "UND_ERR_SOCKET",
     "ERR_SOCKET_CONNECTION_TIMEOUT",
   ])
-  const urls = ["https://kilo.ai", "https://example.com", "https://cloudflare.com/cdn-cgi/trace"]
+  const urls = ["https://tavern.ai", "https://example.com", "https://cloudflare.com/cdn-cgi/trace"]
   const POLL_MS = 3_000
   const PROBE_MS = 5_000
   const RESUME_MS = 10_000
@@ -120,7 +120,7 @@ export namespace SessionNetwork {
   }
 
   class StateService extends Context.Service<StateService, { readonly get: () => Effect.Effect<StateShape> }>()(
-    "@kilocode/SessionNetwork.State",
+    "@taverncode/SessionNetwork.State",
   ) {}
 
   const stateLayer = Layer.effect(
@@ -156,7 +156,7 @@ export namespace SessionNetwork {
       const match = (item as { code?: unknown })?.code
       if (typeof match === "string" && codes.has(match)) return true
     }
-    // kilocode_change - recognize AbortSignal.timeout() errors
+    // taverncode_change - recognize AbortSignal.timeout() errors
     for (const item of chain(err)) {
       if (item instanceof DOMException && item.name === "TimeoutError") return true
     }
@@ -178,7 +178,7 @@ export namespace SessionNetwork {
   }
 
   export function message(err: unknown) {
-    // kilocode_change - check for timeout first
+    // taverncode_change - check for timeout first
     for (const item of chain(err)) {
       if (item instanceof DOMException && item.name === "TimeoutError") return "Request timed out"
     }
@@ -387,7 +387,7 @@ export namespace SessionNetwork {
         return
       }
       s.pending.delete(requestID)
-      // kilocode_change start - reconnect failed remote MCP servers after network recovery
+      // taverncode_change start - reconnect failed remote MCP servers after network recovery
       void import("@/effect/app-runtime")
         .then(({ AppRuntime }) =>
           AppRuntime.runPromise(
@@ -414,7 +414,7 @@ export namespace SessionNetwork {
         .catch((err) => {
           log.error("failed to get MCP status for reconnect", { err })
         })
-      // kilocode_change end
+      // taverncode_change end
       await Bus.publish(s.context, Event.Replied, {
         sessionID: req.info.sessionID,
         requestID: req.info.id,

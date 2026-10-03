@@ -18,9 +18,9 @@ describe("loadIgnore", () => {
     await rm(root, { recursive: true, force: true })
   })
 
-  test("loads root .kilocodeignore in addition to root .gitignore", async () => {
+  test("loads root .taverncodeignore in addition to root .gitignore", async () => {
     await writeFile(path.join(root, ".gitignore"), "dist/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "secret/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "secret/\n")
 
     const ig = await loadIgnore(root)
 
@@ -29,7 +29,7 @@ describe("loadIgnore", () => {
     expect(ig.ignores("src/app.ts")).toBe(false)
   })
 
-  test("preserves existing .gitignore-only behavior when .kilocodeignore is absent", async () => {
+  test("preserves existing .gitignore-only behavior when .taverncodeignore is absent", async () => {
     await writeFile(path.join(root, ".gitignore"), "coverage/\n")
 
     const ig = await loadIgnore(root)
@@ -38,9 +38,9 @@ describe("loadIgnore", () => {
     expect(ig.ignores("src/app.ts")).toBe(false)
   })
 
-  test("loads nested .kilocodeignore relative to its directory", async () => {
+  test("loads nested .taverncodeignore relative to its directory", async () => {
     await mkdir(path.join(root, "pkg", "sub"), { recursive: true })
-    await writeFile(path.join(root, "pkg", ".kilocodeignore"), "secret.ts\n")
+    await writeFile(path.join(root, "pkg", ".taverncodeignore"), "secret.ts\n")
 
     const ig = await loadIgnore(root)
 
@@ -94,7 +94,7 @@ describe("loadIgnore", () => {
     expect(ig.watchIgnoreGlobs?.()).toEqual([])
   })
 
-  test.each([".gitignore", ".kilocodeignore"])("keeps nested %s re-includes visible to the watcher", async (name) => {
+  test.each([".gitignore", ".taverncodeignore"])("keeps nested %s re-includes visible to the watcher", async (name) => {
     await writeFile(path.join(root, ".gitignore"), "/pkg/sub/data/\n")
     await mkdir(path.join(root, "pkg"))
     await writeFile(path.join(root, "pkg", name), "!data/\n")
@@ -130,7 +130,7 @@ describe("loadIgnore", () => {
   test("allows descendants when a parent directory is re-included", async () => {
     await mkdir(path.join(root, "pkg"), { recursive: true })
     await writeFile(path.join(root, ".gitignore"), "pkg/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!pkg/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!pkg/\n")
 
     const ig = await loadIgnore(root)
 
@@ -140,7 +140,7 @@ describe("loadIgnore", () => {
   test("keeps explicit file ignores when a parent directory is re-included", async () => {
     await mkdir(path.join(root, "pkg"), { recursive: true })
     await writeFile(path.join(root, ".gitignore"), "*.ts\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!pkg/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!pkg/\n")
 
     const ig = await loadIgnore(root)
 
@@ -150,7 +150,7 @@ describe("loadIgnore", () => {
   test("keeps explicit file ignores when a re-included parent also had explicit file rules", async () => {
     await mkdir(path.join(root, "pkg"), { recursive: true })
     await writeFile(path.join(root, ".gitignore"), "pkg/\npkg/*.ts\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!pkg/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!pkg/\n")
 
     const ig = await loadIgnore(root)
 
@@ -160,7 +160,7 @@ describe("loadIgnore", () => {
   test("keeps descendants ignored when only a child directory is re-included", async () => {
     await mkdir(path.join(root, "pkg", "sub"), { recursive: true })
     await writeFile(path.join(root, ".gitignore"), "pkg/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!pkg/sub/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!pkg/sub/\n")
 
     const ig = await loadIgnore(root)
 
@@ -170,7 +170,7 @@ describe("loadIgnore", () => {
   test("allows child negation after a parent directory is re-included", async () => {
     await mkdir(path.join(root, "pkg"), { recursive: true })
     await writeFile(path.join(root, ".gitignore"), "pkg/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!pkg/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!pkg/\n")
     await writeFile(path.join(root, "pkg", ".gitignore"), "!keep.ts\n")
 
     const ig = await loadIgnore(root)
@@ -178,9 +178,9 @@ describe("loadIgnore", () => {
     expect(ig.ignores("pkg/keep.ts")).toBe(false)
   })
 
-  test("applies .kilocodeignore after .gitignore in the same directory", async () => {
+  test("applies .taverncodeignore after .gitignore in the same directory", async () => {
     await writeFile(path.join(root, ".gitignore"), "*.ts\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "!keep.ts\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!keep.ts\n")
 
     const ig = await loadIgnore(root)
 
@@ -190,16 +190,16 @@ describe("loadIgnore", () => {
 
   test("ignores the ignore files themselves", async () => {
     await writeFile(path.join(root, ".gitignore"), "dist/\n")
-    await writeFile(path.join(root, ".kilocodeignore"), "secret/\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "secret/\n")
 
     const ig = await loadIgnore(root)
 
     expect(ig.ignores(".gitignore")).toBe(true)
-    expect(ig.ignores(".kilocodeignore")).toBe(true)
+    expect(ig.ignores(".taverncodeignore")).toBe(true)
   })
 
   test("keeps ignore files ignored after negation rules", async () => {
-    await writeFile(path.join(root, ".kilocodeignore"), "!.gitignore\n")
+    await writeFile(path.join(root, ".taverncodeignore"), "!.gitignore\n")
 
     const ig = await loadIgnore(root)
 
@@ -210,7 +210,7 @@ describe("loadIgnore", () => {
     const ig = await loadIgnore(root)
 
     expect(ig.ignores(".gitignore")).toBe(true)
-    expect(ig.ignores("pkg/.kilocodeignore")).toBe(true)
+    expect(ig.ignores("pkg/.taverncodeignore")).toBe(true)
   })
 
   test("does not load ignore files from hardcoded ignored folders", async () => {

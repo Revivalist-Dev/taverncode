@@ -1,11 +1,11 @@
 ---
 title: "Using Agents"
-description: "Understanding and using different agents in Kilo Code"
+description: "Understanding and using different agents in Tavern Code"
 ---
 
 # Using Agents
 
-Agents in Kilo Code are specialized personas that tailor the assistant's behavior to your current task. Each agent offers different capabilities, expertise, and access levels to help you accomplish specific goals.
+Agents in Tavern Code are specialized personas that tailor the assistant's behavior to your current task. Each agent offers different capabilities, expertise, and access levels to help you accomplish specific goals.
 
 ## Why Use Different Agents?
 
@@ -66,7 +66,7 @@ There are several ways to switch agents:
 | Aspect | Details |
 |---|---|
 | **Description** | An experienced technical leader and planner who helps design systems and create implementation plans |
-| **Tool Access** | Read-only tools plus restricted file editing (plan files in `.kilo/plans/` only) |
+| **Tool Access** | Read-only tools plus restricted file editing (plan files in `.tavern/plans/` only) |
 | **Ideal For** | System design, high-level planning, and architecture discussions |
 | **Special Features** | Similar to the legacy extension's "Architect" mode, with a planning-focused approach. In VS Code, the saved plan opens in the editor when ready for review. |
 
@@ -122,7 +122,7 @@ The VSCode extension and CLI do not include a built-in Review agent. Code review
 | Aspect | Details |
 |---|---|
 | **Description** | An experienced technical leader and planner who helps design systems and create implementation plans |
-| **Tool Access** | Read-only tools plus restricted file editing (plan files in `.kilo/plans/` only) |
+| **Tool Access** | Read-only tools plus restricted file editing (plan files in `.tavern/plans/` only) |
 | **Ideal For** | System design, high-level planning, and architecture discussions |
 | **Special Features** | Similar to the legacy extension's "Architect" mode, with a planning-focused approach |
 

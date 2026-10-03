@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"
 import * as Log from "@opencode-ai/core/util/log"
 import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
@@ -13,13 +13,13 @@ import { Auth } from "../../src/auth"
 import { Bus } from "../../src/bus"
 import { GlobalBus } from "../../src/bus/global"
 import type { Config } from "../../src/config/config"
-import { clearInFlightCache } from "../../src/kilo-sessions/inflight-cache"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
-import { provide, Instance } from "../../src/kilocode/instance"
-import * as PrLink from "../../src/kilo-sessions/pr-link"
-import { RemoteWS } from "../../src/kilo-sessions/remote-ws"
-import { RemoteSender } from "../../src/kilo-sessions/remote-sender"
-import { RemoteSessionLog } from "../../src/kilo-sessions/remote-session-log"
+import { clearInFlightCache } from "../../src/tavern-sessions/inflight-cache"
+import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
+import { provide, Instance } from "../../src/taverncode/instance"
+import * as PrLink from "../../src/tavern-sessions/pr-link"
+import { RemoteWS } from "../../src/tavern-sessions/remote-ws"
+import { RemoteSender } from "../../src/tavern-sessions/remote-sender"
+import { RemoteSessionLog } from "../../src/tavern-sessions/remote-session-log"
 import { ProjectV2 } from "@opencode-ai/core/project"
 import { Session } from "../../src/session/session"
 import { SessionID } from "../../src/session/schema"
@@ -29,7 +29,7 @@ import { TestConfig } from "../fixture/config"
 import { pollWithTimeout, testEffect } from "../lib/effect"
 import { InstanceStore } from "../../src/project/instance-store"
 import { TestInstance, testInstanceStoreLayer, tmpdirScoped } from "../fixture/fixture"
-import { RemoteProtocol } from "../../src/kilo-sessions/remote-protocol"
+import { RemoteProtocol } from "../../src/tavern-sessions/remote-protocol"
 import { MessageV2 } from "../../src/session/message-v2"
 
 const it = testEffect(AppNodeBuilder.build(CrossSpawnSpawner.node))
@@ -47,9 +47,9 @@ function layer(overrides: Partial<Config.Interface> = {}) {
 }
 
 function reset(...tokens: string[]) {
-  clearInFlightCache("kilo-sessions:token")
-  clearInFlightCache("kilo-sessions:client")
-  for (const token of tokens) clearInFlightCache(`kilo-sessions:token-valid:${token}`)
+  clearInFlightCache("tavern-sessions:token")
+  clearInFlightCache("tavern-sessions:client")
+  for (const token of tokens) clearInFlightCache(`tavern-sessions:token-valid:${token}`)
 }
 
 it.instance("initializes once per instance through Config.Service", () => {
@@ -135,14 +135,14 @@ it.instance("prefers stored auth over KILO_API_KEY for session ingest", () => {
 
   return Effect.gen(function* () {
     const auth = yield* Auth.Service
-    yield* auth.set("kilo", { type: "api", key: "stored-token" })
+    yield* auth.set("tavern", { type: "api", key: "stored-token" })
     yield* Effect.promise(() => KiloSessions.bootstrap("session-auth"))
     expect(calls).toEqual(["Bearer stored-token", "Bearer stored-token"])
   }).pipe(
     Effect.ensuring(
       Effect.gen(function* () {
         const auth = yield* Auth.Service
-        yield* auth.remove("kilo").pipe(Effect.orDie)
+        yield* auth.remove("tavern").pipe(Effect.orDie)
         if (original === undefined) delete process.env.KILO_API_KEY
         else process.env.KILO_API_KEY = original
         reset("env-token", "stored-token")
@@ -176,7 +176,7 @@ it.instance("does not duplicate created-session subscribers when init is repeate
     const auth = yield* Auth.Service
     const instance = yield* TestInstance
     const sessions = yield* KiloSessions.Service
-    yield* auth.set("kilo", { type: "api", key: "test-token" })
+    yield* auth.set("tavern", { type: "api", key: "test-token" })
     yield* sessions.init()
     yield* sessions.init()
     yield* Effect.sleep(50)
@@ -205,7 +205,7 @@ it.instance("does not duplicate created-session subscribers when init is repeate
     Effect.ensuring(
       Effect.gen(function* () {
         const auth = yield* Auth.Service
-        yield* auth.remove("kilo").pipe(Effect.orDie)
+        yield* auth.remove("tavern").pipe(Effect.orDie)
         reset("test-token")
         request.mockRestore()
       }),
@@ -238,7 +238,7 @@ multi.live("isolates the process-wide listener by instance directory", () => {
     const auth = yield* Auth.Service
     const store = yield* InstanceStore.Service
     const sessions = yield* KiloSessions.Service
-    yield* auth.set("kilo", { type: "api", key: "test-token" })
+    yield* auth.set("tavern", { type: "api", key: "test-token" })
     yield* store.provide({ directory: first }, sessions.init())
     yield* store.provide({ directory: second }, sessions.init())
 
@@ -276,7 +276,7 @@ multi.live("isolates the process-wide listener by instance directory", () => {
     Effect.ensuring(
       Effect.gen(function* () {
         const auth = yield* Auth.Service
-        yield* auth.remove("kilo").pipe(Effect.orDie)
+        yield* auth.remove("tavern").pipe(Effect.orDie)
         reset("test-token")
         request.mockRestore()
       }),
@@ -285,10 +285,10 @@ multi.live("isolates the process-wide listener by instance directory", () => {
   )
 })
 
-// kilocode_change start - K1 W1 / DEF-1: instance advertisement + per-session platform.
+// taverncode_change start - K1 W1 / DEF-1: instance advertisement + per-session platform.
 //
 // `enableRemote` is idempotent/coalescing and is called from `/remote`, the
-// explicit `kilo remote` command, and bootstrap auto-enable (`KILO_REMOTE=1` /
+// explicit `tavern remote` command, and bootstrap auto-enable (`KILO_REMOTE=1` /
 // `remote_control`). Every successful entry must ensure a default instance
 // advertisement (including the already-connected early return — the common
 // `/remote`-after-auto-enable path). Explicit `setInstanceAdvertisement`
@@ -337,10 +337,10 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
-    // kilocode_change - only mock the specific endpoint authValid() calls
+    // taverncode_change - only mock the specific endpoint authValid() calls
     // (${KILO_API_BASE}/api/user). A blanket mock that returned 200 for
     // every URL previously fed a bogus response to whatever OTHER fetch
     // call provide()'s InstanceStore.Service.load(...) chain now makes (an
@@ -430,7 +430,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         })
         const handler = RemoteCommand.handler
         if (typeof handler !== "function") throw new Error("remote command handler is missing")
-        const result = await Promise.resolve(handler({ _: [], $0: "kilo" })).catch((err: unknown) => err)
+        const result = await Promise.resolve(handler({ _: [], $0: "tavern" })).catch((err: unknown) => err)
         expect(result).toBe(stop)
         const payload = await capturedGetSessions()()
         expect(payload.instance?.kind).toBe("remote")
@@ -459,7 +459,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
     })
   })
 
-  test("explicit set after enable replaces the payload (kilo remote race)", async () => {
+  test("explicit set after enable replaces the payload (tavern remote race)", async () => {
     await using tmp = await tmpdir({ git: true })
     await provide({
       directory: tmp.path,
@@ -598,7 +598,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         // context-scoped Vcs branch that only feeds the instance advertisement.
         const git = await AppRuntime.runPromise(Git.Service.use((svc) => Effect.succeed(svc)))
         const gitBranch = spyOn(git, "branch").mockReturnValue(Effect.succeed("feature/session"))
-        clearInFlightCache(`kilo-sessions:git-branch:${tmp.path}`)
+        clearInFlightCache(`tavern-sessions:git-branch:${tmp.path}`)
         for (const [input, expected] of [
           ["feature/current", "feature/current"],
           ["a".repeat(25), "a".repeat(24)],
@@ -628,7 +628,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
   // Creates a child repository through shell git before asserting; keep room
   // for that setup under sequential full-file load.
   test("session repository metadata follows the session directory when the host was started outside the selected repository", async () => {
-    // Parent WITHOUT git mirrors `kilo remote` launched from e.g. ~/Projects;
+    // Parent WITHOUT git mirrors `tavern remote` launched from e.g. ~/Projects;
     // the session is created inside the child repo `cloud`, which has its own
     // remote and branch. Rows and persisted kilo_meta must describe the child.
     await using tmp = await tmpdir({
@@ -642,7 +642,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         await $`git config user.name "Test"`.cwd(repo).quiet()
         await $`git commit --allow-empty -m "root commit"`.cwd(repo).quiet()
         await $`git branch -m feature/live`.cwd(repo).quiet()
-        await $`git remote add origin https://github.com/kilo-test/cloud.git`.cwd(repo).quiet()
+        await $`git remote add origin https://github.com/tavern-test/cloud.git`.cwd(repo).quiet()
         return { repo }
       },
     })
@@ -663,7 +663,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         KiloSessions.setAttachedSessions([chat.info.id])
         const payload = await capturedGetSessions()()
         const row = payload.sessions.find((r) => r.id === chat.info!.id)
-        expect(row?.gitUrl).toBe("https://github.com/kilo-test/cloud.git")
+        expect(row?.gitUrl).toBe("https://github.com/tavern-test/cloud.git")
         expect(row?.gitBranch).toBe("feature/live")
         // The host itself is not a git repo, so the instance advertisement
         // describes the launch directory only: no branch.
@@ -671,7 +671,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         // The persisted kilo_meta path follows the session directory too.
         const info = await AppRuntime.runPromise(Session.Service.use((svc) => svc.get(chat.info!.id)))
         const persisted = await KiloSessions._metaForTests(chat.info!.id, info)
-        expect(persisted.gitUrl).toBe("https://github.com/kilo-test/cloud.git")
+        expect(persisted.gitUrl).toBe("https://github.com/tavern-test/cloud.git")
         expect(persisted.gitBranch).toBe("feature/live")
       },
     })
@@ -699,7 +699,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
         await $`git config user.name "Test"`.cwd(repo).quiet()
         await $`git commit --allow-empty -m "root commit"`.cwd(repo).quiet()
         await $`git branch -m feature/live`.cwd(repo).quiet()
-        await $`git remote add origin https://github.com/kilo-test/cloud.git`.cwd(repo).quiet()
+        await $`git remote add origin https://github.com/tavern-test/cloud.git`.cwd(repo).quiet()
         return { repo }
       },
     })
@@ -722,14 +722,14 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
           KiloSessions.setAttachedSessions([chat.info.id])
           const rowOf = (payload: RemoteProtocol.Heartbeat) => payload.sessions.find((r) => r.id === chat.info!.id)
           const healthy = rowOf(await capturedGetSessions()())
-          expect(healthy?.gitUrl).toBe("https://github.com/kilo-test/cloud.git")
+          expect(healthy?.gitUrl).toBe("https://github.com/tavern-test/cloud.git")
           expect(healthy?.gitBranch).toBe("feature/live")
 
           // Break git, then expire the cached good values the way the 10 s
           // gather TTL does between heartbeats.
           await fs.chmod(gitDir, 0o000)
-          clearInFlightCache(`kilo-sessions:git-url:${repo}`)
-          clearInFlightCache(`kilo-sessions:git-branch:${repo}`)
+          clearInFlightCache(`tavern-sessions:git-url:${repo}`)
+          clearInFlightCache(`tavern-sessions:git-branch:${repo}`)
           const broken = rowOf(await capturedGetSessions()())
           expect(broken?.gitUrl).toBeUndefined()
           expect(broken?.gitBranch).toBeUndefined()
@@ -738,7 +738,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
           // so the very next gather recomputes and the row heals.
           await fs.chmod(gitDir, 0o755)
           const restored = rowOf(await capturedGetSessions()())
-          expect(restored?.gitUrl).toBe("https://github.com/kilo-test/cloud.git")
+          expect(restored?.gitUrl).toBe("https://github.com/tavern-test/cloud.git")
           expect(restored?.gitBranch).toBe("feature/live")
         } finally {
           // tmpdir cleanup cannot recurse into an unreadable .git.
@@ -787,7 +787,7 @@ describe("KiloSessions.setInstanceAdvertisement (K1 W1 / DEF-1)", () => {
   })
 })
 
-// kilocode_change start - K1 W1: real integration between SessionStatus,
+// taverncode_change start - K1 W1: real integration between SessionStatus,
 // detachRemoteSession, and the negative-containment heartbeat fence. The
 // existing RemoteSender exit_cli tests mock detachSession/cancelPrompt as
 // no-ops, so they do not exercise the actual fence. This block drives the
@@ -847,8 +847,8 @@ describe("KiloSessions.detachRemoteSession heartbeat fence (K1 W1)", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
     const fetch: typeof globalThis.fetch = Object.assign(
       async (input: RequestInfo | URL) => {
@@ -975,8 +975,8 @@ describe("KiloSessions heartbeat attention status (DEF-3)", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
     const fetch: typeof globalThis.fetch = Object.assign(
       async (input: RequestInfo | URL) => {
@@ -1251,7 +1251,7 @@ describe("KiloSessions heartbeat attention status (DEF-3)", () => {
   }, 30000)
 })
 
-// kilocode_change - PR link advertise: a PR is linked to a session only on the
+// taverncode_change - PR link advertise: a PR is linked to a session only on the
 // session's own hard evidence (it ran a create command whose output returned the
 // PR URL, or it pushed the PR's head branch) and stored per session. The
 // heartbeat reads each session's own link and never fans one worktree link out
@@ -1298,8 +1298,8 @@ describe("KiloSessions PR link (per-session hard evidence)", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
     const fetch: typeof globalThis.fetch = Object.assign(
       async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -1837,7 +1837,7 @@ describe("KiloSessions PR link (per-session hard evidence)", () => {
     "%s keeps normal ingestion and heartbeats without activating PR links",
     async (client) => {
       process.env.KILO_CLIENT = client
-      const poller = await import("@/kilo-sessions/pr-link-poller")
+      const poller = await import("@/tavern-sessions/pr-link-poller")
       const poll = spyOn(poller, "startPrLinkPoll")
       const create = spyOn(PrLink, "recordPrCreate")
       const push = spyOn(PrLink, "recordPush")
@@ -1955,8 +1955,8 @@ describe("KiloSessions create_session share gate", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
     // spyOn (not a raw `globalThis.fetch = ...` assignment) so `mock.restore()`
     // in afterEach puts the original fetch back instead of leaking this stub
@@ -2141,7 +2141,7 @@ describe("KiloSessions remote session log lifecycle", () => {
     await using tmp = await tmpdir({ git: true })
     try {
       await Log.init({ print: true, level: "INFO" })
-      const log = Log.create({ service: "kilo-sessions" })
+      const log = Log.create({ service: "tavern-sessions" })
       await provide({
         directory: tmp.path,
         fn: async () => {
@@ -2202,8 +2202,8 @@ describe("KiloSessions PR poll wiring", () => {
         }) as RemoteWS.Connection,
     )
 
-    clearInFlightCache("kilo-sessions:token")
-    clearInFlightCache("kilo-sessions:token-valid:tok")
+    clearInFlightCache("tavern-sessions:token")
+    clearInFlightCache("tavern-sessions:token-valid:tok")
 
     const fetch: typeof globalThis.fetch = Object.assign(
       async (input: RequestInfo | URL) => {
@@ -2245,7 +2245,7 @@ describe("KiloSessions PR poll wiring", () => {
   }
 
   test("starts the check once at init and never on a session update or a heartbeat", async () => {
-    const poller = await import("@/kilo-sessions/pr-link-poller")
+    const poller = await import("@/tavern-sessions/pr-link-poller")
     const startPoll = spyOn(poller, "startPrLinkPoll").mockImplementation(() => () => {})
 
     await using tmp = await tmpdir({ git: true })

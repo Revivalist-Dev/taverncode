@@ -1,5 +1,5 @@
 import * as InstanceState from "@/effect/instance-state"
-import { reloadProject } from "@/kilocode/project/reload"
+import { reloadProject } from "@/taverncode/project/reload"
 import { InstanceStore } from "@/project/instance-store"
 import { SessionStatus } from "@/session/status"
 import { ConflictError } from "@/server/routes/instance/httpapi/errors"

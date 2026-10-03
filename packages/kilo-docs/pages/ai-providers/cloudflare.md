@@ -2,9 +2,9 @@
 sidebar_label: Cloudflare
 ---
 
-# Using Cloudflare With Kilo Code
+# Using Cloudflare With Tavern Code
 
-Kilo Code supports both Cloudflare Workers AI and Cloudflare AI Gateway. Workers AI runs Cloudflare-hosted models directly, while AI Gateway routes requests through your Cloudflare gateway to one or more upstream providers.
+Tavern Code supports both Cloudflare Workers AI and Cloudflare AI Gateway. Workers AI runs Cloudflare-hosted models directly, while AI Gateway routes requests through your Cloudflare gateway to one or more upstream providers.
 
 **Website:** [https://developers.cloudflare.com/ai/](https://developers.cloudflare.com/ai/)
 
@@ -15,7 +15,7 @@ Kilo Code supports both Cloudflare Workers AI and Cloudflare AI Gateway. Workers
 | `cloudflare-workers-ai` | Cloudflare-hosted Workers AI models | Account ID and API key |
 | `cloudflare-ai-gateway` | Routing through Cloudflare AI Gateway | Account ID, Gateway ID, and Gateway API token |
 
-You can enter these values interactively with `/connect` in the TUI or `kilo auth` from the CLI, or provide them through environment variables.
+You can enter these values interactively with `/connect` in the TUI or `tavern auth` from the CLI, or provide them through environment variables.
 
 ## Cloudflare Workers AI
 
@@ -25,12 +25,12 @@ You can enter these values interactively with `/connect` in the TUI or `kilo aut
 2. Copy the **Account ID** from the dashboard.
 3. Create an API token that can invoke Workers AI.
 
-### Configure Kilo
+### Configure Tavern
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare Workers AI. If your account ID is not already available from the environment, Kilo prompts for it while connecting the provider.
+Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare Workers AI. If your account ID is not already available from the environment, Tavern prompts for it while connecting the provider.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -38,10 +38,10 @@ Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare 
 Use `/connect` in the TUI and choose Cloudflare Workers AI, or run:
 
 ```bash
-kilo auth cloudflare-workers-ai
+tavern auth cloudflare-workers-ai
 ```
 
-Alternatively, set environment variables before launching Kilo:
+Alternatively, set environment variables before launching Tavern:
 
 ```bash
 export CLOUDFLARE_ACCOUNT_ID="your-account-id"
@@ -67,12 +67,12 @@ Then choose a Workers AI model from the model picker, or set a default model suc
 2. Copy your **Account ID** and **Gateway ID**.
 3. Create a Gateway API token.
 
-### Configure Kilo
+### Configure Tavern
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare AI Gateway. Kilo prompts for the account ID and gateway ID when they are not already set in the environment.
+Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare AI Gateway. Tavern prompts for the account ID and gateway ID when they are not already set in the environment.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -80,10 +80,10 @@ Open **Settings** (gear icon) and go to the **Providers** tab to add Cloudflare 
 Use `/connect` in the TUI and choose Cloudflare AI Gateway, or run:
 
 ```bash
-kilo auth cloudflare-ai-gateway
+tavern auth cloudflare-ai-gateway
 ```
 
-Alternatively, set environment variables before launching Kilo:
+Alternatively, set environment variables before launching Tavern:
 
 ```bash
 export CLOUDFLARE_ACCOUNT_ID="your-account-id"
@@ -106,7 +106,7 @@ Then choose a gateway-backed model from the model picker, or set a default model
 
 ## Advanced Configuration
 
-If your organization provides a fully configured gateway URL, set `provider.<id>.options.baseURL`. When `baseURL` is configured, Kilo skips the built-in Account ID and Gateway ID checks because the URL already identifies the target service.
+If your organization provides a fully configured gateway URL, set `provider.<id>.options.baseURL`. When `baseURL` is configured, Tavern skips the built-in Account ID and Gateway ID checks because the URL already identifies the target service.
 
 ```jsonc
 {
@@ -122,7 +122,7 @@ If your organization provides a fully configured gateway URL, set `provider.<id>
 
 ## Troubleshooting
 
-- **`CLOUDFLARE_ACCOUNT_ID is missing`** — set `CLOUDFLARE_ACCOUNT_ID` or reconnect the provider with `/connect` so Kilo can store the account ID in auth metadata.
-- **`CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_GATEWAY_ID missing`** — set both values or run `kilo auth cloudflare-ai-gateway`.
-- **`CLOUDFLARE_API_TOKEN (or CF_AIG_TOKEN) is required`** — set one of those variables or reconnect Cloudflare AI Gateway with `kilo auth cloudflare-ai-gateway`.
+- **`CLOUDFLARE_ACCOUNT_ID is missing`** — set `CLOUDFLARE_ACCOUNT_ID` or reconnect the provider with `/connect` so Tavern can store the account ID in auth metadata.
+- **`CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_GATEWAY_ID missing`** — set both values or run `tavern auth cloudflare-ai-gateway`.
+- **`CLOUDFLARE_API_TOKEN (or CF_AIG_TOKEN) is required`** — set one of those variables or reconnect Cloudflare AI Gateway with `tavern auth cloudflare-ai-gateway`.
 - **Model errors through AI Gateway** — confirm the gateway route supports the selected upstream provider/model and that your Gateway API token has access.

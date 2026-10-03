@@ -99,7 +99,7 @@ describe("code context feedback composition", () => {
   // the host can no longer rebuild the review and browser cards.
   it("keeps review metadata parseable with a selection attached", () => {
     const content = [reviewPrefix, push, codeContext, draft].filter(Boolean).join("\n\n")
-    expect(partFeedback({ kilo: { review } }, content)).toMatchObject({
+    expect(partFeedback({ tavern: { review } }, content)).toMatchObject({
       review,
       body: `${push}\n\n${codeContext}\n\n${draft}`,
     })
@@ -110,7 +110,7 @@ describe("code context feedback composition", () => {
   // adjacent even when a push instruction is present.
   it("keeps review and browser metadata parseable when a push instruction is present", () => {
     const content = [reviewPrefix, browserPrefix, push, codeContext, draft].filter(Boolean).join("\n\n")
-    expect(partFeedback({ kilo: { review, browserFeedback: browser } }, content)).toMatchObject({
+    expect(partFeedback({ tavern: { review, browserFeedback: browser } }, content)).toMatchObject({
       review,
       browserFeedback: browser,
       body: `${push}\n\n${codeContext}\n\n${draft}`,
@@ -119,7 +119,7 @@ describe("code context feedback composition", () => {
 
   it("keeps browser metadata parseable without review metadata", () => {
     const content = [browserPrefix, push, codeContext, draft].filter(Boolean).join("\n\n")
-    expect(partFeedback({ kilo: { browserFeedback: browser } }, content)).toMatchObject({
+    expect(partFeedback({ tavern: { browserFeedback: browser } }, content)).toMatchObject({
       browserFeedback: browser,
       body: `${push}\n\n${codeContext}\n\n${draft}`,
     })

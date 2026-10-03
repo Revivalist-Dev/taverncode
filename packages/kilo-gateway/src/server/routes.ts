@@ -1,8 +1,8 @@
 /**
- * Kilo Gateway specific routes
- * Handles profile fetching and organization management for Kilo Gateway provider
+ * Tavern Gateway specific routes
+ * Handles profile fetching and organization management for Tavern Gateway provider
  *
- * This factory function accepts OpenCode dependencies to create Kilo-specific routes
+ * This factory function accepts OpenCode dependencies to create Tavern-specific routes
  */
 
 import { fetchKilocodeNotifications, KilocodeNotificationSchema } from "../api/notifications.js"
@@ -51,11 +51,11 @@ interface KiloRoutesDeps extends ImportDeps {
 }
 
 /**
- * Create Kilo Gateway routes with OpenCode dependencies injected
+ * Create Tavern Gateway routes with OpenCode dependencies injected
  *
  * @example
  * ```typescript
- * import { createKiloRoutes } from "@kilocode/kilo-gateway"
+ * import { createKiloRoutes } from "@taverncode/tavern-gateway"
  * import { Hono } from "hono"
  * import { describeRoute, validator, resolver } from "hono-openapi"
  * import z from "zod"
@@ -165,7 +165,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
   })
 
   const getProxyAuth = async () => {
-    const auth = await Auth.get("kilo")
+    const auth = await Auth.get("tavern")
     const token = auth?.type === "api" ? auth.key : auth?.type === "oauth" ? auth.access : undefined
     return {
       auth,
@@ -178,9 +178,9 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
     .get(
       "/profile",
       describeRoute({
-        summary: "Get Kilo Gateway profile",
-        description: "Fetch user profile and organizations from Kilo Gateway",
-        operationId: "kilo.profile",
+        summary: "Get Tavern Gateway profile",
+        description: "Fetch user profile and organizations from Tavern Gateway",
+        operationId: "tavern.profile",
         responses: {
           200: {
             description: "Profile data",
@@ -198,16 +198,16 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getProfile(Auth))
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
         }
       },
     )
     .post(
       "/organization",
       describeRoute({
-        summary: "Update Kilo Gateway organization",
-        description: "Switch to a different Kilo Gateway organization",
-        operationId: "kilo.organization.set",
+        summary: "Update Tavern Gateway organization",
+        description: "Switch to a different Tavern Gateway organization",
+        operationId: "tavern.organization.set",
         responses: {
           200: {
             description: "Organization updated successfully",
@@ -234,7 +234,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
             await setOrganization(
               {
                 auth: Auth,
-                clear: () => ModelCache.clear("kilo"),
+                clear: () => ModelCache.clear("tavern"),
                 dispose: () => Instances.disposeAllInstances(),
               },
               organizationId,
@@ -242,7 +242,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           )
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
         }
       },
     )
@@ -251,7 +251,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       describeRoute({
         summary: "Get organization custom modes",
         description: "Fetch custom modes defined for the current organization",
-        operationId: "kilo.modes",
+        operationId: "tavern.modes",
         responses: {
           200: {
             description: "Organization modes list",
@@ -295,7 +295,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         },
       }),
       async (c: any) => {
-        const auth = await Auth.get("kilo")
+        const auth = await Auth.get("tavern")
 
         if (!auth || auth.type !== "oauth") {
           return c.json({ modes: [] })
@@ -323,8 +323,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/fim",
       describeRoute({
         summary: "FIM completion",
-        description: "Proxy a Fill-in-the-Middle completion request to the Kilo Gateway",
-        operationId: "kilo.fim",
+        description: "Proxy a Fill-in-the-Middle completion request to the Tavern Gateway",
+        operationId: "tavern.fim",
         responses: {
           200: {
             description: "Streaming FIM completion response",
@@ -357,7 +357,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         description:
           "Proxy a Mercury-style Next Edit request. The client supplies structured editor " +
           "context; the gateway assembles the sentinel-tagged prompt and forwards to the upstream edit endpoint.",
-        operationId: "kilo.edit",
+        operationId: "tavern.edit",
         responses: {
           200: {
             description: "Next Edit completion",
@@ -392,8 +392,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/audio/transcriptions",
       describeRoute({
         summary: "Speech to text transcription",
-        description: "Proxy an audio transcription request to the Kilo Gateway",
-        operationId: "kilo.audio.transcriptions",
+        description: "Proxy an audio transcription request to the Tavern Gateway",
+        operationId: "tavern.audio.transcriptions",
         responses: {
           200: {
             description: "Transcription response",
@@ -421,7 +421,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       ),
       async (c: any) => {
         const proxy = await getProxyAuth()
-        if (!proxy.auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+        if (!proxy.auth) return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
 
         if (!proxy.token) return c.json({ error: "No valid token found" }, 401)
 
@@ -429,7 +429,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${proxy.token}`,
-          ...buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy.organizationId }),
+          ...buildKiloHeaders(undefined, { taverncodeOrganizationId: proxy.organizationId }),
           [HEADER_FEATURE]: "vscode-extension",
         }
 
@@ -453,8 +453,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/models/images",
       describeRoute({
         summary: "Image generation models",
-        description: "List image-capable models from the Kilo Gateway OpenRouter passthrough",
-        operationId: "kilo.models.images",
+        description: "List image-capable models from the Tavern Gateway OpenRouter passthrough",
+        operationId: "tavern.models.images",
         responses: {
           200: {
             description: "Image model list",
@@ -475,8 +475,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           if (!proxy.auth || !proxy.token) throw new UnauthorizedError()
 
           const result = await fetchKiloImageModels({
-            kilocodeToken: proxy.token,
-            kilocodeOrganizationId: proxy.organizationId,
+            taverncodeToken: proxy.token,
+            taverncodeOrganizationId: proxy.organizationId,
           })
           if (result.error) {
             if (result.error.kind === "unauthorized") throw new UnauthorizedError()
@@ -485,7 +485,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(result.models)
         } catch (err) {
           if (!(err instanceof UnauthorizedError)) throw err
-          return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
         }
       },
     )
@@ -494,8 +494,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       describeRoute({
         summary: "Image generation",
         description:
-          "Proxy an image generation request (chat-completions with modalities) to the Kilo Gateway OpenRouter passthrough",
-        operationId: "kilo.image.generations",
+          "Proxy an image generation request (chat-completions with modalities) to the Tavern Gateway OpenRouter passthrough",
+        operationId: "tavern.image.generations",
         responses: {
           200: {
             description: "Image generation response",
@@ -511,14 +511,14 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       validator("json", z.object({ body: z.unknown() }).passthrough()),
       async (c: any) => {
         const proxy = await getProxyAuth()
-        if (!proxy.auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+        if (!proxy.auth) return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
         if (!proxy.token) return c.json({ error: "No valid token found" }, 401)
 
         const payload = c.req.valid("json")
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${proxy.token}`,
-          ...buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy.organizationId }),
+          ...buildKiloHeaders(undefined, { taverncodeOrganizationId: proxy.organizationId }),
           [HEADER_FEATURE]: "vscode-extension",
         }
 
@@ -541,9 +541,9 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
     .get(
       "/notifications",
       describeRoute({
-        summary: "Get Kilo notifications",
-        description: "Fetch notifications from Kilo Gateway for CLI display",
-        operationId: "kilo.notifications",
+        summary: "Get Tavern notifications",
+        description: "Fetch notifications from Tavern Gateway for CLI display",
+        operationId: "tavern.notifications",
         responses: {
           200: {
             description: "Notifications list",
@@ -564,8 +564,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/cloud/session/:id",
       describeRoute({
         summary: "Get cloud session",
-        description: "Fetch full session data from the Kilo cloud for preview",
-        operationId: "kilo.cloud.session.get",
+        description: "Fetch full session data from the Tavern cloud for preview",
+        operationId: "tavern.cloud.session.get",
         responses: {
           200: {
             description: "Cloud session data",
@@ -581,8 +581,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       validator("param", z.object({ id: z.string() })),
       async (c: any) => {
         try {
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          const auth = await Auth.get("tavern")
+          if (!auth) return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
 
@@ -591,7 +591,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           if (!result.ok) return c.json({ error: result.error }, result.status)
           return c.json(result.data)
         } catch (err: any) {
-          console.error("[Kilo Gateway] cloud/session/get: unhandled error", err?.message ?? err)
+          console.error("[Tavern Gateway] cloud/session/get: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },
@@ -601,7 +601,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       describeRoute({
         summary: "Import session from cloud",
         description: "Download a cloud-synced session and write it to local storage with fresh IDs.",
-        operationId: "kilo.cloud.session.import",
+        operationId: "tavern.cloud.session.import",
         responses: {
           200: {
             description: "Imported session info",
@@ -624,8 +624,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
         try {
           const { sessionId } = c.req.valid("json")
 
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo" }, 401)
+          const auth = await Auth.get("tavern")
+          if (!auth) return c.json({ error: "Not authenticated with Tavern" }, 401)
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
 
@@ -650,7 +650,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(info)
         } catch (err: any) {
           if (err instanceof SessionImportValidationError) return c.json({ error: "Invalid export data" }, 400)
-          console.error("[Kilo Gateway] cloud/session/import: unhandled error", err?.message ?? err)
+          console.error("[Tavern Gateway] cloud/session/import: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },
@@ -659,8 +659,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       "/cloud-sessions",
       describeRoute({
         summary: "Get cloud sessions",
-        description: "Fetch cloud CLI sessions from Kilo API",
-        operationId: "kilo.cloudSessions",
+        description: "Fetch cloud CLI sessions from Tavern API",
+        operationId: "tavern.cloudSessions",
         responses: {
           200: {
             description: "Cloud sessions list",
@@ -696,8 +696,8 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
       ),
       async (c: any) => {
         try {
-          const auth = await Auth.get("kilo")
-          if (!auth) return c.json({ error: "Not authenticated with Kilo Gateway" }, 401)
+          const auth = await Auth.get("tavern")
+          if (!auth) return c.json({ error: "Not authenticated with Tavern Gateway" }, 401)
 
           const token = auth.type === "api" ? auth.key : auth.type === "oauth" ? auth.access : undefined
           if (!token) return c.json({ error: "No valid token found" }, 401)
@@ -705,7 +705,7 @@ export function createKiloRoutes(deps: KiloRoutesDeps) {
           return c.json(await getCloudSessions(token, c.req.valid("query")))
         } catch (err: any) {
           if (err instanceof GatewayError) return c.json({ error: err.message }, err.status as any)
-          console.error("[Kilo Gateway] cloud-sessions: unhandled error", err?.message ?? err)
+          console.error("[Tavern Gateway] cloud-sessions: unhandled error", err?.message ?? err)
           return c.json({ error: "Internal error" }, 500)
         }
       },

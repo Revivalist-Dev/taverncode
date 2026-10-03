@@ -22,7 +22,7 @@ const watch = process.argv.includes("--watch")
  * unchanged file costs one stat instead of a read and a hash. See the notes
  * on the index below.
  */
-const solidCacheDir = path.join(os.tmpdir(), `kilo-vscode-esbuild-solid-${process.getuid?.() ?? "user"}`)
+const solidCacheDir = path.join(os.tmpdir(), `tavern-vscode-esbuild-solid-${process.getuid?.() ?? "user"}`)
 const solidMemCache = new Map()
 
 // Cache entries are read by the bundler, so they are only used when the
@@ -255,7 +255,7 @@ const cachedSolidPlugin = {
 }
 
 /**
- * Force all solid-js imports (from kilo-ui and the webview) to resolve to
+ * Force all solid-js imports (from tavern-ui and the webview) to resolve to
  * the **same** copy so SolidJS contexts are shared across packages.
  * Without this, the monorepo hoists separate copies (pnpm vs bun) and
  * createContext / useContext can't see each other.
@@ -265,7 +265,7 @@ const cachedSolidPlugin = {
 const solidDedupePlugin = {
   name: "solid-dedupe",
   setup(build) {
-    // Resolve these bare specifiers to the kilo-vscode-local copy
+    // Resolve these bare specifiers to the tavern-vscode-local copy
     const solidRoot = path.dirname(require.resolve("solid-js/package.json"))
     const aliases = {
       "solid-js": path.join(solidRoot, "dist", "solid.js"),
@@ -306,10 +306,10 @@ const esbuildProblemMatcherPlugin = {
 
 /**
  * Route the shared `@opencode-ai/ui/pierre/worker` module (and its relative
- * variants) to the Kilo implementation in `webview-ui/pierre-worker.ts`.
+ * variants) to the Tavern implementation in `webview-ui/pierre-worker.ts`.
  *
  * The upstream module loads Pierre's Shiki worker via a Vite-only
- * `?worker&url` import that esbuild can't resolve. The Kilo replacement loads
+ * `?worker&url` import that esbuild can't resolve. The Tavern replacement loads
  * the worker from the bundled `dist/shiki-worker.js` asset instead, so syntax
  * highlighting runs off the main thread. `@pierre/diffs/worker` (used by that
  * replacement) is left alone.
@@ -337,9 +337,9 @@ const markdownWorkerUrlPlugin = {
   setup(build) {
     build.onResolve({ filter: /markdown-shiki\.worker\.ts\?worker&url$/ }, () => ({
       path: "markdown-shiki-worker-url",
-      namespace: "kilo-worker-url",
+      namespace: "tavern-worker-url",
     }))
-    build.onLoad({ filter: /.*/, namespace: "kilo-worker-url" }, () => ({
+    build.onLoad({ filter: /.*/, namespace: "tavern-worker-url" }, () => ({
       contents: "export default window.KILO_MARKDOWN_SHIKI_WORKER_URI",
       loader: "js",
     }))
@@ -347,7 +347,7 @@ const markdownWorkerUrlPlugin = {
 }
 
 /**
- * Resolve the synthetic `kilo-shiki-worker` entry point to Pierre's Shiki worker
+ * Resolve the synthetic `tavern-shiki-worker` entry point to Pierre's Shiki worker
  * so esbuild can bundle it (and its inlined oniguruma WebAssembly) into a single
  * `dist/shiki-worker.js` asset loaded by `webview-ui/pierre-worker.ts`. Switch to
  * `worker-portable.js` to drop WebAssembly and use the JS regex engine instead.
@@ -357,7 +357,7 @@ const markdownWorkerUrlPlugin = {
 const shikiWorkerEntryPlugin = {
   name: "shiki-worker-entry",
   setup(build) {
-    build.onResolve({ filter: /^kilo-shiki-worker$/ }, async () => {
+    build.onResolve({ filter: /^tavern-shiki-worker$/ }, async () => {
       const resolved = await build.resolve("@pierre/diffs/worker/worker.js", {
         kind: "import-statement",
         resolveDir: __dirname,
@@ -377,9 +377,9 @@ const svgSpritePlugin = {
         contents: `
           const svg = ${JSON.stringify(content)};
           const inject = () => {
-            if (!document.getElementById("kilo-sprite")) {
+            if (!document.getElementById("tavern-sprite")) {
               const el = document.createElement("div");
-              el.id = "kilo-sprite";
+              el.id = "tavern-sprite";
               el.style.display = "none";
               el.innerHTML = svg;
               document.body.appendChild(el);
@@ -468,7 +468,7 @@ function getWebviewsConfig() {
 
 function getShikiWorkerConfig() {
   return {
-    entryPoints: ["kilo-shiki-worker"],
+    entryPoints: ["tavern-shiki-worker"],
     bundle: true,
     format: "iife",
     minify: production,
@@ -511,7 +511,7 @@ function notices() {
 
 /**
  * The DotLottie player defaults to a CDN for its WASM renderer. Ship the copy from
- * `@lottiefiles/dotlottie-web` next to the webview bundles so the animated Kilo logo never
+ * `@lottiefiles/dotlottie-web` next to the webview bundles so the animated Tavern logo never
  * reaches the network (the webview CSP blocks it anyway).
  */
 function wasm() {

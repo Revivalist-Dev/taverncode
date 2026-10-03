@@ -15,7 +15,7 @@ if (wasm) DotLottie.setWasmUrl(wasm)
 export const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
 
 /**
- * Yellow slot-machine Kilo mark, mirrors Kilo Cloud's welcome logo hover animation.
+ * Yellow slot-machine Tavern mark, mirrors Tavern Cloud's welcome logo hover animation.
  *
  * `onReady` reports whether the player can draw. The parent keeps the static mark visible until
  * that is true, so a slow or failed load never leaves an empty square on hover.
@@ -28,13 +28,13 @@ export const AnimatedKiloLogo: Component<{ playing: boolean; onReady: (ready: bo
 
   // A failed load leaves the canvas blank, so log it and let the static mark stay visible.
   const fail = (event: { error: Error }) => {
-    console.warn("[Kilo New] animated Kilo logo failed to load:", event.error)
+    console.warn("[Tavern New] animated Tavern logo failed to load:", event.error)
     setLoaded(false)
     props.onReady(false)
   }
 
   onMount(() => {
-    const dl = new DotLottie({ canvas, src: `${icons}/kilo-yellow.lottie`, loop: true })
+    const dl = new DotLottie({ canvas, src: `${icons}/tavern-yellow.lottie`, loop: true })
     // `play()` is a no-op until the animation and WASM renderer are loaded, so wait for `load`.
     dl.addEventListener("load", () => {
       setLoaded(true)
@@ -54,5 +54,5 @@ export const AnimatedKiloLogo: Component<{ playing: boolean; onReady: (ready: bo
     dl.pause()
   })
 
-  return <canvas ref={canvas} class="kilo-logo-lottie" aria-hidden="true" />
+  return <canvas ref={canvas} class="tavern-logo-lottie" aria-hidden="true" />
 }

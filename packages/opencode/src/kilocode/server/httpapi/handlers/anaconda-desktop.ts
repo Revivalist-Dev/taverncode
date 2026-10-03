@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
-import * as AnacondaDesktop from "@/kilocode/anaconda-desktop/service"
-import { NotReadyError, PlatformError, SyncError, ToolAcknowledgementError } from "@/kilocode/anaconda-desktop/domain"
+import * as AnacondaDesktop from "@/taverncode/anaconda-desktop/service"
+import { NotReadyError, PlatformError, SyncError, ToolAcknowledgementError } from "@/taverncode/anaconda-desktop/domain"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { AnacondaDesktopConflictError, AnacondaDesktopOperationError } from "../groups/anaconda-desktop"
 

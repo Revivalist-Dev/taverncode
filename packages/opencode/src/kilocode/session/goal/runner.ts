@@ -2,7 +2,7 @@ import { Cause, Deferred, Effect, Exit, Option, Scope, Semaphore } from "effect"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
 import { NamedError } from "@opencode-ai/core/util/error"
 import type { EventV2 } from "@opencode-ai/core/event"
-import { Interrupted } from "@opencode-ai/schema/kilocode/session-drain"
+import { Interrupted } from "@opencode-ai/schema/taverncode/session-drain"
 import { Command } from "@/command"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceRef } from "@/effect/instance-ref"
@@ -15,7 +15,7 @@ import { Session } from "@/session/session"
 import type { CommandInput, PromptInput } from "@/session/prompt"
 import { SessionRunState } from "@/session/run-state"
 import { MessageID, PartID, SessionID } from "@/session/schema"
-import { Suggestion } from "@/kilocode/suggestion"
+import { Suggestion } from "@/taverncode/suggestion"
 import { KiloSessionControl } from "../control"
 import { GoalState } from "./state"
 import { GoalLink } from "./link"
@@ -262,7 +262,7 @@ export namespace Goal {
               sessionID: id,
               metadata: {
                 ...session.metadata,
-                "kilo.goal": {
+                "tavern.goal": {
                   text: goal.text,
                   status: "paused",
                   active: false,
@@ -362,7 +362,7 @@ export namespace Goal {
                 sessionID: input.id,
                 metadata: {
                   ...session.metadata,
-                  "kilo.goal": { text: input.text, status, active: status === "active", reason },
+                  "tavern.goal": { text: input.text, status, active: status === "active", reason },
                 },
               })
               // Clear the wait record before cancelling so the wakeup side's
@@ -394,7 +394,7 @@ export namespace Goal {
                 sessionID: id,
                 metadata: {
                   ...session.metadata,
-                  "kilo.goal": { text, status: "waiting", active: false, reason, wait },
+                  "tavern.goal": { text, status: "waiting", active: false, reason, wait },
                 },
               })
               // Hold the goal so the question gate stays closed while it waits.
@@ -658,14 +658,14 @@ export namespace Goal {
                       GoalLink.clear(id)
                       yield* GoalLink.cleanup(id)
                     }
-                    metadata["kilo.goal"] = {
+                    metadata["tavern.goal"] = {
                       text,
                       status: "active",
                       active: true,
                       ...(resumeWait ? { wait: resumeWait } : {}),
                     }
                   }
-                  if (args === "clear") delete metadata["kilo.goal"]
+                  if (args === "clear") delete metadata["tavern.goal"]
                   return yield* sessions.setMetadata({ sessionID: id, metadata })
                 }),
               )
@@ -817,7 +817,7 @@ export namespace Goal {
                   sessionID: id,
                   metadata: {
                     ...fresh.metadata,
-                    "kilo.goal": {
+                    "tavern.goal": {
                       text,
                       status: "active",
                       active: true,

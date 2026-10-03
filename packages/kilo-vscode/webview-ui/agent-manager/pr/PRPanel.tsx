@@ -1,7 +1,7 @@
 /** @jsxImportSource solid-js */
 import { Component, Show, createEffect, createMemo, on, onCleanup } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import type { WorktreeState } from "../../src/types/messages"
 import type { PRStatus } from "../../src/types/messages"
 import { useConfig } from "../../src/context/config"
@@ -239,7 +239,7 @@ export const PRPanel: Component<PRPanelProps> = (props) => {
           <span class="am-pr-panel-number">#{props.pr.number}</span>
         </div>
         <div class="am-pr-panel-actions am-pr-row">
-          {/* Fix mode: whether "Fix with Kilo" also commits and pushes so the PR updates. */}
+          {/* Fix mode: whether "Fix with Tavern" also commits and pushes so the PR updates. */}
           <Tooltip value={t("settings.agentBehaviour.pushFixes.description")} placement="bottom">
             <IconButton
               icon="cloud-upload"

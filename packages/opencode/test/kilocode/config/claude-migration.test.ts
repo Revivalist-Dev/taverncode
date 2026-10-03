@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import fs from "fs/promises"
 import path from "path"
 import { Global } from "@opencode-ai/core/global"
-import { ClaudeMigration } from "@/kilocode/config/claude-migration"
+import { ClaudeMigration } from "@/taverncode/config/claude-migration"
 import { tmpdir } from "../../fixture/fixture"
 
 async function sourceTree(root: string) {
@@ -84,7 +84,7 @@ describe("Claude global configuration migration", () => {
       expect(await fs.readFile(path.join(config, "AGENTS.md"), "utf8")).toBe(source.rules)
       expect(await fs.readFile(path.join(config, "skills", "audit", "SKILL.md"), "utf8")).toContain('name: "audit"')
 
-      const native = JSON.parse(await fs.readFile(path.join(config, "kilo.jsonc"), "utf8"))
+      const native = JSON.parse(await fs.readFile(path.join(config, "tavern.jsonc"), "utf8"))
       expect(native.mcp.local).toEqual({
         type: "local",
         command: ["npx", "-y", "example-mcp"],
@@ -109,7 +109,7 @@ describe("Claude global configuration migration", () => {
     }
   })
 
-  test("preserves existing Kilo files and never retries after completion", async () => {
+  test("preserves existing Tavern files and never retries after completion", async () => {
     await using tmp = await tmpdir()
     const home = path.join(tmp.path, "home")
     const config = path.join(tmp.path, "config")
@@ -130,7 +130,7 @@ describe("Claude global configuration migration", () => {
     )
     await fs.writeFile(path.join(config, "AGENTS.md"), "existing rules")
     await fs.writeFile(
-      path.join(config, "kilo.jsonc"),
+      path.join(config, "tavern.jsonc"),
       JSON.stringify({ mcp: { existing: { type: "local", command: ["keep"] } } }),
     )
 
@@ -158,7 +158,7 @@ describe("Claude global configuration migration", () => {
           expect.objectContaining({ category: "mcp", name: "imported", status: "imported" }),
         ]),
       )
-      const native = JSON.parse(await fs.readFile(path.join(config, "kilo.jsonc"), "utf8"))
+      const native = JSON.parse(await fs.readFile(path.join(config, "tavern.jsonc"), "utf8"))
       expect(native.mcp.imported).toEqual({
         type: "local",
         command: ["npx", "example-mcp"],
@@ -166,10 +166,10 @@ describe("Claude global configuration migration", () => {
       })
       const notice = await ClaudeMigration.notification({ state })
       expect(notice?.message).toContain(
-        "Global CLAUDE.md: Kilo already has AGENTS.md; existing instructions were kept.",
+        "Global CLAUDE.md: Tavern already has AGENTS.md; existing instructions were kept.",
       )
       expect(notice?.message).toContain('Skill "unsafe": it contains additional files')
-      expect(notice?.message).toContain('MCP server "existing": Kilo already has an MCP server with that name')
+      expect(notice?.message).toContain('MCP server "existing": Tavern already has an MCP server with that name')
       expect(notice?.message).toContain("merge skipped instructions or skills manually")
       expect(notice?.message).toContain("this migration runs once.\nOriginal Claude files")
       await fs.writeFile(path.join(home, ".claude", "CLAUDE.md"), "changed source")
@@ -178,7 +178,7 @@ describe("Claude global configuration migration", () => {
       const second = await ClaudeMigration.run({ enabled: true, roots: { home, config, state } })
       expect(second.status).toBe("already-attempted")
       expect(await fs.readFile(path.join(config, "AGENTS.md"), "utf8")).toBe("existing rules")
-      expect(await fs.readFile(path.join(config, "kilo.jsonc"), "utf8")).not.toContain('"new"')
+      expect(await fs.readFile(path.join(config, "tavern.jsonc"), "utf8")).not.toContain('"new"')
     } finally {
       ;(Global.Path as { config: string }).config = previous
     }
@@ -335,7 +335,7 @@ describe("Claude global configuration migration", () => {
         expect.objectContaining({ name: "invalidRemote", reason: "mcp-url-invalid" }),
       ]),
     )
-    expect(await Bun.file(path.join(config, "kilo.jsonc")).exists()).toBe(false)
+    expect(await Bun.file(path.join(config, "tavern.jsonc")).exists()).toBe(false)
   })
 
   test("does not follow source symlinks", async () => {

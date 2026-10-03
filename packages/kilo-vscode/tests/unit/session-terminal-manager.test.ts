@@ -77,7 +77,7 @@ describe("SessionTerminalManager structure", () => {
   it("dispose clears the context key, disposes terminals, and clears the map", () => {
     const text = body("dispose")
     // All three are required for clean shutdown — missing any would leak resources
-    expect(text).toContain("kilo-code.agentTerminalFocus")
+    expect(text).toContain("tavern-code.agentTerminalFocus")
     expect(text).toContain("terminal.dispose()")
     expect(text).toContain("terminals.clear()")
   })
@@ -221,14 +221,14 @@ describe("SessionTerminalManager worktree terminals", () => {
   }
 
   it("creates a terminal rooted at the worktree path", () => {
-    const s = scene({ worktreePath: "/repo/.kilo/worktrees/wt-1", repoPath: "/repo" })
+    const s = scene({ worktreePath: "/repo/.tavern/worktrees/wt-1", repoPath: "/repo" })
     s.manager.showWorktreeTerminal("wt-1", s.state)
-    expect(s.created).toEqual([{ cwd: "/repo/.kilo/worktrees/wt-1", name: "Agent: feature/x" }])
+    expect(s.created).toEqual([{ cwd: "/repo/.tavern/worktrees/wt-1", name: "Agent: feature/x" }])
     expect(s.shown()).toBe(1)
   })
 
   it("reuses the live terminal on repeat calls", () => {
-    const s = scene({ worktreePath: "/repo/.kilo/worktrees/wt-1" })
+    const s = scene({ worktreePath: "/repo/.tavern/worktrees/wt-1" })
     s.manager.showWorktreeTerminal("wt-1", s.state)
     s.manager.showWorktreeTerminal("wt-1", s.state)
     expect(s.created).toHaveLength(1)
@@ -236,12 +236,12 @@ describe("SessionTerminalManager worktree terminals", () => {
   })
 
   it("keeps session and worktree terminal keys in separate namespaces", () => {
-    const s = scene({ worktreePath: "/repo/.kilo/worktrees/wt-1", repoPath: "/repo" })
+    const s = scene({ worktreePath: "/repo/.tavern/worktrees/wt-1", repoPath: "/repo" })
     s.manager.showTerminal("worktree:wt-1", undefined)
     s.manager.showWorktreeTerminal("wt-1", s.state)
     expect(s.created).toEqual([
       { cwd: "/repo", name: "Agent: local" },
-      { cwd: "/repo/.kilo/worktrees/wt-1", name: "Agent: feature/x" },
+      { cwd: "/repo/.tavern/worktrees/wt-1", name: "Agent: feature/x" },
     ])
     expect(s.shown()).toBe(2)
   })
@@ -260,27 +260,27 @@ describe("SessionTerminalManager worktree terminals", () => {
   })
 
   it("closes session and worktree terminals without closing local terminals", () => {
-    const s = scene({ worktreePath: "/repo/.kilo/worktrees/wt-1", repoPath: "/repo" })
+    const s = scene({ worktreePath: "/repo/.tavern/worktrees/wt-1", repoPath: "/repo" })
     s.manager.showLocalTerminal()
     s.manager.showTerminal("session-1", s.state)
     s.manager.showWorktreeTerminal("wt-1", s.state)
 
-    s.manager.closeDirectory("/repo/.kilo/worktrees/wt-1/")
+    s.manager.closeDirectory("/repo/.tavern/worktrees/wt-1/")
 
-    expect(s.disposed).toEqual(["/repo/.kilo/worktrees/wt-1", "/repo/.kilo/worktrees/wt-1"])
+    expect(s.disposed).toEqual(["/repo/.tavern/worktrees/wt-1", "/repo/.tavern/worktrees/wt-1"])
     expect(s.manager.showExisting("session-1")).toBe(false)
     expect(s.manager.showExistingLocal()).toBe(true)
 
-    s.manager.closeDirectory("/repo/.kilo/worktrees/wt-1")
+    s.manager.closeDirectory("/repo/.tavern/worktrees/wt-1")
     expect(s.disposed).toHaveLength(2)
   })
 
   it("matches Windows worktree directories without case or separator differences", () => {
-    const s = scene({ worktreePath: "C:\\Repo\\.kilo\\worktrees\\Feature", repoPath: "C:\\Repo" })
+    const s = scene({ worktreePath: "C:\\Repo\\.tavern\\worktrees\\Feature", repoPath: "C:\\Repo" })
     s.manager.showWorktreeTerminal("wt-1", s.state)
 
     s.manager.closeDirectory("c:/repo/.KILO/worktrees/feature/")
 
-    expect(s.disposed).toEqual(["C:\\Repo\\.kilo\\worktrees\\Feature"])
+    expect(s.disposed).toEqual(["C:\\Repo\\.tavern\\worktrees\\Feature"])
   })
 })

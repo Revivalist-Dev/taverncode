@@ -12,7 +12,7 @@ const done = (id = "part-1") =>
       input: {},
       output: "Opened plan",
       title: "Opening plan",
-      metadata: { plan: ".kilo/plans/plan.md", open: true },
+      metadata: { plan: ".tavern/plans/plan.md", open: true },
     },
   }) satisfies Part
 
@@ -39,7 +39,7 @@ describe("createPlanOpener", () => {
         update({ ...done("part-running"), state: { status: "running", input: {} } }),
         update({
           ...done("part-unmarked"),
-          state: { ...done("part-unmarked").state, metadata: { plan: ".kilo/plans/plan.md" } },
+          state: { ...done("part-unmarked").state, metadata: { plan: ".tavern/plans/plan.md" } },
         }),
         update({ ...done("part-nopath"), state: { ...done("part-nopath").state, metadata: { open: true } } }),
       ],

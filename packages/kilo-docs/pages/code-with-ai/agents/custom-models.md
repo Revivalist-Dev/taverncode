@@ -6,7 +6,7 @@ platform: new
 
 # Custom Models
 
-Kilo Code ships with a curated list of models for each provider, but you can use **any model** your provider supports — including models that aren't in the built-in list. This is useful for:
+Tavern Code ships with a curated list of models for each provider, but you can use **any model** your provider supports — including models that aren't in the built-in list. This is useful for:
 
 - Using a newly released model before it's added to the built-in catalog
 - Running a custom or fine-tuned model via LM Studio, Ollama, or another local provider
@@ -33,7 +33,7 @@ Add custom models under the `provider.<provider_id>.models` key in your config f
 - **Provider ID** — A unique identifier using lowercase letters, numbers, hyphens, or underscores (e.g., `myprovider`). This becomes the `provider_id` in the `provider_id/model_id` format.
 - **Display name** — A human-readable name shown in the UI (e.g., `My AI Provider`).
 - **Provider API** — The protocol used by the provider. Use **OpenAI Responses** for OpenAI and xAI models. Use **Anthropic Messages** for Anthropic and MiniMax models. **OpenAI Compatible** is the default for other OpenAI Chat Completions-compatible endpoints.
-- **Base URL** — The provider's API endpoint (e.g., `https://api.myprovider.com/v1`). When a valid URL is entered, Kilo automatically fetches available models from the endpoint if it exposes an OpenAI-compatible models endpoint.
+- **Base URL** — The provider's API endpoint (e.g., `https://api.myprovider.com/v1`). When a valid URL is entered, Tavern automatically fetches available models from the endpoint if it exposes an OpenAI-compatible models endpoint.
 - **API key** — Your provider's API key. Optional — leave empty if you manage authentication via headers.
 - **Models** — Add models manually by ID and display name, or select from the auto-fetched list that appears after entering a valid base URL. Click **Fetch models** to trigger the fetch on demand, for example after the automatic fetch failed or the endpoint requires extra setup.
 - **Headers** (optional) — Add custom HTTP headers as key-value pairs if your provider requires them.
@@ -42,16 +42,16 @@ Add custom models under the `provider.<provider_id>.models` key in your config f
 
 To edit an existing custom provider, click the **Edit provider** button next to it in the connected providers section.
 
-For additional model configuration (token limits, tool calling, reasoning, variants), edit the `kilo.jsonc` config file directly — see the **CLI** tab for the format.
+For additional model configuration (token limits, tool calling, reasoning, variants), edit the `tavern.jsonc` config file directly — see the **CLI** tab for the format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-**Config file** (`~/.config/kilo/kilo.jsonc` or `./kilo.jsonc`):
+**Config file** (`~/.config/tavern/tavern.jsonc` or `./tavern.jsonc`):
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "lmstudio/my-custom-model",
   "provider": {
     "lmstudio": {
@@ -111,11 +111,11 @@ For a standard text model that can also inspect images, use:
 }
 ```
 
-If `modalities` is omitted and the model ID matches a models.dev catalog entry for that provider, Kilo uses the catalog's modalities. For completely custom models with no catalog match, Kilo defaults to text input and text output only. Set `attachment: true` alongside image, audio, video, or PDF input modalities when the provider supports sending those files as attachments.
+If `modalities` is omitted and the model ID matches a models.dev catalog entry for that provider, Tavern uses the catalog's modalities. For completely custom models with no catalog match, Tavern defaults to text input and text output only. Set `attachment: true` alongside image, audio, video, or PDF input modalities when the provider supports sending those files as attachments.
 
 ### Token Limits (limit)
 
-The `limit` object controls how Kilo manages the model's context window and output length. These values are specified in **tokens**.
+The `limit` object controls how Tavern manages the model's context window and output length. These values are specified in **tokens**.
 
 | Sub-field | Type | Required | Description |
 |---|---|---|---|
@@ -130,22 +130,22 @@ The `limit` object controls how Kilo manages the model's context window and outp
 }
 ```
 
-If a model stops because it reaches `limit.output`, Kilo shows a visible warning that the response may be incomplete. For reasoning models that spend the whole response reasoning and produce no text or tool call, the warning suggests disabling reasoning or increasing `limit.output`.
+If a model stops because it reaches `limit.output`, Tavern shows a visible warning that the response may be incomplete. For reasoning models that spend the whole response reasoning and produce no text or tool call, the warning suggests disabling reasoning or increasing `limit.output`.
 
 #### How limits are resolved
 
-Kilo resolves token limits in this order:
+Tavern resolves token limits in this order:
 
 1. **Your config** — values you set under `provider.<id>.models.<model>.limit`
-2. **Built-in catalog** — Kilo ships a snapshot of [models.dev](https://models.dev) and refreshes it hourly. If your model ID matches a known model, catalog values are used as defaults.
+2. **Built-in catalog** — Tavern ships a snapshot of [models.dev](https://models.dev) and refreshes it hourly. If your model ID matches a known model, catalog values are used as defaults.
 3. **Fallback** — if neither source provides a value, `context` and `output` default to `0`.
 
 #### What happens when limits are `0`
 
 If you use a custom or local model and don't specify limits — and the model isn't in the built-in catalog — both `context` and `output` resolve to `0`. This has meaningful side effects:
 
-- **Compaction is disabled.** Kilo uses `context` to detect when the conversation exceeds the model's window and needs to be summarized. With `context: 0`, overflow detection is skipped and conversations will grow unbounded until the provider rejects the request.
-- **Output falls back to 32,000 tokens.** When `output` is `0`, Kilo uses its internal default of 32,000 tokens (configurable via the `KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX` environment variable).
+- **Compaction is disabled.** Tavern uses `context` to detect when the conversation exceeds the model's window and needs to be summarized. With `context: 0`, overflow detection is skipped and conversations will grow unbounded until the provider rejects the request.
+- **Output falls back to 32,000 tokens.** When `output` is `0`, Tavern uses its internal default of 32,000 tokens (configurable via the `KILO_EXPERIMENTAL_OUTPUT_TOKEN_MAX` environment variable).
 - **No context usage tracking.** Usage metrics that depend on knowing the context size are skipped.
 
 {% callout type="warning" %}
@@ -160,7 +160,7 @@ Register a model that LM Studio serves under a custom name:
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "lmstudio/deepseek-r1-0528",
   "provider": {
     "lmstudio": {
@@ -178,7 +178,7 @@ Register a model that LM Studio serves under a custom name:
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "ollama/my-finetune:latest",
   "provider": {
     "ollama": {
@@ -203,7 +203,7 @@ Use a model that's not yet in the built-in catalog:
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "openai/gpt-6-preview",
   "provider": {
     "openai": {
@@ -229,7 +229,7 @@ Connect to any provider that exposes an OpenAI-compatible API:
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "openai-compatible/my-model",
   "provider": {
     "openai-compatible": {
@@ -258,7 +258,7 @@ Override options or define reasoning variants for a built-in model. Variant fiel
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "provider": {
     "anthropic": {
       "models": {
@@ -305,7 +305,7 @@ If the model key in your config differs from what the provider expects, use the 
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "lmstudio/my-local-llama",
   "provider": {
     "lmstudio": {
@@ -326,7 +326,7 @@ For Azure OpenAI, use the native `azure` provider and set `id` to your Azure dep
 
 ```jsonc
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "azure/gpt-5.5",
   "provider": {
     "azure": {
@@ -352,11 +352,11 @@ For Azure OpenAI, use the native `azure` provider and set `id` to your Azure dep
 }
 ```
 
-Here `azure/gpt-5.5` is the model you select in Kilo Code, while `my-gpt-5-5-deployment` is the Azure deployment name sent to Azure. If you prefer to configure the full Azure endpoint instead of a resource name, replace `resourceName` with `baseURL`, for example `"baseURL": "https://my-resource.openai.azure.com/openai"`. If both are configured, Kilo Code uses `baseURL` and ignores `resourceName` to avoid sending conflicting Azure SDK options.
+Here `azure/gpt-5.5` is the model you select in Tavern Code, while `my-gpt-5-5-deployment` is the Azure deployment name sent to Azure. If you prefer to configure the full Azure endpoint instead of a resource name, replace `resourceName` with `baseURL`, for example `"baseURL": "https://my-resource.openai.azure.com/openai"`. If both are configured, Tavern Code uses `baseURL` and ignores `resourceName` to avoid sending conflicting Azure SDK options.
 
 ## Model Loading Priority
 
-When Kilo starts, it resolves the active model in this order:
+When Tavern starts, it resolves the active model in this order:
 
 1. The `--model` (or `-m`) command-line flag
 2. The `model` key in your config file
@@ -391,7 +391,7 @@ You can also set options that apply to all models from a provider:
 | `chunkTimeout` | `number` | Timeout in milliseconds between streamed response chunks. If no chunk arrives within this window, the request is aborted and retried. This catches silent provider dropouts where the TCP connection stays open but SSE streaming stops. Recommended: `15000`–`30000` (15–30 seconds) for providers with unreliable streaming. |
 
 {% callout type="warning" title="{env:} / {file:} only resolve in trusted config" %}
-`{env:VAR}` and `{file:...}` references in `apiKey` (or any option) are resolved **only** when the config lives in a trusted location: your global config (`~/.config/kilo`), a config passed via `KILO_CONFIG` / `KILO_CONFIG_CONTENT`, or organization/MDM-managed config. A project-level `kilo.json` / `opencode.json` committed to a repository **cannot** resolve `{env:VAR}` — the reference is ignored and a warning is logged, so a provider configured this way in a repo will not authenticate. This prevents a malicious repository from exfiltrating your secrets to an attacker-controlled `baseURL` just by being opened. `{file:...}` still works in project config, but only for files that resolve inside the project root — references that leave it (absolute paths outside the root, `../` traversal, and symlink escapes) are rejected. Keep provider credentials in your global config.
+`{env:VAR}` and `{file:...}` references in `apiKey` (or any option) are resolved **only** when the config lives in a trusted location: your global config (`~/.config/tavern`), a config passed via `KILO_CONFIG` / `KILO_CONFIG_CONTENT`, or organization/MDM-managed config. A project-level `tavern.json` / `opencode.json` committed to a repository **cannot** resolve `{env:VAR}` — the reference is ignored and a warning is logged, so a provider configured this way in a repo will not authenticate. This prevents a malicious repository from exfiltrating your secrets to an attacker-controlled `baseURL` just by being opened. `{file:...}` still works in project config, but only for files that resolve inside the project root — references that leave it (absolute paths outside the root, `../` traversal, and symlink escapes) are rejected. Keep provider credentials in your global config.
 {% /callout %}
 
 ## Filtering Available Models
@@ -418,7 +418,7 @@ Control which models appear in the model picker for a provider using allowlists 
 
 - Verify the provider has valid credentials configured (API key, or local server running)
 - Check that the model key matches what you set in `"model": "provider/model-key"`
-- Run `kilo models` to list all available models and confirm your provider is active
+- Run `tavern models` to list all available models and confirm your provider is active
 
 **Model errors or unexpected behavior:**
 

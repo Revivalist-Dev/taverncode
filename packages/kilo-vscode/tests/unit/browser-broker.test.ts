@@ -397,12 +397,12 @@ describe("BrowserBroker", () => {
       expect(new URL(first.url).searchParams.has("can_dock")).toBe(false)
       const frontend = await fetch(first.url)
       expect(frontend.status).toBe(200)
-      expect(await frontend.text()).toContain('<script src="./kilo-bootstrap.js"></script>')
+      expect(await frontend.text()).toContain('<script src="./tavern-bootstrap.js"></script>')
       for (const [entry, theme] of [
         [first, "dark"],
         [second, "light"],
       ] as const) {
-        const bootstrap = await fetch(new URL("./kilo-bootstrap.js", entry.url))
+        const bootstrap = await fetch(new URL("./tavern-bootstrap.js", entry.url))
         expect(bootstrap.status).toBe(200)
         const storage = new Map<string, string>()
         runInNewContext(await bootstrap.text(), {
@@ -620,7 +620,7 @@ describe("BrowserBroker", () => {
       missing,
       cause,
       message: expect.stringContaining(
-        `${system ? "disable" : "enable"} Use System Chrome in Kilo Settings > Experimental for the Integrated Browser`,
+        `${system ? "disable" : "enable"} Use System Chrome in Tavern Settings > Experimental for the Integrated Browser`,
       ),
     })
     await expect(open()).rejects.toThrow(system ? "Install Chrome" : "enable Use System Chrome")
@@ -787,7 +787,7 @@ describe("BrowserBroker", () => {
           request: () => ({ isNavigationRequest: () => true }),
           frame: () => main,
           status: () => 502,
-          headers: () => ({ "x-kilo-browser-unreachable": "1" }),
+          headers: () => ({ "x-tavern-browser-unreachable": "1" }),
         })
         throw new Error("page.goto: net::ERR_HTTP_RESPONSE_CODE_FAILURE at http://localhost:3000/")
       },

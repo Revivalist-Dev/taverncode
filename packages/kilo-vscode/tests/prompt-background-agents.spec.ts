@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 import type { BackgroundJobInfo, WebviewMessage } from "../webview-ui/src/types/messages"
 
-const globals = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const globals = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 test("Agent panel stops only this session's running agents and clears finished ones", async ({ page }) => {
   const calls: WebviewMessage[] = []

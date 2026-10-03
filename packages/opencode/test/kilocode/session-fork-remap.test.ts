@@ -4,7 +4,7 @@ import { SessionProjector } from "@opencode-ai/core/session/projector"
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import { HttpRouter } from "effect/unstable/http"
-import { createKiloClient } from "@kilocode/sdk/v2/client"
+import { createKiloClient } from "@taverncode/sdk/v2/client"
 import { provideTestInstance } from "../fixture/fixture"
 import { HttpApiApp } from "../../src/server/routes/instance/httpapi/server"
 import { Session } from "../../src/session/session"
@@ -15,7 +15,7 @@ import { disposeAllInstances, disposeTestRuntime, tmpdir } from "../fixture/fixt
 import { eq } from "drizzle-orm"
 import { EventSequenceTable, EventTable } from "@opencode-ai/core/event/sql"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { KiloPartLifecycle } from "../../src/kilocode/session/part-lifecycle"
+import { KiloPartLifecycle } from "../../src/taverncode/session/part-lifecycle"
 import { Database as CoreDatabase } from "@opencode-ai/core/database/database"
 import { ProjectV2 } from "@opencode-ai/core/project"
 import { ProjectTable } from "@opencode-ai/core/project/sql"
@@ -31,7 +31,7 @@ import { remove as cleanup } from "./cleanup"
 Log.init({ print: false })
 
 const previous = Flag.KILO_DB
-const dbfile = path.join(os.tmpdir(), `kilo-fork-${process.pid}-${crypto.randomUUID()}.db`)
+const dbfile = path.join(os.tmpdir(), `tavern-fork-${process.pid}-${crypto.randomUUID()}.db`)
 const layer = LayerNode.compile(LayerNode.group([Session.node, SessionProjector.node]))
 const runtime = makeRuntime(Session.Service, layer)
 

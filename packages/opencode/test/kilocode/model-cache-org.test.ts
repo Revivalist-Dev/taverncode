@@ -1,4 +1,4 @@
-// Regression test: OAuth accountId must flow into model fetch as kilocodeOrganizationId
+// Regression test: OAuth accountId must flow into model fetch as taverncodeOrganizationId
 // When a user logs in via OAuth and selects an enterprise organization, the model fetch
 // should use the organization-specific endpoint, not the personal endpoint.
 
@@ -10,7 +10,7 @@ import * as Log from "@opencode-ai/core/util/log"
 Log.init({ print: false })
 
 import { Auth } from "../../src/auth"
-import { recommend } from "../../src/kilocode/provider/catalog"
+import { recommend } from "../../src/taverncode/provider/catalog"
 import { ModelCache } from "../../src/provider/model-cache"
 import { TestConfig } from "../fixture/config"
 import { testEffect } from "../lib/effect"
@@ -23,7 +23,7 @@ function layer(
   options: Record<string, string> = {},
 ) {
   const auth = Layer.mock(Auth.Service)({
-    get: (id) => Effect.succeed(id === "kilo" ? info : undefined),
+    get: (id) => Effect.succeed(id === "tavern" ? info : undefined),
   })
   const models = Layer.succeed(
     ModelCache.KiloModelsService,
@@ -45,7 +45,7 @@ function layer(
   )
   return Layer.fresh(ModelCache.layer).pipe(
     Layer.provide(FetchHttpClient.layer),
-    Layer.provide(TestConfig.layer({ get: () => Effect.succeed({ provider: { kilo: { options } } }) })),
+    Layer.provide(TestConfig.layer({ get: () => Effect.succeed({ provider: { tavern: { options } } }) })),
     Layer.provide(auth),
     Layer.provide(models),
   )
@@ -80,14 +80,14 @@ for (const org of [false, true]) {
     { name: "API", auth: "api", key: undefined, env: undefined, token: "stored-token", org: "org-config" },
     { name: "configured", auth: "none", key: undefined, env: undefined, token: "configured-token", org: "org-config" },
     {
-      name: "Kilo token",
+      name: "Tavern token",
       auth: "none",
       key: undefined,
       env: undefined,
-      token: "configured-kilo-token",
+      token: "configured-tavern-token",
       org: "org-config",
     },
-    { name: "empty Kilo token", auth: "none", key: undefined, env: undefined, token: "", org: "org-config" },
+    { name: "empty Tavern token", auth: "none", key: undefined, env: undefined, token: "", org: "org-config" },
     { name: "empty environment", auth: "oauth", key: "", env: "", token: "stored-token", org: "org-stored" },
     { name: "empty stored token", auth: "empty", key: undefined, env: undefined, token: "", org: "org-stored" },
   ]) {
@@ -109,8 +109,8 @@ for (const org of [false, true]) {
                 })
         const options = {
           apiKey: "configured-token",
-          ...(["Kilo token", "empty Kilo token"].includes(item.name) ? { kilocodeToken: item.token } : {}),
-          ...(org ? { kilocodeOrganizationId: "org-config" } : {}),
+          ...(["Tavern token", "empty Tavern token"].includes(item.name) ? { taverncodeToken: item.token } : {}),
+          ...(org ? { taverncodeOrganizationId: "org-config" } : {}),
         }
         const requests: Array<{ path: string; authorization: string | null }> = []
         yield* Effect.acquireRelease(
@@ -130,11 +130,11 @@ for (const org of [false, true]) {
           }),
           (fetch) => Effect.sync(() => fetch.mockRestore()),
         )
-        yield* ModelCache.Service.use((cache) => cache.fetch("kilo")).pipe(
+        yield* ModelCache.Service.use((cache) => cache.fetch("tavern")).pipe(
           Effect.provide(layer(info, captured, options)),
         )
-        expect((yield* Ref.get(captured))?.kilocodeToken).toBe(item.token)
-        expect((yield* Ref.get(captured))?.kilocodeOrganizationId).toBe(org ? item.org : undefined)
+        expect((yield* Ref.get(captured))?.taverncodeToken).toBe(item.token)
+        expect((yield* Ref.get(captured))?.taverncodeOrganizationId).toBe(org ? item.org : undefined)
         expect(yield* Effect.promise(() => recommend({ first: {}, selected: {}, free: {} }, options, info))).toBe(
           item.token ? "selected" : "free",
         )
@@ -186,19 +186,19 @@ it.live("explicit fetch credentials override environment values, including expli
     })
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo", { kilocodeToken: "explicit-token", kilocodeOrganizationId: "org-explicit" })
+        yield* cache.fetch("tavern", { taverncodeToken: "explicit-token", taverncodeOrganizationId: "org-explicit" })
         expect(yield* Ref.get(captured)).toMatchObject({
-          kilocodeToken: "explicit-token",
-          kilocodeOrganizationId: "org-explicit",
+          taverncodeToken: "explicit-token",
+          taverncodeOrganizationId: "org-explicit",
         })
-        yield* cache.refresh("kilo", { kilocodeToken: undefined, kilocodeOrganizationId: undefined })
-        expect((yield* Ref.get(captured))?.kilocodeToken).toBeUndefined()
-        expect((yield* Ref.get(captured))?.kilocodeOrganizationId).toBeUndefined()
-        yield* cache.refresh("kilo", { kilocodeToken: "", kilocodeOrganizationId: "" })
-        expect((yield* Ref.get(captured))?.kilocodeToken).toBe("")
-        expect((yield* Ref.get(captured))?.kilocodeOrganizationId).toBe("")
+        yield* cache.refresh("tavern", { taverncodeToken: undefined, taverncodeOrganizationId: undefined })
+        expect((yield* Ref.get(captured))?.taverncodeToken).toBeUndefined()
+        expect((yield* Ref.get(captured))?.taverncodeOrganizationId).toBeUndefined()
+        yield* cache.refresh("tavern", { taverncodeToken: "", taverncodeOrganizationId: "" })
+        expect((yield* Ref.get(captured))?.taverncodeToken).toBe("")
+        expect((yield* Ref.get(captured))?.taverncodeOrganizationId).toBe("")
       }),
-    ).pipe(Effect.provide(layer(info, captured, { apiKey: "configured-token", kilocodeOrganizationId: "org-config" })))
+    ).pipe(Effect.provide(layer(info, captured, { apiKey: "configured-token", taverncodeOrganizationId: "org-config" })))
   }),
 )
 
@@ -208,8 +208,8 @@ it.live("rejects a model endpoint whose pinned Org conflicts with the selected e
     const captured = yield* Ref.make<Options | undefined>(undefined)
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        expect(yield* cache.fetch("kilo", { baseURL: "https://gateway.test/api/organizations/org-pinned" })).toEqual({})
-        expect(yield* cache.getFailure("kilo")).toEqual({ kind: "schema" })
+        expect(yield* cache.fetch("tavern", { baseURL: "https://gateway.test/api/organizations/org-pinned" })).toEqual({})
+        expect(yield* cache.getFailure("tavern")).toEqual({ kind: "schema" })
         expect(yield* Ref.get(captured)).toBeUndefined()
       }),
     ).pipe(Effect.provide(layer(undefined, captured)))
@@ -269,7 +269,7 @@ it.live("switch invalidation drops warm Personal and delayed prior catalogs", ()
               yield* Deferred.succeed(started, undefined)
               yield* Deferred.await(wait)
             }
-            const id = options.kilocodeOrganizationId ?? "personal"
+            const id = options.taverncodeOrganizationId ?? "personal"
             return { models: { [id]: { id, name: id, limit: { context: 128000, output: 4096 } } } }
           }),
       }),
@@ -282,24 +282,24 @@ it.live("switch invalidation drops warm Personal and delayed prior catalogs", ()
     )
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        expect(Object.keys(yield* cache.fetch("kilo"))).toEqual(["personal"])
-        const pending = yield* cache.refresh("kilo").pipe(Effect.forkChild)
+        expect(Object.keys(yield* cache.fetch("tavern"))).toEqual(["personal"])
+        const pending = yield* cache.refresh("tavern").pipe(Effect.forkChild)
         yield* Deferred.await(started)
         yield* Ref.set(account, "org-a")
-        yield* cache.clear("kilo")
-        expect(yield* cache.get("kilo")).toBeUndefined()
-        expect(Object.keys(yield* cache.fetch("kilo"))).toEqual(["org-a"])
+        yield* cache.clear("tavern")
+        expect(yield* cache.get("tavern")).toBeUndefined()
+        expect(Object.keys(yield* cache.fetch("tavern"))).toEqual(["org-a"])
         yield* Deferred.succeed(wait, undefined)
         yield* Fiber.join(pending)
-        expect(Object.keys((yield* cache.get("kilo")) ?? {})).toEqual(["org-a"])
-        expect(yield* cache.getFailure("kilo")).toBeUndefined()
+        expect(Object.keys((yield* cache.get("tavern")) ?? {})).toEqual(["org-a"])
+        expect(yield* cache.getFailure("tavern")).toBeUndefined()
         yield* Ref.set(account, "org-b")
-        yield* cache.clear("kilo")
-        expect(Object.keys(yield* cache.fetch("kilo"))).toEqual(["org-b"])
+        yield* cache.clear("tavern")
+        expect(Object.keys(yield* cache.fetch("tavern"))).toEqual(["org-b"])
         yield* Ref.set(account, undefined)
-        yield* cache.clear("kilo")
-        expect(Object.keys(yield* cache.fetch("kilo"))).toEqual(["personal"])
-        expect(calls.map((options) => options.kilocodeOrganizationId)).toEqual([
+        yield* cache.clear("tavern")
+        expect(Object.keys(yield* cache.fetch("tavern"))).toEqual(["personal"])
+        expect(calls.map((options) => options.taverncodeOrganizationId)).toEqual([
           undefined,
           undefined,
           "org-a",
@@ -311,7 +311,7 @@ it.live("switch invalidation drops warm Personal and delayed prior catalogs", ()
   }),
 )
 
-it.live("model fetch uses accountId from OAuth auth as kilocodeOrganizationId", () =>
+it.live("model fetch uses accountId from OAuth auth as taverncodeOrganizationId", () =>
   Effect.gen(function* () {
     const captured = yield* Ref.make<Options | undefined>(undefined)
     const info = new Auth.Oauth({
@@ -321,15 +321,15 @@ it.live("model fetch uses accountId from OAuth auth as kilocodeOrganizationId", 
       expires: Date.now() + 3600000,
       accountId: "org-enterprise-123",
     })
-    yield* ModelCache.Service.use((cache) => cache.fetch("kilo")).pipe(Effect.provide(layer(info, captured)))
+    yield* ModelCache.Service.use((cache) => cache.fetch("tavern")).pipe(Effect.provide(layer(info, captured)))
     expect(yield* Ref.get(captured)).toMatchObject({
-      kilocodeToken: "test-oauth-token",
-      kilocodeOrganizationId: "org-enterprise-123",
+      taverncodeToken: "test-oauth-token",
+      taverncodeOrganizationId: "org-enterprise-123",
     })
   }),
 )
 
-it.live("model fetch without OAuth accountId does not set kilocodeOrganizationId", () =>
+it.live("model fetch without OAuth accountId does not set taverncodeOrganizationId", () =>
   Effect.gen(function* () {
     const captured = yield* Ref.make<Options | undefined>(undefined)
     const info = new Auth.Oauth({
@@ -338,9 +338,9 @@ it.live("model fetch without OAuth accountId does not set kilocodeOrganizationId
       refresh: "test-refresh-token",
       expires: Date.now() + 3600000,
     })
-    yield* ModelCache.Service.use((cache) => cache.fetch("kilo")).pipe(Effect.provide(layer(info, captured)))
-    expect(yield* Ref.get(captured)).toMatchObject({ kilocodeToken: "test-personal-token" })
-    expect((yield* Ref.get(captured))?.kilocodeOrganizationId).toBeUndefined()
+    yield* ModelCache.Service.use((cache) => cache.fetch("tavern")).pipe(Effect.provide(layer(info, captured)))
+    expect(yield* Ref.get(captured)).toMatchObject({ taverncodeToken: "test-personal-token" })
+    expect((yield* Ref.get(captured))?.taverncodeOrganizationId).toBeUndefined()
   }),
 )
 
@@ -356,18 +356,18 @@ it.live("ModelCache.clear removes cached entry so next fetch hits the network", 
     })
     yield* ModelCache.Service.use((cache) =>
       Effect.gen(function* () {
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("tavern")
         expect(yield* Ref.get(captured)).toBeDefined()
 
         yield* Ref.set(captured, undefined)
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("tavern")
         expect(yield* Ref.get(captured)).toBeUndefined()
-        expect(yield* cache.get("kilo")).toBeDefined()
+        expect(yield* cache.get("tavern")).toBeDefined()
 
-        yield* cache.clear("kilo")
-        expect(yield* cache.get("kilo")).toBeUndefined()
+        yield* cache.clear("tavern")
+        expect(yield* cache.get("tavern")).toBeUndefined()
 
-        yield* cache.fetch("kilo")
+        yield* cache.fetch("tavern")
         expect(yield* Ref.get(captured)).toBeDefined()
       }),
     ).pipe(Effect.provide(layer(info, captured)))

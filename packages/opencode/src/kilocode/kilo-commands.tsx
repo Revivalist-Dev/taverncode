@@ -1,7 +1,7 @@
 /**
- * Kilo Gateway Commands for TUI
+ * Tavern Gateway Commands for TUI
  *
- * Provides /profile and /teams commands that are only visible when connected to Kilo Gateway.
+ * Provides /profile and /teams commands that are only visible when connected to Tavern Gateway.
  */
 
 import { createMemo } from "solid-js"
@@ -12,9 +12,9 @@ import { useToast } from "@tui/ui/toast"
 import { DialogAlert } from "@tui/ui/dialog-alert"
 import { DialogConfirm } from "@tui/ui/dialog-confirm"
 import { reconcile } from "solid-js/store"
-import type { Organization } from "@kilocode/kilo-gateway"
-import { DialogKiloTeamSelect } from "./components/dialog-kilo-team-select.js"
-import { DialogKiloProfile } from "./components/dialog-kilo-profile.js"
+import type { Organization } from "@taverncode/tavern-gateway"
+import { DialogKiloTeamSelect } from "./components/dialog-tavern-team-select.js"
+import { DialogKiloProfile } from "./components/dialog-tavern-profile.js"
 import { DialogIndexing } from "./components/dialog-indexing.js"
 import { DialogProviderUsage } from "./components/dialog-provider-usage.js"
 import { indexingEnabled } from "./indexing-feature"
@@ -26,7 +26,7 @@ type UseSDK = any
 type SDK = any
 
 /**
- * Register all Kilo Gateway commands
+ * Register all Tavern Gateway commands
  * Call this from a component inside the TUI app
  *
  * @param useSDK - OpenCode's useSDK hook (passed from TUI context)
@@ -37,9 +37,9 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
   const sdk = useSDK()
   const toast = useToast()
 
-  // Only show Kilo commands when connected to Kilo Gateway
+  // Only show Tavern commands when connected to Tavern Gateway
   const isKiloConnected = createMemo(() => {
-    return sync.data.provider_next.connected.includes("kilo")
+    return sync.data.provider_next.connected.includes("tavern")
   })
   const indexing = createMemo(() => indexingEnabled(sync.data.config))
 
@@ -50,7 +50,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
         name: "remote.toggle",
         title: "Toggle remote",
         desc: "Enable or disable remote session relay",
-        category: "Kilo",
+        category: "Tavern",
         slashName: "remote",
         enabled: isKiloConnected(),
         hidden: !isKiloConnected(),
@@ -85,10 +85,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
       },
 
       {
-        name: "kilo.usage",
+        name: "tavern.usage",
         title: "Plans & usage",
         desc: "View provider plans and quota",
-        category: "Kilo",
+        category: "Tavern",
         slashName: "usage",
         slashAliases: ["plans", "quota"],
         run: () => {
@@ -98,10 +98,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /profile command
       {
-        name: "kilo.profile",
+        name: "tavern.profile",
         title: "Profile",
-        desc: "View your Kilo Gateway profile",
-        category: "Kilo",
+        desc: "View your Tavern Gateway profile",
+        category: "Tavern",
         slashName: "profile",
         slashAliases: ["me", "whoami"],
         enabled: isKiloConnected(),
@@ -118,13 +118,13 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
             }
 
             // Fetch profile and balance using server endpoint
-            const response = await sdk.client.kilo.profile()
+            const response = await sdk.client.tavern.profile()
 
             if (response.error || !response.data) {
               dialog.replace(() => (
                 <DialogAlert
                   title="Error"
-                  message="Failed to fetch profile. Please ensure you're authenticated with Kilo Gateway."
+                  message="Failed to fetch profile. Please ensure you're authenticated with Tavern Gateway."
                 />
               ))
               return
@@ -143,10 +143,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
       ...(indexing()
         ? [
             {
-              name: "kilo.indexing",
+              name: "tavern.indexing",
               title: "Indexing",
               desc: "Configure codebase indexing",
-              category: "Kilo",
+              category: "Tavern",
               slashName: "indexing",
               slashAliases: ["index", "embedding"],
               run: () => {
@@ -158,13 +158,13 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /privacy command
       {
-        name: "kilo.privacy",
+        name: "tavern.privacy",
         get title() {
           const active = sync.data.config.privacy_mode === true || sync.data.globalConfig.privacy_mode === true
           return active ? "Disable privacy mode" : "Enable privacy mode"
         },
         desc: "Blur PII (balance, email, etc.) and confirm before showing profile",
-        category: "Kilo",
+        category: "Tavern",
         slashName: "privacy",
         run: async () => {
           const active = sync.data.config.privacy_mode === true || sync.data.globalConfig.privacy_mode === true
@@ -205,10 +205,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /teams command
       {
-        name: "kilo.teams",
+        name: "tavern.teams",
         title: "Teams",
-        desc: "Switch between Kilo Gateway teams",
-        category: "Kilo",
+        desc: "Switch between Tavern Gateway teams",
+        category: "Tavern",
         slashName: "teams",
         slashAliases: ["team", "org", "orgs"],
         enabled: isKiloConnected(),
@@ -216,13 +216,13 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
         run: async () => {
           try {
             // Fetch profile to get organizations
-            const response = await sdk.client.kilo.profile()
+            const response = await sdk.client.tavern.profile()
 
             if (response.error || !response.data) {
               dialog.replace(() => (
                 <DialogAlert
                   title="Error"
-                  message="Failed to fetch teams. Please ensure you're authenticated with Kilo Gateway."
+                  message="Failed to fetch teams. Please ensure you're authenticated with Tavern Gateway."
                 />
               ))
               return
@@ -234,7 +234,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
               dialog.replace(() => (
                 <DialogAlert
                   title="No Teams Available"
-                  message="You're not a member of any teams.\nVisit https://app.kilo.ai to create or join a team."
+                  message="You're not a member of any teams.\nVisit https://app.tavern.ai to create or join a team."
                 />
               ))
               return
@@ -249,7 +249,7 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
                 onSelect={async (orgId) => {
                   try {
                     // Switch to team immediately using server endpoint
-                    const result = await sdk.client.kilo.organization.set({
+                    const result = await sdk.client.tavern.organization.set({
                       organizationId: orgId,
                     })
                     if (result.error) {
@@ -299,10 +299,10 @@ export function registerKiloCommands(useSDK: () => UseSDK) {
 
       // /about command
       {
-        name: "kilo.about",
+        name: "tavern.about",
         title: "About",
         desc: "Show version, environment, and diagnostic info",
-        category: "Kilo",
+        category: "Tavern",
         slashName: "about",
         run: () => {
           showAboutDialog(dialog)

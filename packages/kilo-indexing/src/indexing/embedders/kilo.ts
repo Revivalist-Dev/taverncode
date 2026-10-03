@@ -1,11 +1,11 @@
-import { resolveKiloGatewayBaseUrl } from "@kilocode/kilo-gateway"
-import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@kilocode/kilo-gateway"
+import { resolveKiloGatewayBaseUrl } from "@taverncode/tavern-gateway"
+import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@taverncode/tavern-gateway"
 import { MAX_ITEM_TOKENS } from "../constants"
 import type { EmbedderInfo, EmbeddingResponse, IEmbedder } from "../interfaces/embedder"
 import { Log } from "../../util/log"
 import { OpenAICompatibleEmbedder } from "./openai-compatible"
 
-const log = Log.create({ service: "embedder-kilo" })
+const log = Log.create({ service: "embedder-tavern" })
 
 export const KILO_INDEXING_FEATURE = "managed-indexing"
 
@@ -20,9 +20,9 @@ export class KiloEmbedder implements IEmbedder {
     modelId?: string
     dimensions?: number
   }) {
-    if (!input.apiKey) throw new Error("Kilo API key is required for embedding.")
+    if (!input.apiKey) throw new Error("Tavern API key is required for embedding.")
 
-    if (!input.modelId) throw new Error("Kilo embedding model is required.")
+    if (!input.modelId) throw new Error("Tavern embedding model is required.")
     this.model = input.modelId
     const headers: Record<string, string> = {
       [HEADER_FEATURE]: KILO_INDEXING_FEATURE,
@@ -42,7 +42,7 @@ export class KiloEmbedder implements IEmbedder {
     try {
       return await this.embedder.createEmbeddings(texts, model || this.model)
     } catch (err) {
-      log.error("Kilo embedder error", {
+      log.error("Tavern embedder error", {
         err: err instanceof Error ? err.message : String(err),
         location: "KiloEmbedder:createEmbeddings",
       })
@@ -54,7 +54,7 @@ export class KiloEmbedder implements IEmbedder {
     try {
       return await this.embedder.validateConfiguration()
     } catch (err) {
-      log.error("Kilo embedder validation error", {
+      log.error("Tavern embedder validation error", {
         err: err instanceof Error ? err.message : String(err),
         location: "KiloEmbedder:validateConfiguration",
       })
@@ -63,6 +63,6 @@ export class KiloEmbedder implements IEmbedder {
   }
 
   get embedderInfo(): EmbedderInfo {
-    return { name: "kilo" }
+    return { name: "tavern" }
   }
 }

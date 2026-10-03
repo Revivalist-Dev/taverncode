@@ -288,13 +288,13 @@ describe("DirectoryScanner", () => {
     expect(count?.candidate).toBe(1)
   })
 
-  test("skips files matched by .kilocodeignore during full scans", async () => {
+  test("skips files matched by .taverncodeignore during full scans", async () => {
     const root = await mkdtemp(join(tmpdir(), "scanner-test-"))
     const cacheDir = await mkdtemp(join(tmpdir(), "scanner-cache-"))
     const blocked = join(root, "blocked.ts")
     const open = join(root, "open.ts")
 
-    await Bun.write(join(root, ".kilocodeignore"), "blocked.ts\n")
+    await Bun.write(join(root, ".taverncodeignore"), "blocked.ts\n")
     await Bun.write(blocked, "export const blocked = 1\n")
     await Bun.write(open, "export const open = 1\n")
 
@@ -366,7 +366,7 @@ describe("DirectoryScanner", () => {
     expect(cache.getHash(file)).toBeUndefined()
   })
 
-  test("skips files matched by nested .kilocodeignore during full scans", async () => {
+  test("skips files matched by nested .taverncodeignore during full scans", async () => {
     const root = await mkdtemp(join(tmpdir(), "scanner-test-"))
     const cacheDir = await mkdtemp(join(tmpdir(), "scanner-cache-"))
     try {
@@ -375,7 +375,7 @@ describe("DirectoryScanner", () => {
       const open = join(dir, "open.ts")
 
       await mkdir(dir, { recursive: true })
-      await Bun.write(join(dir, ".kilocodeignore"), "blocked.ts\n")
+      await Bun.write(join(dir, ".taverncodeignore"), "blocked.ts\n")
       await Bun.write(blocked, "export const blocked = 1\n")
       await Bun.write(open, "export const open = 1\n")
 

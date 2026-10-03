@@ -3,7 +3,7 @@ import { tmpdir } from "../fixture/fixture"
 import path from "path"
 import fs from "fs/promises"
 import { provideTestInstance, withTestInstance } from "../fixture/fixture"
-import { getKiloProjectId } from "../../src/kilocode/project-id"
+import { getKiloProjectId } from "../../src/taverncode/project-id"
 import { disposeInstance } from "../../src/effect/instance-registry"
 
 describe("project-id", () => {
@@ -93,14 +93,14 @@ describe("project-id", () => {
   })
 
   describe("config file priority", () => {
-    test("uses project.id from .kilo/config.json", async () => {
+    test("uses project.id from .tavern/config.json", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
           // Create config with project ID
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "my-custom-project",
@@ -121,13 +121,13 @@ describe("project-id", () => {
       expect(id).toBe("my-custom-project")
     })
 
-    test("falls back to .kilocode/config.json when .kilo/config.json is absent", async () => {
+    test("falls back to .taverncode/config.json when .tavern/config.json is absent", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilocode"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".taverncode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilocode", "config.json"),
+            path.join(dir, ".taverncode", "config.json"),
             JSON.stringify({
               project: {
                 id: "legacy-project",
@@ -145,15 +145,15 @@ describe("project-id", () => {
       expect(id).toBe("legacy-project")
     })
 
-    test("prefers .kilo/config.json over .kilocode/config.json", async () => {
+    test("prefers .tavern/config.json over .taverncode/config.json", async () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), JSON.stringify({ project: { id: "new-project" } }))
-          await fs.mkdir(path.join(dir, ".kilocode"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), JSON.stringify({ project: { id: "new-project" } }))
+          await fs.mkdir(path.join(dir, ".taverncode"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilocode", "config.json"),
+            path.join(dir, ".taverncode", "config.json"),
             JSON.stringify({ project: { id: "old-project" } }),
           )
         },
@@ -171,9 +171,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "https://github.com/Kilo-Org/another-repo.git",
@@ -195,9 +195,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 managedIndexingEnabled: true,
@@ -221,9 +221,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "",
@@ -247,9 +247,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "  my-project\n",
@@ -271,9 +271,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "  \n\t  ",
@@ -321,8 +321,8 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), "{ invalid json")
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), "{ invalid json")
 
           await Bun.$`git remote add origin https://github.com/Kilo-Org/handbook.git`.cwd(dir).quiet()
         },
@@ -341,9 +341,9 @@ describe("project-id", () => {
       await using tmp = await tmpdir({
         git: true,
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: 12345,
@@ -369,14 +369,14 @@ describe("project-id", () => {
     test("keeps project IDs isolated across active project contexts", async () => {
       await using first = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), JSON.stringify({ project: { id: "first" } }))
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), JSON.stringify({ project: { id: "first" } }))
         },
       })
       await using second = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), JSON.stringify({ project: { id: "second" } }))
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), JSON.stringify({ project: { id: "second" } }))
         },
       })
 
@@ -391,8 +391,8 @@ describe("project-id", () => {
     test("invalidates the cached project ID when the instance is disposed", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), JSON.stringify({ project: { id: "first" } }))
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), JSON.stringify({ project: { id: "first" } }))
         },
       })
 
@@ -400,7 +400,7 @@ describe("project-id", () => {
         directory: tmp.path,
         fn: async (ctx) => {
           const first = await getKiloProjectId()
-          await Bun.write(path.join(tmp.path, ".kilo", "config.json"), JSON.stringify({ project: { id: "second" } }))
+          await Bun.write(path.join(tmp.path, ".tavern", "config.json"), JSON.stringify({ project: { id: "second" } }))
           const cached = await getKiloProjectId()
           await disposeInstance(ctx.directory)
           const refreshed = await getKiloProjectId()
@@ -432,9 +432,9 @@ describe("project-id", () => {
     test("handles plain string project IDs from config", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: "simple-name",
@@ -456,9 +456,9 @@ describe("project-id", () => {
       const longId = "x".repeat(150)
       await using tmp = await tmpdir({
         init: async (dir) => {
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
           await Bun.write(
-            path.join(dir, ".kilo", "config.json"),
+            path.join(dir, ".tavern", "config.json"),
             JSON.stringify({
               project: {
                 id: longId,

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, mock } from "bun:test"
-import { createKiloClient } from "@kilocode/sdk/v2/client"
+import { createKiloClient } from "@taverncode/sdk/v2/client"
 import * as vscode from "vscode"
 import { MarketplaceService } from "../../src/services/marketplace"
 import {
@@ -19,8 +19,8 @@ import type { MarketplaceItem } from "../../webview-ui/src/types/marketplace"
 
 const project = "/repo"
 const storage = vscode.Uri.file("/storage")
-const local = `${project}/.kilo/mcp.json`
-const legacy = `${project}/.kilocode/mcp.json`
+const local = `${project}/.tavern/mcp.json`
+const legacy = `${project}/.taverncode/mcp.json`
 const global = `${storage.fsPath}/settings/mcp_settings.json`
 const item: McpMarketplaceItem = {
   id: "memory",
@@ -188,7 +188,7 @@ describe("Marketplace companion skill payloads", () => {
       success: true,
       slug: mcp.id,
       filePaths: [
-        "/chosen/config/kilo.jsonc",
+        "/chosen/config/tavern.jsonc",
         "/chosen/skills/query-workflow/SKILL.md",
         "/chosen/skills/data-checks/SKILL.md",
       ],
@@ -205,10 +205,10 @@ describe("Marketplace companion skill payloads", () => {
           directory: url.searchParams.get("directory"),
           body: request.method === "POST" ? await request.json() : undefined,
         })
-        if (url.pathname === "/kilocode/marketplace")
+        if (url.pathname === "/taverncode/marketplace")
           return Response.json({ items: [mcp], installed: { project: {}, global: {} } })
-        if (url.pathname === "/kilocode/marketplace/install") return Response.json(result)
-        if (url.pathname === "/kilocode/marketplace/remove") return Response.json({ success: true, slug: mcp.id })
+        if (url.pathname === "/taverncode/marketplace/install") return Response.json(result)
+        if (url.pathname === "/taverncode/marketplace/remove") return Response.json({ success: true, slug: mcp.id })
         return new Response(null, { status: 404 })
       },
     })
@@ -224,16 +224,16 @@ describe("Marketplace companion skill payloads", () => {
       expect(await service.install(client, loaded, options, project)).toEqual(result)
       expect(await service.remove(client, loaded, scope, project)).toEqual({ success: true, slug: mcp.id })
       expect(calls).toEqual([
-        { method: "GET", path: "/kilocode/marketplace", directory: project, body: undefined },
+        { method: "GET", path: "/taverncode/marketplace", directory: project, body: undefined },
         {
           method: "POST",
-          path: "/kilocode/marketplace/install",
+          path: "/taverncode/marketplace/install",
           directory: project,
           body: { item: mcp, ...options },
         },
         {
           method: "POST",
-          path: "/kilocode/marketplace/remove",
+          path: "/taverncode/marketplace/remove",
           directory: project,
           body: { item: { id: mcp.id, type: "mcp" }, scope },
         },
@@ -299,7 +299,7 @@ describe("Marketplace agent removal", () => {
     const remove = mock(async () => ({ data: true }))
     const dispose = mock(async () => ({}))
     const getClientAsync = mock(async () => ({
-      kilocode: { removeAgent: remove },
+      taverncode: { removeAgent: remove },
       global: { config: { update: mock(async () => ({})) } },
       instance: { dispose },
     }))
@@ -316,7 +316,7 @@ describe("Marketplace agent removal", () => {
 
   it("returns a failure when the authoritative removal rejects the agent", async () => {
     const getClientAsync = mock(async () => ({
-      kilocode: { removeAgent: mock(async () => ({ error: { message: "Agent is still configured" } })) },
+      taverncode: { removeAgent: mock(async () => ({ error: { message: "Agent is still configured" } })) },
       instance: { dispose: mock(async () => ({})) },
     }))
     const ctx = {
@@ -331,7 +331,7 @@ describe("Marketplace agent removal", () => {
 
   it("uses friendly fallbacks for empty backend errors", async () => {
     const remove = mock(async () => ({ error: new Error("") }))
-    const getClientAsync = mock(async () => ({ kilocode: { removeAgent: remove } }))
+    const getClientAsync = mock(async () => ({ taverncode: { removeAgent: remove } }))
     const ctx = {
       connection: { getClientAsync },
       marketplace: { remove: mock(async () => ({ success: true, slug: agent.id })) },

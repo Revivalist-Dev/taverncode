@@ -3,8 +3,8 @@ import { mkdir, mkdtemp, rm, stat, writeFile } from "fs/promises"
 import * as os from "os"
 import * as path from "path"
 import * as vscode from "vscode"
-import { globalFiles, localFiles } from "../../src/kilo-provider/config-file"
-import { openConfig } from "../../src/kilo-provider/open-config"
+import { globalFiles, localFiles } from "../../src/tavern-provider/config-file"
+import { openConfig } from "../../src/tavern-provider/open-config"
 
 type Uri = { fsPath: string }
 
@@ -27,11 +27,11 @@ const labels = {
   sourceEnvContent: "Env content",
   sourceEnvDir: "Env dir",
   sourceEnvFile: "Env file",
-  sourceHomeKilo: "Home Kilo",
-  sourceHomeKilocode: "Home Kilocode",
+  sourceHomeKilo: "Home Tavern",
+  sourceHomeKilocode: "Home Taverncode",
   sourceHomeOpencode: "Home Opencode",
-  sourceProjectKilo: "Project Kilo",
-  sourceProjectKilocode: "Project Kilocode",
+  sourceProjectKilo: "Project Tavern",
+  sourceProjectKilocode: "Project Taverncode",
   sourceProjectOpencode: "Project Opencode",
   sourceProjectRoot: "Project root",
   sourceXdg: "XDG",
@@ -59,7 +59,7 @@ const workspace = vscode.workspace as unknown as {
 }
 
 async function temp() {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kilo-config-"))
+  const dir = await mkdtemp(path.join(os.tmpdir(), "tavern-config-"))
   dirs.push(dir)
   return dir
 }
@@ -115,9 +115,9 @@ describe("config file discovery", () => {
     process.env.KILO_CONFIG = envfile
     process.env.KILO_CONFIG_DIR = extra
     process.env.KILO_CONFIG_CONTENT = "{}"
-    await file(path.join(xdg, "kilo", "kilo.json"))
-    await file(path.join(home, ".kilocode", "opencode.json"))
-    await file(path.join(home, ".opencode", "kilo.jsonc"))
+    await file(path.join(xdg, "tavern", "tavern.json"))
+    await file(path.join(home, ".taverncode", "opencode.json"))
+    await file(path.join(home, ".opencode", "tavern.jsonc"))
     await file(envfile)
 
     const list = globalFiles()
@@ -138,7 +138,7 @@ describe("config file discovery", () => {
     reset()
     const root = await temp()
     process.env.KILO_DISABLE_PROJECT_CONFIG = "1"
-    await file(path.join(root, "kilo.json"))
+    await file(path.join(root, "tavern.json"))
     await file(path.join(root, ".opencode", "opencode.json"))
 
     const list = localFiles(root)
@@ -146,7 +146,7 @@ describe("config file discovery", () => {
     expect(list.every((item) => !item.loaded)).toBe(true)
     expect(list.some((item) => item.source === "sourceProjectRoot" && item.exists)).toBe(true)
     expect(list.some((item) => item.source === "sourceProjectOpencode" && item.legacy)).toBe(true)
-    expect(list.find((item) => item.recommended)?.file).toBe(path.join(root, ".kilo", "kilo.jsonc"))
+    expect(list.find((item) => item.recommended)?.file).toBe(path.join(root, ".tavern", "tavern.jsonc"))
   })
 })
 
@@ -163,7 +163,7 @@ describe("openConfig", () => {
   it("opens the only editable config without showing the picker", async () => {
     reset()
     const root = await temp()
-    const cfg = path.join(root, ".kilo", "kilo.jsonc")
+    const cfg = path.join(root, ".tavern", "tavern.jsonc")
     await file(cfg)
 
     await openConfig("local", labels, root)
@@ -181,7 +181,7 @@ describe("openConfig", () => {
   it("uses the picker for multiple editable configs and creates the selected recommended file", async () => {
     reset()
     const root = await temp()
-    const cfg = path.join(root, ".kilo", "kilo.jsonc")
+    const cfg = path.join(root, ".tavern", "tavern.jsonc")
     await file(path.join(root, ".opencode", "opencode.json"))
     win.showQuickPick = mock(async (items: Array<{ item: { recommended?: boolean } }>) =>
       items.find((item) => item.item.recommended),
@@ -191,7 +191,7 @@ describe("openConfig", () => {
 
     expect(win.showQuickPick).toHaveBeenCalled()
     expect(await Bun.file(cfg).text()).toBe(`{
-  "$schema": "https://app.kilo.ai/config.json"
+  "$schema": "https://app.tavern.ai/config.json"
 }
 `)
     expect(workspace.openTextDocument).toHaveBeenCalledWith(expect.objectContaining({ fsPath: cfg }))
@@ -200,7 +200,7 @@ describe("openConfig", () => {
   it("shows a localized error when opening the selected config fails", async () => {
     reset()
     const root = await temp()
-    const cfg = path.join(root, ".kilo", "kilo.jsonc")
+    const cfg = path.join(root, ".tavern", "tavern.jsonc")
     const spy = spyOn(console, "error").mockImplementation(() => {})
     await file(cfg)
     workspace.openTextDocument = mock(async () => {

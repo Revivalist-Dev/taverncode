@@ -1,9 +1,9 @@
 /**
- * Contract test for prompt.ts Kilo-specific invariants.
+ * Contract test for prompt.ts Tavern-specific invariants.
  *
- * prompt.ts is a shared upstream file. The Kilo-specific "new prompt unblocks
+ * prompt.ts is a shared upstream file. The Tavern-specific "new prompt unblocks
  * pending suggestions/questions then enqueues without cancelling the in-flight
- * stream" behaviour lives inside a kilocode_change block. An upstream merge
+ * stream" behaviour lives inside a taverncode_change block. An upstream merge
  * that restructures the prompt handling could silently remove these calls —
  * this test catches that.
  */
@@ -14,10 +14,10 @@ import path from "node:path"
 
 const PROMPT_FILE = path.resolve(import.meta.dir, "../../src/session/prompt.ts")
 
-describe("prompt.ts Kilo-specific invariants", () => {
-  test("imports Suggestion from kilocode/suggestion", () => {
+describe("prompt.ts Tavern-specific invariants", () => {
+  test("imports Suggestion from taverncode/suggestion", () => {
     const content = fs.readFileSync(PROMPT_FILE, "utf-8")
-    expect(content).toMatch(/import\s*\{[^}]*Suggestion[^}]*\}\s*from\s*["']@\/kilocode\/suggestion["']/)
+    expect(content).toMatch(/import\s*\{[^}]*Suggestion[^}]*\}\s*from\s*["']@\/taverncode\/suggestion["']/)
   })
 
   test("imports Question from the question module", () => {
@@ -36,7 +36,7 @@ describe("prompt.ts Kilo-specific invariants", () => {
     // observes hasFollowup when the question resumes. The enqueue reservation
     // runs both dismissals before waiting for the prior queue tail.
     const block = content.match(
-      /kilocode_change start[^\n]*register the queued follow-up[\s\S]*?Suggestion\.dismissAll[\s\S]*?question\.dismissAll[\s\S]*?KiloSessionPromptQueue\.enqueue\([\s\S]*?dismiss/,
+      /taverncode_change start[^\n]*register the queued follow-up[\s\S]*?Suggestion\.dismissAll[\s\S]*?question\.dismissAll[\s\S]*?KiloSessionPromptQueue\.enqueue\([\s\S]*?dismiss/,
     )
     expect(block).not.toBeNull()
     expect(content).not.toMatch(/state\.cancel\(input\.sessionID\)/)

@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
-import { TelemetryEvent } from "@kilocode/kilo-telemetry"
+import { TelemetryEvent } from "@taverncode/tavern-telemetry"
 
 describe("TelemetryEvent.FEEDBACK_SUBMITTED", () => {
   test("enum value is human-readable title case", () => {

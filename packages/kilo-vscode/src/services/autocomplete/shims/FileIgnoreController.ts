@@ -2,11 +2,11 @@ import path from "node:path"
 import fs from "node:fs"
 import ignore, { type Ignore } from "ignore"
 
-const KILOCODEIGNORE = ".kilocodeignore"
+const KILOCODEIGNORE = ".taverncodeignore"
 const GITIGNORE = ".gitignore"
 
 /**
- * Patterns for sensitive environment files, applied only when no .kilocodeignore exists.
+ * Patterns for sensitive environment files, applied only when no .taverncodeignore exists.
  */
 const SENSITIVE_PATTERNS = [".env", ".env.*"]
 
@@ -37,14 +37,14 @@ export class FileIgnoreController {
       return
     }
 
-    // Try .kilocodeignore first — if it exists, use only that.
+    // Try .taverncodeignore first — if it exists, use only that.
     // Use existsSync to distinguish "missing" from "unreadable" — permission
     // errors on readFileSync will propagate instead of being silently swallowed.
-    const kilocodeignorePath = path.join(this.workspacePath, KILOCODEIGNORE)
-    if (fs.existsSync(kilocodeignorePath)) {
-      const kilocodeignoreContent = fs.readFileSync(kilocodeignorePath, "utf-8")
-      if (kilocodeignoreContent.trim()) {
-        this.ignoreInstance.add(kilocodeignoreContent)
+    const taverncodeignorePath = path.join(this.workspacePath, KILOCODEIGNORE)
+    if (fs.existsSync(taverncodeignorePath)) {
+      const taverncodeignoreContent = fs.readFileSync(taverncodeignorePath, "utf-8")
+      if (taverncodeignoreContent.trim()) {
+        this.ignoreInstance.add(taverncodeignoreContent)
         this.ignoreInstance.add(KILOCODEIGNORE)
         return
       }

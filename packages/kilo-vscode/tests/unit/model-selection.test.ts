@@ -12,7 +12,7 @@ function makeProvider(id: string, name: string, modelIds: string[]): Provider {
 }
 
 const providers = {
-  kilo: makeProvider("kilo", "Kilo Gateway", ["kilo-auto/free"]),
+  tavern: makeProvider("tavern", "Tavern Gateway", ["tavern-auto/free"]),
   anthropic: makeProvider("anthropic", "Anthropic", ["claude-sonnet-4"]),
   openai: makeProvider("openai", "OpenAI", ["gpt-4.1"]),
 }
@@ -25,10 +25,10 @@ describe("parseModelString", () => {
     })
   })
 
-  it("keeps slashes inside kilo model ids", () => {
-    expect(parseModelString("kilo/kilo-auto/free")).toEqual({
-      providerID: "kilo",
-      modelID: "kilo-auto/free",
+  it("keeps slashes inside tavern model ids", () => {
+    expect(parseModelString("tavern/tavern-auto/free")).toEqual({
+      providerID: "tavern",
+      modelID: "tavern-auto/free",
     })
   })
 
@@ -75,7 +75,7 @@ describe("resolveModelSelection", () => {
     expect(result).toEqual({ providerID: "openai", modelID: "gpt-4.1" })
   })
 
-  it("uses kilo auto as the explicit final fallback", () => {
+  it("uses tavern auto as the explicit final fallback", () => {
     const result = resolveModelSelection({
       providers,
       connected: [],
@@ -106,25 +106,25 @@ describe("resolveModelSelection", () => {
 })
 
 describe("organization model selection", () => {
-  const first = { providerID: "kilo", modelID: "z-first" }
-  const recommendation = { providerID: "kilo", modelID: "a-default" }
-  const recent = { providerID: "kilo", modelID: "older-recent" }
+  const first = { providerID: "tavern", modelID: "z-first" }
+  const recommendation = { providerID: "tavern", modelID: "a-default" }
+  const recent = { providerID: "tavern", modelID: "older-recent" }
   const external = { providerID: "openai", modelID: "gpt-4.1" }
   const input = {
     providers: {
       ...providers,
-      kilo: makeProvider("kilo", "Kilo Gateway", [
+      tavern: makeProvider("tavern", "Tavern Gateway", [
         first.modelID,
         recommendation.modelID,
         recent.modelID,
-        "kilo-auto/free",
+        "tavern-auto/free",
       ]),
     },
     connected: ["openai"],
     ready: true,
     organizationId: "org-a",
-    defaults: { kilo: recommendation.modelID },
-    recent: [{ providerID: "kilo", modelID: "missing-recent" }, recent, external],
+    defaults: { tavern: recommendation.modelID },
+    recent: [{ providerID: "tavern", modelID: "missing-recent" }, recent, external],
     fallback: KILO_AUTO,
   }
 
@@ -133,7 +133,7 @@ describe("organization model selection", () => {
   })
 
   it.each([undefined, "", "unavailable"])("uses catalog order for an absent or invalid default %s", (model) => {
-    expect(resolveModelSelection({ ...input, defaults: model === undefined ? {} : { kilo: model } })).toEqual(first)
+    expect(resolveModelSelection({ ...input, defaults: model === undefined ? {} : { tavern: model } })).toEqual(first)
   })
 
   it.each(["session", "override", "mode", "global"] as const)(
@@ -144,7 +144,7 @@ describe("organization model selection", () => {
   )
 
   it("validates session, manual, mode, and global preferences in order", () => {
-    const missing = { providerID: "kilo", modelID: "missing" }
+    const missing = { providerID: "tavern", modelID: "missing" }
     const choices = { session: KILO_AUTO, override: recent, mode: first, global: external }
     expect(resolveModelSelection({ ...input, ...choices })).toEqual(KILO_AUTO)
     expect(resolveModelSelection({ ...input, ...choices, session: missing })).toEqual(recent)
@@ -162,7 +162,7 @@ describe("organization model selection", () => {
     expect(resolveModelSelection({ ...input, connected: [], override: external })).toEqual(recommendation)
   })
 
-  it.each([{}, { kilo: makeProvider("kilo", "Kilo Gateway", []) }, { openai: providers.openai }])(
+  it.each([{}, { tavern: makeProvider("tavern", "Tavern Gateway", []) }, { openai: providers.openai }])(
     "does not fall back to free models or external recents for an empty Org catalog",
     (catalog) => {
       expect(resolveModelSelection({ ...input, providers: catalog, override: KILO_AUTO })).toBeNull()
@@ -175,7 +175,7 @@ describe("organization model selection", () => {
     )
   })
 
-  it("does not trust a retained Kilo catalog while refresh or auth context is pending", () => {
+  it("does not trust a retained Tavern catalog while refresh or auth context is pending", () => {
     for (const pending of [{ ready: false }, { organizationId: undefined }]) {
       expect(resolveModelSelection({ ...input, ...pending, override: KILO_AUTO })).toBeNull()
       expect(resolveModelSelection({ ...input, ...pending, override: external })).toEqual(external)
@@ -191,18 +191,18 @@ describe("organization model selection", () => {
   })
 
   it("restores the same explicit choice through Personal, Org A, Org B, and Personal", () => {
-    const override: ModelSelection = { providerID: "kilo", modelID: "personal" }
+    const override: ModelSelection = { providerID: "tavern", modelID: "personal" }
     const personal = {
       ...input,
       organizationId: null,
-      providers: { kilo: makeProvider("kilo", "Kilo", [override.modelID]) },
+      providers: { tavern: makeProvider("tavern", "Tavern", [override.modelID]) },
     }
     expect(resolveModelSelection({ ...personal, override })).toEqual(override)
     expect(resolveModelSelection({ ...input, override })).toEqual(recommendation)
     expect(
-      resolveModelSelection({ ...input, organizationId: "org-b", defaults: { kilo: first.modelID }, override }),
+      resolveModelSelection({ ...input, organizationId: "org-b", defaults: { tavern: first.modelID }, override }),
     ).toEqual(first)
     expect(resolveModelSelection({ ...personal, override })).toEqual(override)
-    expect(override).toEqual({ providerID: "kilo", modelID: "personal" })
+    expect(override).toEqual({ providerID: "tavern", modelID: "personal" })
   })
 })

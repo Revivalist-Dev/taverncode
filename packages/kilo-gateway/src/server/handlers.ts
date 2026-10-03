@@ -1,5 +1,5 @@
 import { fetchBalance, fetchProfile } from "../api/profile.js"
-import { fetchKiloPassState } from "../api/kilo-pass.js"
+import { fetchKiloPassState } from "../api/tavern-pass.js"
 import { fetchKilocodeNotifications } from "../api/notifications.js"
 import { clearModesCache } from "../api/modes.js"
 import { KILO_API_BASE } from "../api/constants.js"
@@ -58,8 +58,8 @@ export function getOrganizationId(auth: KiloAuth | undefined) {
 }
 
 export async function getProfile(auth: AuthStore): Promise<KiloProfileResult> {
-  const info = await auth.get("kilo")
-  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Kilo Gateway")
+  const info = await auth.get("tavern")
+  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Tavern Gateway")
 
   const currentOrgId = info.accountId ?? null
   const [profile, balance, kiloPass] = await Promise.all([
@@ -71,21 +71,21 @@ export async function getProfile(auth: AuthStore): Promise<KiloProfileResult> {
 }
 
 export async function getNotifications(auth: AuthStore) {
-  const info = await auth.get("kilo")
+  const info = await auth.get("tavern")
   const token = getToken(info)
   if (!token) return []
 
   return fetchKilocodeNotifications({
-    kilocodeToken: token,
-    kilocodeOrganizationId: getOrganizationId(info),
+    taverncodeToken: token,
+    taverncodeOrganizationId: getOrganizationId(info),
   })
 }
 
 export async function setOrganization(deps: OrganizationDeps, organizationId: string | null) {
-  const info = await deps.auth.get("kilo")
-  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Kilo Gateway")
+  const info = await deps.auth.get("tavern")
+  if (!info || info.type !== "oauth") throw new UnauthorizedError("Not authenticated with Tavern Gateway")
 
-  await deps.auth.set("kilo", {
+  await deps.auth.set("tavern", {
     type: "oauth",
     refresh: info.refresh,
     access: info.access,
@@ -120,7 +120,7 @@ export async function getCloudSessions(token: string, input: CloudSessionsInput)
 
   if (!response.ok) {
     const text = await response.text()
-    console.error("[Kilo Gateway] cloud-sessions: tRPC request failed", {
+    console.error("[Tavern Gateway] cloud-sessions: tRPC request failed", {
       status: response.status,
       body: text.slice(0, 500),
     })

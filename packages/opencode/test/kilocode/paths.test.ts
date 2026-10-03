@@ -1,5 +1,5 @@
 import { test, expect, describe } from "bun:test"
-import { KilocodePaths } from "../../src/kilocode/paths"
+import { KilocodePaths } from "../../src/taverncode/paths"
 import { tmpdir } from "../fixture/fixture"
 import path from "path"
 import fs from "fs/promises"
@@ -17,10 +17,10 @@ async function withHome<T>(home: string, fn: () => Promise<T>): Promise<T> {
 
 describe("KilocodePaths", () => {
   describe("skillDirectories", () => {
-    test("discovers skills from .kilo/skills/", async () => {
+    test("discovers skills from .tavern/skills/", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const skillDir = path.join(dir, ".kilo", "skills", "test-skill")
+          const skillDir = path.join(dir, ".tavern", "skills", "test-skill")
           await fs.mkdir(skillDir, { recursive: true })
           await Bun.write(
             path.join(skillDir, "SKILL.md"),
@@ -40,10 +40,10 @@ description: A test skill
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0]).toEndWith(".kilo")
+      expect(result[0]).toEndWith(".tavern")
     })
 
-    test("returns empty array when no .kilo/skills/ exists", async () => {
+    test("returns empty array when no .tavern/skills/ exists", async () => {
       await using tmp = await tmpdir()
 
       const result = await KilocodePaths.skillDirectories({
@@ -55,11 +55,11 @@ description: A test skill
       expect(result).toHaveLength(0)
     })
 
-    test("discovers skills from nested .kilo directories", async () => {
+    test("discovers skills from nested .tavern directories", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
           // Root level skill
-          const rootSkillDir = path.join(dir, ".kilo", "skills", "root-skill")
+          const rootSkillDir = path.join(dir, ".tavern", "skills", "root-skill")
           await fs.mkdir(rootSkillDir, { recursive: true })
           await Bun.write(
             path.join(rootSkillDir, "SKILL.md"),
@@ -72,7 +72,7 @@ description: Root level skill
 
           // Nested project skill
           const nestedDir = path.join(dir, "packages", "nested")
-          const nestedSkillDir = path.join(nestedDir, ".kilo", "skills", "nested-skill")
+          const nestedSkillDir = path.join(nestedDir, ".tavern", "skills", "nested-skill")
           await fs.mkdir(nestedSkillDir, { recursive: true })
           await Bun.write(
             path.join(nestedSkillDir, "SKILL.md"),
@@ -99,12 +99,12 @@ description: Nested skill
       expect(result.some((d) => !d.includes(nested))).toBe(true)
     })
 
-    test("handles .kilo directory without skills subdirectory", async () => {
+    test("handles .tavern directory without skills subdirectory", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          // Create .kilo but not skills/
-          await fs.mkdir(path.join(dir, ".kilo"), { recursive: true })
-          await Bun.write(path.join(dir, ".kilo", "config.json"), "{}")
+          // Create .tavern but not skills/
+          await fs.mkdir(path.join(dir, ".tavern"), { recursive: true })
+          await Bun.write(path.join(dir, ".tavern", "config.json"), "{}")
         },
       })
 
@@ -132,8 +132,8 @@ description: Symlinked skill
 # Instructions`,
           )
 
-          // Create .kilo/skills/ and symlink the skill
-          const skillsDir = path.join(dir, ".kilo", "skills")
+          // Create .tavern/skills/ and symlink the skill
+          const skillsDir = path.join(dir, ".tavern", "skills")
           await fs.mkdir(skillsDir, { recursive: true })
           await fs.symlink(actualDir, path.join(skillsDir, "my-skill"))
         },
@@ -146,13 +146,13 @@ description: Symlinked skill
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0]).toEndWith(".kilo")
+      expect(result[0]).toEndWith(".tavern")
     })
 
-    test("discovers skills from legacy .kilocode/skills/", async () => {
+    test("discovers skills from legacy .taverncode/skills/", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const skillDir = path.join(dir, ".kilocode", "skills", "legacy-skill")
+          const skillDir = path.join(dir, ".taverncode", "skills", "legacy-skill")
           await fs.mkdir(skillDir, { recursive: true })
           await Bun.write(
             path.join(skillDir, "SKILL.md"),
@@ -172,19 +172,19 @@ description: A legacy skill
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0]).toEndWith(".kilocode")
+      expect(result[0]).toEndWith(".taverncode")
     })
 
-    test("returns legacy skill dirs before .kilo so .kilo skills win", async () => {
+    test("returns legacy skill dirs before .tavern so .tavern skills win", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          // .kilo skill
-          const kiloSkillDir = path.join(dir, ".kilo", "skills", "new-skill")
+          // .tavern skill
+          const kiloSkillDir = path.join(dir, ".tavern", "skills", "new-skill")
           await fs.mkdir(kiloSkillDir, { recursive: true })
           await Bun.write(path.join(kiloSkillDir, "SKILL.md"), "# New skill")
 
-          // .kilocode skill
-          const legacySkillDir = path.join(dir, ".kilocode", "skills", "old-skill")
+          // .taverncode skill
+          const legacySkillDir = path.join(dir, ".taverncode", "skills", "old-skill")
           await fs.mkdir(legacySkillDir, { recursive: true })
           await Bun.write(path.join(legacySkillDir, "SKILL.md"), "# Old skill")
         },
@@ -197,14 +197,14 @@ description: A legacy skill
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0]).toEndWith(".kilocode")
-      expect(result[1]).toEndWith(".kilo")
+      expect(result[0]).toEndWith(".taverncode")
+      expect(result[1]).toEndWith(".tavern")
     })
 
-    test("discovers global skills from ~/.kilo/skills/", async () => {
+    test("discovers global skills from ~/.tavern/skills/", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const skillDir = path.join(dir, ".kilo", "skills", "global-skill")
+          const skillDir = path.join(dir, ".tavern", "skills", "global-skill")
           await fs.mkdir(skillDir, { recursive: true })
           await Bun.write(path.join(skillDir, "SKILL.md"), "# Global skill")
           await fs.mkdir(path.join(dir, "repo"), { recursive: true })
@@ -218,13 +218,13 @@ description: A legacy skill
         }),
       )
 
-      expect(result.some((d) => d.endsWith(".kilo"))).toBe(true)
+      expect(result.some((d) => d.endsWith(".tavern"))).toBe(true)
     })
 
     test("discovers multiple skills in same directory", async () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          const skillsDir = path.join(dir, ".kilo", "skills")
+          const skillsDir = path.join(dir, ".tavern", "skills")
 
           // First skill
           const skill1 = path.join(skillsDir, "skill-one")
@@ -258,9 +258,9 @@ description: Second skill
         skipGlobalPaths: true,
       })
 
-      // Should return the .kilo directory (not skills/ subdirectory)
+      // Should return the .tavern directory (not skills/ subdirectory)
       expect(result).toHaveLength(1)
-      expect(result[0]).toEndWith(".kilo")
+      expect(result[0]).toEndWith(".tavern")
     })
   })
 })

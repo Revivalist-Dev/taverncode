@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
 import { $ } from "bun"
 import { Effect } from "effect"
@@ -10,7 +10,7 @@ import { resetDatabase } from "../fixture/db"
 import { provideTestInstance, tmpdir } from "../fixture/fixture"
 import type { Tool } from "../../src/tool/tool"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
-import { RemoteSender } from "../../src/kilo-sessions/remote-sender"
+import { RemoteSender } from "../../src/tavern-sessions/remote-sender"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 beforeEach(() => {
@@ -63,7 +63,7 @@ describe("tool.recall", () => {
 
     try {
       await $`git worktree add ${worktree} -b test-branch-${Date.now()}`.cwd(first.path).quiet()
-      await Bun.write(path.join(first.path, ".git", "kilo"), "stale-project-id") // kilocode_change
+      await Bun.write(path.join(first.path, ".git", "tavern"), "stale-project-id") // taverncode_change
 
       try {
         const root = await provideTestInstance({
@@ -182,7 +182,7 @@ describe("tool.recall", () => {
 
     try {
       await $`git worktree add ${worktree} -b test-branch-${Date.now()}`.cwd(first.path).quiet()
-      await Bun.write(path.join(first.path, ".git", "kilo"), "stale-project-id") // kilocode_change
+      await Bun.write(path.join(first.path, ".git", "tavern"), "stale-project-id") // taverncode_change
 
       try {
         const session = await provideTestInstance({

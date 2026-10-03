@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { KiloToolRegistry } from "@/kilocode/tool/registry"
+import { KiloToolRegistry } from "@/taverncode/tool/registry"
 import type * as Tool from "@/tool/tool"
 
 // Minimal stub — select() only reads .id from each Tool.Def

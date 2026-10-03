@@ -1,15 +1,15 @@
 ---
 title: "Deploy"
-description: "Deploy your applications with Kilo Code"
+description: "Deploy your applications with Tavern Code"
 ---
 
 # Deploy
 
 {% partial file="deploy-eol.md" /%}
 
-Kilo Deploy lets you ship **Next.js** and **static sites** directly from Kilo Code, with:
+Tavern Deploy lets you ship **Next.js** and **static sites** directly from Tavern Code, with:
 
-- **One-click deployment** from the Kilo Code dashboard
+- **One-click deployment** from the Tavern Code dashboard
 - **No manual configuration** — deployment settings are generated for you
 - **Deployment history** with logs and build details
 - **Automatic rebuilds** on every GitHub push
@@ -33,7 +33,7 @@ Kilo Deploy lets you ship **Next.js** and **static sites** directly from Kilo Co
 Enable the **GitHub Integration** before deploying:
 
 1. Go to **Integrations → GitHub**
-2. Click **Configure** and follow the prompts to connect GitHub to Kilo Code
+2. Click **Configure** and follow the prompts to connect GitHub to Tavern Code
 
 ---
 
@@ -41,7 +41,7 @@ Enable the **GitHub Integration** before deploying:
 
 ### 1. Open the Deploy Tab
 
-- Navigate to your [Organization dashboard](https://app.kilo.ai/organizations) or [Profile](https://app.kilo.ai/profile)
+- Navigate to your [Organization dashboard](https://app.tavern.ai/organizations) or [Profile](https://app.tavern.ai/profile)
 - Select the **Deploy** tab
 
 ### 2. Select Your Project
@@ -54,7 +54,7 @@ Enable the **GitHub Integration** before deploying:
 
 ### 3. Click **Deploy**
 
-Kilo Code will:
+Tavern Code will:
 
 - Build your project
 - Upload artifacts
@@ -85,13 +85,13 @@ From the deployment details, you can:
 
 ## Database Support
 
-Kilo Deploy does **not** include built-in database hosting, but you can connect to any external database service.
+Tavern Deploy does **not** include built-in database hosting, but you can connect to any external database service.
 
 ---
 
 ## Environment Variables
 
-Kilo Deploy supports Environment Variables and Secrets. Add the variable **key** and **value** during the **Create New Deployment** step, and toggle to mark as secrets.
+Tavern Deploy supports Environment Variables and Secrets. Add the variable **key** and **value** during the **Create New Deployment** step, and toggle to mark as secrets.
 
 ## Common Use Cases
 

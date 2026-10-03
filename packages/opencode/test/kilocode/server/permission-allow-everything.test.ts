@@ -6,7 +6,7 @@ import { Cause, Effect, Exit, Fiber } from "effect"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Bus } from "../../../src/bus"
 import * as Config from "../../../src/config/config"
-import { AllowEverythingPermission } from "../../../src/kilocode/permission/allow-everything"
+import { AllowEverythingPermission } from "../../../src/taverncode/permission/allow-everything"
 import { Permission } from "../../../src/permission"
 import { PermissionV1 } from "@opencode-ai/core/v1/permission"
 import { provideTestInstance } from "../../fixture/fixture"
@@ -42,7 +42,7 @@ afterEach(() => {
   else process.env.KILO_SERVER_USERNAME = original.envUsername
 })
 
-const auth = () => `Basic ${Buffer.from("kilo:secret").toString("base64")}`
+const auth = () => `Basic ${Buffer.from("tavern:secret").toString("base64")}`
 
 const requireAuth = () => {
   Flag.KILO_SERVER_PASSWORD = "secret"
@@ -82,21 +82,21 @@ describe("AllowEverythingPermission", () => {
       fn: async () => {
         const blocked = await Server.Default().app.request("/permission/allow-everything", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-kilo-directory": tmp.path },
+          headers: { "Content-Type": "application/json", "x-tavern-directory": tmp.path },
           body: JSON.stringify({ enable: true }),
         })
         expect(blocked.status).toBe(401)
 
         const enable = await Server.Default().app.request("/permission/allow-everything", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-kilo-directory": tmp.path, authorization: auth() },
+          headers: { "Content-Type": "application/json", "x-tavern-directory": tmp.path, authorization: auth() },
           body: JSON.stringify({ enable: true }),
         })
         expect(enable.status).toBe(200)
 
         const disable = await Server.Default().app.request("/permission/allow-everything", {
           method: "POST",
-          headers: { "Content-Type": "application/json", "x-kilo-directory": tmp.path, authorization: auth() },
+          headers: { "Content-Type": "application/json", "x-tavern-directory": tmp.path, authorization: auth() },
           body: JSON.stringify({ enable: false }),
         })
         expect(disable.status).toBe(200)

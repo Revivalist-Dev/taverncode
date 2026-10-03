@@ -107947,13 +107947,13 @@
       }
     }
   },
-  "kilo": {
-    "id": "kilo",
+  "tavern": {
+    "id": "tavern",
     "env": ["KILO_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://api.kilo.ai/api/gateway",
-    "name": "Kilo Gateway",
-    "doc": "https://kilo.ai",
+    "api": "https://api.tavern.ai/api/gateway",
+    "name": "Tavern Gateway",
+    "doc": "https://tavern.ai",
     "models": {
       "inclusionai/ling-2.6-1t": {
         "id": "inclusionai/ling-2.6-1t",
@@ -108473,9 +108473,9 @@
           "cache_write": 6.25
         }
       },
-      "kilo-auto/balanced": {
-        "id": "kilo-auto/balanced",
-        "name": "Kilo Auto Balanced",
+      "tavern-auto/balanced": {
+        "id": "tavern-auto/balanced",
+        "name": "Tavern Auto Balanced",
         "description": "Automatic model router for matching prompts to suitable backends and budgets",
         "attachment": false,
         "reasoning": true,
@@ -108498,9 +108498,9 @@
           "output": 3
         }
       },
-      "kilo-auto/small": {
-        "id": "kilo-auto/small",
-        "name": "Kilo Auto Small",
+      "tavern-auto/small": {
+        "id": "tavern-auto/small",
+        "name": "Tavern Auto Small",
         "description": "Automatic model router for matching prompts to suitable backends and budgets",
         "attachment": true,
         "reasoning": true,
@@ -108523,9 +108523,9 @@
           "output": 0.4
         }
       },
-      "kilo-auto/free": {
-        "id": "kilo-auto/free",
-        "name": "Kilo Auto Free",
+      "tavern-auto/free": {
+        "id": "tavern-auto/free",
+        "name": "Tavern Auto Free",
         "description": "Automatic model router for matching prompts to suitable backends and budgets",
         "attachment": false,
         "reasoning": true,
@@ -108548,9 +108548,9 @@
           "output": 0
         }
       },
-      "kilo-auto/frontier": {
-        "id": "kilo-auto/frontier",
-        "name": "Kilo Auto Frontier",
+      "tavern-auto/frontier": {
+        "id": "tavern-auto/frontier",
+        "name": "Tavern Auto Frontier",
         "description": "Automatic model router for matching prompts to suitable backends and budgets",
         "attachment": true,
         "reasoning": true,

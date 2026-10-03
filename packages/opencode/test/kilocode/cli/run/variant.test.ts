@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import { preserveVariant, resolvePreservedVariant } from "@/kilocode/cli/cmd/run/variant"
+import { preserveVariant, resolvePreservedVariant } from "@/taverncode/cli/cmd/run/variant"
 
-describe("Kilo CLI variant preservation", () => {
+describe("Tavern CLI variant preservation", () => {
   test("keeps exact variants across supported families", () => {
     expect(preserveVariant("high", ["low", "high"])).toBe("high")
     expect(preserveVariant("thinking", ["instant", "thinking"])).toBe("thinking")

@@ -5,7 +5,7 @@ import {
   getKiloUrlFromToken,
   resolveKiloOpenRouterBaseUrl,
   supportsTools,
-} from "@kilocode/kilo-gateway"
+} from "@taverncode/tavern-gateway"
 import { Context, Effect, Layer, Redacted, Schema } from "effect"
 import z from "zod"
 import type { CloudAuth } from "./auth"
@@ -53,7 +53,7 @@ export namespace CloudCatalog {
     readonly defaultModel: (input: Input) => Effect.Effect<string, CatalogError>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/CloudCatalog") {}
+  export class Service extends Context.Service<Service, Interface>()("@taverncode/CloudCatalog") {}
 
   export const layer = (options: Options = {}) => {
     const fetcher = options.fetch ?? ((request: Request) => globalThis.fetch(request))
@@ -67,9 +67,9 @@ export namespace CloudCatalog {
               ...getDefaultHeaders(),
               ...buildKiloHeaders(
                 undefined,
-                input.organizationID ? { kilocodeOrganizationId: input.organizationID } : undefined,
+                input.organizationID ? { taverncodeOrganizationId: input.organizationID } : undefined,
               ),
-              "X-KILOCODE-FEATURE": "kilo-cli",
+              "X-KILOCODE-FEATURE": "tavern-cli",
               Authorization: `Bearer ${Redacted.value(input.token)}`,
             },
             redirect: "error",
@@ -78,7 +78,7 @@ export namespace CloudCatalog {
         catch: () =>
           new CatalogError({
             kind: "schema",
-            message: "Kilo catalog URL is invalid",
+            message: "Tavern catalog URL is invalid",
           }),
       })
       const response = yield* Effect.tryPromise({
@@ -86,7 +86,7 @@ export namespace CloudCatalog {
         catch: () =>
           new CatalogError({
             kind: "network",
-            message: "Unable to reach the Kilo model catalog",
+            message: "Unable to reach the Tavern model catalog",
           }),
       })
       if (!response.ok) {
@@ -97,8 +97,8 @@ export namespace CloudCatalog {
             status: response.status,
             message:
               kind === "auth"
-                ? "Kilo credentials or organization were rejected by the model catalog"
-                : "The Kilo model catalog is unavailable",
+                ? "Tavern credentials or organization were rejected by the model catalog"
+                : "The Tavern model catalog is unavailable",
           }),
         )
       }
@@ -108,7 +108,7 @@ export namespace CloudCatalog {
         catch: () =>
           new CatalogError({
             kind: "schema",
-            message: "The Kilo model catalog returned an invalid response",
+            message: "The Tavern model catalog returned an invalid response",
           }),
       })
       const parsed = schema.safeParse(body)
@@ -116,7 +116,7 @@ export namespace CloudCatalog {
         return yield* Effect.fail(
           new CatalogError({
             kind: "schema",
-            message: "The Kilo model catalog returned an invalid response",
+            message: "The Tavern model catalog returned an invalid response",
           }),
         )
       }
@@ -137,7 +137,7 @@ export namespace CloudCatalog {
         catch: () =>
           new CatalogError({
             kind: "schema",
-            message: "Kilo catalog URL must be secure",
+            message: "Tavern catalog URL must be secure",
           }),
       })
     })

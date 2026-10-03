@@ -11,7 +11,7 @@ import { Global } from "@opencode-ai/core/global"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { applyEdits, modify, parse as parseJsonc } from "jsonc-parser"
 import type { RuntimeFlags } from "@/effect/runtime-flags"
-import { BoardEnabled } from "@/kilocode/board/enabled"
+import { BoardEnabled } from "@/taverncode/board/enabled"
 import { KilocodeConfigSources } from "../config/sources"
 
 import PROMPT_DEBUG from "../../agent/prompt/debug.txt"
@@ -275,7 +275,7 @@ function baseline(
 function planEditRules(worktree: string) {
   return {
     "*": "deny" as const,
-    [path.join(".kilo", "plans", "*.md")]: "allow" as const,
+    [path.join(".tavern", "plans", "*.md")]: "allow" as const,
     [path.join("plans", "*.md")]: "allow" as const,
     [path.join(".plans", "*.md")]: "allow" as const,
     [path.join(".opencode", "plans", "*.md")]: "allow" as const,
@@ -371,7 +371,7 @@ export interface KiloData {
   board: boolean
 }
 
-// Prepare kilo-specific data derived from config. Call once per state initialization.
+// Prepare tavern-specific data derived from config. Call once per state initialization.
 export function prepare(cfg: Config.Info, flags: Pick<RuntimeFlags.Info, "experimentalSharedAgentBoard">): KiloData {
   const mcpRules = getMcpRules(cfg)
   const enabled = BoardEnabled.on(cfg, flags)
@@ -417,7 +417,7 @@ export function preprocessConfig<T>(agentConfig: Record<string, T>): Record<stri
   return result
 }
 
-// Lift Kilo-internal metadata onto typed agent fields and remove it from `options`.
+// Lift Tavern-internal metadata onto typed agent fields and remove it from `options`.
 // Older org modes and marketplace agents stored `displayName`/`source` inside the
 // `options` record, which is otherwise forwarded verbatim to the provider as request
 // parameters. Promoting then deleting them keeps `options` provider-clean at the source
@@ -472,9 +472,9 @@ export function telemetryOptions(_cfg: Config.Info) {
   return { isEnabled: false as const }
 }
 
-// Patch the base agents map in-place with all kilo-specific changes:
+// Patch the base agents map in-place with all tavern-specific changes:
 // - Rename build → code
-// - Patch plan with readOnlyBash, mcpRules, .kilo paths
+// - Patch plan with readOnlyBash, mcpRules, .tavern paths
 // - Patch explore permissions and prompt
 // - Patch appropriate agents with semantic_search
 // - Add debug, orchestrator, ask agents
@@ -503,11 +503,11 @@ export function patchAgents(
   >,
   defaults: Permission.Ruleset,
   user: Permission.Ruleset,
-  kilo: KiloData,
+  tavern: KiloData,
   worktree: string,
   whitelistedDirs: string[],
 ) {
-  const enabled = kilo.board
+  const enabled = tavern.board
   // Rename "build" → "code" for backward compatibility
   if (agents.build) {
     agents.code = {
@@ -525,7 +525,7 @@ export function patchAgents(
 
   // Patch plan mode
   if (agents.plan) {
-    const guard = planGuard(worktree, kilo.mcpRules, enabled)
+    const guard = planGuard(worktree, tavern.mcpRules, enabled)
     agents.plan = {
       ...agents.plan,
       description: "Plan mode. Can only edit plan files; all other filesystem mutations are denied.",
@@ -533,7 +533,7 @@ export function patchAgents(
         defaults,
         guard,
         user,
-        baseline(guard, user, kilo.mcpRules),
+        baseline(guard, user, tavern.mcpRules),
         planEditGuard(worktree),
         restrictions(user),
       ),
@@ -636,7 +636,7 @@ export function patchAgents(
   }
 
   // Add ask agent
-  const guard = askGuard(kilo.mcpRules, enabled)
+  const guard = askGuard(tavern.mcpRules, enabled)
   agents.ask = {
     name: "ask",
     description: "Get answers and explanations without making changes to the codebase.",
@@ -651,7 +651,7 @@ export function patchAgents(
       defaults,
       guard,
       user,
-      baseline(guard, user, kilo.mcpRules),
+      baseline(guard, user, tavern.mcpRules),
       askEditGuard(),
       denies(user),
     ),
@@ -669,7 +669,7 @@ export const RemoveError = NamedError.create("AgentRemoveError", {
 
 /**
  * Remove a custom agent by deleting its markdown source file, removing it from
- * config-backed agent entries, and/or removing it from legacy .kilocodemodes YAML files.
+ * config-backed agent entries, and/or removing it from legacy .taverncodemodes YAML files.
  * Scans the selected writable config scope, or every scope when none is selected.
  */
 export async function remove(input: {
@@ -719,9 +719,9 @@ export async function remove(input: {
 
   if (await removeConfigAgent(input.name, sources)) found = true
 
-  // 2. Remove from legacy .kilocodemodes YAML files (read by ModesMigrator)
-  const { ModesMigrator } = await import("@/kilocode/modes-migrator")
-  const { KilocodePaths } = await import("@/kilocode/paths")
+  // 2. Remove from legacy .taverncodemodes YAML files (read by ModesMigrator)
+  const { ModesMigrator } = await import("@/taverncode/modes-migrator")
+  const { KilocodePaths } = await import("@/taverncode/paths")
   const os = await import("os")
   const matter = (await import("gray-matter")).default
   const home = os.default.homedir()
@@ -732,10 +732,10 @@ export async function remove(input: {
     },
     {
       scope: "global" as const,
-      file: path.join(home, ".kilocode", "cli", "global", "settings", "custom_modes.yaml"),
+      file: path.join(home, ".taverncode", "cli", "global", "settings", "custom_modes.yaml"),
     },
-    { scope: "global" as const, file: path.join(home, ".kilocodemodes") },
-    { scope: "project" as const, file: path.join(input.directory, ".kilocodemodes") },
+    { scope: "global" as const, file: path.join(home, ".taverncodemodes") },
+    { scope: "project" as const, file: path.join(input.directory, ".taverncodemodes") },
   ]
 
   for (const item of legacy) {

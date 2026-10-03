@@ -187,7 +187,7 @@ export async function fetchCloudSessionForImport(token: string, sessionId: strin
   if (response.status === 404) return { ok: false, status: 404, error: "Session not found in cloud" }
   if (!response.ok) {
     const text = await response.text()
-    console.error("[Kilo Gateway] cloud/session/import: export failed", {
+    console.error("[Tavern Gateway] cloud/session/import: export failed", {
       status: response.status,
       body: text.slice(0, 500),
     })

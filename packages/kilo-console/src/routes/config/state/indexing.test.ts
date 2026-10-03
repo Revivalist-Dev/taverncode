@@ -38,8 +38,8 @@ describe("indexing config state", () => {
   })
 
   test("builds provider patches for custom selector changes", () => {
-    expect(providerPatch("kilo", "default-embedding")).toEqual({
-      provider: "kilo",
+    expect(providerPatch("tavern", "default-embedding")).toEqual({
+      provider: "tavern",
       model: "default-embedding",
       dimension: undefined,
     })

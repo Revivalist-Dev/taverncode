@@ -6,7 +6,7 @@ import type {
   NotebookFailure,
   NotebookRequest,
   NotebookResult,
-} from "@kilocode/sdk/v2/client"
+} from "@taverncode/sdk/v2/client"
 import { FileIgnoreController } from "../autocomplete/shims/FileIgnoreController"
 import type { ConnectionState, KiloConnectionService } from "../cli-backend/connection-service"
 import type { SSEPayload } from "../cli-backend/sdk-sse-adapter"
@@ -115,7 +115,7 @@ export class NotebookBridge {
       this.backend = backend
       const revision = ++this.revision
       void this.recover(revision).catch((error: unknown) => {
-        console.error("[Kilo New] NotebookBridge: pending request recovery failed:", error)
+        console.error("[Tavern New] NotebookBridge: pending request recovery failed:", error)
       })
     })
   }
@@ -135,7 +135,7 @@ export class NotebookBridge {
     for (const context of this.contexts.values()) {
       void context
         .then((value) => value.dispose())
-        .catch((error: unknown) => console.error("[Kilo New] NotebookBridge: context disposal failed:", error))
+        .catch((error: unknown) => console.error("[Tavern New] NotebookBridge: context disposal failed:", error))
     }
     this.contexts.clear()
     this.origins.clear()
@@ -156,11 +156,11 @@ export class NotebookBridge {
   }
 
   private event(event: SSEPayload, directory?: string): void {
-    if (event.type === "kilocode.notebook.requested") {
+    if (event.type === "taverncode.notebook.requested") {
       this.request(event as EventKilocodeNotebookRequested, directory)
       return
     }
-    if (event.type === "kilocode.notebook.cancelled") {
+    if (event.type === "taverncode.notebook.cancelled") {
       this.cancel(event as EventKilocodeNotebookCancelled, directory)
     }
   }
@@ -199,7 +199,7 @@ export class NotebookBridge {
     const active = { controller: new AbortController(), cancelled: false }
     this.active.set(request.id, active)
     void this.run(request, origin, active).catch((error: unknown) => {
-      console.error(`[Kilo New] NotebookBridge: request ${request.id} failed:`, error)
+      console.error(`[Tavern New] NotebookBridge: request ${request.id} failed:`, error)
     })
   }
 
@@ -300,24 +300,24 @@ export class NotebookBridge {
 
   private async reply(requestID: string, directory: string, result: NotebookResult): Promise<boolean> {
     try {
-      const response = await this.connection.getClient().kilocode.notebook.reply({ requestID, directory, result })
+      const response = await this.connection.getClient().taverncode.notebook.reply({ requestID, directory, result })
       if (!response.error) return true
-      console.error(`[Kilo New] NotebookBridge: reply ${requestID} failed:`, response.error)
+      console.error(`[Tavern New] NotebookBridge: reply ${requestID} failed:`, response.error)
       return false
     } catch (error) {
-      console.error(`[Kilo New] NotebookBridge: reply ${requestID} failed:`, error)
+      console.error(`[Tavern New] NotebookBridge: reply ${requestID} failed:`, error)
       return false
     }
   }
 
   private async reject(requestID: string, directory: string, error: NotebookFailure): Promise<boolean> {
     try {
-      const response = await this.connection.getClient().kilocode.notebook.reject({ requestID, directory, error })
+      const response = await this.connection.getClient().taverncode.notebook.reject({ requestID, directory, error })
       if (!response.error) return true
-      console.error(`[Kilo New] NotebookBridge: rejection ${requestID} failed:`, response.error)
+      console.error(`[Tavern New] NotebookBridge: rejection ${requestID} failed:`, response.error)
       return false
     } catch (cause) {
-      console.error(`[Kilo New] NotebookBridge: rejection ${requestID} failed:`, cause)
+      console.error(`[Tavern New] NotebookBridge: rejection ${requestID} failed:`, cause)
       return false
     }
   }
@@ -326,17 +326,17 @@ export class NotebookBridge {
     const client = this.connection.getClient()
     for (const directory of this.connection.getKnownDirectories()) {
       try {
-        const response = await client.kilocode.notebook.list({ directory })
+        const response = await client.taverncode.notebook.list({ directory })
         if (this.disposed || revision !== this.revision) return
         if (response.error) {
-          console.error(`[Kilo New] NotebookBridge: could not list requests for ${directory}:`, response.error)
+          console.error(`[Tavern New] NotebookBridge: could not list requests for ${directory}:`, response.error)
           continue
         }
         for (const request of response.data ?? []) {
-          this.request({ id: request.id, type: "kilocode.notebook.requested", properties: request }, directory)
+          this.request({ id: request.id, type: "taverncode.notebook.requested", properties: request }, directory)
         }
       } catch (error) {
-        console.error(`[Kilo New] NotebookBridge: could not list requests for ${directory}:`, error)
+        console.error(`[Tavern New] NotebookBridge: could not list requests for ${directory}:`, error)
       }
     }
   }

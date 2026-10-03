@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, mock, test } from "bun:test"
-import * as SDK from "@kilocode/sdk/v2"
+import * as SDK from "@taverncode/sdk/v2"
 import { RunCommand } from "@/cli/cmd/run"
 
 const actual = { ...SDK }
@@ -88,7 +88,7 @@ function idle(): Event {
 function args() {
   return {
     _: [],
-    $0: "kilo",
+    $0: "tavern",
     message: ["hi"],
     command: undefined,
     continue: false,
@@ -119,7 +119,7 @@ const tty = Object.getOwnPropertyDescriptor(process.stdin, "isTTY")
 const exitCode = process.exitCode
 
 afterEach(async () => {
-  await mock.module("@kilocode/sdk/v2", () => actual)
+  await mock.module("@taverncode/sdk/v2", () => actual)
   process.exitCode = exitCode ?? 0
   if (tty) {
     Object.defineProperty(process.stdin, "isTTY", tty)
@@ -131,13 +131,13 @@ afterEach(async () => {
 type Transport = { signal?: AbortSignal | null }
 
 async function run(sdk: Record<string, unknown>, transport: Transport = {}) {
-  await mock.module("@kilocode/sdk/v2", () => ({
+  await mock.module("@taverncode/sdk/v2", () => ({
     createKiloClient: (config: Transport & { fetch?: () => Promise<Response> }) => {
       transport.signal = config.signal
       config.fetch = async () =>
         Response.json({
           paths: {
-            "/kilocode/session/{sessionID}/drain": { post: { operationId: "kilocode.drainSession" } },
+            "/taverncode/session/{sessionID}/drain": { post: { operationId: "taverncode.drainSession" } },
           },
         })
       return sdk
@@ -168,7 +168,7 @@ describe("cli run auto permissions", () => {
           return { stream: q.stream() }
         },
       },
-      kilocode: {
+      taverncode: {
         drainSession: async (input: { sessionID: string; token: string }) => {
           q.push({ type: "session.drained", properties: input })
           q.end()
@@ -270,7 +270,7 @@ describe("cli run auto permissions", () => {
           return { data: true }
         },
       },
-      kilocode: {
+      taverncode: {
         drainSession: async (input: { sessionID: string; token: string }) => {
           q.push({ type: "session.drained", properties: input })
           q.end()

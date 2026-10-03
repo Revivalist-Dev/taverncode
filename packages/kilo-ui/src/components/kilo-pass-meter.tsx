@@ -45,7 +45,7 @@ export function KiloPassMeter(props: KiloPassMeterProps) {
   return (
     <div
       {...rest}
-      data-component="kilo-pass-meter"
+      data-component="tavern-pass-meter"
       role="meter"
       aria-valuemin={0}
       aria-valuemax={Math.max(model().total, 1)}
@@ -53,32 +53,32 @@ export function KiloPassMeter(props: KiloPassMeterProps) {
       aria-valuetext={`${local.format(model().used)} / ${local.format(model().total)}`}
       classList={{ ...local.classList, [local.class ?? ""]: !!local.class }}
     >
-      <div data-slot="kilo-pass-meter-header">
+      <div data-slot="tavern-pass-meter-header">
         <span>{local.label}</span>
         <strong>
           {local.format(model().used)} / {local.format(model().total)}
         </strong>
       </div>
-      <div data-slot="kilo-pass-meter-track" aria-hidden="true">
-        <div data-slot="kilo-pass-meter-paid-background" style={{ width: `${model().boundary}%` }} />
+      <div data-slot="tavern-pass-meter-track" aria-hidden="true">
+        <div data-slot="tavern-pass-meter-paid-background" style={{ width: `${model().boundary}%` }} />
         <div
-          data-slot="kilo-pass-meter-bonus-background"
+          data-slot="tavern-pass-meter-bonus-background"
           hidden={model().bonus <= 0}
           style={{ left: `${model().boundary}%`, width: `${100 - model().boundary}%` }}
         />
-        <div data-slot="kilo-pass-meter-paid-fill" style={{ width: `${model().paidFill}%` }} />
+        <div data-slot="tavern-pass-meter-paid-fill" style={{ width: `${model().paidFill}%` }} />
         <div
-          data-slot="kilo-pass-meter-bonus-fill"
+          data-slot="tavern-pass-meter-bonus-fill"
           hidden={model().bonusFill <= 0}
           style={{ left: `${model().boundary}%`, width: `${model().bonusFill}%` }}
         />
         <div
-          data-slot="kilo-pass-meter-boundary"
+          data-slot="tavern-pass-meter-boundary"
           hidden={model().bonus <= 0}
           style={{ left: `${model().boundary}%` }}
         />
       </div>
-      <div data-slot="kilo-pass-meter-amounts" aria-hidden="true">
+      <div data-slot="tavern-pass-meter-amounts" aria-hidden="true">
         <span
           hidden={model().total <= 0}
           data-pin={model().bonus <= 0 ? "end" : model().paid <= 0 ? "start" : undefined}
@@ -86,17 +86,17 @@ export function KiloPassMeter(props: KiloPassMeterProps) {
         >
           {local.format(model().paid)}
         </span>
-        <span data-slot="kilo-pass-meter-bonus-amount" hidden={model().bonus <= 0}>
+        <span data-slot="tavern-pass-meter-bonus-amount" hidden={model().bonus <= 0}>
           {local.format(model().bonus)}
         </span>
       </div>
-      <div data-slot="kilo-pass-meter-legend">
+      <div data-slot="tavern-pass-meter-legend">
         <span>
-          <i data-slot="kilo-pass-meter-paid-dot" aria-hidden="true" />
+          <i data-slot="tavern-pass-meter-paid-dot" aria-hidden="true" />
           {local.paidLabel}
         </span>
         <span hidden={model().bonus <= 0}>
-          <i data-slot="kilo-pass-meter-bonus-dot" aria-hidden="true" />
+          <i data-slot="tavern-pass-meter-bonus-dot" aria-hidden="true" />
           {local.bonusLabel}
         </span>
       </div>

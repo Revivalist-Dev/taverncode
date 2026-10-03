@@ -1,8 +1,8 @@
-import type { TuiPlugin } from "@kilocode/plugin/tui"
+import type { TuiPlugin } from "@taverncode/plugin/tui"
 import type { InternalTuiPlugin } from "@/plugin/tui/internal"
-import { MemoryPermission } from "@/kilocode/cli/cmd/tui/permissions"
+import { MemoryPermission } from "@/taverncode/cli/cmd/tui/permissions"
 
-const id = "internal:kilo-permissions"
+const id = "internal:tavern-permissions"
 
 const tui: TuiPlugin = async () => {
   MemoryPermission.register()

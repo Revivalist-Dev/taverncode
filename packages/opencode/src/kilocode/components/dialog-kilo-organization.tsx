@@ -1,5 +1,5 @@
 /**
- * Kilo Gateway Organization Selection Dialog
+ * Tavern Gateway Organization Selection Dialog
  *
  * Shows organization selection after OAuth authentication when user has multiple organizations.
  * Pre-selects the first organization by default.
@@ -9,8 +9,8 @@ import { useDialog } from "@tui/ui/dialog"
 import { useSync } from "@tui/context/sync"
 import { useToast } from "@tui/ui/toast"
 import { DialogSelect } from "@tui/ui/dialog-select"
-import type { Organization } from "@kilocode/kilo-gateway"
-import { getOrganizationOptions, getDefaultOrganizationSelection } from "@kilocode/kilo-gateway/tui"
+import type { Organization } from "@taverncode/tavern-gateway"
+import { getOrganizationOptions, getDefaultOrganizationSelection } from "@taverncode/tavern-gateway/tui"
 
 // These types are OpenCode-internal and imported at runtime
 type UseSDK = any
@@ -49,7 +49,7 @@ export function DialogKiloOrganization(props: DialogKiloOrganizationProps) {
           const orgId = option.value
 
           // Update auth to include organization ID using server endpoint
-          await sdk.client.kilo.organization.set({
+          await sdk.client.tavern.organization.set({
             organizationId: orgId,
           })
 

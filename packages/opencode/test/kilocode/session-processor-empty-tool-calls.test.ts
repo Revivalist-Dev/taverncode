@@ -27,7 +27,7 @@ import { SessionStatus } from "../../src/session/status"
 import { SessionSummary } from "../../src/session/summary"
 import { Snapshot } from "../../src/snapshot"
 import { SyncEvent } from "../../src/sync"
-import { KiloSessionProcessor } from "../../src/kilocode/session/processor"
+import { KiloSessionProcessor } from "../../src/taverncode/session/processor"
 import * as Log from "@opencode-ai/core/util/log"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { provideTmpdirProject } from "../fixture/fixture"
@@ -581,8 +581,8 @@ describe("session processor empty tool-calls", () => {
           const processors = yield* SessionProcessor.Service
           const session = yield* Session.Service
           const selection = {
-            providerID: ProviderV2.ID.kilo,
-            modelID: ModelV2.ID.make("kilo-auto/efficient"),
+            providerID: ProviderV2.ID.tavern,
+            modelID: ModelV2.ID.make("tavern-auto/efficient"),
           }
 
           yield* test.reply(
@@ -592,8 +592,8 @@ describe("session processor empty tool-calls", () => {
               reason: "other",
               usage: usage(),
               providerMetadata: {
-                kilocode: { routedModelID: "openai/gpt-5.5-20260423" },
-                kilo: { vercelID: "fra1::test" },
+                taverncode: { routedModelID: "openai/gpt-5.5-20260423" },
+                tavern: { vercelID: "fra1::test" },
                 gateway: {
                   generationId: "gen_test",
                   routing: { finalProvider: "openai" },

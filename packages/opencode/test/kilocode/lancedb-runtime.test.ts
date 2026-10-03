@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from "bun:test"
 
-const entry = "file:///tmp/kilo-cache/node_modules/@lancedb/lancedb/dist/index.js"
-const add = mock(async () => ({ directory: "/tmp/kilo-cache", entrypoint: entry }))
+const entry = "file:///tmp/tavern-cache/node_modules/@lancedb/lancedb/dist/index.js"
+const add = mock(async () => ({ directory: "/tmp/tavern-cache", entrypoint: entry }))
 const real = await import("@opencode-ai/core/npm")
 
 mock.module("@opencode-ai/core/npm", () => ({
@@ -17,21 +17,21 @@ const prev = process.env[env]
 
 describe("LanceDBRuntime", () => {
   beforeEach(async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     LanceDBRuntime.clear()
     add.mockClear()
-    add.mockImplementation(async () => ({ directory: "/tmp/kilo-cache", entrypoint: entry }))
+    add.mockImplementation(async () => ({ directory: "/tmp/tavern-cache", entrypoint: entry }))
   })
 
   afterEach(async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     LanceDBRuntime.clear()
     if (prev === undefined) delete process.env[env]
     if (prev !== undefined) process.env[env] = prev
   })
 
   test("skips installation for non-lancedb backends", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
 
     await LanceDBRuntime.ensure("qdrant")
 
@@ -40,7 +40,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("guides Intel Mac users to Qdrant", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     const platform = Object.getOwnPropertyDescriptor(process, "platform")!
     const arch = Object.getOwnPropertyDescriptor(process, "arch")!
     Object.defineProperty(process, "platform", { ...platform, value: "darwin" })
@@ -58,7 +58,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("installs the pinned package and exports a file URL for lancedb", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
 
     await LanceDBRuntime.ensure("lancedb")
 
@@ -67,7 +67,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("exposes every LanceDB package that must stay external to bun compile", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
 
     expect(LanceDBRuntime.external).toEqual([
       "@lancedb/lancedb",
@@ -82,7 +82,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("skips install when runtime path is already set", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     process.env[env] = "file:///already/set.js"
 
     await LanceDBRuntime.ensure("lancedb")
@@ -92,7 +92,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("dedupes concurrent ensure calls", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
 
     await Promise.all([
       LanceDBRuntime.ensure("lancedb"),
@@ -105,7 +105,7 @@ describe("LanceDBRuntime", () => {
   })
 
   test("surfaces install failures without swallowing them", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     add.mockImplementationOnce(async () => {
       throw new Error("registry unavailable")
     })
@@ -115,12 +115,12 @@ describe("LanceDBRuntime", () => {
   })
 
   test("retries after a failed install", async () => {
-    const { LanceDBRuntime } = await import("../../src/kilocode/lancedb")
+    const { LanceDBRuntime } = await import("../../src/taverncode/lancedb")
     add
       .mockImplementationOnce(async () => {
         throw new Error("install failed")
       })
-      .mockImplementationOnce(async () => ({ directory: "/tmp/kilo-cache", entrypoint: entry }))
+      .mockImplementationOnce(async () => ({ directory: "/tmp/tavern-cache", entrypoint: entry }))
 
     await expect(LanceDBRuntime.ensure("lancedb")).rejects.toThrow("install failed")
     expect(process.env[env]).toBeUndefined()

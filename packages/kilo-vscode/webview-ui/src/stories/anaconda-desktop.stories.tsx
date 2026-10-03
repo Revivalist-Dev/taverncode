@@ -2,8 +2,8 @@
 /** Stories for Anaconda Desktop provider setup. */
 
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import type { AnacondaDesktopStatus } from "@kilocode/sdk/v2/client"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import type { AnacondaDesktopStatus } from "@taverncode/sdk/v2/client"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { onMount } from "solid-js"
 import { StoryProviders } from "./StoryProviders"
 import AnacondaDesktopDialog from "../components/settings/AnacondaDesktopDialog"

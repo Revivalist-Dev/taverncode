@@ -2,7 +2,7 @@ import type { ProviderMetadata } from "@opencode-ai/llm"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 export namespace KiloRoutedModel {
-  const ns = "kilocode"
+  const ns = "taverncode"
   const key = "routedModelID"
 
   export function write(meta: ProviderMetadata | undefined, modelID: string | undefined) {
@@ -46,8 +46,8 @@ export namespace KiloRoutedModel {
     meta: ProviderMetadata | undefined,
     input: { providerID: ProviderV2.ID; modelID: string; selected?: string },
   ) {
-    if (input.providerID !== ProviderV2.ID.kilo) return undefined
-    if (!input.modelID.startsWith("kilo-auto/") && !input.modelID.startsWith("openrouter/") && !input.modelID.includes("fable")) return undefined
+    if (input.providerID !== ProviderV2.ID.tavern) return undefined
+    if (!input.modelID.startsWith("tavern-auto/") && !input.modelID.startsWith("openrouter/") && !input.modelID.includes("fable")) return undefined
     const model = read(meta, input.providerID)
     if (!model) return undefined
     if (model.modelID === input.modelID || model.modelID === input.selected) return undefined

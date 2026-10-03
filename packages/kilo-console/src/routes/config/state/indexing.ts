@@ -1,7 +1,7 @@
-import type { IndexingConfig } from "@kilocode/sdk/v2/client"
-import { isFileExtension } from "@kilocode/kilo-indexing/file-extensions"
+import type { IndexingConfig } from "@taverncode/sdk/v2/client"
+import { isFileExtension } from "@taverncode/tavern-indexing/file-extensions"
 
-export { parseFileExtensions } from "@kilocode/kilo-indexing/file-extensions"
+export { parseFileExtensions } from "@taverncode/tavern-indexing/file-extensions"
 
 function record(input: unknown): input is Record<string, unknown> {
   return typeof input === "object" && input !== null && !Array.isArray(input)
@@ -46,7 +46,7 @@ export function clean(input: IndexingConfig): IndexingConfig {
 export function providerPatch(provider: IndexingConfig["provider"] | "", model?: string): IndexingConfig {
   return {
     provider: provider || undefined,
-    model: provider === "kilo" ? model || undefined : undefined,
+    model: provider === "tavern" ? model || undefined : undefined,
     dimension: undefined,
   }
 }

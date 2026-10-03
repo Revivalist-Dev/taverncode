@@ -1,12 +1,12 @@
 ---
-title: "Using Atomic Chat with Kilo Code | Local LLMs"
-description: "Run local models in Kilo Code via Atomic Chat's OpenAI-compatible API. Setup for VS Code and the CLI."
+title: "Using Atomic Chat with Tavern Code | Local LLMs"
+description: "Run local models in Tavern Code via Atomic Chat's OpenAI-compatible API. Setup for VS Code and the CLI."
 sidebar_label: Atomic Chat
 ---
 
-# Using Atomic Chat With Kilo Code
+# Using Atomic Chat With Tavern Code
 
-[Kilo Code](https://kilocode.ai/) supports [Atomic Chat](https://atomic.chat/) as a local provider. Atomic Chat runs models on your machine and exposes an OpenAI-compatible API (default `http://127.0.0.1:1337/v1`).
+[Tavern Code](https://taverncode.ai/) supports [Atomic Chat](https://atomic.chat/) as a local provider. Atomic Chat runs models on your machine and exposes an OpenAI-compatible API (default `http://127.0.0.1:1337/v1`).
 
 **Website:** [https://atomic.chat/](https://atomic.chat/)  
 **Repository:** [https://github.com/AtomicBot-ai/Atomic-Chat](https://github.com/AtomicBot-ai/Atomic-Chat)
@@ -22,13 +22,13 @@ sidebar_label: Atomic Chat
 curl http://127.0.0.1:1337/v1/models
 ```
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
-Kilo Code ships the `@kilocode/plugin-atomic-chat` plugin by default. It **does not** call localhost unless you opt in (see below). When enabled, it discovers models from `GET /v1/models` and can warn if the selected model is not loaded.
+Tavern Code ships the `@taverncode/plugin-atomic-chat` plugin by default. It **does not** call localhost unless you opt in (see below). When enabled, it discovers models from `GET /v1/models` and can warn if the selected model is not loaded.
 
 **Localhost HTTP runs only when one of these is true:**
 
-- You configure `provider.atomic-chat` in `kilo.jsonc`
+- You configure `provider.atomic-chat` in `tavern.jsonc`
 - You set `"model": "atomic-chat/..."` (or per-agent model uses `atomic-chat`)
 - You enable optional auto-detect: `"atomicChat": { "autoDetect": true }` (probes ports **1337** and **1338**)
 
@@ -42,7 +42,7 @@ Open **Settings** (gear icon) → **Providers** → **Atomic Chat**. No API key 
 {% /tab %}
 {% tab label="CLI" %}
 
-**Config file** (`~/.config/kilo/kilo.jsonc` or `./kilo.jsonc`):
+**Config file** (`~/.config/tavern/tavern.jsonc` or `./tavern.jsonc`):
 
 ```jsonc
 {
@@ -72,7 +72,7 @@ Optional auto-detect without a provider block:
 }
 ```
 
-To disable the provider entirely, use `disabled_providers: ["atomic-chat"]` or remove `@kilocode/plugin-atomic-chat` from the `plugin` array in your config.
+To disable the provider entirely, use `disabled_providers: ["atomic-chat"]` or remove `@taverncode/plugin-atomic-chat` from the `plugin` array in your config.
 
 {% /tab %}
 {% /tabs %}

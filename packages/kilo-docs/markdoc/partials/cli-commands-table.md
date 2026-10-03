@@ -2,32 +2,32 @@
 
 | Command | Description |
 |---|---|
-| `kilo acp` | start ACP (Agent Client Protocol) server |
-| `kilo mcp` | manage MCP (Model Context Protocol) servers |
-| `kilo [project]` | start kilo tui |
-| `kilo attach <url>` | attach to a running kilo server |
-| `kilo run [message..]` | run kilo with a message |
-| `kilo debug` | debugging and troubleshooting tools |
-| `kilo auth` | manage AI providers and credentials |
-| `kilo agent` | manage agents |
-| `kilo upgrade [target]` | upgrade kilo to the latest or a specific version |
-| `kilo uninstall` | uninstall kilo and remove all related files |
-| `kilo serve` | starts a headless kilo server |
-| `kilo models [provider]` | list all available models |
-| `kilo roll-call <filter>` | batch-test text models matching a filter for connectivity and latency |
-| `kilo profile` | show Kilo account profile |
-| `kilo stats` | show token usage and cost statistics |
-| `kilo export [sessionID]` | export session data as JSON |
-| `kilo import <file>` | import session data from JSON file or URL |
-| `kilo github` | manage GitHub agent |
-| `kilo pr` | manage pull requests |
-| `kilo session` | manage sessions |
-| `kilo remote` | enable remote connection for real-time session relay |
-| `kilo daemon` | manage the local kilo daemon |
-| `kilo console` | open or stop the local Kilo Console (deprecated) |
-| `kilo cloud` | run Cloud Agent tasks |
-| `kilo db` | database tools |
-| `kilo config` | configuration tools |
-| `kilo plugin <module>` | install plugin and update config |
-| `kilo help [command]` | show full CLI reference |
-| `kilo completion` | generate shell completion script |
+| `tavern acp` | start ACP (Agent Client Protocol) server |
+| `tavern mcp` | manage MCP (Model Context Protocol) servers |
+| `tavern [project]` | start tavern tui |
+| `tavern attach <url>` | attach to a running tavern server |
+| `tavern run [message..]` | run tavern with a message |
+| `tavern debug` | debugging and troubleshooting tools |
+| `tavern auth` | manage AI providers and credentials |
+| `tavern agent` | manage agents |
+| `tavern upgrade [target]` | upgrade tavern to the latest or a specific version |
+| `tavern uninstall` | uninstall tavern and remove all related files |
+| `tavern serve` | starts a headless tavern server |
+| `tavern models [provider]` | list all available models |
+| `tavern roll-call <filter>` | batch-test text models matching a filter for connectivity and latency |
+| `tavern profile` | show Tavern account profile |
+| `tavern stats` | show token usage and cost statistics |
+| `tavern export [sessionID]` | export session data as JSON |
+| `tavern import <file>` | import session data from JSON file or URL |
+| `tavern github` | manage GitHub agent |
+| `tavern pr` | manage pull requests |
+| `tavern session` | manage sessions |
+| `tavern remote` | enable remote connection for real-time session relay |
+| `tavern daemon` | manage the local tavern daemon |
+| `tavern console` | open or stop the local Tavern Console (deprecated) |
+| `tavern cloud` | run Cloud Agent tasks |
+| `tavern db` | database tools |
+| `tavern config` | configuration tools |
+| `tavern plugin <module>` | install plugin and update config |
+| `tavern help [command]` | show full CLI reference |
+| `tavern completion` | generate shell completion script |

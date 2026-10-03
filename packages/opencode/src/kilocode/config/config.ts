@@ -14,14 +14,14 @@ import { ConfigErrorV1 as ConfigError } from "@opencode-ai/core/v1/config/error"
 import type { Config } from "../../config/config"
 import type { ConfigAgentV1 } from "@opencode-ai/core/v1/config/agent"
 import { ModesMigrator } from "../modes-migrator"
-import { fetchOrganizationModes } from "@kilocode/kilo-gateway"
+import { fetchOrganizationModes } from "@taverncode/tavern-gateway"
 import { RulesMigrator } from "../rules-migrator"
 import { WorkflowsMigrator } from "../workflows-migrator"
 import { McpMigrator } from "../mcp-migrator"
 import { IgnoreMigrator } from "../ignore-migrator"
 
 export namespace KilocodeConfig {
-  const log = Log.create({ service: "kilocode.config" })
+  const log = Log.create({ service: "taverncode.config" })
 
   // ── Config schema extensions ─────────────────────────────────────────
 
@@ -37,11 +37,11 @@ export namespace KilocodeConfig {
 
   // ── Config file constants ────────────────────────────────────────────
 
-  /** All config file names in precedence order (kilo + opencode). */
-  export const ALL_CONFIG_FILES = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json"] as const
+  /** All config file names in precedence order (tavern + opencode). */
+  export const ALL_CONFIG_FILES = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json"] as const
 
   /** Config directory suffixes in update-target preference order. */
-  export const KILO_DIR_SUFFIXES = [".kilo", ".kilocode"] as const
+  export const KILO_DIR_SUFFIXES = [".tavern", ".taverncode"] as const
 
   /**
    * List every project config file the read chain can merge: config files in
@@ -73,7 +73,7 @@ export namespace KilocodeConfig {
     writable: (config: Config.Info) => Config.Info
   }) {
     const files = yield* projectConfigFiles(input)
-    const file = files.find((item) => existsSync(item)) ?? path.join(input.directory, ".kilo", "kilo.jsonc")
+    const file = files.find((item) => existsSync(item)) ?? path.join(input.directory, ".tavern", "tavern.jsonc")
     const source = yield* input.read(file)
     const before = source ?? "{}"
     const patch = input.writable(input.config)
@@ -304,7 +304,7 @@ export namespace KilocodeConfig {
     try {
       const [{ Session }, { capture }, { AppRuntime }, { EventV2Bridge }] = await Promise.all([
         import("@/session/session"),
-        import("@/kilocode/instance"),
+        import("@/taverncode/instance"),
         import("@/effect/app-runtime"),
         import("@/event-v2-bridge"),
       ])
@@ -344,7 +344,7 @@ export namespace KilocodeConfig {
   type MergeFn = (target: Config.Info, source: Config.Info) => Config.Info
 
   /**
-   * Load all Kilocode legacy configs (modes, workflows, rules, MCP, ignore).
+   * Load all Taverncode legacy configs (modes, workflows, rules, MCP, ignore).
    * These have the lowest precedence in the config chain.
    */
   export async function loadLegacyConfigs(input: {
@@ -354,73 +354,73 @@ export namespace KilocodeConfig {
     const warnings: Config.Warning[] = []
     let result: Config.Info = {}
 
-    // Load Kilocode custom modes
+    // Load Taverncode custom modes
     try {
       const migration = await ModesMigrator.migrate({ projectDir: input.projectDir })
       if (Object.keys(migration.agents).length > 0) {
         result = input.merge(result, { agent: migration.agents })
-        log.debug("loaded kilocode custom modes", {
+        log.debug("loaded taverncode custom modes", {
           count: Object.keys(migration.agents).length,
           modes: Object.keys(migration.agents),
         })
       }
       for (const skipped of migration.skipped) {
-        log.debug("skipped kilocode mode", { slug: skipped.slug, reason: skipped.reason })
+        log.debug("skipped taverncode mode", { slug: skipped.slug, reason: skipped.reason })
       }
     } catch (err) {
-      log.warn("failed to load kilocode modes", { error: err })
+      log.warn("failed to load taverncode modes", { error: err })
     }
 
-    // Load Kilocode workflows as commands
+    // Load Taverncode workflows as commands
     try {
       const migration = await WorkflowsMigrator.migrate({ projectDir: input.projectDir })
       if (Object.keys(migration.commands).length > 0) {
         result = input.merge(result, { command: migration.commands })
-        log.debug("loaded kilocode workflows as commands", {
+        log.debug("loaded taverncode workflows as commands", {
           count: Object.keys(migration.commands).length,
           commands: Object.keys(migration.commands),
         })
       }
     } catch (err) {
-      log.warn("failed to load kilocode workflows", { error: err })
+      log.warn("failed to load taverncode workflows", { error: err })
     }
 
-    // Load Kilocode rules
+    // Load Taverncode rules
     try {
       const migration = await RulesMigrator.migrate({ projectDir: input.projectDir })
       if (migration.instructions.length > 0) {
         result = input.merge(result, { instructions: migration.instructions })
-        log.debug("loaded kilocode rules", {
+        log.debug("loaded taverncode rules", {
           count: migration.instructions.length,
           files: migration.instructions,
         })
       }
       for (const warning of migration.warnings) {
-        log.debug("kilocode rules warning", { warning })
+        log.debug("taverncode rules warning", { warning })
       }
     } catch (err) {
-      log.warn("failed to load kilocode rules", { error: err })
+      log.warn("failed to load taverncode rules", { error: err })
     }
 
-    // Load Kilocode MCP servers (skip global VSCode extension paths unless running in an editor or Console daemon)
+    // Load Taverncode MCP servers (skip global VSCode extension paths unless running in an editor or Console daemon)
     const skipGlobal = process.env["KILO_PLATFORM"] !== "vscode" && process.env["KILOCODE_FEATURE"] !== "daemon"
     const mcp = await McpMigrator.loadMcpConfig(input.projectDir, skipGlobal)
     if (Object.keys(mcp).length > 0) {
       result = input.merge(result, { mcp })
     }
 
-    // Load .kilocodeignore patterns
+    // Load .taverncodeignore patterns
     try {
       const permission = await IgnoreMigrator.loadIgnoreConfig(input.projectDir)
       if (Object.keys(permission).length > 0) {
         result = input.merge(result, { permission })
-        log.debug("loaded kilocode ignore patterns", {
+        log.debug("loaded taverncode ignore patterns", {
           hasRead: !!(permission as Record<string, unknown>).read,
           hasEdit: !!(permission as Record<string, unknown>).edit,
         })
       }
     } catch (err) {
-      log.warn("failed to load kilocode ignore patterns", { error: err })
+      log.warn("failed to load taverncode ignore patterns", { error: err })
     }
 
     return { config: result, warnings }
@@ -429,7 +429,7 @@ export namespace KilocodeConfig {
   // ── Organization modes ───────────────────────────────────────────────
 
   /**
-   * Load organization custom modes from the Kilo Cloud API.
+   * Load organization custom modes from the Tavern Cloud API.
    * Returns empty agents + warnings if the user is not authenticated.
    */
   export async function loadOrganizationModes(
@@ -437,9 +437,9 @@ export namespace KilocodeConfig {
   ): Promise<{ agents: Record<string, ConfigAgentV1.Info>; warnings: Config.Warning[] }> {
     const warnings: Config.Warning[] = []
     try {
-      const kilo = auth["kilo"]
-      if (kilo?.type === "oauth" && kilo.access && kilo.accountId) {
-        const modes = await fetchOrganizationModes(kilo.access, kilo.accountId)
+      const tavern = auth["tavern"]
+      if (tavern?.type === "oauth" && tavern.access && tavern.accountId) {
+        const modes = await fetchOrganizationModes(tavern.access, tavern.accountId)
         if (modes.length > 0) {
           const agents = ModesMigrator.convertOrganizationModes(modes)
           log.debug("loaded organization custom modes", {
@@ -458,7 +458,7 @@ export namespace KilocodeConfig {
   // ── Bash permission migration ────────────────────────────────────────
 
   /** Global config file names in read-merge order (lowest-to-highest precedence). */
-  export const GLOBAL_CONFIG_FILES = ["config.json", "kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc"]
+  export const GLOBAL_CONFIG_FILES = ["config.json", "tavern.json", "tavern.jsonc", "opencode.json", "opencode.jsonc"]
   const BASH_PERMISSION_MIGRATION = ".bash-permission-migrated"
 
   /**
@@ -677,19 +677,19 @@ export namespace KilocodeConfig {
 
   /** Check whether a directory path should be treated as a config directory (for loading config files). */
   export function isConfigDir(dir: string, flagDir?: string): boolean {
-    return dir.endsWith(".kilo") || dir.endsWith(".kilocode") || dir === flagDir
+    return dir.endsWith(".tavern") || dir.endsWith(".taverncode") || dir === flagDir
   }
 
   // ── Opencode config migration notice ─────────────────────────────────
 
-  /** Client-neutral docs page describing where Kilo reads configuration from. */
-  export const CONFIG_DOCS_URL = "https://kilo.ai/docs/getting-started/settings"
+  /** Client-neutral docs page describing where Tavern reads configuration from. */
+  export const CONFIG_DOCS_URL = "https://tavern.ai/docs/getting-started/settings"
 
   /** Stable id for the synthetic "move your opencode config" notification (used for client-side dismissal). */
-  export const OPENCODE_NOTIFICATION_ID = "kilo.local.opencode-config-detected"
+  export const TAVERN_NOTIFICATION_ID = "tavern.local.opencode-config-detected"
 
   /**
-   * Detect leftover opencode config directories. Kilo used to fall back to
+   * Detect leftover opencode config directories. Tavern used to fall back to
    * opencode configuration but no longer reads `.opencode` directories.
    * Returns the existing `.opencode` locations (global + project), highest first.
    */
@@ -700,7 +700,7 @@ export namespace KilocodeConfig {
   }): string[] {
     const found: string[] = []
 
-    // Global opencode config dir (sibling of the kilo global config dir, e.g. ~/.config/opencode).
+    // Global opencode config dir (sibling of the tavern global config dir, e.g. ~/.config/opencode).
     const globalDir = path.join(path.dirname(Global.Path.config), "opencode")
     if (existsSync(globalDir)) found.push(globalDir)
 
@@ -731,12 +731,12 @@ export namespace KilocodeConfig {
     if (found.length === 0) return undefined
     const suffix = found.length > 1 ? ` (and ${found.length - 1} more)` : ""
     return {
-      id: OPENCODE_NOTIFICATION_ID,
+      id: TAVERN_NOTIFICATION_ID,
       title: "Move your opencode configuration",
       message:
-        `Kilo no longer falls back to opencode configuration. ` +
+        `Tavern no longer falls back to opencode configuration. ` +
         `Found opencode config at ${found[0]}${suffix}. ` +
-        `Move it into a .kilo directory (project) or ${Global.Path.config} (global).`,
+        `Move it into a .tavern directory (project) or ${Global.Path.config} (global).`,
       action: { actionText: "Learn more", actionURL: CONFIG_DOCS_URL },
       showIn: ["cli", "extension"],
     }

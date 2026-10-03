@@ -1,6 +1,6 @@
 ## Project Overview
 
-This is the Kilo Code documentation site. Kilo Code is the leading open source agentic engineering platform.
+This is the Tavern Code documentation site. Tavern Code is the leading open source agentic engineering platform.
 
 ## Dev Server
 
@@ -25,16 +25,16 @@ This project uses [Markdoc](https://markdoc.dev/) for rendering markdown with cu
 Use the Markdoc image tag format:
 
 ```markdown
-{% image src="/docs/img/kilo-provider/connected-accounts.png" alt="Connect account screen" width="800" caption="Connect account screen" /%}
+{% image src="/docs/img/tavern-provider/connected-accounts.png" alt="Connect account screen" width="800" caption="Connect account screen" /%}
 ```
 
-Note that this site is served under kilo.ai/docs so the `/docs` prefix **must** be present in every image path.
+Note that this site is served under tavern.ai/docs so the `/docs` prefix **must** be present in every image path.
 
 #### Generated screenshots
 
-When updating screenshots for active docs pages, prefer generated screenshot-test assets from `packages/kilo-docs/public/img/screenshot-tests/` and reference them as `/docs/img/screenshot-tests/...`. Only replace a hand-captured image when the generated screenshot matches the docs content closely. Do not replace screenshots in VSCode Legacy docs tabs or sections.
+When updating screenshots for active docs pages, prefer generated screenshot-test assets from `packages/tavern-docs/public/img/screenshot-tests/` and reference them as `/docs/img/screenshot-tests/...`. Only replace a hand-captured image when the generated screenshot matches the docs content closely. Do not replace screenshots in VSCode Legacy docs tabs or sections.
 
-If a docs page references a generated VS Code visual-regression screenshot, record that usage in `packages/kilo-vscode/tests/visual-regression.spec.ts` by adding the story ID to the `DOCS` map. If no matching generated screenshot exists, add or update a Storybook story in `packages/kilo-vscode/webview-ui/src/stories/` and let visual-regression CI generate the baseline.
+If a docs page references a generated VS Code visual-regression screenshot, record that usage in `packages/tavern-vscode/tests/visual-regression.spec.ts` by adding the story ID to the `DOCS` map. If no matching generated screenshot exists, add or update a Storybook story in `packages/tavern-vscode/webview-ui/src/stories/` and let visual-regression CI generate the baseline.
 
 Image attributes:
 
@@ -76,7 +76,7 @@ Use the Markdoc codicon tag format:
 
 ### Style Guide
 
-Before writing documentation, review `packages/kilo-docs/STYLE_GUIDE.md` for voice, tone, and formatting conventions.
+Before writing documentation, review `packages/tavern-docs/STYLE_GUIDE.md` for voice, tone, and formatting conventions.
 
 ### Adding New Pages
 

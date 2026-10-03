@@ -18,9 +18,9 @@ import {
   on,
   onCleanup,
 } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { createAutoScroll } from "@kilocode/kilo-ui/hooks"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { createAutoScroll } from "@taverncode/tavern-ui/hooks"
 import { useSession } from "../../context/session"
 import { useServer } from "../../context/server"
 import { useVSCode } from "../../context/vscode"
@@ -895,7 +895,7 @@ export const MessageList: Component<MessageListProps> = (props) => {
           </Show>
           <Show when={isEmpty() && props.readonly}>
             <div class="message-list-empty">
-              <p class="kilo-about-text">{language.t("session.messages.initializing")}</p>
+              <p class="tavern-about-text">{language.t("session.messages.initializing")}</p>
             </div>
           </Show>
           <Show when={isEmpty() && !props.readonly}>

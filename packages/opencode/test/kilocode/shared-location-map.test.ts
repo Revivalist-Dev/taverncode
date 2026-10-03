@@ -12,7 +12,7 @@ describe("shared location service map", () => {
     const files = [
       "server/routes/instance/httpapi/handlers/file.ts",
       "server/routes/instance/httpapi/handlers/pty.ts",
-      "kilocode/server/reference-reconciler.ts",
+      "taverncode/server/reference-reconciler.ts",
     ]
 
     for (const file of files) {

@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test"
-import { removeKiloWeb } from "./remove-kilo-web"
+import { removeKiloWeb } from "./remove-tavern-web"
 
 const INDEX = "packages/opencode/src/index.ts"
 
-test("replaces the known Kilo web command import and registration with Kilo omissions", () => {
+test("replaces the known Tavern web command import and registration with Tavern omissions", () => {
   const source = [
     'import { WebCommand } from "./cli/cmd/web"',
     'import { ServeCommand } from "./cli/cmd/serve"',
@@ -16,11 +16,11 @@ test("replaces the known Kilo web command import and registration with Kilo omis
 
   expect(removeKiloWeb(INDEX, source)).toEqual({
     result: [
-      "// kilocode_change - upstream web command intentionally omitted; Kilo does not ship an embedded web UI",
+      "// taverncode_change - upstream web command intentionally omitted; Tavern does not ship an embedded web UI",
       'import { ServeCommand } from "./cli/cmd/serve"',
       "cli",
       "  .command(ServeCommand)",
-      "  // kilocode_change - upstream web command intentionally omitted",
+      "  // taverncode_change - upstream web command intentionally omitted",
       "  .command(ModelsCommand)",
       "",
     ].join("\n"),

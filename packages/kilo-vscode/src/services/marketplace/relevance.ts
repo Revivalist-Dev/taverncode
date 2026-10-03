@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import type { MarketplaceItem, MarketplaceRelevanceMetadata } from "./types"
 
-const EXCLUDE = "**/{node_modules,.git,dist,build,out,.kilo,.opencode,.kilocode}/**"
+const EXCLUDE = "**/{node_modules,.git,dist,build,out,.tavern,.opencode,.taverncode}/**"
 
 function strings(value: unknown): string[] {
   if (!Array.isArray(value)) return []
@@ -53,7 +53,7 @@ export async function detectMarketplaceRelevance(
         const found = await Promise.all(
           roots.map((root) =>
             source.find(root, pattern).catch((err: unknown) => {
-              console.warn(`[Kilo New] Marketplace relevance scan failed for ${pattern}:`, err)
+              console.warn(`[Tavern New] Marketplace relevance scan failed for ${pattern}:`, err)
               return false
             }),
           ),

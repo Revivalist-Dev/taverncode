@@ -21,7 +21,7 @@ import type { EnrichedModel } from "../../webview-ui/src/context/provider"
 const labels = { select: "Select model", noProviders: "No providers", notSet: "Not set" }
 
 describe("providerSortKey", () => {
-  it("returns 0 for kilo gateway", () => {
+  it("returns 0 for tavern gateway", () => {
     expect(providerSortKey(KILO_GATEWAY_ID)).toBe(0)
   })
 
@@ -48,9 +48,9 @@ describe("providerSortKey", () => {
   })
 
   it("sorts providers correctly when used with sort", () => {
-    const ids = ["google", "anthropic", "kilo", "openai", "deepseek"]
+    const ids = ["google", "anthropic", "tavern", "openai", "deepseek"]
     const sorted = ids.slice().sort((a, b) => providerSortKey(a) - providerSortKey(b))
-    expect(sorted).toEqual(["kilo", "anthropic", "deepseek", "openai", "google"])
+    expect(sorted).toEqual(["tavern", "anthropic", "deepseek", "openai", "google"])
   })
 })
 
@@ -65,9 +65,9 @@ describe("stripSubProviderPrefix", () => {
     expect(stripSubProviderPrefix("claude-3-5-sonnet")).toBe("claude-3-5-sonnet")
   })
 
-  it("does not strip 'Kilo: ' prefix", () => {
-    expect(stripSubProviderPrefix("Kilo: Auto")).toBe("Kilo: Auto")
-    expect(stripSubProviderPrefix("kilo: Auto")).toBe("kilo: Auto")
+  it("does not strip 'Tavern: ' prefix", () => {
+    expect(stripSubProviderPrefix("Tavern: Auto")).toBe("Tavern: Auto")
+    expect(stripSubProviderPrefix("tavern: Auto")).toBe("tavern: Auto")
   })
 })
 
@@ -81,8 +81,8 @@ describe("sanitizeName", () => {
     expect(sanitizeName("Model (FREE)")).toBe("Model")
   })
 
-  it("preserves bare trailing Free in names like 'Kilo Auto Free'", () => {
-    expect(sanitizeName("Kilo Auto Free")).toBe("Kilo Auto Free")
+  it("preserves bare trailing Free in names like 'Tavern Auto Free'", () => {
+    expect(sanitizeName("Tavern Auto Free")).toBe("Tavern Auto Free")
     expect(sanitizeName("Mixtral free")).toBe("Mixtral free")
     expect(sanitizeName("Mistral:free")).toBe("Mistral:free")
     expect(sanitizeName("Gemma-free")).toBe("Gemma-free")
@@ -119,10 +119,10 @@ describe("isFree", () => {
 })
 
 describe("isAuto", () => {
-  it("matches only Kilo Auto model ids", () => {
-    expect(isAuto({ providerID: KILO_GATEWAY_ID, id: "kilo-auto/efficient" })).toBe(true)
+  it("matches only Tavern Auto model ids", () => {
+    expect(isAuto({ providerID: KILO_GATEWAY_ID, id: "tavern-auto/efficient" })).toBe(true)
     expect(isAuto({ providerID: KILO_GATEWAY_ID, id: "auto-small" })).toBe(true)
-    expect(isAuto({ providerID: "anthropic", id: "kilo-auto/efficient" })).toBe(false)
+    expect(isAuto({ providerID: "anthropic", id: "tavern-auto/efficient" })).toBe(false)
     expect(isAuto({ providerID: KILO_GATEWAY_ID, id: "anthropic/claude-sonnet" })).toBe(false)
   })
 })
@@ -133,7 +133,7 @@ describe("autoChoices", () => {
       autoChoices(
         {
           providerID: KILO_GATEWAY_ID,
-          id: "kilo-auto/efficient",
+          id: "tavern-auto/efficient",
           autoRouting: { models: ["provider/model", "missing/model"] },
         },
         [{ id: "provider/model", name: "Provider: Model" }],
@@ -149,7 +149,7 @@ describe("autoChoices", () => {
       autoChoices(
         {
           providerID: KILO_GATEWAY_ID,
-          id: "kilo-auto/frontier",
+          id: "tavern-auto/frontier",
           autoRouting: { models: ["provider/model"] },
         },
         [{ id: "provider/model", name: "Provider: Model" }],
@@ -158,14 +158,14 @@ describe("autoChoices", () => {
     expect(
       autoChoices({
         providerID: KILO_GATEWAY_ID,
-        id: "kilo-auto/free",
+        id: "tavern-auto/free",
         autoRouting: { models: ["provider/model"] },
       }),
     ).toEqual([{ id: "provider/model", name: "provider/model" }])
   })
 
   it("ignores missing routes and non-Auto models", () => {
-    expect(autoChoices({ providerID: KILO_GATEWAY_ID, id: "kilo-auto/efficient" })).toEqual([])
+    expect(autoChoices({ providerID: KILO_GATEWAY_ID, id: "tavern-auto/efficient" })).toEqual([])
     expect(
       autoChoices({
         providerID: KILO_GATEWAY_ID,
@@ -195,9 +195,9 @@ describe("autoSummary", () => {
 const SEARCH_MODELS: EnrichedModel[] = [
   { id: "solar-pro", name: "Solar Pro", providerID: "nvidia", providerName: "NVIDIA" },
   { id: "gpt-5.6-sol", name: "GPT-5.6 Sol", providerID: "openai", providerName: "OpenAI" },
-  { id: "gpt-5.6-sol", name: "GPT-5.6 Sol", providerID: "kilo", providerName: "Kilo" },
+  { id: "gpt-5.6-sol", name: "GPT-5.6 Sol", providerID: "tavern", providerName: "Tavern" },
   { id: "gpt-5.6", name: "GPT-5.6", providerID: "anthropic", providerName: "Anthropic" },
-  { id: "xai/grok-4.20", name: "SpaceXAI: Grok 4.20", providerID: "kilo", providerName: "Kilo Gateway" },
+  { id: "xai/grok-4.20", name: "SpaceXAI: Grok 4.20", providerID: "tavern", providerName: "Tavern Gateway" },
 ]
 
 describe("rankModelSearch", () => {
@@ -215,9 +215,9 @@ describe("rankModelSearch", () => {
 
   it("keeps provider variants together and uses usage to order equivalent variants", () => {
     const result = rankModelSearch(SEARCH_MODELS, "sol", {
-      usage: { "kilo/gpt-5.6-sol": { count: 4, lastUsed: 10 }, "openai/gpt-5.6-sol": { count: 1, lastUsed: 20 } },
+      usage: { "tavern/gpt-5.6-sol": { count: 4, lastUsed: 10 }, "openai/gpt-5.6-sol": { count: 1, lastUsed: 20 } },
     })
-    expect(result.slice(0, 2).map((model) => model.providerID)).toEqual(["kilo", "openai"])
+    expect(result.slice(0, 2).map((model) => model.providerID)).toEqual(["tavern", "openai"])
   })
 
   it("does not let usage make a weaker model beat an exact match", () => {
@@ -259,17 +259,17 @@ describe("hasByok", () => {
 })
 
 describe("buildTriggerLabel", () => {
-  it("returns resolved model name for non-kilo provider unchanged", () => {
+  it("returns resolved model name for non-tavern provider unchanged", () => {
     expect(buildTriggerLabel("GPT-4o", "openai", null, false, "", true, labels)).toBe("GPT-4o")
   })
 
-  it("strips sub-provider prefix from resolved name for kilo gateway models", () => {
+  it("strips sub-provider prefix from resolved name for tavern gateway models", () => {
     expect(buildTriggerLabel("Anthropic: Claude Sonnet", KILO_GATEWAY_ID, null, false, "", true, labels)).toBe(
       "Claude Sonnet",
     )
   })
 
-  it("does not strip prefix for non-kilo provider even if name contains ': '", () => {
+  it("does not strip prefix for non-tavern provider even if name contains ': '", () => {
     expect(buildTriggerLabel("Anthropic: Claude Sonnet", "anthropic", null, false, "", true, labels)).toBe(
       "Anthropic: Claude Sonnet",
     )
@@ -283,12 +283,12 @@ describe("buildTriggerLabel", () => {
     expect(buildTriggerLabel("GPT-5.6 Luna", "openai", null, false, "", true, labels)).toBe("GPT-5.6 Luna")
   })
 
-  it("returns modelID for kilo gateway raw selection", () => {
-    const raw = { providerID: "kilo", modelID: "kilo-auto/frontier" }
-    expect(buildTriggerLabel(undefined, undefined, raw, false, "", true, labels)).toBe("kilo-auto/frontier")
+  it("returns modelID for tavern gateway raw selection", () => {
+    const raw = { providerID: "tavern", modelID: "tavern-auto/frontier" }
+    expect(buildTriggerLabel(undefined, undefined, raw, false, "", true, labels)).toBe("tavern-auto/frontier")
   })
 
-  it("returns providerID / modelID for non-kilo raw selection", () => {
+  it("returns providerID / modelID for non-tavern raw selection", () => {
     const raw = { providerID: "anthropic", modelID: "claude-3-5-sonnet" }
     expect(buildTriggerLabel(undefined, undefined, raw, false, "", true, labels)).toBe("anthropic / claude-3-5-sonnet")
   })

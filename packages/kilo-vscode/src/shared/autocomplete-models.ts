@@ -7,4 +7,4 @@ export {
   validAutocompleteProvider,
   type AutocompleteModelDef,
   type AutocompleteProviderID,
-} from "@kilocode/kilo-gateway/autocomplete"
+} from "@taverncode/tavern-gateway/autocomplete"

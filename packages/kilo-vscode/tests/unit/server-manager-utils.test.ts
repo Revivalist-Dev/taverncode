@@ -22,7 +22,7 @@ import * as path from "path"
 
 describe("parseServerPort", () => {
   it("parses port from standard CLI startup message", () => {
-    expect(parseServerPort("kilo server listening on http://127.0.0.1:12345")).toBe(12345)
+    expect(parseServerPort("tavern server listening on http://127.0.0.1:12345")).toBe(12345)
   })
 
   it("parses port from localhost variant", () => {
@@ -30,7 +30,7 @@ describe("parseServerPort", () => {
   })
 
   it("parses port when embedded in longer output", () => {
-    const output = "[INFO] 2024-01-01 kilo server listening on http://127.0.0.1:54321\n[INFO] ready"
+    const output = "[INFO] 2024-01-01 tavern server listening on http://127.0.0.1:54321\n[INFO] ready"
     expect(parseServerPort(output)).toBe(54321)
   })
 
@@ -64,14 +64,14 @@ describe("parseServerPort", () => {
   })
 
   it("waits for the complete startup line before resolving a split port", () => {
-    const first = "kilo server listening on http://127.0.0.1:43"
+    const first = "tavern server listening on http://127.0.0.1:43"
 
     expect(parseServerPort(first, true)).toBeNull()
     expect(parseServerPort(`${first}123\n`, true)).toBe(43123)
   })
 
   it("detects a startup announcement split across stdout chunks", () => {
-    const first = "kilo server listening on http://127.0."
+    const first = "tavern server listening on http://127.0."
     const second = "0.1:43123\n"
 
     expect(parseServerPort(first, true)).toBeNull()
@@ -79,13 +79,13 @@ describe("parseServerPort", () => {
   })
 
   it("accepts complete Windows startup lines", () => {
-    expect(parseServerPort("kilo server listening on http://127.0.0.1:43123\r\n", true)).toBe(43123)
+    expect(parseServerPort("tavern server listening on http://127.0.0.1:43123\r\n", true)).toBe(43123)
   })
 })
 
 describe("scanServerPort", () => {
   it("detects startup announcements split across stdout chunks", () => {
-    const first = scanServerPort("", "kilo server listening on http://127.0.", 1024)
+    const first = scanServerPort("", "tavern server listening on http://127.0.", 1024)
     const second = scanServerPort(first.output, "0.1:43123\n", 1024)
 
     expect(first.port).toBeNull()
@@ -93,7 +93,7 @@ describe("scanServerPort", () => {
   })
 
   it("waits for split port digits before resolving startup", () => {
-    const first = scanServerPort("", "kilo server listening on http://127.0.0.1:43", 1024)
+    const first = scanServerPort("", "tavern server listening on http://127.0.0.1:43", 1024)
     const second = scanServerPort(first.output, "123\n", 1024)
 
     expect(first.port).toBeNull()
@@ -101,7 +101,7 @@ describe("scanServerPort", () => {
   })
 
   it("preserves startup announcements followed by oversized stdout chunks", () => {
-    const chunk = `kilo server listening on http://127.0.0.1:43123\n${"x".repeat(1024)}`
+    const chunk = `tavern server listening on http://127.0.0.1:43123\n${"x".repeat(1024)}`
     const state = scanServerPort("", chunk, 1024)
 
     expect(state.port).toBe(43123)
@@ -111,32 +111,32 @@ describe("scanServerPort", () => {
 
 describe("cli tree-sitter resources", () => {
   it("resolves resources next to the VS Code bundled CLI", () => {
-    const root = "/Users/test/.vscode/extensions/kilocode.kilo-code-7.2.50-darwin-arm64"
-    const bin = `${root}/bin/kilo`
+    const root = "/Users/test/.vscode/extensions/taverncode.tavern-code-7.2.50-darwin-arm64"
+    const bin = `${root}/bin/tavern`
 
     expect(treeSitterDirForBinary(bin)).toBe(`${root}/bin/tree-sitter`)
     expect(treeSitterDirForExtension(root)).toBe(`${root}/bin/tree-sitter`)
-    expect(kiloSandboxWorkerForBinary(bin)).toBe(`${root}/bin/kilo-sandbox-mutation-worker.js`)
+    expect(kiloSandboxWorkerForBinary(bin)).toBe(`${root}/bin/tavern-sandbox-mutation-worker.js`)
     expect(resolveTreeSitterEnv(root)).toEqual({ KILO_TREE_SITTER_WASM_DIR: `${root}/bin/tree-sitter` })
   })
 
   it("resolves resources next to a Windows packaged CLI", () => {
-    const root = String.raw`C:\Users\test\.vscode\extensions\kilocode.kilo-code-7.2.50-win32-x64`
-    const bin = String.raw`${root}\bin\kilo.exe`
+    const root = String.raw`C:\Users\test\.vscode\extensions\taverncode.tavern-code-7.2.50-win32-x64`
+    const bin = String.raw`${root}\bin\tavern.exe`
 
     expect(treeSitterDirForBinary(bin)).toBe(String.raw`${root}\bin\tree-sitter`)
     expect(treeSitterDirForExtension(root)).toBe(String.raw`${root}\bin\tree-sitter`)
-    expect(kiloSandboxWorkerForBinary(bin)).toBe(String.raw`${root}\bin\kilo-sandbox-mutation-worker.js`)
+    expect(kiloSandboxWorkerForBinary(bin)).toBe(String.raw`${root}\bin\tavern-sandbox-mutation-worker.js`)
     expect(resolveTreeSitterEnv(root)).toEqual({
       KILO_TREE_SITTER_WASM_DIR: String.raw`${root}\bin\tree-sitter`,
     })
   })
 
-  it("copies the Kilo sandbox worker with the packaged CLI binary", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-sandbox-worker-"))
+  it("copies the Tavern sandbox worker with the packaged CLI binary", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-sandbox-worker-"))
     try {
-      const source = path.join(root, "dist", "@kilocode", "cli-darwin-arm64", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
+      const source = path.join(root, "dist", "@taverncode", "cli-darwin-arm64", "bin", "tavern")
+      const target = path.join(root, "extension", "bin", "tavern")
       await fs.mkdir(path.dirname(source), { recursive: true })
       await fs.mkdir(path.dirname(target), { recursive: true })
       await fs.writeFile(kiloSandboxWorkerForBinary(source), "worker")
@@ -150,10 +150,10 @@ describe("cli tree-sitter resources", () => {
   })
 
   it("copies runtime and language WASMs with the packaged CLI binary", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-tree-sitter-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-tree-sitter-"))
     try {
-      const source = path.join(root, "dist", "@kilocode", "cli-darwin-arm64", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
+      const source = path.join(root, "dist", "@taverncode", "cli-darwin-arm64", "bin", "tavern")
+      const target = path.join(root, "extension", "bin", "tavern")
       const dir = treeSitterDirForBinary(source)
 
       await fs.mkdir(dir, { recursive: true })
@@ -175,15 +175,15 @@ describe("cli tree-sitter resources", () => {
   })
 
   it("copies the Linux sandbox helper and license resources", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-sandbox-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-sandbox-"))
     try {
-      const source = path.join(root, "dist", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
+      const source = path.join(root, "dist", "bin", "tavern")
+      const target = path.join(root, "extension", "bin", "tavern")
       const helper = path.join(path.dirname(source), "bwrap")
       const license = path.join(path.dirname(source), "licenses", "bubblewrap", "COPYING")
       const notice = path.join(path.dirname(license), "NOTICE")
-      const relay = path.join(path.dirname(source), "kilo-sandbox-network-relay.js")
-      const seccomp = path.join(path.dirname(source), "kilo-sandbox-seccomp")
+      const relay = path.join(path.dirname(source), "tavern-sandbox-network-relay.js")
+      const seccomp = path.join(path.dirname(source), "tavern-sandbox-seccomp")
       const runtimeLicense = path.join(path.dirname(source), "licenses", "sandbox-runtime", "LICENSE")
 
       await fs.mkdir(path.dirname(license), { recursive: true })
@@ -209,8 +209,8 @@ describe("cli tree-sitter resources", () => {
       expect(await fs.readFile(path.join(path.dirname(target), "licenses", "bubblewrap", "NOTICE"), "utf8")).toBe(
         "SPDX-License-Identifier: LGPL-2.0-or-later",
       )
-      expect(await fs.readFile(path.join(path.dirname(target), "kilo-sandbox-network-relay.js"), "utf8")).toBe("relay")
-      const copiedSeccomp = path.join(path.dirname(target), "kilo-sandbox-seccomp")
+      expect(await fs.readFile(path.join(path.dirname(target), "tavern-sandbox-network-relay.js"), "utf8")).toBe("relay")
+      const copiedSeccomp = path.join(path.dirname(target), "tavern-sandbox-seccomp")
       expect(await fs.readFile(copiedSeccomp, "utf8")).toBe("seccomp")
       expect((await fs.stat(copiedSeccomp)).mode & 0o111).not.toBe(0)
       expect(await fs.readFile(path.join(path.dirname(target), "licenses", "sandbox-runtime", "LICENSE"), "utf8")).toBe(
@@ -222,12 +222,12 @@ describe("cli tree-sitter resources", () => {
   })
 
   it("copies seccomp licensing when bundled Bubblewrap is omitted", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-seccomp-license-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-seccomp-license-"))
     try {
-      const source = path.join(root, "dist", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
-      const relay = path.join(path.dirname(source), "kilo-sandbox-network-relay.js")
-      const seccomp = path.join(path.dirname(source), "kilo-sandbox-seccomp")
+      const source = path.join(root, "dist", "bin", "tavern")
+      const target = path.join(root, "extension", "bin", "tavern")
+      const relay = path.join(path.dirname(source), "tavern-sandbox-network-relay.js")
+      const seccomp = path.join(path.dirname(source), "tavern-sandbox-seccomp")
       const license = path.join(path.dirname(source), "licenses", "sandbox-runtime", "LICENSE")
 
       await fs.mkdir(path.dirname(license), { recursive: true })
@@ -240,8 +240,8 @@ describe("cli tree-sitter resources", () => {
 
       await copySandboxResources(source, target)
 
-      expect(await fs.readFile(path.join(path.dirname(target), "kilo-sandbox-network-relay.js"), "utf8")).toBe("relay")
-      expect(await fs.readFile(path.join(path.dirname(target), "kilo-sandbox-seccomp"), "utf8")).toBe("seccomp")
+      expect(await fs.readFile(path.join(path.dirname(target), "tavern-sandbox-network-relay.js"), "utf8")).toBe("relay")
+      expect(await fs.readFile(path.join(path.dirname(target), "tavern-sandbox-seccomp"), "utf8")).toBe("seccomp")
       expect(await fs.readFile(path.join(path.dirname(target), "licenses", "sandbox-runtime", "LICENSE"), "utf8")).toBe(
         "Apache-2.0",
       )
@@ -251,10 +251,10 @@ describe("cli tree-sitter resources", () => {
   })
 
   it("removes stale sandbox resources when the source has none", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-vscode-sandbox-stale-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-vscode-sandbox-stale-"))
     try {
-      const source = path.join(root, "dist", "bin", "kilo")
-      const target = path.join(root, "extension", "bin", "kilo")
+      const source = path.join(root, "dist", "bin", "tavern")
+      const target = path.join(root, "extension", "bin", "tavern")
       const helper = path.join(path.dirname(target), "bwrap")
       const license = path.join(path.dirname(target), "licenses", "bubblewrap", "COPYING")
 
@@ -297,9 +297,9 @@ describe("toErrorMessage", () => {
   })
 
   it("strips ANSI codes before matching Error:", () => {
-    const ansiError = "\x1b[91m\x1b[1mError: \x1b[0mConfig file at /path/kilo.json is not valid JSON(C):"
+    const ansiError = "\x1b[91m\x1b[1mError: \x1b[0mConfig file at /path/tavern.json is not valid JSON(C):"
     const result = toErrorMessage("startup failed", [ansiError])
-    expect(result.userMessage).toBe("Config file at /path/kilo.json is not valid JSON(C):")
+    expect(result.userMessage).toBe("Config file at /path/tavern.json is not valid JSON(C):")
   })
 
   it("finds Error: line anywhere, not just the last line", () => {
@@ -328,8 +328,8 @@ describe("toErrorMessage", () => {
   })
 
   it("includes CLI path in userDetails when provided", () => {
-    const result = toErrorMessage("startup failed", [], "/usr/local/bin/kilo")
-    expect(result.userDetails).toContain("CLI path: /usr/local/bin/kilo")
+    const result = toErrorMessage("startup failed", [], "/usr/local/bin/tavern")
+    expect(result.userDetails).toContain("CLI path: /usr/local/bin/tavern")
   })
 
   it("does not include CLI path in userDetails when not provided", () => {
@@ -348,12 +348,12 @@ describe("toErrorMessage", () => {
       "Code: UNKNOWN",
       "Errno: -86",
       "Syscall: spawn",
-      "Path: /path/to/bin/kilo",
+      "Path: /path/to/bin/tavern",
       'Spawn args: ["serve","--port","0"]',
     ]
-    const result = toErrorMessage("Failed to spawn CLI binary (UNKNOWN)", spawnLines, "/path/to/bin/kilo")
+    const result = toErrorMessage("Failed to spawn CLI binary (UNKNOWN)", spawnLines, "/path/to/bin/tavern")
     expect(result.userMessage).toBe("spawn UNKNOWN")
-    expect(result.userDetails).toContain("CLI path: /path/to/bin/kilo")
+    expect(result.userDetails).toContain("CLI path: /path/to/bin/tavern")
     expect(result.userDetails).toContain("Failed to spawn CLI binary (UNKNOWN)")
     expect(result.userDetails).toContain("Syscall: spawn")
     expect(result.userDetails).toContain("Errno: -86")
@@ -363,10 +363,10 @@ describe("toErrorMessage", () => {
     const result = toErrorMessage(
       "CLI process terminated by signal SIGSEGV before server started",
       [],
-      "/path/to/bin/kilo",
+      "/path/to/bin/tavern",
     )
     expect(result.userMessage).toBe("CLI process terminated by signal SIGSEGV before server started")
-    expect(result.userDetails).toContain("CLI path: /path/to/bin/kilo")
+    expect(result.userDetails).toContain("CLI path: /path/to/bin/tavern")
     expect(result.userDetails).toContain("CLI process terminated by signal SIGSEGV before server started")
   })
 })

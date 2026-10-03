@@ -1,7 +1,7 @@
 import { Show, type Component } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { Tooltip, TooltipKeybind } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { Tooltip, TooltipKeybind } from "@taverncode/tavern-ui/tooltip"
 import { useLanguage } from "../src/context/language"
 
 interface Props {

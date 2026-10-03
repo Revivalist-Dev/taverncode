@@ -1,19 +1,19 @@
 import { describe, expect, it } from "bun:test"
-import { dismissNotification, fetchAndSendNotifications } from "../../src/kilo-provider/notifications"
+import { dismissNotification, fetchAndSendNotifications } from "../../src/tavern-provider/notifications"
 
-const KEY = "kilo.dismissedNotificationIds"
+const KEY = "tavern.dismissedNotificationIds"
 
 describe("KiloProvider local notifications", () => {
   it("passes local notifications through without requiring a profile", async () => {
     const items = [
       {
-        id: "kilo.local.claude-migration",
+        id: "tavern.local.claude-migration",
         title: "Claude Code migration",
         message: "Migration details",
         showIn: ["extension"],
       },
       {
-        id: "kilo.local.claude-migration-partial",
+        id: "tavern.local.claude-migration-partial",
         title: "Claude Code migration",
         message: "Some items were skipped",
         showIn: ["extension"],
@@ -39,7 +39,7 @@ describe("KiloProvider local notifications", () => {
         },
       },
       client: {
-        kilo: {
+        tavern: {
           notifications: async () => ({ data: items }),
         },
       },

@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
 
 const meta: Meta<typeof Spinner> = {
   title: "Components/Spinner",

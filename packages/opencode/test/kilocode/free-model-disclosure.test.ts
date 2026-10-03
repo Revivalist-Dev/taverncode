@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { FreeModelDisclosure } from "../../src/kilocode/components/free-model-disclosure"
+import { FreeModelDisclosure } from "../../src/taverncode/components/free-model-disclosure"
 
 describe("FreeModelDisclosure", () => {
   test("uses compact CLI labels", () => {

@@ -1,5 +1,5 @@
 import { test, expect, describe } from "bun:test"
-import { ModesMigrator } from "../../src/kilocode/modes-migrator"
+import { ModesMigrator } from "../../src/taverncode/modes-migrator"
 import { tmpdir } from "../fixture/fixture"
 import path from "path"
 
@@ -240,7 +240,7 @@ describe("ModesMigrator", () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
           await Bun.write(
-            path.join(dir, ".kilocodemodes"),
+            path.join(dir, ".taverncodemodes"),
             `customModes:
   - slug: code
     name: Code
@@ -280,9 +280,9 @@ describe("ModesMigrator", () => {
       - read`,
           )
 
-          // Create project .kilocodemodes (should win)
+          // Create project .taverncodemodes (should win)
           await Bun.write(
-            path.join(dir, ".kilocodemodes"),
+            path.join(dir, ".taverncodemodes"),
             `customModes:
   - slug: translate
     name: Translate Project
@@ -317,7 +317,7 @@ describe("ModesMigrator", () => {
       await using tmp = await tmpdir({
         init: async (dir) => {
           await Bun.write(
-            path.join(dir, ".kilocodemodes"),
+            path.join(dir, ".taverncodemodes"),
             `customModes:
   - slug: translate
     name: Translate

@@ -8,7 +8,7 @@ import { BackgroundJob } from "../../src/background/job"
 import { Bus } from "../../src/bus"
 import { SessionRunState } from "../../src/session/run-state"
 import { SessionStatus } from "../../src/session/status"
-import { SessionDrain } from "@/kilocode/session/drain"
+import { SessionDrain } from "@/taverncode/session/drain"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Config } from "../../src/config/config"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
@@ -17,7 +17,7 @@ import { Session } from "../../src/session/session"
 import { MessageV2 } from "../../src/session/message-v2"
 import type { SessionPrompt } from "../../src/session/prompt"
 import { MessageID, PartID, SessionID } from "../../src/session/schema"
-import { BackgroundProcess } from "../../src/kilocode/background-process"
+import { BackgroundProcess } from "../../src/taverncode/background-process"
 import { Shell } from "@opencode-ai/core/shell"
 import path from "path"
 import { ProviderV2 } from "@opencode-ai/core/provider"
@@ -26,8 +26,8 @@ import { Provider } from "../../src/provider/provider"
 import { Permission } from "../../src/permission"
 import { TaskTool, type TaskPromptOps } from "../../src/tool/task"
 import type { Context } from "../../src/tool/tool"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
-import * as SandboxPolicy from "../../src/kilocode/sandbox/policy"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
+import * as SandboxPolicy from "../../src/taverncode/sandbox/policy"
 import { Truncate } from "../../src/tool/truncate"
 import { ToolRegistry } from "../../src/tool/registry"
 import { disposeAllInstances, provideTmpdirInstance } from "../fixture/fixture"
@@ -147,7 +147,7 @@ function stubOps(opts?: { onPrompt?: (input: SessionPrompt.PromptInput) => void;
   }
 }
 
-describe("Kilo task nesting", () => {
+describe("Tavern task nesting", () => {
   it.live("treats a missing ancestor row as the root", () =>
     provideTmpdirInstance(() =>
       Effect.gen(function* () {
@@ -528,7 +528,7 @@ describe("Kilo task nesting", () => {
   )
 })
 
-describe("Kilo task drain", () => {
+describe("Tavern task drain", () => {
   function task(message: MessageV2.Assistant, ops: TaskPromptOps, metadata: Context["metadata"] = () => Effect.void) {
     return Effect.gen(function* () {
       const tool = yield* (yield* TaskTool).init()

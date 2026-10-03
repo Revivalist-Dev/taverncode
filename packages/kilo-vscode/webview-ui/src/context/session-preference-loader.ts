@@ -21,7 +21,7 @@ export function createPreferenceLoader(opts: {
       if (disposed || opts.ready() || !opts.connected()) return
       if (attempts === 4) {
         // Exhaustion is not hydration: a late saved preference must still apply.
-        console.warn("[Kilo New] Model preferences did not load after 4 attempts; waiting for a later retry")
+        console.warn("[Tavern New] Model preferences did not load after 4 attempts; waiting for a later retry")
         return
       }
       attempts++

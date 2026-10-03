@@ -9,7 +9,7 @@ import {
   clampNormal,
   type VimDoc,
   type VimKey,
-} from "@/kilocode/cli/cmd/tui/component/prompt/vim"
+} from "@/taverncode/cli/cmd/tui/component/prompt/vim"
 
 /** In-memory document implementing the engine's VimDoc contract. */
 class MockDoc implements VimDoc {

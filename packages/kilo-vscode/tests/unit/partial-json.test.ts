@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { partial } from "../../src/kilo-provider/partial-json"
+import { partial } from "../../src/tavern-provider/partial-json"
 
 const live = new Set(["content", "command"])
 

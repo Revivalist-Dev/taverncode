@@ -4,7 +4,7 @@ import {
   formatRateValue,
   hasMetrics,
   throughputLabel,
-} from "../../../src/kilocode/plugins/model-usage"
+} from "../../../src/taverncode/plugins/model-usage"
 
 const step = (metrics: { generation?: number }) => ({
   metrics: { source: "computed" as const, ...metrics },
@@ -24,7 +24,7 @@ const weightedStep = (overrides: {
   reasoning: overrides.reasoning ?? 0,
 })
 
-describe("kilocode.plugins.model-usage throughput helpers", () => {
+describe("taverncode.plugins.model-usage throughput helpers", () => {
   test("formatRateValue renders positive values with grouping", () => {
     expect(formatRateValue(412)).toBe("412 t/s")
     expect(formatRateValue(412.5)).toBe("412.5 t/s")

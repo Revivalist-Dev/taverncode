@@ -1,9 +1,9 @@
 ---
-title: "Using Fireworks AI with Kilo Code | Fast Inference"
-description: "Run open-source and proprietary models on Fireworks AI's high-performance platform in Kilo Code. Setup guide for VS Code and the CLI."
+title: "Using Fireworks AI with Tavern Code | Fast Inference"
+description: "Run open-source and proprietary models on Fireworks AI's high-performance platform in Tavern Code. Setup guide for VS Code and the CLI."
 ---
 
-# Using Fireworks AI With Kilo Code
+# Using Fireworks AI With Tavern Code
 
 Fireworks AI is a high-performance platform for running AI models that offers fast access to a wide range of open-source and proprietary language models. Built for speed and reliability, Fireworks AI provides both serverless and dedicated deployment options with OpenAI-compatible APIs.
 
@@ -13,22 +13,22 @@ Fireworks AI is a high-performance platform for running AI models that offers fa
 
 1. **Sign Up/Sign In:** Go to [Fireworks AI](https://fireworks.ai/) and create an account or sign in.
 2. **Navigate to API Keys:** After logging in, go to the [API Keys page](https://app.fireworks.ai/settings/users/api-keys) in the account settings.
-3. **Create a Key:** Click "Create API key" and give your key a descriptive name (e.g., "Kilo Code").
+3. **Create a Key:** Click "Create API key" and give your key a descriptive name (e.g., "Tavern Code").
 4. **Copy the Key:** Copy the API key _immediately_ and store it securely. You will not be able to see it again.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Fireworks AI and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -36,7 +36,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export FIREWORKS_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

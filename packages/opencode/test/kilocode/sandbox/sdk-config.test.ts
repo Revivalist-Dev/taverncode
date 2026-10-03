@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
-import type { Config as ConfigV1 } from "@kilocode/sdk"
-import type { Config as ConfigV2 } from "@kilocode/sdk/v2"
+import type { Config as ConfigV1 } from "@taverncode/sdk"
+import type { Config as ConfigV2 } from "@taverncode/sdk/v2"
 
 const value = {
   sandbox: {

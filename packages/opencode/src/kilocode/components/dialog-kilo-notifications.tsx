@@ -1,7 +1,7 @@
 /**
- * Kilo Notifications Dialog
+ * Tavern Notifications Dialog
  *
- * Displays all notifications from Kilo API in a scrollable dialog.
+ * Displays all notifications from Tavern API in a scrollable dialog.
  * Each notification shows title, message, and clickable action link.
  */
 
@@ -11,7 +11,7 @@ import { useTheme } from "@tui/context/theme"
 import { useDialog } from "@tui/ui/dialog"
 import { Link } from "@tui/ui/link"
 import { TextAttributes } from "@opentui/core"
-import type { KilocodeNotification } from "@kilocode/kilo-gateway"
+import type { KilocodeNotification } from "@taverncode/tavern-gateway"
 
 interface DialogKiloNotificationsProps {
   notifications: KilocodeNotification[]

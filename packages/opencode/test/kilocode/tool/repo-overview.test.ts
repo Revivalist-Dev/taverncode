@@ -9,7 +9,7 @@ import { Git } from "@/git"
 import { Global } from "@opencode-ai/core/global"
 import { MessageID, SessionID } from "@/session/schema"
 import { Truncate } from "@/tool/truncate"
-import { RepoOverviewTool } from "@/kilocode/tool/repo-overview"
+import { RepoOverviewTool } from "@/taverncode/tool/repo-overview"
 import { disposeAllInstances, provideTmpdirInstance, tmpdirScoped } from "../../fixture/fixture"
 import { testEffect } from "../../lib/effect"
 

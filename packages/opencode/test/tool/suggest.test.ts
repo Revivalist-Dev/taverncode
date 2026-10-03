@@ -1,2 +1,2 @@
-// kilocode_change - new file
-// Moved to test/kilocode/suggestion/tool.test.ts.
+// taverncode_change - new file
+// Moved to test/taverncode/suggestion/tool.test.ts.

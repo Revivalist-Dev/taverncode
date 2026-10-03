@@ -27,7 +27,7 @@ async function main() {
   const kiloVersion = await getCurrentKiloVersion()
 
   console.log()
-  success(`Current Kilo version: ${kiloVersion}`)
+  success(`Current Tavern version: ${kiloVersion}`)
   console.log()
 
   info("Available upstream versions (newest first):")

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js"
-import { probe } from "@/kilocode/mcp/sse-probe"
+import { probe } from "@/taverncode/mcp/sse-probe"
 
 const get = (headers: Record<string, string>, status = 200) =>
   new Response("<html>not an event stream</html>", { status, headers })

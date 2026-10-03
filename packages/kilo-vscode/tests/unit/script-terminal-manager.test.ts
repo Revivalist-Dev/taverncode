@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { ScriptTerminalManager, type ScriptTerminalView } from "../../src/agent-manager/ScriptTerminalManager"
 import { buildScriptTerminalWsUrl } from "../../src/agent-manager/script-terminal-url"
 import { RunScriptManager, type RunStatus } from "../../src/agent-manager/run/manager"
@@ -212,7 +212,7 @@ describe("ScriptTerminalManager", () => {
     expect(url.searchParams.get("location[directory]")).toBe("/repo/worktree")
     expect(url.searchParams.get("cursor")).toBe("0")
     expect(url.searchParams.get("replayExited")).toBe("1")
-    expect(url.searchParams.get("auth_token")).toBe(Buffer.from("kilo:secret").toString("base64"))
+    expect(url.searchParams.get("auth_token")).toBe(Buffer.from("tavern:secret").toString("base64"))
   })
 
   it("finishes once on a natural exit and retains the replayable terminal", async () => {

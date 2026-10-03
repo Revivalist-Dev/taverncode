@@ -21,15 +21,15 @@ it("accepts all states, ignores invalid signals, and clears on expiry and dispos
     },
     (state) => states.push(state),
   )
-  const packet = (state: string, time = Date.now()) => `kilo;activity;1;${state};${time}`
+  const packet = (state: string, time = Date.now()) => `tavern;activity;1;${state};${time}`
   try {
     expect(handle("notify;hello")).toBe(false)
     for (const value of [
       packet("unknown"),
       packet("busy", Date.now() - 16_000),
       packet("busy", Date.now() + 6_000),
-      "kilo;activity;2;busy;1",
-      "kilo;activity;1;busy;NaN",
+      "tavern;activity;2;busy;1",
+      "tavern;activity;1;busy;NaN",
       `${packet("busy")};extra`,
     ]) {
       expect(handle(value)).toBe(true)

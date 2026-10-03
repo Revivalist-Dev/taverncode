@@ -1,15 +1,15 @@
 ---
 title: "Custom Subagents"
-description: "Create and configure custom subagents in Kilo Code's CLI"
+description: "Create and configure custom subagents in Tavern Code's CLI"
 platform: new
 ---
 
 # Custom Subagents
 
-Kilo Code's CLI supports **custom subagents** — specialized AI assistants that can be invoked by primary agents or manually via `@` mentions. Subagents run in their own isolated sessions with tailored prompts, models, tool access, and permissions, enabling you to build purpose-built workflows for tasks like code review, documentation, security audits, and more.
+Tavern Code's CLI supports **custom subagents** — specialized AI assistants that can be invoked by primary agents or manually via `@` mentions. Subagents run in their own isolated sessions with tailored prompts, models, tool access, and permissions, enabling you to build purpose-built workflows for tasks like code review, documentation, security audits, and more.
 
 {% callout type="info" %}
-Custom subagents are currently configured through the config file (`kilo.jsonc`) or via markdown agent files. UI-based configuration is not yet available.
+Custom subagents are currently configured through the config file (`tavern.jsonc`) or via markdown agent files. UI-based configuration is not yet available.
 {% /callout %}
 
 ## What Are Subagents?
@@ -23,11 +23,11 @@ Key characteristics of subagents:
 - **Invocable by agents or users**: Primary agents invoke subagents via the Task tool, or you can invoke them manually with `@agent-name`
 - **Results flow back**: When a subagent completes, its result summary is returned to the parent agent
 
-When a primary agent invokes a subagent with `task`, the child is non-interactive: it cannot ask the end user a question directly. The child can still use its permitted tools and communicate through its result, shared files, or the [Kilo Swarm](/docs/getting-started/settings#kilo-swarm) board. Foreground tasks return before the parent continues. Background tasks use `background: true`, return immediately, and deliver their result to the parent when they finish.
+When a primary agent invokes a subagent with `task`, the child is non-interactive: it cannot ask the end user a question directly. The child can still use its permitted tools and communicate through its result, shared files, or the [Tavern Swarm](/docs/getting-started/settings#tavern-swarm) board. Foreground tasks return before the parent continues. Background tasks use `background: true`, return immediately, and deliver their result to the parent when they finish.
 
 ### Built-in Subagents
 
-Kilo Code includes two built-in subagents:
+Tavern Code includes two built-in subagents:
 
 | Name | Description |
 |---|---|
@@ -50,11 +50,11 @@ There are two ways to define custom subagents: through JSON configuration or mar
 
 ### Method 1: JSON Configuration
 
-Add agents to the `agent` section of your `kilo.jsonc` config file. Any key that doesn't match a built-in agent name creates a new custom agent.
+Add agents to the `agent` section of your `tavern.jsonc` config file. Any key that doesn't match a built-in agent name creates a new custom agent.
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "agent": {
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",
@@ -90,12 +90,12 @@ The file path is relative to the config file location, so this works for both gl
 
 Define agents as markdown files with YAML frontmatter. Place them in:
 
-- **Global**: `~/.config/kilo/agents/`
-- **Project-specific**: `.kilo/agents/`
+- **Global**: `~/.config/tavern/agents/`
+- **Project-specific**: `.tavern/agents/`
 
 The **filename** (without `.md`) becomes the agent name.
 
-If `.kilo/agents/` is a symlink to a directory outside the project, allow that exact source in your global `~/.config/kilo/kilo.jsonc`:
+If `.tavern/agents/` is a symlink to a directory outside the project, allow that exact source in your global `~/.config/tavern/tavern.jsonc`:
 
 ```jsonc
 {
@@ -139,7 +139,7 @@ Markdown files are often preferred for subagents with longer prompts because the
 Create agents interactively using the CLI:
 
 ```bash
-kilo agent create
+tavern agent create
 ```
 
 This command will:
@@ -154,8 +154,8 @@ This command will:
 You can also run it non-interactively:
 
 ```bash
-kilo agent create \
-  --path .kilo \
+tavern agent create \
+  --path .tavern \
   --description "Reviews code for security vulnerabilities" \
   --mode subagent \
   --tools "read,grep,glob"
@@ -251,7 +251,7 @@ This creates a subtask that runs in the subagent's isolated context with its con
 To see all available agents (both built-in and custom):
 
 ```bash
-kilo agent list
+tavern agent list
 ```
 
 This displays each agent's name, mode, and permission configuration.
@@ -262,17 +262,17 @@ When a subagent is delegated from a session in the VS Code extension, open its t
 
 Inspector tabs are scoped to the current project and parent session. When you switch worktrees or sessions, Agent Manager shows the tabs for that project and parent only, so child transcripts from another session are not mixed into the current view.
 
-This differs from the sidebar and Kilo editor subagent tabs. In those surfaces, **Open in Tab** opens the child transcript as a separate read-only VS Code editor tab. Agent Manager keeps the transcript inside its right-hand inspector alongside the session's other panels. In both surfaces, the child session is a delegated transcript, not a new prompt you can send messages to directly.
+This differs from the sidebar and Tavern editor subagent tabs. In those surfaces, **Open in Tab** opens the child transcript as a separate read-only VS Code editor tab. Agent Manager keeps the transcript inside its right-hand inspector alongside the session's other panels. In both surfaces, the child session is a delegated transcript, not a new prompt you can send messages to directly.
 
 ## Configuration Precedence
 
 Agent configurations are merged from multiple sources. Later sources override earlier ones:
 
 1. **Built-in agent defaults** (native agents defined in the codebase)
-2. **Global config** (`~/.config/kilo/config.json`)
-3. **Project config** (`kilo.jsonc` in the project root)
-4. **Global agent markdown files** (`~/.config/kilo/agents/*.md`)
-5. **Project agent markdown files** (`.kilo/agents/*.md`)
+2. **Global config** (`~/.config/tavern/config.json`)
+3. **Project config** (`tavern.jsonc` in the project root)
+4. **Global agent markdown files** (`~/.config/tavern/agents/*.md`)
+5. **Project agent markdown files** (`.tavern/agents/*.md`)
 
 When overriding a built-in agent, properties are merged — only the fields you specify are overridden. When creating a new custom agent, unspecified fields use sensible defaults (`mode: "all"`, full permissions inherited from global config).
 

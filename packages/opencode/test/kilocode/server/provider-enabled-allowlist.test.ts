@@ -13,7 +13,7 @@ const it = testEffectShared(Layer.merge(AppNodeBuilder.build(ModelCache.node), A
 
 function request(path: string, dir: string) {
   return Effect.promise(async () => {
-    const result = await Server.Default().app.request(path, { headers: { "x-kilo-directory": dir } })
+    const result = await Server.Default().app.request(path, { headers: { "x-tavern-directory": dir } })
     const text = await result.text()
     return { status: result.status, text, body: JSON.parse(text) as unknown }
   })
@@ -31,8 +31,8 @@ const config = (enabled: string[]) => ({
   lsp: false,
   enabled_providers: enabled,
   provider: {
-    ...(enabled.includes("kilo")
-      ? { kilo: { models: { smoke: { name: "Smoke", limit: { context: 32000, output: 1000 } } } } }
+    ...(enabled.includes("tavern")
+      ? { tavern: { models: { smoke: { name: "Smoke", limit: { context: 32000, output: 1000 } } } } }
       : {}),
     external: {
       npm: "@ai-sdk/openai-compatible",
@@ -51,7 +51,7 @@ function stagedAuth() {
         KILO_ORG_ID: process.env.KILO_ORG_ID,
       }
       process.env.KILO_AUTH_CONTENT = JSON.stringify({
-        kilo: { type: "oauth", access: "staged-token", refresh: "staged-refresh", expires: 0, accountId: "staged-org" },
+        tavern: { type: "oauth", access: "staged-token", refresh: "staged-refresh", expires: 0, accountId: "staged-org" },
       })
       delete process.env.KILO_API_KEY
       delete process.env.KILO_ORG_ID
@@ -75,7 +75,7 @@ function offline() {
       globalThis.fetch = Object.assign(
         async (input: RequestInfo | URL, init?: RequestInit) => {
           const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url)
-          if (url.hostname.endsWith("kilo.ai") || url.hostname.endsWith("apertis.ai"))
+          if (url.hostname.endsWith("tavern.ai") || url.hostname.endsWith("apertis.ai"))
             return new Response(null, { status: 401 })
           return previous.fetch(input, init)
         },
@@ -98,7 +98,7 @@ function workspace(enabled: string[]) {
   )
 }
 
-it.live("excludes Kilo while staged Kilo auth exists", () =>
+it.live("excludes Tavern while staged Tavern auth exists", () =>
   Effect.gen(function* () {
     yield* stagedAuth()
     yield* offline()
@@ -114,17 +114,17 @@ it.live("excludes Kilo while staged Kilo auth exists", () =>
   }),
 )
 
-it.live("still loads enabled Kilo with staged Kilo auth", () =>
+it.live("still loads enabled Tavern with staged Tavern auth", () =>
   Effect.gen(function* () {
     yield* stagedAuth()
     yield* offline()
-    const tmp = yield* workspace(["external", "kilo"])
+    const tmp = yield* workspace(["external", "tavern"])
     const all = yield* request("/provider", tmp.path)
     const connected = yield* request("/config/providers", tmp.path)
     expect(all.status).toBe(200)
     expect(connected.status).toBe(200)
-    expect(ids(all.body, "all").sort()).toEqual(["external", "kilo"])
-    expect(ids(connected.body, "providers").sort()).toEqual(["external", "kilo"])
+    expect(ids(all.body, "all").sort()).toEqual(["external", "tavern"])
+    expect(ids(connected.body, "providers").sort()).toEqual(["external", "tavern"])
     expect(all.text).not.toContain("staged-token")
     expect(connected.text).not.toContain("staged-token")
   }),

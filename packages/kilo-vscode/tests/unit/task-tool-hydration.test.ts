@@ -4,7 +4,7 @@ import {
   resetToolOpenState,
   toolOpenKey,
   writeToolOpen,
-} from "../../../kilo-ui/src/components/tool-open-state"
+} from "../../../tavern-ui/src/components/tool-open-state"
 import {
   taskAutoOpen,
   taskBackground,

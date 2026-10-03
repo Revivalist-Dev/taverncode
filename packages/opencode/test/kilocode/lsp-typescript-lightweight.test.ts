@@ -1,19 +1,19 @@
 // Tests for the lightweight TypeScript diagnostic mode.
 // These are regression guards — if an upstream OpenCode merge overwrites the
-// kilocode integration in shared LSP files, these tests catch it.
+// taverncode integration in shared LSP files, these tests catch it.
 
 import { describe, test, expect, spyOn, afterEach } from "bun:test"
 import path from "path"
 import { utimes } from "node:fs/promises"
 import { DiagnosticSeverity } from "vscode-languageserver-types"
 import * as LSPServer from "../../src/lsp/server"
-import { TsClient } from "../../src/kilocode/ts-client"
-import { TsCheck } from "../../src/kilocode/ts-check"
+import { TsClient } from "../../src/taverncode/ts-client"
+import { TsCheck } from "../../src/taverncode/ts-check"
 import { GlobalBus } from "../../src/bus/global"
 import type { LSPClient } from "../../src/lsp/client"
 import { withTimeout } from "../../src/util/timeout"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import type { InstanceContext } from "../../src/kilocode/instance"
+import type { InstanceContext } from "../../src/taverncode/instance"
 import { disposeAllInstances, tmpdir } from "../fixture/fixture"
 import type { RuntimeFlags } from "../../src/effect/runtime-flags"
 
@@ -294,7 +294,7 @@ describe("typescript lightweight mode", () => {
   })
 
   describe("source integration guards", () => {
-    // These tests verify that kilocode integration code exists in shared
+    // These tests verify that taverncode integration code exists in shared
     // files. If an upstream merge strips the integration blocks, these fail.
 
     test("lsp/server.ts gates Typescript.spawn behind flag", async () => {

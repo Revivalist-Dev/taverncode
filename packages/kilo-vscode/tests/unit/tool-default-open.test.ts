@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { Part, ToolPart } from "@kilocode/sdk/v2"
+import type { Part, ToolPart } from "@taverncode/sdk/v2"
 import { toolDefaultOpen } from "../../webview-ui/src/components/chat/tool-default-open"
 
 function tool(name: string) {

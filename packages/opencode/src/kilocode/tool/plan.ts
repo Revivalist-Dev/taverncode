@@ -2,7 +2,7 @@ import { Effect, Schema } from "effect"
 import * as Tool from "@/tool/tool"
 import { InstanceState } from "@/effect/instance-state"
 import { Session } from "@/session/session"
-import { PlanFile } from "@/kilocode/plan-file"
+import { PlanFile } from "@/taverncode/plan-file"
 import EXIT_DESCRIPTION from "@/tool/plan-exit.txt"
 
 export const Parameters = Schema.Struct({

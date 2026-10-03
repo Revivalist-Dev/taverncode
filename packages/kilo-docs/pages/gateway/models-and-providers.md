@@ -1,11 +1,11 @@
 ---
 title: "Models & Providers"
-description: "Learn about the AI models available through the Kilo AI Gateway, including model IDs and how to use them."
+description: "Learn about the AI models available through the Tavern AI Gateway, including model IDs and how to use them."
 ---
 
 # Models & Providers
 
-The Kilo AI Gateway provides access to hundreds of AI models through a single unified API. You can switch between models by changing the model ID string -- no code changes required.
+The Tavern AI Gateway provides access to hundreds of AI models through a single unified API. You can switch between models by changing the model ID string -- no code changes required.
 
 ## Specifying a model
 
@@ -13,7 +13,7 @@ Models are identified using the format `provider/model-name`. Pass this as the `
 
 ```typescript
 const result = streamText({
-  model: kilo.chat("anthropic/claude-sonnet-4.6"),
+  model: tavern.chat("anthropic/claude-sonnet-4.6"),
   prompt: "Hello!",
 })
 ```
@@ -32,7 +32,7 @@ Or in a raw API request:
 You can browse the full list of available models via the models endpoint:
 
 ```
-GET https://api.kilo.ai/api/gateway/models
+GET https://api.tavern.ai/api/gateway/models
 ```
 
 This returns model information including pricing, context window, and supported features. No authentication is required.
@@ -56,7 +56,7 @@ This returns model information including pricing, context window, and supported 
 
 ### Free models
 
-Several models are available at no cost, subject to rate limits. Availability changes; check the [live model catalog](https://kilo.ai/models) for current free options and model IDs.
+Several models are available at no cost, subject to rate limits. Availability changes; check the [live model catalog](https://tavern.ai/models) for current free options and model IDs.
 
 Free models are available to both authenticated and anonymous users. Anonymous users are rate-limited to 200 requests per hour per IP address.
 
@@ -66,13 +66,13 @@ For NVIDIA free endpoints (Super/Ultra/etc): Trial use only - do not submit pers
 
 ## Auto models
 
-Auto virtual models select an underlying model using tier-specific routing. Frontier uses the `x-kilocode-mode` request header. Efficient classifies task difficulty in session context and falls back to a fixed baseline model, Free uses deterministic affinity across available candidates, and Small uses account balance.
+Auto virtual models select an underlying model using tier-specific routing. Frontier uses the `x-taverncode-mode` request header. Efficient classifies task difficulty in session context and falls back to a fixed baseline model, Free uses deterministic affinity across available candidates, and Small uses account balance.
 
 {% callout type="info" title="Underlying models can change" %}
-The mappings below reflect the current routing. The underlying models behind each `kilo-auto/*` tier are updated server-side as better options become available or as providers change pricing and availability — the tier IDs themselves remain stable.
+The mappings below reflect the current routing. The underlying models behind each `tavern-auto/*` tier are updated server-side as better options become available or as providers change pricing and availability — the tier IDs themselves remain stable.
 {% /callout %}
 
-### `kilo-auto/frontier`
+### `tavern-auto/frontier`
 
 Highest performance and capability for any task. Frontier requests are sent with medium reasoning effort and medium verbosity.
 
@@ -82,11 +82,11 @@ Highest performance and capability for any task. Frontier requests are sent with
 | `build`, `explore`, `code` | `anthropic/claude-sonnet-4.6` |
 | Default (no / unknown mode) | `anthropic/claude-sonnet-4.6` |
 
-### `kilo-auto/efficient`
+### `tavern-auto/efficient`
 
 Session-aware routing that classifies each request by difficulty and routes to the cheapest model proven accurate enough for the task. When no confident routing decision can be made, requests fall back to `z-ai/glm-5.3-flash`.
 
-### `kilo-auto/free`
+### `tavern-auto/free`
 
 Free with limited capability. No credits required. The resolved model is selected dynamically per session from a curated set of available free models; the mapping updates server-side as free model availability shifts.
 
@@ -94,7 +94,7 @@ Free with limited capability. No credits required. The resolved model is selecte
 Auto Free may route your requests to providers that log prompts and outputs and use them to improve their services. Do not submit personal or confidential data when using Auto Free. In particular, it may route to NVIDIA's free endpoints (see NVIDIA Trial Terms of Service above).
 {% /callout %}
 
-### `kilo-auto/small`
+### `tavern-auto/small`
 
 Automatically routes to a small, fast model for lightweight background tasks (session titles, commit messages, summaries).
 
@@ -107,7 +107,7 @@ Automatically routes to a small, fast model for lightweight background tasks (se
 
 ```json
 {
-  "model": "kilo-auto/frontier",
+  "model": "tavern-auto/frontier",
   "messages": [{ "role": "user", "content": "Help me design a database schema" }]
 }
 ```
@@ -115,9 +115,9 @@ Automatically routes to a small, fast model for lightweight background tasks (se
 With the mode header:
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
-  -H "x-kilocode-mode: plan" \
+  -H "x-taverncode-mode: plan" \
   -H "Content-Type: application/json" \
-  -d '{"model": "kilo-auto/efficient", "messages": [{"role": "user", "content": "Design a database schema"}]}'
+  -d '{"model": "tavern-auto/efficient", "messages": [{"role": "user", "content": "Design a database schema"}]}'
 ```

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 
-const TAB_SYNC_EVENT = "kilo-tab-select"
+const TAB_SYNC_EVENT = "tavern-tab-select"
 
 function slugify(label: string) {
   return label

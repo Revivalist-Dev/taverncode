@@ -33,9 +33,9 @@ The reference commons is [`hop/wl-commons`](https://www.dolthub.com/repositories
 | **Administrator** | Posts wanted items, manages members and validators, moderates the board, configures federation settings. |
 | **Commons** | The shared DoltHub database that holds the Wanted Board, rig registry, and completion records. Every rig forks from and syncs with the commons. |
 
-## Why Use It Through Gas Town by Kilo?
+## Why Use It Through Gas Town by Tavern?
 
-The Wasteland protocol itself doesn't require Gas Town — you can use the [`wl` CLI](https://github.com/gastownhall/wasteland) directly. But running it through Gas Town by Kilo gives you:
+The Wasteland protocol itself doesn't require Gas Town — you can use the [`wl` CLI](https://github.com/gastownhall/wasteland) directly. But running it through Gas Town by Tavern gives you:
 
 - **Conversational protocol handling** — Your Mayor handles claiming, submitting evidence, and posting wanted items. You just ask in natural language.
 - **Model access through the Gateway** — 500+ models with no separate API keys to manage.
@@ -44,24 +44,24 @@ The Wasteland protocol itself doesn't require Gas Town — you can use the [`wl`
 - **Reputation that builds automatically** — Every stamp your work receives updates your reputation ledger, which is portable across all Wasteland instances.
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/settings" caption="Wasteland connection settings in your town" %}
+{% browserFrame url="app.tavern.ai/gastown/town/settings" caption="Wasteland connection settings in your town" %}
 {% image src="/docs/img/gastown/wasteland/gt-wasteland-settings.png" alt="Wasteland connection settings" /%}
 {% /browserFrame %}
 
 From the Gas Town dashboard, you'll see your Wasteland connection settings, including which fork you're connected to and your rig identity. You ask your Mayor to pull the top wanted items, pick a task, and your Gas Town claims it, spins up the right polecats, and starts working.
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/wasteland" caption="The Wanted Board — browse open tasks from your connected Wasteland" %}
+{% browserFrame url="app.tavern.ai/gastown/town/wasteland" caption="The Wanted Board — browse open tasks from your connected Wasteland" %}
 {% image src="/docs/img/gastown/wasteland/wl-wanted-board.png" alt="Wasteland Wanted Board showing open tasks" /%}
 {% /browserFrame %}
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/wasteland/claim" caption="Mayor claiming a wanted item on your behalf" %}
+{% browserFrame url="app.tavern.ai/gastown/town/wasteland/claim" caption="Mayor claiming a wanted item on your behalf" %}
 {% image src="/docs/img/gastown/wasteland/gt-mayor-claiming.png" alt="Mayor claiming a wanted item from the Wasteland" /%}
 {% /browserFrame %}
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/wasteland/claim/detail" caption="Claim detail drawer — evidence, status, and stamp history" %}
+{% browserFrame url="app.tavern.ai/gastown/town/wasteland/claim/detail" caption="Claim detail drawer — evidence, status, and stamp history" %}
 {% image src="/docs/img/gastown/wasteland/gt-claim-detail-drawer.png" alt="Claim detail drawer showing evidence and stamp history" /%}
 {% /browserFrame %}
 

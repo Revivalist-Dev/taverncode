@@ -11,7 +11,7 @@ import { expect, test, type Page } from "@playwright/test"
  * stay put.
  */
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "chat--chat-view-session-dock-stability"
 
 async function openStory(page: Page, motion = false) {

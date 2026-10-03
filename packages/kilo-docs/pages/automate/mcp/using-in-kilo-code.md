@@ -1,27 +1,27 @@
 ---
-title: "Using MCP in Kilo Code"
-description: "How to use MCP servers in Kilo Code"
+title: "Using MCP in Tavern Code"
+description: "How to use MCP servers in Tavern Code"
 ---
 
-# Using MCP in Kilo Code
+# Using MCP in Tavern Code
 
-Model Context Protocol (MCP) extends Kilo Code's capabilities by connecting to external tools and services. This guide covers everything you need to know about using MCP with Kilo Code.
+Model Context Protocol (MCP) extends Tavern Code's capabilities by connecting to external tools and services. This guide covers everything you need to know about using MCP with Tavern Code.
 
 ## Configuring MCP Servers
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-MCP server configurations are stored inside the main Kilo config file. There are two levels:
+MCP server configurations are stored inside the main Tavern config file. There are two levels:
 
-1. **Global Configuration**: `~/.config/kilo/kilo.jsonc` — applies to all projects.
-2. **Project-level Configuration**: `kilo.jsonc` in your project root, or `.kilo/kilo.jsonc` for a cleaner setup.
+1. **Global Configuration**: `~/.config/tavern/tavern.jsonc` — applies to all projects.
+2. **Project-level Configuration**: `tavern.jsonc` in your project root, or `.tavern/tavern.jsonc` for a cleaner setup.
 
 **Precedence**: Project-level configuration takes precedence over global configuration.
 
 ### Editing MCP Settings
 
-You can edit MCP settings from the Kilo Code settings UI:
+You can edit MCP settings from the Tavern Code settings UI:
 
 1. Click the {% codicon name="gear" /%} icon in the sidebar toolbar to open Settings.
 2. Click the `Agent Behaviour` tab on the left side.
@@ -29,11 +29,11 @@ You can edit MCP settings from the Kilo Code settings UI:
 
 From here you can add, edit, enable/disable, and delete MCP servers. Changes are written directly to the appropriate config file.
 
-If the UI cannot add a server, edit a Kilo config file directly and add the server under the top-level `mcp` key. For project-specific servers, edit `./kilo.json` or `./kilo.jsonc` if your project already has one; otherwise use `./.kilo/kilo.json` or `./.kilo/kilo.jsonc` for a cleaner setup. For servers you want in every workspace, use `~/.config/kilo/kilo.json` or `~/.config/kilo/kilo.jsonc`.
+If the UI cannot add a server, edit a Tavern config file directly and add the server under the top-level `mcp` key. For project-specific servers, edit `./tavern.json` or `./tavern.jsonc` if your project already has one; otherwise use `./.tavern/tavern.json` or `./.tavern/tavern.jsonc` for a cleaner setup. For servers you want in every workspace, use `~/.config/tavern/tavern.json` or `~/.config/tavern/tavern.jsonc`.
 
 ### Config Format
 
-MCP servers are configured under the `mcp` key in `kilo.jsonc`:
+MCP servers are configured under the `mcp` key in `tavern.jsonc`:
 
 **Local (STDIO) server:**
 
@@ -71,17 +71,17 @@ MCP servers are configured under the `mcp` key in `kilo.jsonc`:
 }
 ```
 
-Remote servers support OAuth 2.0 authentication. If the server supports it, Kilo Code will automatically start the OAuth flow when you connect. You can also disable OAuth with `"oauth": false`.
+Remote servers support OAuth 2.0 authentication. If the server supports it, Tavern Code will automatically start the OAuth flow when you connect. You can also disable OAuth with `"oauth": false`.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-The CLI accepts several config filenames. The recommended file is `kilo.json`:
+The CLI accepts several config filenames. The recommended file is `tavern.json`:
 
 | Scope | Recommended Path | Also supported |
 |---|---|---|
-| **Global** | `~/.config/kilo/kilo.json` | `kilo.jsonc`, `opencode.json`, `opencode.jsonc`, `config.json` |
-| **Project** | `./kilo.json` or `./.kilo/kilo.json` | `kilo.jsonc`, `opencode.jsonc`, `opencode.json` |
+| **Global** | `~/.config/tavern/tavern.json` | `tavern.jsonc`, `opencode.json`, `opencode.jsonc`, `config.json` |
+| **Project** | `./tavern.json` or `./.tavern/tavern.json` | `tavern.jsonc`, `opencode.jsonc`, `opencode.json` |
 
 {% /tab %}
 {% /tabs %}
@@ -120,7 +120,7 @@ You can disable a server by setting `enabled` to `false` without removing it fro
 MCP supports two main transport types:
 
 - **Local (STDIO)**: Servers run as a child process on your machine, communicating over stdin/stdout.
-- **Remote (HTTP/SSE)**: Servers hosted over HTTP/HTTPS. Kilo Code tries `StreamableHTTP` first, then falls back to `SSE` automatically.
+- **Remote (HTTP/SSE)**: Servers hosted over HTTP/HTTPS. Tavern Code tries `StreamableHTTP` first, then falls back to `SSE` automatically.
 
 For more details, see [STDIO & SSE Transports](server-transports).
 
@@ -270,11 +270,11 @@ The extension also supports the `{env:VARIABLE_NAME}` syntax in config files to 
 
 | Command | Description |
 |---|---|
-| `kilo mcp list` | List all configured MCP servers |
-| `kilo mcp add` | Add an MCP server |
-| `kilo mcp auth` | Authenticate with an MCP server |
-| `kilo mcp logout` | Log out from an MCP server |
-| `kilo mcp debug` | Debug an MCP server connection |
+| `tavern mcp list` | List all configured MCP servers |
+| `tavern mcp add` | Add an MCP server |
+| `tavern mcp auth` | Authenticate with an MCP server |
+| `tavern mcp logout` | Log out from an MCP server |
+| `tavern mcp debug` | Debug an MCP server connection |
 
 ### Enabling or Disabling a Server
 
@@ -294,7 +294,7 @@ You can also edit your config directly. Set `enabled` to `false` to disable a se
 }
 ```
 
-Run `kilo mcp list` to verify the server status.
+Run `tavern mcp list` to verify the server status.
 
 ### Environment Variables
 
@@ -341,7 +341,7 @@ MCP tool calls use the same permission system as built-in tools. Each MCP tool's
 
 **At runtime:** When an MCP tool is called, the Permission Dock shows an approval prompt. Click **Approve Always** to save an allow rule to your config so future calls to that tool are auto-approved.
 
-**In your config file:** Add the tool name (or a wildcard pattern) to the `permission` key in `kilo.jsonc`:
+**In your config file:** Add the tool name (or a wildcard pattern) to the `permission` key in `tavern.jsonc`:
 
 ```json
 {
@@ -494,30 +494,30 @@ Add the test MCP server for development:
 
 ## Finding and Installing MCP Servers
 
-Kilo Code does not come with any pre-installed MCP servers. You'll need to find and install them separately.
+Tavern Code does not come with any pre-installed MCP servers. You'll need to find and install them separately.
 
-- **Kilo Marketplace:** Browse community-contributed MCP server configurations and agent skills in the [Kilo Marketplace](https://github.com/Kilo-Org/kilo-marketplace). The marketplace includes ready-to-use configs for popular tools like Figma, Sentry, and more.
+- **Tavern Marketplace:** Browse community-contributed MCP server configurations and agent skills in the [Tavern Marketplace](https://github.com/Kilo-Org/tavern-marketplace). The marketplace includes ready-to-use configs for popular tools like Figma, Sentry, and more.
 - **Community Repositories:** Check for community-maintained lists of MCP servers on GitHub
-- **Ask Kilo Code:** You can ask Kilo Code to help you find or even create MCP servers
-- **Build Your Own:** Create custom MCP servers using the SDK to extend Kilo Code with your own tools
+- **Ask Tavern Code:** You can ask Tavern Code to help you find or even create MCP servers
+- **Build Your Own:** Create custom MCP servers using the SDK to extend Tavern Code with your own tools
 
 For full SDK documentation, visit the [MCP GitHub repository](https://github.com/modelcontextprotocol/).
 
 ## Using MCP Tools in Your Workflow
 
-After configuring an MCP server, Kilo Code will automatically detect available tools and resources. To use them:
+After configuring an MCP server, Tavern Code will automatically detect available tools and resources. To use them:
 
-1. Type your request in the Kilo Code chat interface
-2. Kilo Code will identify when an MCP tool can help with your task
+1. Type your request in the Tavern Code chat interface
+2. Tavern Code will identify when an MCP tool can help with your task
 3. Approve the tool use when prompted (or use auto-approval)
 
 Example: "Analyze the performance of my API" might use an MCP tool that tests API endpoints.
 
 ### Server instructions and resources
 
-When a connected MCP server provides instructions, Kilo adds them to the model context so the agent can follow the server's usage guidance. Kilo omits those instructions when every tool from that server is denied.
+When a connected MCP server provides instructions, Tavern adds them to the model context so the agent can follow the server's usage guidance. Tavern omits those instructions when every tool from that server is denied.
 
-Resource-capable servers also make the `list_mcp_resources`, `list_mcp_resource_templates`, and `read_mcp_resource` tools available to the agent. Resource templates describe parameterized URIs; the agent fills in a template, then reads the resulting resource URI. Resource listing and reads use Kilo's normal read approval flow.
+Resource-capable servers also make the `list_mcp_resources`, `list_mcp_resource_templates`, and `read_mcp_resource` tools available to the agent. Resource templates describe parameterized URIs; the agent fills in a template, then reads the resulting resource URI. Resource listing and reads use Tavern's normal read approval flow.
 
 ## Troubleshooting MCP Servers
 
@@ -532,8 +532,8 @@ Resource-capable servers also make the `list_mcp_resources`, `list_mcp_resource_
 {% /tab %}
 {% tab label="CLI" %}
 
-- **Server Not Responding:** Check if the server process is running. Use `kilo mcp debug <server-name>` to inspect the connection.
-- **Permission Errors:** Ensure API keys and credentials are set in your `kilo.jsonc` config or via `{env:VARIABLE_NAME}` references.
+- **Server Not Responding:** Check if the server process is running. Use `tavern mcp debug <server-name>` to inspect the connection.
+- **Permission Errors:** Ensure API keys and credentials are set in your `tavern.jsonc` config or via `{env:VARIABLE_NAME}` references.
 - **Tool Not Available:** Confirm the server is properly implementing the tool and it is not disabled (`"enabled": false`) in your config.
 - **Slow Performance:** Increase the `timeout` value for the specific MCP server in your config.
 

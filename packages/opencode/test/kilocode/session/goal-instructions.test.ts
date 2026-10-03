@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test"
-import { GoalInstructions } from "@/kilocode/session/goal/instructions"
-import backgroundProcess from "@/kilocode/tool/background-process.txt"
-import cancelWakeup from "@/kilocode/tool/cancel-wakeup.txt"
-import cronCreate from "@/kilocode/tool/cron-create.txt"
-import cronDelete from "@/kilocode/tool/cron-delete.txt"
-import cronList from "@/kilocode/tool/cron-list.txt"
-import scheduleWakeup from "@/kilocode/tool/schedule-wakeup.txt"
+import { GoalInstructions } from "@/taverncode/session/goal/instructions"
+import backgroundProcess from "@/taverncode/tool/background-process.txt"
+import cancelWakeup from "@/taverncode/tool/cancel-wakeup.txt"
+import cronCreate from "@/taverncode/tool/cron-create.txt"
+import cronDelete from "@/taverncode/tool/cron-delete.txt"
+import cronList from "@/taverncode/tool/cron-list.txt"
+import scheduleWakeup from "@/taverncode/tool/schedule-wakeup.txt"
 
 // A scheduled wait must read as a normal goal action that suspends the goal, not
 // as a blocker that ends it. These are the model-facing texts that say so.

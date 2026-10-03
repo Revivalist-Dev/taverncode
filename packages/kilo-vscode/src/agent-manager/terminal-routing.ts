@@ -14,7 +14,7 @@
  * callbacks so this module is trivially unit-testable with fakes.
  */
 
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { AgentManagerInMessage, AgentManagerOutMessage, TerminalFont, TerminalPlacement } from "./types"
 import { TerminalManager } from "./terminal-manager"
 
@@ -28,7 +28,7 @@ export interface TerminalRoutingDeps {
   getClient(): KiloClient
   /** Shared SDK client, connecting the CLI backend when needed. */
   getClientAsync(): Promise<KiloClient>
-  /** Loopback URL + basic-auth password for the running `kilo serve`. */
+  /** Loopback URL + basic-auth password for the running `tavern serve`. */
   getServerConfig(): ServerConfig | undefined
   /** Workspace root — used as cwd fallback when no worktree is selected (LOCAL). */
   getRoot(): string | undefined
@@ -175,7 +175,7 @@ export class TerminalRouter {
     const title = `Terminal ${ordinal}`
     try {
       // Join the shared backend connection instead of racing its synchronous
-      // client accessor when this is the first Kilo action in the window.
+      // client accessor when this is the first Tavern action in the window.
       await this.deps.getClientAsync()
       const created = await manager.create({ terminalId: createId, worktreeId, cwd, title, cols, rows })
       if (generation !== this.generation) {
@@ -262,13 +262,13 @@ export class TerminalRouter {
    * `username:password`. Browsers cannot set HTTP headers on
    * `new WebSocket(...)`, so query-param auth is the only option. Safe
    * because the server binds loopback-only and the password rotates on
-   * every `kilo serve` spawn.
+   * every `tavern serve` spawn.
    */
   private buildWsUrl(ptyID: string, cwd: string): string {
     const config = this.deps.getServerConfig()
     if (!config) throw new Error("Not connected to CLI backend")
     const base = config.baseUrl.replace(/^http/i, "ws")
-    const token = Buffer.from(`kilo:${config.password}`).toString("base64")
+    const token = Buffer.from(`tavern:${config.password}`).toString("base64")
     const dir = encodeURIComponent(cwd)
     const auth = encodeURIComponent(token)
     // A new terminal has one initial attachment. Replay its retained startup

@@ -3,9 +3,9 @@ import { BusEvent } from "@/bus/bus-event"
 import { InstanceState } from "@/effect/instance-state"
 import { makeRuntime } from "@/effect/run-service"
 import { Identifier } from "@/id/id"
-import { Instance, type InstanceContext } from "@/kilocode/instance"
-import { KiloShutdown } from "@/kilocode/cli/shutdown"
-import { model as modelEnv } from "@/kilocode/process/env"
+import { Instance, type InstanceContext } from "@/taverncode/instance"
+import { KiloShutdown } from "@/taverncode/cli/shutdown"
+import { model as modelEnv } from "@/taverncode/process/env"
 import { SessionID } from "@/session/schema"
 import { Shell } from "@opencode-ai/core/shell"
 import { ProjectV2 } from "@opencode-ai/core/project"
@@ -196,7 +196,7 @@ export namespace BackgroundProcess {
   type Probe = "owned" | "gone" | "foreign" | "unknown"
 
   class StateService extends Context.Service<StateService, { readonly get: () => Effect.Effect<State> }>()(
-    "@kilocode/BackgroundProcess.State",
+    "@taverncode/BackgroundProcess.State",
   ) {}
 
   function scoped(ctx: InstanceContext) {
@@ -268,7 +268,7 @@ export namespace BackgroundProcess {
         return true
       })
       .catch((err) => {
-        log.debug("persistent process scope is managed by another Kilo process", { err, scope: shared.key })
+        log.debug("persistent process scope is managed by another Tavern process", { err, scope: shared.key })
         return false
       })
       .finally(() => {
@@ -921,7 +921,7 @@ export namespace BackgroundProcess {
     if (logpath) {
       await secure(state.shared)
       if (!(await claim(state.shared)))
-        throw new Error("Persistent processes for this project are managed by another Kilo process")
+        throw new Error("Persistent processes for this project are managed by another Tavern process")
       await Filesystem.write(logpath, "", 0o600)
     }
     const cmd =

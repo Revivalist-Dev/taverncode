@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/kilo-ui",
+  "name": "@taverncode/tavern-ui",
   "version": "7.8.3",
   "type": "module",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "./app-icon": "./src/components/app-icon.tsx",
     "./markdown": "./src/components/markdown.tsx",
     "./keybind": "./src/components/keybind.tsx",
-    "./kilo-pass-meter": "./src/components/kilo-pass-meter.tsx",
+    "./tavern-pass-meter": "./src/components/tavern-pass-meter.tsx",
     "./popover": "./src/components/popover.tsx",
     "./hover-card": "./src/components/hover-card.tsx",
     "./dropdown-menu": "./src/components/dropdown-menu.tsx",
@@ -121,7 +121,7 @@
     "test:visual:update": "playwright test --update-snapshots"
   },
   "dependencies": {
-    "@kilocode/sdk": "workspace:*",
+    "@taverncode/sdk": "workspace:*",
     "@kobalte/core": "0.13.11",
     "@opencode-ai/core": "workspace:*",
     "@pierre/diffs": "catalog:",

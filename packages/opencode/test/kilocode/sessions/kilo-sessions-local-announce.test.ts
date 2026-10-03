@@ -1,5 +1,5 @@
-// kilocode_change - new file
-// Locally started CLI sessions (kilo run, TUI) must appear in the mobile app's
+// taverncode_change - new file
+// Locally started CLI sessions (tavern run, TUI) must appear in the mobile app's
 // live list the same way app-spawned (create_session) sessions do: the relay's
 // per-connection registry is fed only by heartbeat attached ids, so a locally
 // created session must be announced on the remote connection when its first
@@ -8,7 +8,7 @@
 // layer state installed by init) through GlobalBus session events plus the real
 // enableRemote/AttachedState path, with only the relay socket faked.
 
-// kilo-sessions reads KILO_DISABLE_SESSION_INGEST and KILO_REMOTE at module
+// tavern-sessions reads KILO_DISABLE_SESSION_INGEST and KILO_REMOTE at module
 // load. Set them before the first import: keep ingest enabled so the layer
 // state installs its watchers, and keep bootstrap auto-enable off so every
 // test enables remote explicitly.
@@ -23,21 +23,21 @@ import { Auth } from "../../../src/auth"
 import { Bus } from "../../../src/bus"
 import { GlobalBus } from "../../../src/bus/global"
 import type { Config } from "../../../src/config/config"
-import { clearInFlightCache } from "../../../src/kilo-sessions/inflight-cache"
-import { provide } from "../../../src/kilocode/instance"
-import { RemoteSender } from "../../../src/kilo-sessions/remote-sender"
-import { RemoteWS } from "../../../src/kilo-sessions/remote-ws"
+import { clearInFlightCache } from "../../../src/tavern-sessions/inflight-cache"
+import { provide } from "../../../src/taverncode/instance"
+import { RemoteSender } from "../../../src/tavern-sessions/remote-sender"
+import { RemoteWS } from "../../../src/tavern-sessions/remote-ws"
 import { Session } from "../../../src/session/session"
 import { SessionID } from "../../../src/session/schema"
 import { TestConfig } from "../../fixture/config"
 import { TestInstance, tmpdir } from "../../fixture/fixture"
 import { pollWithTimeout, testEffect } from "../../lib/effect"
 
-const { KiloSessions } = await import("../../../src/kilo-sessions/kilo-sessions")
+const { KiloSessions } = await import("../../../src/tavern-sessions/tavern-sessions")
 
 const it = testEffect(AppNodeBuilder.build(CrossSpawnSpawner.node))
 
-// Mirrors the KiloSessions layer wiring used by test/kilocode/kilo-sessions.test.ts:
+// Mirrors the KiloSessions layer wiring used by test/taverncode/tavern-sessions.test.ts:
 // real Bus/Session/Config graph, TestConfig so `init` does not read real config.
 function layer(overrides: Partial<Config.Interface> = {}) {
   return Layer.merge(
@@ -51,9 +51,9 @@ function layer(overrides: Partial<Config.Interface> = {}) {
 }
 
 function reset(...tokens: string[]) {
-  clearInFlightCache("kilo-sessions:token")
-  clearInFlightCache("kilo-sessions:client")
-  for (const token of tokens) clearInFlightCache(`kilo-sessions:token-valid:${token}`)
+  clearInFlightCache("tavern-sessions:token")
+  clearInFlightCache("tavern-sessions:client")
+  for (const token of tokens) clearInFlightCache(`tavern-sessions:token-valid:${token}`)
 }
 
 const token = "local-announce-token"
@@ -188,8 +188,8 @@ describe("KiloSessions locally started session announce", () => {
       const id = SessionID.descending("ses_local_announce_first_turn")
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
         yield* enable(instance.directory)
         expect(KiloSessions.remoteStatus()).toEqual({ enabled: true, connected: true })
 
@@ -214,8 +214,8 @@ describe("KiloSessions locally started session announce", () => {
       const id = SessionID.descending("ses_local_announce_idempotent")
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
         yield* enable(instance.directory)
 
         turnOpen(instance.directory, id)
@@ -246,8 +246,8 @@ describe("KiloSessions locally started session announce", () => {
     const id = SessionID.descending("ses_local_announce_disabled")
     return Effect.gen(function* () {
       const instance = yield* TestInstance
-      const kilo = yield* KiloSessions.Service
-      yield* kilo.init()
+      const tavern = yield* KiloSessions.Service
+      yield* tavern.init()
 
       turnOpen(instance.directory, id)
       turnOpen(instance.directory, id)
@@ -263,8 +263,8 @@ describe("KiloSessions locally started session announce", () => {
       const id = SessionID.descending("ses_local_announce_race")
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
 
         let release: () => void = () => {}
         userGate = new Promise<void>((resolve) => {
@@ -305,8 +305,8 @@ describe("KiloSessions locally started session announce", () => {
       const id = SessionID.descending("ses_local_announce_delete_during_enable")
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
 
         let release: () => void = () => {}
         userGate = new Promise<void>((resolve) => {
@@ -361,8 +361,8 @@ describe("KiloSessions locally started session announce", () => {
 
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
         yield* enable(instance.directory)
 
         turnOpen(instance.directory, id)
@@ -395,8 +395,8 @@ describe("KiloSessions locally started session announce", () => {
       const unowned = SessionID.descending("ses_local_announce_detach_unowned")
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
         yield* enable(instance.directory)
 
         turnOpen(instance.directory, id)
@@ -436,8 +436,8 @@ describe("KiloSessions locally started session announce", () => {
 
       return Effect.gen(function* () {
         const instance = yield* TestInstance
-        const kilo = yield* KiloSessions.Service
-        yield* kilo.init()
+        const tavern = yield* KiloSessions.Service
+        yield* tavern.init()
         yield* enable(instance.directory)
 
         turnOpen(instance.directory, id)

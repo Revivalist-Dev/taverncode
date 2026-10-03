@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
-import { KiloSessionProcessor } from "../../src/kilocode/session/processor"
+import { KiloSessionProcessor } from "../../src/taverncode/session/processor"
 import type { MessageV2 } from "../../src/session/message-v2"
 
 const REVIEW_COMMANDS = ["review"] as const
@@ -57,15 +57,15 @@ describe("KiloSessionProcessor.markReviewTelemetry", () => {
 })
 
 describe("KiloSessionProcessor.markCommand", () => {
-  test("labels text parts with the typed command and keeps other kilo metadata", () => {
+  test("labels text parts with the typed command and keeps other tavern metadata", () => {
     const parts: Array<{ type: string; metadata?: Record<string, unknown> }> = [
-      { type: "text", metadata: { mode: "review", kilo: { review: { version: 1 } } } },
+      { type: "text", metadata: { mode: "review", tavern: { review: { version: 1 } } } },
       { type: "file" },
     ]
     KiloSessionProcessor.markCommand(parts, "review", "branch ")
     expect(parts[0].metadata).toEqual({
       mode: "review",
-      kilo: { review: { version: 1 }, injected: { title: "/review branch" } },
+      tavern: { review: { version: 1 }, injected: { title: "/review branch" } },
     })
     expect(parts[1].metadata).toBeUndefined()
   })

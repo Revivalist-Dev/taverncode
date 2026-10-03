@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/kilo-i18n",
+  "name": "@taverncode/tavern-i18n",
   "version": "7.8.3",
   "type": "module",
   "license": "MIT",
-  "description": "Kilo-specific i18n translations and overrides",
+  "description": "Tavern-specific i18n translations and overrides",
   "exports": {
     "./*": "./src/*.ts"
   },

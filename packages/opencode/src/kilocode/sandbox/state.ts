@@ -4,7 +4,7 @@ import type { SessionID } from "@/session/schema"
 import { SessionTable } from "@opencode-ai/core/session/sql"
 import { Database } from "@opencode-ai/core/database/database"
 
-export const key = "kilocode.sandbox"
+export const key = "taverncode.sandbox"
 
 export type Value = {
   enabled: boolean

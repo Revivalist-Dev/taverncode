@@ -1,5 +1,5 @@
 import { describe, expect, it, spyOn } from "bun:test"
-import { interceptMessage } from "../../src/kilo-provider/git-changes-request"
+import { interceptMessage } from "../../src/tavern-provider/git-changes-request"
 
 describe("permission message interception", () => {
   it("acknowledges a dropped approval so the webview stops waiting", async () => {

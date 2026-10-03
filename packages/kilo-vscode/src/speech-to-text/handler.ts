@@ -1,4 +1,4 @@
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { transcribeSpeech } from "./transcribe"
 import { cancelSpeechCapture, startSpeechCapture, stopSpeechCapture } from "./capture"
 import type { KiloConnectionService } from "../services/cli-backend/connection-service"

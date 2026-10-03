@@ -105,7 +105,7 @@ function http() {
 }
 
 async function root() {
-  const dir = await mkdtemp(join(tmpdir(), "kilo-seatbelt-network-"))
+  const dir = await mkdtemp(join(tmpdir(), "tavern-seatbelt-network-"))
   roots.push(dir)
   await mkdir(join(dir, ".protected"))
   return dir

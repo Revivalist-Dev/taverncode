@@ -15,7 +15,7 @@ type Toast = {
 }
 
 const toasts: Toast[] = []
-mock.module("@kilocode/kilo-ui/toast", () => ({
+mock.module("@taverncode/tavern-ui/toast", () => ({
   showToast: (toast: Toast) => toasts.push(toast),
 }))
 

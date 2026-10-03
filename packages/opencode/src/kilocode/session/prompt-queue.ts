@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { MessageV2 } from "@/session/message-v2"
 import { MessageID, SessionID } from "@/session/schema"
-import { KiloSession } from "@/kilocode/session"
+import { KiloSession } from "@/taverncode/session"
 
 type Slot = {
   readonly seq: number

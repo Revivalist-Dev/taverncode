@@ -1,2 +1,2 @@
-// kilocode_change - new file
-export { Suggestion } from "../kilocode/suggestion/index"
+// taverncode_change - new file
+export { Suggestion } from "../taverncode/suggestion/index"

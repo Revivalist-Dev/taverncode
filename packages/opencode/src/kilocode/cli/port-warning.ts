@@ -1,4 +1,4 @@
-import { Daemon } from "@/kilocode/daemon/daemon"
+import { Daemon } from "@/taverncode/daemon/daemon"
 import type { resolveNetworkOptions } from "@/cli/network"
 
 export function warnPort(port: number) {

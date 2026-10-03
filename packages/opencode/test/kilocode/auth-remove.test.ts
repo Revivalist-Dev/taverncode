@@ -1,6 +1,6 @@
 import { expect } from "bun:test"
 import { Auth } from "@/auth"
-import { remove } from "@/kilocode/auth/remove"
+import { remove } from "@/taverncode/auth/remove"
 import { Integration } from "@opencode-ai/core/integration"
 import { Credential } from "@opencode-ai/core/credential"
 import { Database } from "@opencode-ai/core/database/database"

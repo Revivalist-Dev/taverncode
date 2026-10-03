@@ -1,6 +1,6 @@
 import type { JSX } from "solid-js"
 import { Show } from "solid-js"
-import { ConfigCountTag, ConfigTag, SourceBadge as UiSourceBadge } from "@kilocode/kilo-web-ui/console"
+import { ConfigCountTag, ConfigTag, SourceBadge as UiSourceBadge } from "@taverncode/tavern-web-ui/console"
 
 export { ConfigCountTag, ConfigTag }
 

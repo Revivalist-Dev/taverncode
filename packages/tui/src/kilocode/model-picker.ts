@@ -1,21 +1,21 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Pure option builder for the TUI model picker, extracted from
-// `component/dialog-model.tsx` so the Kilo Gateway grouping/search rules are
+// `component/dialog-model.tsx` so the Tavern Gateway grouping/search rules are
 // testable without mounting the dialog.
 //
-// Two rules here exist because the TUI used to hide live Kilo Gateway models:
+// Two rules here exist because the TUI used to hide live Tavern Gateway models:
 //   1. Recently used models are no longer stripped from their provider section.
-//      Selecting a Kilo sonnet once used to remove it from "Recommended" /
-//      "Kilo Gateway" entirely, leaving those sections looking empty. This
+//      Selecting a Tavern sonnet once used to remove it from "Recommended" /
+//      "Tavern Gateway" entirely, leaving those sections looking empty. This
 //      matches the VS Code selector, which also keeps recents in place.
 //   2. Search matches the provider name and the provider/model ids, not just
-//      the title and the section header, so typing `kilo` finds
+//      the title and the section header, so typing `tavern` finds
 //      "Anthropic Claude Sonnet 4.5" under the "Recommended" section.
 import * as fuzzysort from "fuzzysort"
 import { entries, filter, flatMap, groupBy, map, pipe, sortBy } from "remeda"
 
-export const KILO_PROVIDER_ID = "kilo"
+export const KILO_PROVIDER_ID = "tavern"
 export const RECOMMENDED_CATEGORY = "Recommended"
 
 export interface ModelPickerRef {

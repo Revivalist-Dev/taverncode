@@ -1,6 +1,6 @@
 import { Component, createSignal, createMemo, createEffect, Switch, Match, Show, onMount, onCleanup } from "solid-js"
-import { DataProvider } from "@kilocode/kilo-ui/context/data"
-import { BoardNavigationProvider } from "@kilocode/kilo-ui/context/board-navigation"
+import { DataProvider } from "@taverncode/tavern-ui/context/data"
+import { BoardNavigationProvider } from "@taverncode/tavern-ui/context/board-navigation"
 import Settings from "./components/settings/Settings"
 import ProfileView from "./components/profile/ProfileView"
 import { useVSCode } from "./context/vscode"
@@ -30,7 +30,7 @@ registerExpandedTaskTool()
 registerVscodeToolOverrides()
 import HistoryView from "./components/history/HistoryView"
 import { MigrationWizard } from "./components/migration"
-import type { Message as SDKMessage, Part as SDKPart } from "@kilocode/sdk/v2"
+import type { Message as SDKMessage, Part as SDKPart } from "@taverncode/sdk/v2"
 import { cycleAgent as cycle } from "./context/session-agent"
 import { routeChatInput } from "./utils/chat-input-route"
 import "./styles/chat.css"
@@ -143,7 +143,7 @@ export const DataBridge: Component<{ children: any }> = (props) => {
   }
 
   const open = (filePath: string, line?: number, column?: number, sessionID?: string) => {
-    const event = new CustomEvent("kilo:open-file", {
+    const event = new CustomEvent("tavern:open-file", {
       cancelable: true,
       detail: { filePath, line, column, sessionID },
     })
@@ -223,7 +223,7 @@ export const DataBridge: Component<{ children: any }> = (props) => {
     <DataProvider
       data={data}
       directory={directory()}
-      // @ts-expect-error — onPermissionRespond/onQuestion* are extension-specific props not yet in kilo-ui's DataProvider types
+      // @ts-expect-error — onPermissionRespond/onQuestion* are extension-specific props not yet in tavern-ui's DataProvider types
       onPermissionRespond={respond}
       onQuestionReply={reply}
       onQuestionReject={reject}
@@ -332,7 +332,7 @@ const AppContent: Component = () => {
 
   const open = (message: { type?: string; sessionID?: string }) => {
     if (message.type !== "openSession" || !message.sessionID) return
-    console.log("[Kilo New] App: opening local session:", message.sessionID)
+    console.log("[Tavern New] App: opening local session:", message.sessionID)
     if (tabs) tabs.open(message.sessionID, { scrollToBottom: true })
     if (!tabs) session.selectSession(message.sessionID, { scrollToBottom: true })
     setCurrentView("newTask")
@@ -342,18 +342,18 @@ const AppContent: Component = () => {
     const handler = (event: MessageEvent) => {
       const message = event.data
       if (message?.type === "action" && message.action) {
-        console.log("[Kilo New] App: 🎬 action:", message.action)
+        console.log("[Tavern New] App: 🎬 action:", message.action)
         handleViewAction(message.action)
       }
       if (message?.type === "navigate" && message.view && VALID_VIEWS.has(message.view)) {
-        console.log("[Kilo New] App: 🧭 navigate:", message.view, message.tab ? `tab=${message.tab}` : "")
+        console.log("[Tavern New] App: 🧭 navigate:", message.view, message.tab ? `tab=${message.tab}` : "")
         if (message.tab) setSettingsTab(message.tab)
         setAgentManagerProjectId(message.projectId)
         setCurrentView(message.view as ViewType)
         vscode.postMessage({ type: "settingsTabChanged", tab: message.tab })
       }
       if (message?.type === "openCloudSession" && message.sessionId) {
-        console.log("[Kilo New] App: ☁️ openCloudSession:", message.sessionId)
+        console.log("[Tavern New] App: ☁️ openCloudSession:", message.sessionId)
         session.selectCloudSession(message.sessionId)
         setCurrentView("newTask")
       }
@@ -367,7 +367,7 @@ const AppContent: Component = () => {
         (msg) => window.postMessage(msg, window.origin),
       )
       if (message?.type === "viewSubAgentSession" && message.sessionID) {
-        console.log("[Kilo New] App: 🔍 viewSubAgentSession:", message.sessionID)
+        console.log("[Tavern New] App: 🔍 viewSubAgentSession:", message.sessionID)
         session.setCurrentSessionID(message.sessionID)
         setCurrentView("subAgentViewer")
       }

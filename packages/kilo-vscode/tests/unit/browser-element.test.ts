@@ -125,7 +125,7 @@ describe("browser element context", () => {
   })
 
   test("accepts only existing source files within the owning workspace", async () => {
-    const root = await mkdtemp(path.join(os.tmpdir(), "kilo-browser-source-"))
+    const root = await mkdtemp(path.join(os.tmpdir(), "tavern-browser-source-"))
     try {
       const project = path.join(root, "project")
       await mkdir(path.join(project, "src"), { recursive: true })

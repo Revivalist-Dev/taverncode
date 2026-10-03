@@ -1,11 +1,11 @@
 ---
 title: Tool Use Details
-description: Learn how Kilo Code's tools automate your development workflow
+description: Learn how Tavern Code's tools automate your development workflow
 ---
 
 # Tool Use Overview
 
-Kilo Code implements a sophisticated tool system that allows AI models to interact with your development environment in a controlled and secure manner. This document explains how tools work, when they're called, and how they're managed.
+Tavern Code implements a sophisticated tool system that allows AI models to interact with your development environment in a controlled and secure manner. This document explains how tools work, when they're called, and how they're managed.
 
 ## Core Concepts
 
@@ -35,7 +35,7 @@ Certain tools are accessible regardless of the current agent:
 
 ### Read Tools
 
-These tools help Kilo Code understand your code and project:
+These tools help Tavern Code understand your code and project:
 
 - `read` - Reads file contents with line numbers
 - `glob` - Finds files matching a glob pattern
@@ -43,17 +43,17 @@ These tools help Kilo Code understand your code and project:
 
 ### Edit Tools
 
-These tools help Kilo Code make changes to your code:
+These tools help Tavern Code make changes to your code:
 
 - `edit` - Makes precise text replacements in a file
 - `write` - Creates new files or fully overwrites existing ones
 - `apply_patch` - Applies unified diffs (used with certain models)
 
-For multiple replacements in one file, Kilo uses repeated `edit` calls or a patch-style edit when the model supports it.
+For multiple replacements in one file, Tavern uses repeated `edit` calls or a patch-style edit when the model supports it.
 
 ### Execute Tools
 
-These tools help Kilo Code run commands:
+These tools help Tavern Code run commands:
 
 - `bash` - Runs shell commands with configurable timeout and working directory
 
@@ -63,14 +63,14 @@ The `interactive_terminal` tool and the in-session terminal controls were remove
 
 ### Web Tools
 
-These tools help Kilo Code access web content:
+These tools help Tavern Code access web content:
 
 - `webfetch` - Fetches a URL and returns the content
 - `websearch` - Searches the web
 
 #### Web Search Availability
 
-`websearch` is available automatically with the Kilo provider. For models from other providers it is off by default; enable it for all providers by setting `web_search` in `kilo.jsonc`:
+`websearch` is available automatically with the Tavern provider. For models from other providers it is off by default; enable it for all providers by setting `web_search` in `tavern.jsonc`:
 
 ```json
 {
@@ -82,25 +82,25 @@ In the VS Code extension, the same option lives under **Settings → Web Tools �
 
 #### Web Search Providers
 
-`websearch` routes through the Exa or Parallel search providers. When the Exa provider is used and you are signed into Kilo, requests go through the Kilo proxy automatically — no separate Exa API key is required. Setting `EXA_API_KEY` uses your own Exa key instead. Exa searches return at most 10 results.
+`websearch` routes through the Exa or Parallel search providers. When the Exa provider is used and you are signed into Tavern, requests go through the Tavern proxy automatically — no separate Exa API key is required. Setting `EXA_API_KEY` uses your own Exa key instead. Exa searches return at most 10 results.
 
 Set the `KILO_WEBSEARCH_PROVIDER` environment variable to force a provider:
 
 | Value | Behavior |
 |---|---|
-| `exa` | Use Exa — through the Kilo proxy when signed in, through `EXA_API_KEY` when set |
+| `exa` | Use Exa — through the Tavern proxy when signed in, through `EXA_API_KEY` when set |
 | `parallel` | Use Parallel |
-| `kilo-exa` | Always route Exa searches through the Kilo proxy (requires Kilo sign-in) |
+| `tavern-exa` | Always route Exa searches through the Tavern proxy (requires Tavern sign-in) |
 
 ### Browser Tools
 
-The VS Code extension has a built-in browser automation tool powered by [Playwright MCP](https://www.npmjs.com/package/@playwright/mcp). Enable it in **Settings → Web Tools → Browser Automation**. When enabled, it registers an MCP server named `kilo-playwright` and exposes browser tools that follow the same permission model as all MCP tools.
+The VS Code extension has a built-in browser automation tool powered by [Playwright MCP](https://www.npmjs.com/package/@playwright/mcp). Enable it in **Settings → Web Tools → Browser Automation**. When enabled, it registers an MCP server named `tavern-playwright` and exposes browser tools that follow the same permission model as all MCP tools.
 
 The VS Code extension's experimental `browser_open` tool opens a local application in Agent Manager's Integrated Browser panel and returns a screenshot and diagnostics. Enable **Integrated Browser** under **Settings > Experimental**. It requires installed Chrome or compatible Playwright Chromium. It is independent from Playwright MCP.
 
 The `browser_open` automation browser accepts HTTP URLs on `localhost` or `127.0.0.1` only, and blocks resources from other origins. See [Browser previews](/docs/automate/agent-manager#browser-previews) for setup and element feedback.
 
-This restriction is specific to `browser_open`, not Kilo's web access in general. Use `websearch` and `webfetch` to find and read public web pages. Browser tools from a separately configured MCP server can provide interactive web browsing according to that server's capabilities and permissions.
+This restriction is specific to `browser_open`, not Tavern's web access in general. Use `websearch` and `webfetch` to find and read public web pages. Browser tools from a separately configured MCP server can provide interactive web browsing according to that server's capabilities and permissions.
 
 ### MCP Tools
 
@@ -118,7 +118,7 @@ These tools help manage the conversation and task flow:
 - `skill` - Invokes a reusable skill (Markdown instruction module)
 - `open_plan` - Opens a saved plan for review in the VS Code extension
 - `agent_manager` - Starts Agent Manager local or worktree sessions in VS Code
-- `board_post` / `board_read` - Exchange messages on the Kilo Swarm board
+- `board_post` / `board_read` - Exchange messages on the Tavern Swarm board
 
 ### Task tool
 
@@ -131,7 +131,7 @@ There are two execution modes:
 | Mode | Behavior | Use it when |
 |---|---|---|
 | Foreground (default) | The parent waits for the child and receives its result before continuing. | Later work depends on the child output. |
-| Background (`background: true`) | The tool returns immediately. Kilo delivers a completion or error result to the parent session when the child finishes. | The work is independent and can run while the parent continues. |
+| Background (`background: true`) | The tool returns immediately. Tavern delivers a completion or error result to the parent session when the child finishes. | The work is independent and can run while the parent continues. |
 
 For example, a primary agent can start independent background research with a call shaped like this:
 
@@ -144,18 +144,18 @@ For example, a primary agent can start independent background research with a ca
 }
 ```
 
-Background subagents are available when the server exposes the background capability. Do not poll for progress or duplicate work in the same files. If Kilo returns a `task_id` after a failed or interrupted child, use it to resume that child when the current session and permissions allow it. A child can create more task children only when its configured depth and `task` permission allow it.
+Background subagents are available when the server exposes the background capability. Do not poll for progress or duplicate work in the same files. If Tavern returns a `task_id` after a failed or interrupted child, use it to resume that child when the current session and permissions allow it. A child can create more task children only when its configured depth and `task` permission allow it.
 
-### Kilo Swarm board tools
+### Tavern Swarm board tools
 
-Kilo Swarm is a shared board for one main session and its `task` descendants, including nested descendants. It is on by default; turn it off in **Settings > Agent Behaviour** or set `shared_agent_board` to `false` in `kilo.jsonc`. The board is not shared by unrelated sessions, even when they use the same repository or worktree.
+Tavern Swarm is a shared board for one main session and its `task` descendants, including nested descendants. It is on by default; turn it off in **Settings > Agent Behaviour** or set `shared_agent_board` to `false` in `tavern.jsonc`. The board is not shared by unrelated sessions, even when they use the same repository or worktree.
 
 - `board_post` stores a concise material update for another participant. Use it for findings, questions, results, blockers, or corrections.
 - `board_read` reads board messages explicitly. Use the cursor from the previous read for incremental reads instead of polling.
 - Board activity notices are best-effort and do not prove that a recipient read or acted on a message.
 - Board messages are coordination data, not user approval. Posting does not start, wake, assign, resume, stop, or cancel an agent.
 
-See [Kilo Swarm communication](/docs/automate/agent-manager#kilo-swarm-communication) for how the board relates to background agents and Agent Manager sessions.
+See [Tavern Swarm communication](/docs/automate/agent-manager#tavern-swarm-communication) for how the board relates to background agents and Agent Manager sessions.
 
 ### Agent Manager tool
 

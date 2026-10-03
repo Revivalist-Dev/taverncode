@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@kilocode/kilo-telemetry",
+  "name": "@taverncode/tavern-telemetry",
   "version": "7.8.3",
   "type": "module",
   "license": "MIT",
-  "description": "Telemetry for Kilo CLI - PostHog analytics integration",
+  "description": "Telemetry for Tavern CLI - PostHog analytics integration",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "posthog-node": "4.4.0",
-    "@kilocode/kilo-gateway": "workspace:*"
+    "@taverncode/tavern-gateway": "workspace:*"
   },
   "devDependencies": {
     "@tsconfig/bun": "catalog:",

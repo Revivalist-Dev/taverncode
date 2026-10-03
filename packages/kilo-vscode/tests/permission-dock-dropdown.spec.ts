@@ -20,7 +20,7 @@ if (IS_DARWIN) {
   test.skip()
 }
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 function storyUrl(storyId: string) {
   return `/iframe.html?id=${storyId}&viewMode=story&globals=${GLOBALS}`
@@ -211,7 +211,7 @@ test.describe("Permission Dock Dropdown — external directory", () => {
     await page.waitForSelector("#storybook-root *", { state: "attached" })
     await openDropdown(page)
 
-    const text = "Access External Directory /Users/developer/projects/kilo-bench/dashboard/app/routes/*"
+    const text = "Access External Directory /Users/developer/projects/tavern-bench/dashboard/app/routes/*"
     const hint = page.locator('[data-slot="permission-hint"]')
     await expect(hint).toHaveText(text)
     await expect(hint).toHaveAttribute("title", text)

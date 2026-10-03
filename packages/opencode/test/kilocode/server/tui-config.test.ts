@@ -22,7 +22,7 @@ describe("TUI config routes", () => {
   test("gets effective project TUI config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".tavern")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(
           path.join(cfg, "tui.json"),
@@ -32,7 +32,7 @@ describe("TUI config routes", () => {
     })
 
     const response = await Server.Default().app.request("/tui/config", {
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-tavern-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
@@ -50,7 +50,7 @@ describe("TUI config routes", () => {
   test("warns about unknown top-level TUI settings while applying valid settings", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".tavern")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(path.join(cfg, "tui.json"), JSON.stringify({ theme: "nord", typo_setting: true }))
       },
@@ -75,7 +75,7 @@ describe("TUI config routes", () => {
   test("does not write TUI config logs to the terminal", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".tavern")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(path.join(cfg, "tui.json"), JSON.stringify({ theme: "dracula" }))
       },
@@ -86,7 +86,7 @@ describe("TUI config routes", () => {
     try {
       console.log = (...args) => output.push(args)
       const response = await Server.Default().app.request("/tui/config", {
-        headers: { "x-kilo-directory": tmp.path },
+        headers: { "x-tavern-directory": tmp.path },
       })
       expect(response.status).toBe(200)
     } finally {
@@ -100,18 +100,18 @@ describe("TUI config routes", () => {
     ).toBe(false)
   })
 
-  test("loads legacy .kilocode TUI config and ignores .opencode", async () => {
+  test("loads legacy .taverncode TUI config and ignores .opencode", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await fs.mkdir(path.join(dir, ".opencode"), { recursive: true })
-        await fs.mkdir(path.join(dir, ".kilocode"), { recursive: true })
+        await fs.mkdir(path.join(dir, ".taverncode"), { recursive: true })
         await Bun.write(path.join(dir, ".opencode", "tui.json"), JSON.stringify({ theme: "dracula" }))
-        await Bun.write(path.join(dir, ".kilocode", "tui.json"), JSON.stringify({ theme: "nord" }))
+        await Bun.write(path.join(dir, ".taverncode", "tui.json"), JSON.stringify({ theme: "nord" }))
       },
     })
 
     const response = await Server.Default().app.request("/tui/config", {
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-tavern-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
@@ -123,7 +123,7 @@ describe("TUI config routes", () => {
     await using tmp = await tmpdir()
 
     const response = await Server.Default().app.request("/tui/keybinds", {
-      headers: { "x-kilo-directory": tmp.path },
+      headers: { "x-tavern-directory": tmp.path },
     })
 
     expect(response.status).toBe(200)
@@ -148,7 +148,7 @@ describe("TUI config routes", () => {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-kilo-directory": tmp.path,
+        "x-tavern-directory": tmp.path,
       },
       body: JSON.stringify({ theme: "nord", title_icon: "emojis" }),
     })
@@ -158,14 +158,14 @@ describe("TUI config routes", () => {
     expect(body.theme).toBe("nord")
     expect(body.title_icon).toBe("emojis")
 
-    const saved = await Bun.file(path.join(tmp.path, ".kilo", "tui.json")).json()
+    const saved = await Bun.file(path.join(tmp.path, ".tavern", "tui.json")).json()
     expect(saved).toEqual({ theme: "nord", title_icon: "emojis" })
   })
 
   test("patches attention config without dropping advanced notification settings", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const cfg = path.join(dir, ".kilo")
+        const cfg = path.join(dir, ".tavern")
         await fs.mkdir(cfg, { recursive: true })
         await Bun.write(
           path.join(cfg, "tui.json"),
@@ -188,7 +188,7 @@ describe("TUI config routes", () => {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "x-kilo-directory": tmp.path,
+        "x-tavern-directory": tmp.path,
       },
       body: JSON.stringify({
         attention: { enabled: true, notifications: false, sound: true, volume: 0.25 },
@@ -196,7 +196,7 @@ describe("TUI config routes", () => {
     })
 
     expect(response.status).toBe(200)
-    const saved = await Bun.file(path.join(tmp.path, ".kilo", "tui.json")).json()
+    const saved = await Bun.file(path.join(tmp.path, ".tavern", "tui.json")).json()
     expect(saved).toEqual({
       attention: {
         enabled: true,
@@ -220,7 +220,7 @@ describe("TUI config routes", () => {
         method: "PATCH",
         headers: {
           "content-type": "application/json",
-          "x-kilo-directory": tmp.path,
+          "x-tavern-directory": tmp.path,
         },
         body: JSON.stringify({ keybinds: { app_exit: "ctrl+q" } }),
       })

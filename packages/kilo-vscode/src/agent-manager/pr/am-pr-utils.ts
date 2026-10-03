@@ -330,7 +330,7 @@ export function parseReviewers(requests: GhReviewRequest[], reviews: GhReview[])
 
 function bot(author?: GhAuthor & { __typename?: string }): boolean {
   if (!author?.login) return false
-  return author.__typename === "Bot" || author.login.endsWith("[bot]") || author.login === "kilo-code-bot"
+  return author.__typename === "Bot" || author.login.endsWith("[bot]") || author.login === "tavern-code-bot"
 }
 
 export function commentItem(node: GhConversationComment): PRConversationComment | null {

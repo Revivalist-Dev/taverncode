@@ -4,8 +4,8 @@ import type { NetworkOptions } from "@/cli/network"
 import { ServerAuth } from "@/server/auth"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { errorMessage } from "@opencode-ai/tui/util/error"
-import { validate as validateSession } from "@/kilocode/cli/cmd/tui"
-import { DaemonClient } from "@/kilocode/daemon/client"
+import { validate as validateSession } from "@/taverncode/cli/cmd/tui"
+import { DaemonClient } from "@/taverncode/daemon/client"
 
 type TuiInput = import("@opencode-ai/tui").TuiInput
 export type StartInput = Omit<TuiInput, "pluginHost">
@@ -31,8 +31,8 @@ async function session(input: Input, daemon: DaemonClient.Connection) {
   if (!input.args.cloudFork || !input.args.session) return { ok: true as const, id: input.args.session }
 
   const [{ createKiloClient }, { importCloudSession, reportCloudImportError }] = await Promise.all([
-    import("@kilocode/sdk/v2"),
-    import("@/kilocode/cloud-session"),
+    import("@taverncode/sdk/v2"),
+    import("@/taverncode/cloud-session"),
   ])
   UI.println("Importing session from cloud...")
   const client = createKiloClient({
@@ -56,7 +56,7 @@ export namespace KiloTuiThreadDaemon {
   // clients share the same Basic auth material.
   export function workerAuth() {
     const password = Flag.KILO_SERVER_PASSWORD ?? randomUUID()
-    const username = Flag.KILO_SERVER_USERNAME ?? "kilo"
+    const username = Flag.KILO_SERVER_USERNAME ?? "tavern"
     return {
       env: { KILO_SERVER_USERNAME: username, KILO_SERVER_PASSWORD: password },
       headers: ServerAuth.headers({ password, username }),

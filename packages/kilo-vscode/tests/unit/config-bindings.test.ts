@@ -1,11 +1,11 @@
 import { describe, expect, it } from "bun:test"
-import { ConfigBindings, type ConfigBinding, type ConfigProject } from "../../src/kilo-provider/config-bindings"
+import { ConfigBindings, type ConfigBinding, type ConfigProject } from "../../src/tavern-provider/config-bindings"
 
 const { KiloProvider } = await import("../../src/KiloProvider")
 
 const target = {
   scope: "project" as const,
-  path: "/repo/.kilo/kilo.jsonc",
+  path: "/repo/.tavern/tavern.jsonc",
   revision: "revision",
   exists: false,
   writable: true,

@@ -1,10 +1,10 @@
 ---
-title: "Using Cerebras with Kilo Code | Ultra-Fast Inference"
-description: "Run Llama and Qwen models at record-breaking speeds by configuring Cerebras in Kilo Code. Setup for VS Code and the CLI."
+title: "Using Cerebras with Tavern Code | Ultra-Fast Inference"
+description: "Run Llama and Qwen models at record-breaking speeds by configuring Cerebras in Tavern Code. Setup for VS Code and the CLI."
 sidebar_label: Cerebras
 ---
 
-# Using Cerebras With Kilo Code
+# Using Cerebras With Tavern Code
 
 Cerebras is known for their ultra-fast AI inference powered by the Cerebras CS-3 chip, the world's largest and fastest AI accelerator. Their platform delivers exceptional inference speeds for large language models, making them ideal for interactive development workflows.
 
@@ -14,22 +14,22 @@ Cerebras is known for their ultra-fast AI inference powered by the Cerebras CS-3
 
 1. **Sign Up/Sign In:** Go to the [Cerebras Cloud Platform](https://cloud.cerebras.ai/). Create an account or sign in.
 2. **Navigate to API Keys:** Access the API Keys section in your account dashboard.
-3. **Create a Key:** Click to generate a new API key. Give it a descriptive name (e.g., "Kilo Code").
+3. **Create a Key:** Click to generate a new API key. Give it a descriptive name (e.g., "Tavern Code").
 4. **Copy the Key:** **Important:** Copy the API key _immediately_. Store it securely.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Cerebras and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -37,7 +37,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export CEREBRAS_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {

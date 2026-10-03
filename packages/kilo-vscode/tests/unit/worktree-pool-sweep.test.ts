@@ -23,7 +23,7 @@ async function temp(prefix: string): Promise<string> {
 }
 
 async function createRepo(): Promise<string> {
-  const dir = await temp("kilo-sweep-repo-")
+  const dir = await temp("tavern-sweep-repo-")
   git(["init", "-q", "-b", "main", dir])
   git([
     "-C",
@@ -45,7 +45,7 @@ function metaFile(slot: string): string {
   const pointer = readFileSync(path.join(slot, ".git"), "utf-8")
   return path.join(
     path.resolve(slot, pointer.match(/^gitdir:\s*(.+)$/m)![1]!.trim()),
-    "kilo-agent-manager-metadata.json",
+    "tavern-agent-manager-metadata.json",
   )
 }
 
@@ -76,7 +76,7 @@ function run(enabled = true): Promise<void> {
 }
 
 beforeEach(async () => {
-  home = path.join(await temp("kilo-sweep-home-"), "worktree-pool")
+  home = path.join(await temp("tavern-sweep-home-"), "worktree-pool")
   repo = await createRepo()
 })
 

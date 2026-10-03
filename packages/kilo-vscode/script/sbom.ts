@@ -1,20 +1,20 @@
 #!/usr/bin/env bun
 
 /**
- * SBOM generation for Kilo VS Code artifacts.
+ * SBOM generation for Tavern VS Code artifacts.
  *
  * A VSIX is not one product: it is the extension host bundle, the webview
  * bundles, an externally copied Playwright runtime, a platform FFmpeg helper,
- * and a full Kilo CLI for one target. The CLI component graph is imported from
+ * and a full Tavern CLI for one target. The CLI component graph is imported from
  * the CLI generator rather than recomputed, so a VSIX and the CLI archive that
  * contain the same binary cannot describe it differently.
  */
 
 import fs from "node:fs"
 import path from "node:path"
-import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../script/kilocode/sbom/index"
-import type { Component, Manifest as ManifestType } from "../../../script/kilocode/sbom/index"
-import * as Cli from "../../opencode/script/kilocode/sbom"
+import { Artifact, Deps, Manifest, Policy, Scan, compose, serialize } from "../../../script/taverncode/sbom/index"
+import type { Component, Manifest as ManifestType } from "../../../script/taverncode/sbom/index"
+import * as Cli from "../../opencode/script/taverncode/sbom"
 import { packages as ffmpeg } from "./ffmpeg-helper"
 
 const repo = path.resolve(import.meta.dir, "../../..")
@@ -74,17 +74,17 @@ export async function vsix(input: { file: string; target: string; release: Relea
 
   const lock = input.lock ?? (await Deps.load(path.join(repo, "bun.lock")))
   const subject = await Artifact.subject(input.file)
-  const rootRef = `kilocode:artifact:${subject.name}`
+  const rootRef = `taverncode:artifact:${subject.name}`
 
   const extension = Deps.closure({
     lock,
-    workspace: "packages/kilo-vscode",
+    workspace: "packages/tavern-vscode",
     platform: constraint(input.target),
     root: rootRef,
   })
   const enriched = await Deps.enrich(Cli.reclassify(extension.components), [
     path.join(repo, "node_modules"),
-    path.join(repo, "packages/kilo-vscode/node_modules"),
+    path.join(repo, "packages/tavern-vscode/node_modules"),
   ])
   const [embedded, scan] = await Promise.all([
     Cli.graph({ target: Cli.target(cli), subject: rootRef, lock }),
@@ -94,10 +94,10 @@ export async function vsix(input: { file: string; target: string; release: Relea
   const bom = compose({
     subject,
     product: {
-      name: "kilo-code",
+      name: "tavern-code",
       version: input.release.version,
       type: "application",
-      description: `Kilo Code VS Code extension for ${input.target}`,
+      description: `Tavern Code VS Code extension for ${input.target}`,
     },
     target: { platform: input.target, ...constraint(input.target) },
     build: {
@@ -128,7 +128,7 @@ export async function vsix(input: { file: string; target: string; release: Relea
   }
 }
 
-export const CHECKSUMS = "kilo-vscode-SHA256SUMS"
+export const CHECKSUMS = "tavern-vscode-SHA256SUMS"
 
 /**
  * Describe every VSIX in `dir`.
@@ -142,7 +142,7 @@ export async function evidence(input: { dir: string; release: Release; expected?
 
   const entries: Manifest.Entry[] = []
   for (const file of files) {
-    const target = file.replace(/^kilo-vscode-/, "").replace(/\.vsix$/, "")
+    const target = file.replace(/^tavern-vscode-/, "").replace(/\.vsix$/, "")
     try {
       const result = await vsix({ file: path.join(input.dir, file), target, release: input.release, lock })
       entries.push(result.entry)

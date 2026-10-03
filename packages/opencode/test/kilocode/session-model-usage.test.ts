@@ -2,7 +2,7 @@ import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { SessionProjector } from "@opencode-ai/core/session/projector"
 import { describe, expect } from "bun:test"
 import { Effect } from "effect"
-import { ModelUsage } from "@/kilocode/session/model-usage"
+import { ModelUsage } from "@/taverncode/session/model-usage"
 import { ProjectTable } from "@opencode-ai/core/project/sql"
 import { ProjectV2 } from "@opencode-ai/core/project"
 import { MessageV2 } from "@/session/message-v2"
@@ -79,8 +79,8 @@ describe("session model usage", () => {
       const child = yield* sessions.create({ title: "child", parentID: root.id })
       const sibling = yield* sessions.create({ title: "sibling", parentID: root.id })
       const unrelated = yield* sessions.create({ title: "unrelated" })
-      const auto = ref("kilo", "kilo-auto/efficient")
-      const routed = ref("kilo", "openai/gpt-5")
+      const auto = ref("tavern", "tavern-auto/efficient")
+      const routed = ref("tavern", "openai/gpt-5")
       const direct = ref("google", "gemini-pro")
 
       const rootMessage = yield* seed(root.id, auto)

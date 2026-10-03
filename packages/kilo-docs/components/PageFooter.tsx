@@ -101,9 +101,9 @@ export function PageFooter() {
           </button>
         </div>
         <p className="footer-note">
-          Kilo has been acquired by Anaconda.{" "}
+          Tavern has been acquired by Anaconda.{" "}
           <a
-            href="https://www.anaconda.com/blog/anaconda-acquires-kilo-code"
+            href="https://www.anaconda.com/blog/anaconda-acquires-tavern-code"
             target="_blank"
             rel="noreferrer"
           >

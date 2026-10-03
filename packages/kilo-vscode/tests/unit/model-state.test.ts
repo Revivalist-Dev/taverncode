@@ -2,26 +2,26 @@ import { afterEach, describe, expect, it } from "bun:test"
 import { link, mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { PersistModelSelectionRequest } from "../../webview-ui/src/types/messages/webview-messages"
 
 const dirs: string[] = []
-const model = { providerID: "kilo", modelID: "model-a" }
+const model = { providerID: "tavern", modelID: "model-a" }
 const other = { providerID: "other", modelID: "model-b" }
 const unrelated = {
   recent: [other],
   favorite: [model],
-  variant: { "kilo/model-a": "low" },
+  variant: { "tavern/model-a": "low" },
   custom: { nested: [1, "keep", null] },
 }
 
-function load(): Promise<typeof import("../../src/kilo-provider/model-state")> {
+function load(): Promise<typeof import("../../src/tavern-provider/model-state")> {
   // Reload module-level path caching without replacing the persistence implementation.
-  return import(`../../src/kilo-provider/model-state.ts?${crypto.randomUUID()}`)
+  return import(`../../src/tavern-provider/model-state.ts?${crypto.randomUUID()}`)
 }
 
 async function fixture(data?: unknown, prefs?: unknown) {
-  const dir = await mkdtemp(join(tmpdir(), "kilo-model-state-"))
+  const dir = await mkdtemp(join(tmpdir(), "tavern-model-state-"))
   dirs.push(dir)
   const file = join(dir, "model.json")
   const preference = join(dir, "vscode-model.json")
@@ -139,7 +139,7 @@ describe("model-state", () => {
       "invalid",
       [],
       {},
-      { providerID: "kilo" },
+      { providerID: "tavern" },
       { modelID: "model-a" },
       { ...model, providerID: 42 },
       { ...model, providerID: "" },
@@ -222,7 +222,7 @@ describe("model-state", () => {
     const state = await fixture({ ...unrelated, model: { existing: other } })
     const choices = Array.from({ length: 12 }, (_, index) => ({
       agent: `mode-${index}`,
-      providerID: "kilo",
+      providerID: "tavern",
       modelID: `model-${index}`,
       variant: `effort-${index}`,
     }))

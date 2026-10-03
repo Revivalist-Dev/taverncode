@@ -1,13 +1,13 @@
-// Report outdated dependencies of Kilo-owned workspace packages.
+// Report outdated dependencies of Tavern-owned workspace packages.
 //
 // Dependabot's root `bun` scan has version updates turned off (it mostly
-// touched upstream files), so nothing else says when a Kilo-owned package falls
-// behind. This script runs `bun outdated` for `packages/kilo-*` and prints a
+// touched upstream files), so nothing else says when a Tavern-owned package falls
+// behind. This script runs `bun outdated` for `packages/tavern-*` and prints a
 // JSON report `{ count, text, full }`: `text` is the short Slack message and
 // `full` the complete list for the job summary.
 //
-// kilo-docs is left out because Dependabot still has its own block for it.
-// kilo-jetbrains has no bun dependencies (its Gradle ones are covered by the
+// tavern-docs is left out because Dependabot still has its own block for it.
+// tavern-jetbrains has no bun dependencies (its Gradle ones are covered by the
 // Dependabot gradle block), so the filter matches it but finds nothing.
 
 export type Row = {
@@ -97,7 +97,7 @@ export function report(rows: Row[], opts: Options = {}) {
   const unlisted = opts.patch ? 0 : count("patch")
 
   const text = [
-    `*Outdated Kilo-owned dependencies: ${count("major")} major, ${count("minor")} minor, ${count("patch")} patch*`,
+    `*Outdated Tavern-owned dependencies: ${count("major")} major, ${count("minor")} minor, ${count("patch")} patch*`,
     ...sections.flatMap(block),
     unlisted > 0 ? `${unlisted} patch update${unlisted === 1 ? "" : "s"} not listed.` : "",
     // Derived from the rows actually printed, so the label and the note agree.
@@ -121,7 +121,7 @@ export function verify(text: string, rows: Row[]) {
 }
 
 async function run() {
-  const proc = Bun.spawn(["bun", "outdated", "--filter", "./packages/kilo-*", "--filter", "!./packages/kilo-docs"], {
+  const proc = Bun.spawn(["bun", "outdated", "--filter", "./packages/tavern-*", "--filter", "!./packages/tavern-docs"], {
     stdout: "pipe",
     stderr: "pipe",
   })

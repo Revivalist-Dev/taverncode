@@ -10,7 +10,7 @@
  */
 
 import { Component, createMemo, Show } from "solid-js"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useSession } from "../../context/session"
 import { useProvider } from "../../context/provider"
 import { formatCompactCount as fmt } from "../../utils/format"

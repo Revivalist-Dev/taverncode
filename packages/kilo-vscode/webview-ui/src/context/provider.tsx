@@ -8,7 +8,7 @@ import { batch, createContext, useContext, createSignal, createMemo, onCleanup }
 import type { ParentComponent, Accessor } from "solid-js"
 import { useVSCode } from "./vscode"
 import type { Provider, ProviderModel, ModelSelection, ExtensionMessage, ProviderAuthState } from "../types/messages"
-import type { ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import type { ProviderAuthMethod } from "@taverncode/sdk/v2/client"
 import { flattenModels, findModel as _findModel, isModelValid as isValid } from "./provider-utils"
 import { KILO_AUTO } from "../../../src/shared/provider-model"
 
@@ -61,15 +61,15 @@ export const ProviderProvider: ParentComponent = (props) => {
         setOrganizationId(undefined)
         setProviders((prev) => {
           const next = { ...prev }
-          delete next.kilo
+          delete next.tavern
           return next
         })
         setDefaults((prev) => {
           const next = { ...prev }
-          delete next.kilo
+          delete next.tavern
           return next
         })
-        setConnected((prev) => prev.filter((id) => id !== "kilo"))
+        setConnected((prev) => prev.filter((id) => id !== "tavern"))
       })
       return
     }

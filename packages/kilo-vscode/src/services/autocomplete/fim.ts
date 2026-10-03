@@ -12,7 +12,7 @@ export function fimModel(provider?: string, model?: string) {
 
 /**
  * Generate a FIM (Fill-in-the-Middle) completion via the CLI backend.
- * Uses the SDK's kilo.fim() SSE endpoint which handles auth and streaming.
+ * Uses the SDK's tavern.fim() SSE endpoint which handles auth and streaming.
  *
  * @param signal - Optional AbortSignal to cancel the SSE stream early (e.g. when the user types again)
  */
@@ -35,9 +35,9 @@ export async function generateFim(
   // ends the stream. Without this, errors never reach ErrorBackoff.
   let sseError: Error | undefined
 
-  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/kilo/fim`)
+  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/tavern/fim`)
 
-  const { stream } = await client.kilo.fim(
+  const { stream } = await client.tavern.fim(
     {
       prefix,
       suffix,

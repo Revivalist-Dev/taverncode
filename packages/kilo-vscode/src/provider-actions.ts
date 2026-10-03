@@ -2,7 +2,7 @@
  * Provider action handlers extracted from KiloProvider to stay under max-lines.
  * These are pure async functions that operate on the SDK client — no vscode dependency.
  */
-import type { Config, KiloClient } from "@kilocode/sdk/v2"
+import type { Config, KiloClient } from "@taverncode/sdk/v2"
 import { validateProviderID as validateProviderIDShared } from "./shared/custom-provider"
 import {
   resolveCustomProviderAuth,
@@ -59,7 +59,7 @@ export async function fetchProviderData(client: KiloClient, dir: string) {
           .then((r) => r.data ?? {})
           .catch(() => ({}))
       : Promise.resolve({})
-  const kiloRequest = client.kilo
+  const kiloRequest = client.tavern
     .authStatus({ directory: dir }, { throwOnError: true })
     .then((r) => r.data)
     .catch(() => undefined)
@@ -150,7 +150,7 @@ export function buildActionContext(
       // Shared State.dispose() now has a hard per-disposer timeout, so this
       // wait is bounded without needing a client-side timeout here.
       await client.global.dispose().catch((error: unknown) => {
-        console.warn(`[Kilo New] KiloProvider: global.dispose() after ${reason} failed:`, error)
+        console.warn(`[Tavern New] KiloProvider: global.dispose() after ${reason} failed:`, error)
       })
     },
     fetchAndSendProviders: refresh,
@@ -280,7 +280,7 @@ async function removeAuth(ctx: ActionContext, id: string, configured: boolean) {
     await ctx.client.auth.remove({ providerID: id }, { throwOnError: true })
   } catch (err) {
     if (!configured) throw err
-    console.warn(`[Kilo New] auth.remove failed for configured provider ${id} (non-fatal):`, err)
+    console.warn(`[Tavern New] auth.remove failed for configured provider ${id} (non-fatal):`, err)
   }
 }
 
@@ -400,7 +400,7 @@ export async function disconnectProvider(
     // reconnect automatically with an old key after logout.
     await removeAuth(ctx, id, custom)
 
-    if (id === "kilo") {
+    if (id === "tavern") {
       ctx.postMessage({ type: "profileData", data: null })
     }
 

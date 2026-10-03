@@ -16,16 +16,16 @@ import {
   ToolApprovalProvider,
   resolveToolApproval,
   useGrowIn,
-} from "@kilocode/kilo-ui/message-part"
-import type { MessageFeedbackControls } from "@kilocode/kilo-ui/message-part"
-import { useToolMotion, useToolSize } from "@kilocode/kilo-ui/tool-motion"
+} from "@taverncode/tavern-ui/message-part"
+import type { MessageFeedbackControls } from "@taverncode/tavern-ui/message-part"
+import { useToolMotion, useToolSize } from "@taverncode/tavern-ui/tool-motion"
 import type {
   AssistantMessage as SDKAssistantMessage,
   Part as SDKPart,
   Message as SDKMessage,
   ToolPart,
-} from "@kilocode/sdk/v2"
-import { useData } from "@kilocode/kilo-ui/context/data"
+} from "@taverncode/sdk/v2"
+import { useData } from "@taverncode/tavern-ui/context/data"
 import { useSession } from "../../context/session"
 import { useDisplay } from "../../context/display"
 import { useConfig } from "../../context/config"
@@ -39,7 +39,7 @@ import type { TurnTiming } from "../../context/transcript-rows"
 import { color as timelineColor } from "../../utils/timeline/colors"
 import type { Part as TimelinePart, QuestionRequest } from "../../types/messages"
 import type { TimelineHighlight } from "../../utils/timeline/highlight"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { QuestionDock } from "./QuestionDock"
 import { SuggestBar } from "./SuggestBar"
 import { toolDefaultOpen } from "./tool-default-open"
@@ -231,7 +231,7 @@ function BashToolCard(props: { part: ToolPart; defaultOpen: boolean }) {
  * rate across the turn's model-generation steps (output + reasoning
  * tokens over active generation time).
  *
- * Visibility is gated by the same `kilo-code.new.showTokenThroughput`
+ * Visibility is gated by the same `tavern-code.new.showTokenThroughput`
  * toggle that previously controlled the multi-row badge. The metric only
  * renders when the message has at least one step-finish part carrying both
  * a token count and elapsed timing.

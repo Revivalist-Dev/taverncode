@@ -9,7 +9,7 @@ const baseInput = {
   variant: undefined as string | undefined,
 }
 
-describe("buildFeedbackProperties — non-Kilo providers", () => {
+describe("buildFeedbackProperties — non-Tavern providers", () => {
   it("includes only provider/model/rating (no session or message IDs)", () => {
     const props = buildFeedbackProperties({ ...baseInput, providerID: "anthropic", next: "up" })
     expect(props).toEqual({
@@ -39,11 +39,11 @@ describe("buildFeedbackProperties — non-Kilo providers", () => {
   })
 })
 
-describe("buildFeedbackProperties — Kilo Gateway", () => {
+describe("buildFeedbackProperties — Tavern Gateway", () => {
   it("includes sessionID, messageID, parentMessageID", () => {
-    const props = buildFeedbackProperties({ ...baseInput, providerID: "kilo", next: "up" })
+    const props = buildFeedbackProperties({ ...baseInput, providerID: "tavern", next: "up" })
     expect(props).toEqual({
-      providerID: "kilo",
+      providerID: "tavern",
       modelID: "claude-sonnet-4-5",
       rating: "up",
       sessionID: "ses_xyz",

@@ -2,10 +2,10 @@
  * Pure helpers for shaping the feedback telemetry payload.
  *
  * Payload rules:
- * - Non-Kilo-Gateway providers: providerID, modelID, variant?, rating, previousRating? only.
+ * - Non-Tavern-Gateway providers: providerID, modelID, variant?, rating, previousRating? only.
  *   No session or message IDs — they can't be correlated to upstream data.
- * - Kilo Gateway providers: add sessionID, messageID, parentMessageID. The
- *   gateway can join parentMessageID against its `x-kilo-request` header logs.
+ * - Tavern Gateway providers: add sessionID, messageID, parentMessageID. The
+ *   gateway can join parentMessageID against its `x-tavern-request` header logs.
  */
 
 export type Rating = "up" | "down"
@@ -21,7 +21,7 @@ export interface RateInput {
 }
 
 export function isKiloGateway(providerID: string): boolean {
-  return providerID === "kilo"
+  return providerID === "tavern"
 }
 
 export function buildFeedbackProperties(input: RateInput, previousRating?: Rating): Record<string, unknown> {

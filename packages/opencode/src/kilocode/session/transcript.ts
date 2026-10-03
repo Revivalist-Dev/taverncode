@@ -1,7 +1,7 @@
 import { Effect, Schema } from "effect"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
 import { ProjectV2 } from "@opencode-ai/core/project"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { Session } from "@/session/session"
 import { MessageID, SessionID } from "@/session/schema"
 import { Filesystem } from "@/util/filesystem"

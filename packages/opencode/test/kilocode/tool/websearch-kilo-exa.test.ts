@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
 import { Effect, Exit, Layer } from "effect"
 import { HttpBody, HttpClient, HttpClientResponse } from "effect/unstable/http"
@@ -7,7 +7,7 @@ import {
   MAX_KILO_EXA_RESULTS,
   type KiloExaParams,
   callKiloExa,
-} from "../../../src/kilocode/tool/websearch-kilo-exa"
+} from "../../../src/taverncode/tool/websearch-tavern-exa"
 
 type Recorded = {
   url?: string
@@ -54,7 +54,7 @@ const runCall = async (
   params: KiloExaParams,
   respond: (status: number) => Response,
   recorded?: Recorded,
-  kiloToken = "kilo-test-token",
+  kiloToken = "tavern-test-token",
 ) =>
   Effect.runPromiseExit(
     Effect.gen(function* () {
@@ -70,7 +70,7 @@ describe("callKiloExa request shape", () => {
     expect(Exit.isSuccess(exit)).toBe(true)
     expect(recorded.url).toContain("/api/exa/search")
     expect(recorded.method).toBe("POST")
-    expect(recorded.authorization).toBe("Bearer kilo-test-token")
+    expect(recorded.authorization).toBe("Bearer tavern-test-token")
     const parsed = JSON.parse(recorded.body!)
     expect(parsed.query).toBe("drone")
     expect(parsed.type).toBe("auto")
@@ -156,7 +156,7 @@ describe("callKiloExa error handling", () => {
     expect(Exit.isFailure(exit)).toBe(true)
     if (Exit.isSuccess(exit)) return
     expect(String((exit as Extract<typeof exit, { _tag: "Failure" }>).cause)).toContain("unauthorized")
-    expect(String((exit as Extract<typeof exit, { _tag: "Failure" }>).cause)).toContain("kilo auth login")
+    expect(String((exit as Extract<typeof exit, { _tag: "Failure" }>).cause)).toContain("tavern auth login")
   })
 
   test("dies with auth-required message on 403", async () => {

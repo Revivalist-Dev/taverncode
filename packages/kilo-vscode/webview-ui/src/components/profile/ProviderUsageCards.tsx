@@ -1,15 +1,15 @@
 import { Component, For, Show } from "solid-js"
 import type { KiloPassState, ProviderUsageData } from "../../types/messages"
-import type { ProviderUsageSnapshot } from "@kilocode/sdk/v2/client"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Card, CardActions, CardDescription, CardHeader, CardTitle } from "@kilocode/kilo-ui/card"
-import { KiloPassMeter } from "@kilocode/kilo-ui/kilo-pass-meter"
-import { Progress } from "@kilocode/kilo-ui/progress"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { Tag } from "@kilocode/kilo-ui/tag"
+import type { ProviderUsageSnapshot } from "@taverncode/sdk/v2/client"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Card, CardActions, CardDescription, CardHeader, CardTitle } from "@taverncode/tavern-ui/card"
+import { KiloPassMeter } from "@taverncode/tavern-ui/tavern-pass-meter"
+import { Progress } from "@taverncode/tavern-ui/progress"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { Tag } from "@taverncode/tavern-ui/tag"
 import { useLanguage } from "../../context/language"
 import { localeToBcp47 } from "../../context/language-utils"
-import { formatWindow, windowLabel, windowProgress } from "@kilocode/kilo-gateway/provider-usage"
+import { formatWindow, windowLabel, windowProgress } from "@taverncode/tavern-gateway/provider-usage"
 
 export interface ProviderUsageCardsProps {
   data: ProviderUsageData | undefined
@@ -25,7 +25,7 @@ export interface ProviderUsageCardsProps {
 type Language = ReturnType<typeof useLanguage>
 
 const source = (item: ProviderUsageSnapshot, language: Language) => {
-  if (item.sourceKind === "kilo_managed") return "Kilo Gateway"
+  if (item.sourceKind === "kilo_managed") return "Tavern Gateway"
   return language.t("profile.usage.source.direct")
 }
 
@@ -203,11 +203,11 @@ const KiloPassCard: Component<{
       <CardHeader>
         <div>
           <CardTitle icon={false} role="heading" aria-level={4}>
-            Kilo
+            Tavern
           </CardTitle>
-          <CardDescription>Kilo Pass</CardDescription>
+          <CardDescription>Tavern Pass</CardDescription>
         </div>
-        <Tag>Kilo Gateway</Tag>
+        <Tag>Tavern Gateway</Tag>
       </CardHeader>
       <Show
         when={props.pass}

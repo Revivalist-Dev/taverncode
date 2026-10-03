@@ -39,7 +39,7 @@ test("headless prompts preserve the agent selected when the session was created"
     directory: tmp.path,
     fn: async () => {
       const app = Server.Default().app
-      const headers = { "content-type": "application/json", "x-kilo-directory": tmp.path }
+      const headers = { "content-type": "application/json", "x-tavern-directory": tmp.path }
       const created = await app.request("/session", {
         method: "POST",
         headers,

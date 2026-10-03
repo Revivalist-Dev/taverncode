@@ -2,11 +2,11 @@ import { Deferred, Effect } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import * as Log from "@opencode-ai/core/util/log"
 import { SessionID } from "@/session/schema"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
 import type { Info } from "@/question"
 
 /**
- * Kilo-specific helpers for the shared `@/question` module.
+ * Tavern-specific helpers for the shared `@/question` module.
  *
  * Extracted here so the upstream file keeps just the import, an Interface entry
  * for `dismissAll`, and one-liner calls at the use sites — minimising the

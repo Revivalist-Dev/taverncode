@@ -1,5 +1,5 @@
 /**
- * Kilo-specific overrides for the provider dialog.
+ * Tavern-specific overrides for the provider dialog.
  *
  * Exports constants and renderers consumed by the shared upstream
  * `dialog-provider.tsx` so the upstream diff stays minimal.
@@ -7,9 +7,9 @@
 
 import type { JSX } from "solid-js"
 import type { RGBA } from "@opentui/core"
-import type { ProviderAuthAuthorization } from "@kilocode/sdk/v2"
-import { KiloAutoMethod } from "@/kilocode/components/dialog-kilo-auto-method"
-export { selectProvider } from "@/kilocode/anaconda-desktop/tui/setup"
+import type { ProviderAuthAuthorization } from "@taverncode/sdk/v2"
+import { KiloAutoMethod } from "@/taverncode/components/dialog-tavern-auto-method"
+export { selectProvider } from "@/taverncode/anaconda-desktop/tui/setup"
 
 // ---------------------------------------------------------------------------
 // Failed-state gutter/description helpers
@@ -46,7 +46,7 @@ export function failedDescription(providerID: string, failed: string[]): string 
 // ---------------------------------------------------------------------------
 
 export const PROVIDER_PRIORITY: Record<string, number> = {
-  kilo: -1,
+  tavern: -1,
   anthropic: 0,
   "github-copilot": 1,
   openai: 2,
@@ -59,7 +59,7 @@ export const PROVIDER_PRIORITY: Record<string, number> = {
 // ---------------------------------------------------------------------------
 
 export const PROVIDER_DESCRIPTIONS: Record<string, string> = {
-  kilo: "(Recommended)",
+  tavern: "(Recommended)",
   anthropic: "(Claude Max or API key)",
   openai: "(ChatGPT login or API key)",
   "anaconda-desktop": "(Local models)",
@@ -83,7 +83,7 @@ export const LOCAL_API_KEY_PLACEHOLDER = "local"
 // ---------------------------------------------------------------------------
 
 /**
- * If the provider is Kilo Gateway, renders the custom `KiloAutoMethod`
+ * If the provider is Tavern Gateway, renders the custom `KiloAutoMethod`
  * component that handles device-auth + org selection.
  *
  * Returns `undefined` for every other provider so the caller can fall
@@ -98,7 +98,7 @@ export function renderAutoMethod(opts: {
   useTheme: () => any
   DialogModel: any
 }): (() => JSX.Element) | undefined {
-  if (opts.providerID !== "kilo") return undefined
+  if (opts.providerID !== "tavern") return undefined
   return () => (
     <KiloAutoMethod
       providerID={opts.providerID}
@@ -118,7 +118,7 @@ export function renderAutoMethod(opts: {
 
 /**
  * Returns a custom description element for the API-key dialog when the
- * provider is Kilo Gateway. Returns `undefined` otherwise.
+ * provider is Tavern Gateway. Returns `undefined` otherwise.
  */
 export function renderApiDescription(
   providerID: string,
@@ -131,14 +131,14 @@ export function renderApiDescription(
       </text>
     )
   }
-  if (providerID !== "kilo") return undefined
+  if (providerID !== "tavern") return undefined
   return () => (
     <box gap={1}>
       <text fg={theme.textMuted}>
-        Kilo Gateway gives you access to all the best coding models at the cheapest prices with a single API key.
+        Tavern Gateway gives you access to all the best coding models at the cheapest prices with a single API key.
       </text>
       <text fg={theme.text}>
-        Go to <span style={{ fg: theme.primary }}>https://kilo.ai/gateway</span> to get a key
+        Go to <span style={{ fg: theme.primary }}>https://tavern.ai/gateway</span> to get a key
       </text>
     </box>
   )

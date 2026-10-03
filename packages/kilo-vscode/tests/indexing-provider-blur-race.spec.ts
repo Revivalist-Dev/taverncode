@@ -8,10 +8,10 @@ if (IS_DARWIN) {
   test.skip()
 }
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "settings--indexing-provider-blur-race"
-const KILO_STORY_ID = "settings--indexing-kilo-model-preset"
-const KILO_LOADING_STORY_ID = "settings--indexing-kilo-catalog-loading"
+const KILO_STORY_ID = "settings--indexing-tavern-model-preset"
+const KILO_LOADING_STORY_ID = "settings--indexing-tavern-catalog-loading"
 const SCOPE_STORY_ID = "settings--indexing-scope-switch"
 
 type Saved = {
@@ -122,17 +122,17 @@ test("scope switching preserves raw overrides and commits blur to the original s
   await expect(tuningRow.locator('[data-component="tag"]')).toHaveText("Default")
 })
 
-test("Kilo exposes only supported embedding model presets", async ({ page }) => {
+test("Tavern exposes only supported embedding model presets", async ({ page }) => {
   await page.setViewportSize({ width: 420, height: 720 })
   await page.goto(storyUrl(KILO_STORY_ID), { waitUntil: "load" })
   await disableAnimations(page)
   await page.waitForSelector("#storybook-root *", { state: "attached" })
 
-  await expect(page.getByText("Kilo model preset", { exact: true })).toBeVisible()
+  await expect(page.getByText("Tavern model preset", { exact: true })).toBeVisible()
   await expect(page.getByText("Embedding model", { exact: true })).toHaveCount(0)
   await expect(page.getByText("Vector dimension", { exact: true })).toBeVisible()
 
-  const preset = selectIn(page, "Kilo model preset")
+  const preset = selectIn(page, "Tavern model preset")
   await expect(preset).toContainText("Provider Model")
 
   const dimension = field(page, "Vector dimension").first()
@@ -143,11 +143,11 @@ test("Kilo exposes only supported embedding model presets", async ({ page }) => 
   await expect(preset).toContainText("Provider Compact")
 })
 
-test("enabling Kilo before its catalog loads does not store an empty model", async ({ page }) => {
-  const saved = page.getByTestId("indexing-kilo-loading-save")
+test("enabling Tavern before its catalog loads does not store an empty model", async ({ page }) => {
+  const saved = page.getByTestId("indexing-tavern-loading-save")
   const cfg = async () => JSON.parse(((await saved.textContent()) ?? "{}").trim()) as Saved
   const verify = async () => {
-    await expect.poll(async () => (await cfg()).provider).toBe("kilo")
+    await expect.poll(async () => (await cfg()).provider).toBe("tavern")
     expect((await cfg()).model).toBeNull()
     expect((await cfg()).dimension).toBeNull()
   }

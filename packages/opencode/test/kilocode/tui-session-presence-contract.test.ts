@@ -1,5 +1,5 @@
 /**
- * Contract test for the TUI presence snapshot in kilocode/cli/cmd/tui/app.tsx.
+ * Contract test for the TUI presence snapshot in taverncode/cli/cmd/tui/app.tsx.
  *
  * `useSessionEffects` must run inside a SolidJS owner with the @opentui/solid
  * renderer context, so mounting it in a unit test would require mocking the TUI
@@ -14,7 +14,7 @@ import { describe, expect, test } from "bun:test"
 import fs from "node:fs"
 import path from "node:path"
 
-const APP_FILE = path.resolve(import.meta.dir, "../../src/kilocode/cli/cmd/tui/app.tsx")
+const APP_FILE = path.resolve(import.meta.dir, "../../src/taverncode/cli/cmd/tui/app.tsx")
 
 /** The useSessionEffects function body, so assertions don't match unrelated code. */
 function effects() {

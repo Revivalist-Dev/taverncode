@@ -65,7 +65,7 @@ describe("Build Script Dependency Declarations", () => {
   })
 
   it("loads the packaged browser broker outside the repository", async () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kilo-browser-runtime-"))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "tavern-browser-runtime-"))
     const staging = path.join(dir, "staging")
     const installed = path.join(dir, "installed")
     try {

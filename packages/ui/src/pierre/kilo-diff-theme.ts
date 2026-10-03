@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { registerCustomTheme, type ThemeRegistrationResolved } from "@pierre/diffs"
 
-// The "Kilo" Pierre/Shiki theme used by every diff review surface (Code / Diff /
+// The "Tavern" Pierre/Shiki theme used by every diff review surface (Code / Diff /
 // File / SessionReview) and by markdown code highlighting. Pierre resolves the
-// theme by name when a worker pool initializes (resolveThemes(["Kilo"])) or when
+// theme by name when a worker pool initializes (resolveThemes(["Tavern"])) or when
 // getSharedHighlighter() attaches it; if the name was never registered it throws
-// "resolveTheme: No valid loader for Kilo".
+// "resolveTheme: No valid loader for Tavern".
 //
 // This registration lives next to the worker pool factory (./worker) so that it
 // is a guaranteed, synchronous precondition of using the diff machinery: every
@@ -13,7 +13,7 @@ import { registerCustomTheme, type ThemeRegistrationResolved } from "@pierre/dif
 // at module load — before any WorkerPoolManager.initialize() runs. Previously the
 // registration was only a side effect of importing the (heavy, katex/marked-
 // pulling) markdown context module, which forced consumers that render diffs
-// without markdown (e.g. kilo-console) to fire a racy `void import(...)` purely to
+// without markdown (e.g. tavern-console) to fire a racy `void import(...)` purely to
 // register the theme. Keeping it here, free of katex/marked, lets those consumers
 // stay light while removing the race entirely.
 //
@@ -21,10 +21,10 @@ import { registerCustomTheme, type ThemeRegistrationResolved } from "@pierre/dif
 // context/marked.tsx. Do not restore that inline block on upstream merges — route
 // the registration through ensureKiloDiffTheme() instead.
 
-export const KILO_DIFF_THEME = "Kilo"
+export const KILO_DIFF_THEME = "Tavern"
 
 const registrations = (() => {
-  const key = Symbol.for("kilocode.ui.pierre.kilo-diff-theme")
+  const key = Symbol.for("taverncode.ui.pierre.tavern-diff-theme")
   const existing = Reflect.get(globalThis, key)
   if (existing instanceof WeakSet) return existing as WeakSet<typeof registerCustomTheme>
 
@@ -35,7 +35,7 @@ const registrations = (() => {
 
 // Idempotent: this is reached from both the markdown context and the diff worker
 // factory. Pierre no longer exposes its registered-theme set, so use a realm-wide
-// guard keyed by the public registration function. Duplicate Kilo modules sharing
+// guard keyed by the public registration function. Duplicate Tavern modules sharing
 // one Pierre instance stay no-ops, while separately bundled Pierre instances still
 // receive their own registration.
 export function ensureKiloDiffTheme(): void {

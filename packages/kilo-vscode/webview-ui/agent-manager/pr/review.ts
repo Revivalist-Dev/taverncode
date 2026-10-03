@@ -62,8 +62,8 @@ export function createPRReview(opts: Options) {
     if (owner && owner !== opts.context()) return
     if (open(thread(detail.comment))) event.preventDefault()
   }
-  window.addEventListener("kilo:open-pr-comment", handle)
-  onCleanup(() => window.removeEventListener("kilo:open-pr-comment", handle))
+  window.addEventListener("tavern:open-pr-comment", handle)
+  onCleanup(() => window.removeEventListener("tavern:open-pr-comment", handle))
   createEffect(
     on(
       () => key(opts.context()),

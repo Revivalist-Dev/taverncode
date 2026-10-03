@@ -7,7 +7,7 @@ import { RuntimeFlags } from "../../../src/effect/runtime-flags"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { provideTmpdirInstance, testInstanceStoreLayer } from "../../fixture/fixture"
 import { testEffect } from "../../lib/effect"
-import * as SkillPaths from "../../../src/kilocode/skill/paths"
+import * as SkillPaths from "../../../src/taverncode/skill/paths"
 
 const node = AppNodeBuilder.build(CrossSpawnSpawner.node)
 const skills = AppNodeBuilder.build(Skill.node, [
@@ -32,7 +32,7 @@ const names = (list: readonly Skill.Info[]) =>
     .filter((n) => n.endsWith("-skill"))
     .sort()
 
-describe("kilocode skills.paths resolution", () => {
+describe("taverncode skills.paths resolution", () => {
   test("rooted detects a leading slash but not drive or UNC paths", () => {
     expect(SkillPaths.rooted("/.github/skills")).toBe(true)
     expect(SkillPaths.rooted("\\.github\\skills")).toBe(true)
@@ -70,7 +70,7 @@ describe("kilocode skills.paths resolution", () => {
           // The absolute entry needs the tmpdir, so write the config before the first config read.
           yield* Effect.promise(() =>
             Bun.write(
-              path.join(dir, "kilo.json"),
+              path.join(dir, "tavern.json"),
               JSON.stringify({
                 skills: { paths: [".github/skills", "./team/skills", path.join(dir, "abs", "skills")] },
               }),
@@ -88,7 +88,7 @@ describe("kilocode skills.paths resolution", () => {
     provideTmpdirInstance(
       (dir) =>
         Effect.gen(function* () {
-          yield* write(dir, ".kilo", "skills", "project-skill")
+          yield* write(dir, ".tavern", "skills", "project-skill")
           const skill = yield* Skill.Service
           const list = yield* skill.all()
           expect(names(list)).toEqual(["project-skill"])

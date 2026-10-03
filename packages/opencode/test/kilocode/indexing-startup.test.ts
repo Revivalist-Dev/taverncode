@@ -3,17 +3,17 @@ import { $ } from "bun"
 import { Effect } from "effect"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { CodeIndexManager } from "@kilocode/kilo-indexing/engine"
-import { normalizeIndexingStatus } from "@kilocode/kilo-indexing/status"
+import { CodeIndexManager } from "@taverncode/tavern-indexing/engine"
+import { normalizeIndexingStatus } from "@taverncode/tavern-indexing/status"
 import type { Config } from "../../src/config/config"
 import { GlobalBus } from "../../src/bus/global"
 import { WorkspaceV2 } from "@opencode-ai/core/workspace"
 import { Global } from "@opencode-ai/core/global"
-import { message } from "@opencode-ai/core/kilocode/fff"
+import { message } from "@opencode-ai/core/taverncode/fff"
 import { WorkspaceContext } from "../../src/control-plane/workspace-context"
-import { KiloIndexing, IndexingModelError } from "../../src/kilocode/indexing"
-import { indexingWarningKey } from "../../src/kilocode/indexing-warning"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { KiloIndexing, IndexingModelError } from "../../src/taverncode/indexing"
+import { indexingWarningKey } from "../../src/taverncode/indexing-warning"
+import { IndexingWorker } from "../../src/taverncode/indexing-worker-client"
 import { provideTestInstance, withTestInstance } from "../fixture/fixture"
 import { Server } from "../../src/server/server"
 import * as Log from "@opencode-ai/core/util/log"
@@ -24,7 +24,7 @@ Log.init({ print: false })
 const fetch = global.fetch
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: true,
     provider: "ollama",
@@ -36,7 +36,7 @@ const cfg: Partial<Config.Info> = {
 }
 
 const unset: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     provider: "ollama",
     vectorStore: "qdrant",
@@ -46,22 +46,22 @@ const unset: Partial<Config.Info> = {
   },
 }
 const inactive: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: false,
     provider: "ollama",
     vectorStore: "qdrant",
   },
 }
-const kilo: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+const tavern: Partial<Config.Info> = {
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: true,
     vectorStore: "qdrant",
   },
 }
 const implicitOpenAi: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: true,
     vectorStore: "qdrant",
@@ -71,10 +71,10 @@ const implicitOpenAi: Partial<Config.Info> = {
   },
 }
 const staleKilo: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: true,
-    provider: "kilo",
+    provider: "tavern",
     model: "custom/model",
     dimension: 2048,
     vectorStore: "qdrant",
@@ -139,18 +139,18 @@ afterEach(async () => {
 })
 
 describe("indexing model catalog", () => {
-  test("ignores a project-scoped Kilo origin", async () => {
+  test("ignores a project-scoped Tavern origin", async () => {
     await using tmp = await tmpdir({
       git: true,
       init: async (dir) => {
         const global = path.join(dir, "global")
         const project = path.join(dir, "project")
-        await fs.mkdir(path.join(project, ".kilo"), { recursive: true })
+        await fs.mkdir(path.join(project, ".tavern"), { recursive: true })
         await fs.mkdir(global, { recursive: true })
-        await Bun.write(path.join(global, "kilo.jsonc"), "{}")
+        await Bun.write(path.join(global, "tavern.jsonc"), "{}")
         await Bun.write(
-          path.join(project, ".kilo", "kilo.jsonc"),
-          JSON.stringify({ indexing: { kilo: { baseUrl: "http://127.0.0.1:4567" } } }),
+          path.join(project, ".tavern", "tavern.jsonc"),
+          JSON.stringify({ indexing: { tavern: { baseUrl: "http://127.0.0.1:4567" } } }),
         )
         return { global, project }
       },
@@ -169,7 +169,7 @@ describe("indexing model catalog", () => {
     }) as typeof fetch
 
     const response = await Server.Default().app.request("/indexing/models", {
-      headers: { "x-kilo-directory": tmp.extra.project },
+      headers: { "x-tavern-directory": tmp.extra.project },
     })
 
     const catalogs = calls.filter((url) => url.includes("embedding-models"))
@@ -191,7 +191,7 @@ describe("indexing startup degradation", () => {
 
       const config = await app.request("/config", {
         headers: {
-          "x-kilo-directory": tmp.path,
+          "x-tavern-directory": tmp.path,
         },
       })
       expect(config.status).toBe(200)
@@ -199,7 +199,7 @@ describe("indexing startup degradation", () => {
       const body = await wait(async () => {
         const status = await app.request("/indexing/status", {
           headers: {
-            "x-kilo-directory": tmp.path,
+            "x-tavern-directory": tmp.path,
           },
         })
         expect(status.status).toBe(200)
@@ -277,7 +277,7 @@ describe("indexing startup degradation", () => {
         for (const _ of Array.from({ length: 100 })) {
           const response = await app.request("/indexing/warnings", {
             headers: {
-              "x-kilo-directory": tmp.path,
+              "x-tavern-directory": tmp.path,
             },
           })
           expect(response.status).toBe(200)
@@ -391,7 +391,7 @@ describe("indexing startup degradation", () => {
 
       const config = await app.request("/config", {
         headers: {
-          "x-kilo-directory": tmp.path,
+          "x-tavern-directory": tmp.path,
         },
       })
       expect(config.status).toBe(200)
@@ -400,7 +400,7 @@ describe("indexing startup degradation", () => {
         method: "PUT",
         headers: {
           "content-type": "application/json",
-          "x-kilo-directory": tmp.path,
+          "x-tavern-directory": tmp.path,
         },
         body: JSON.stringify({ enabled: true }),
       })
@@ -555,7 +555,7 @@ describe("indexing startup degradation", () => {
             expect(await KiloIndexing.available()).toBe(false)
             expect(KiloIndexing.ready()).toBe(false)
             expect(await KiloIndexing.search("filesystem root")).toEqual([])
-            const warnings = await app.request("/config/warnings", { headers: { "x-kilo-directory": directory } })
+            const warnings = await app.request("/config/warnings", { headers: { "x-tavern-directory": directory } })
             expect(warnings.status).toBe(200)
             expect(await warnings.json()).toContainEqual(expect.objectContaining({ message }))
             expect(created).toEqual([])
@@ -563,7 +563,7 @@ describe("indexing startup degradation", () => {
         })
       }
     }
-    const warnings = await app.request("/config/warnings", { headers: { "x-kilo-directory": tmp.path } })
+    const warnings = await app.request("/config/warnings", { headers: { "x-tavern-directory": tmp.path } })
     expect(warnings.status).toBe(200)
     expect(await warnings.json()).not.toContainEqual(expect.objectContaining({ message }))
   })
@@ -618,7 +618,7 @@ describe("indexing startup degradation", () => {
           }),
         ),
       )) as unknown as typeof global.fetch
-    const logger = Log.create({ service: "kilocode-indexing" })
+    const logger = Log.create({ service: "taverncode-indexing" })
     const warn = spyOn(logger, "warn")
     const key = process.env.KILO_API_KEY
 
@@ -628,7 +628,7 @@ describe("indexing startup degradation", () => {
     }
     await using tmp = await tmpdir({ git: true, config })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -648,7 +648,7 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("disabled indexing does not resolve the Kilo model catalog", async () => {
+  test("disabled indexing does not resolve the Tavern model catalog", async () => {
     const fetchSpy = spyOn(globalThis, "fetch")
     const key = process.env.KILO_API_KEY
 
@@ -658,12 +658,12 @@ describe("indexing startup degradation", () => {
         ...staleKilo.indexing,
         enabled: false,
         model: "removed/model",
-        kilo: { baseUrl: "not a url" },
+        tavern: { baseUrl: "not a url" },
       },
     }
     await using tmp = await tmpdir({ git: true, config })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -802,7 +802,7 @@ describe("indexing startup degradation", () => {
     }
   }, 15_000)
 
-  test("enriches Kilo provider config from env auth", async () => {
+  test("enriches Tavern provider config from env auth", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -819,9 +819,9 @@ describe("indexing startup degradation", () => {
     const key = process.env.KILO_API_KEY
     const org = process.env.KILO_ORG_ID
 
-    await using tmp = await tmpdir({ git: true, config: kilo })
+    await using tmp = await tmpdir({ git: true, config: tavern })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
     process.env.KILO_ORG_ID = "org_123"
 
     try {
@@ -831,8 +831,8 @@ describe("indexing startup degradation", () => {
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
-            kiloApiKey: "kilo-token",
+            embedderProvider: "tavern",
+            kiloApiKey: "tavern-token",
             kiloOrganizationId: "org_123",
             modelId: "mistralai/mistral-embed-2312",
             modelDimension: 1024,
@@ -849,7 +849,7 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("reports an error for an unsupported explicit Kilo model instead of falling back", async () => {
+  test("reports an error for an unsupported explicit Tavern model instead of falling back", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -862,13 +862,13 @@ describe("indexing startup degradation", () => {
           }),
         ),
       )) as unknown as typeof global.fetch
-    const logger = Log.create({ service: "kilocode-indexing" })
+    const logger = Log.create({ service: "taverncode-indexing" })
     const warn = spyOn(logger, "warn")
     const key = process.env.KILO_API_KEY
 
     await using tmp = await tmpdir({ git: true, config: staleKilo })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -895,7 +895,7 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("passes a valid explicit Kilo model through without error", async () => {
+  test("passes a valid explicit Tavern model through without error", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -908,7 +908,7 @@ describe("indexing startup degradation", () => {
           }),
         ),
       )) as unknown as typeof global.fetch
-    const logger = Log.create({ service: "kilocode-indexing" })
+    const logger = Log.create({ service: "taverncode-indexing" })
     const warn = spyOn(logger, "warn")
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
     const key = process.env.KILO_API_KEY
@@ -919,7 +919,7 @@ describe("indexing startup degradation", () => {
     }
     await using tmp = await tmpdir({ git: true, config })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -928,7 +928,7 @@ describe("indexing startup degradation", () => {
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "tavern",
             modelId: "mistralai/mistral-embed-2312",
             modelDimension: 1024,
             searchMinScore: 0.35,
@@ -946,7 +946,7 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("uses hosted dimensions for supported Kilo models", async () => {
+  test("uses hosted dimensions for supported Tavern models", async () => {
     global.fetch = (() =>
       Promise.resolve(
         new Response(
@@ -978,7 +978,7 @@ describe("indexing startup degradation", () => {
 
     await using tmp = await tmpdir({ git: true, config })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -987,7 +987,7 @@ describe("indexing startup degradation", () => {
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "tavern",
             modelId: "openai/text-embedding-3-small",
             modelDimension: 1536,
           })
@@ -1000,14 +1000,14 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("leaves Kilo model metadata unset when the hosted catalog is unavailable", async () => {
+  test("leaves Tavern model metadata unset when the hosted catalog is unavailable", async () => {
     global.fetch = (() => Promise.resolve(new Response(undefined, { status: 500 }))) as unknown as typeof global.fetch
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
     const key = process.env.KILO_API_KEY
 
     await using tmp = await tmpdir({ git: true, config: staleKilo })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({
@@ -1016,7 +1016,7 @@ describe("indexing startup degradation", () => {
         fn: async () => {
           await called(init)
           expect(init.mock.calls[0]?.[0]).toMatchObject({
-            embedderProvider: "kilo",
+            embedderProvider: "tavern",
             modelId: undefined,
             modelDimension: undefined,
             searchMinScore: undefined,
@@ -1030,13 +1030,13 @@ describe("indexing startup degradation", () => {
     }
   })
 
-  test("does not default to Kilo when an existing provider config is present", async () => {
+  test("does not default to Tavern when an existing provider config is present", async () => {
     const init = spyOn(CodeIndexManager.prototype, "initialize").mockResolvedValue({ requiresRestart: false })
     const key = process.env.KILO_API_KEY
 
     await using tmp = await tmpdir({ git: true, config: implicitOpenAi })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    process.env.KILO_API_KEY = "kilo-token"
+    process.env.KILO_API_KEY = "tavern-token"
 
     try {
       await provideTestInstance({

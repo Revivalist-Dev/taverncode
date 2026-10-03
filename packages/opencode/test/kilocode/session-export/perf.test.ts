@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { Capture } from "@/kilocode/session-export/capture"
+import { Capture } from "@/taverncode/session-export/capture"
 
 describe("session export performance budget", () => {
   const worker = { postMessage: () => {}, terminate: () => {} } as unknown as Worker
@@ -29,7 +29,7 @@ describe("session export performance budget", () => {
     for (let i = 0; i < 200; i++) {
       const start = performance.now()
       cap.beforeRequest({
-        input: { model: { api: { npm: "@kilocode/kilo-gateway" }, isFree: true }, org: { type: "personal" as const } },
+        input: { model: { api: { npm: "@taverncode/tavern-gateway" }, isFree: true }, org: { type: "personal" as const } },
         requestMeta: meta(`s${i}`),
         assembled: { system: [body], messages: [], tools: {}, permissions: [], params: {} },
       })

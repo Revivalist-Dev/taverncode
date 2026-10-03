@@ -1,35 +1,35 @@
 /**
  * Language context
- * Provides i18n translations for kilo-ui components.
- * Merges UI translations from @opencode-ai/ui and Kilo overrides from @kilocode/kilo-i18n.
+ * Provides i18n translations for tavern-ui components.
+ * Merges UI translations from @opencode-ai/ui and Tavern overrides from @taverncode/tavern-i18n.
  *
  * Locale priority: user override → VS Code display language → browser language → "en"
  */
 
 import { createSignal, createMemo, createEffect, ParentComponent, Accessor } from "solid-js"
-import { I18nProvider, pluralCategory, pluralKey } from "@kilocode/kilo-ui/context"
-import type { UiI18nKey, UiI18nParams, UiI18nPluralKey } from "@kilocode/kilo-ui/context"
-import { dict as uiEn } from "@kilocode/kilo-ui/i18n/en"
-import { dict as uiZh } from "@kilocode/kilo-ui/i18n/zh"
-import { dict as uiZht } from "@kilocode/kilo-ui/i18n/zht"
-import { dict as uiKo } from "@kilocode/kilo-ui/i18n/ko"
-import { dict as uiDe } from "@kilocode/kilo-ui/i18n/de"
-import { dict as uiEs } from "@kilocode/kilo-ui/i18n/es"
-import { dict as uiFr } from "@kilocode/kilo-ui/i18n/fr"
-import { dict as uiDa } from "@kilocode/kilo-ui/i18n/da"
-import { dict as uiJa } from "@kilocode/kilo-ui/i18n/ja"
-import { dict as uiPl } from "@kilocode/kilo-ui/i18n/pl"
-import { dict as uiRu } from "@kilocode/kilo-ui/i18n/ru"
-import { dict as uiAr } from "@kilocode/kilo-ui/i18n/ar"
-import { dict as uiNo } from "@kilocode/kilo-ui/i18n/no"
-import { dict as uiBr } from "@kilocode/kilo-ui/i18n/br"
-import { dict as uiTh } from "@kilocode/kilo-ui/i18n/th"
-import { dict as uiBs } from "@kilocode/kilo-ui/i18n/bs"
-import { dict as uiTr } from "@kilocode/kilo-ui/i18n/tr"
-import { dict as uiNl } from "@kilocode/kilo-ui/i18n/nl"
-import { dict as uiUk } from "@kilocode/kilo-ui/i18n/uk"
-import { dict as uiIt } from "@kilocode/kilo-ui/i18n/it"
-import { dict as uiFa } from "@kilocode/kilo-ui/i18n/fa"
+import { I18nProvider, pluralCategory, pluralKey } from "@taverncode/tavern-ui/context"
+import type { UiI18nKey, UiI18nParams, UiI18nPluralKey } from "@taverncode/tavern-ui/context"
+import { dict as uiEn } from "@taverncode/tavern-ui/i18n/en"
+import { dict as uiZh } from "@taverncode/tavern-ui/i18n/zh"
+import { dict as uiZht } from "@taverncode/tavern-ui/i18n/zht"
+import { dict as uiKo } from "@taverncode/tavern-ui/i18n/ko"
+import { dict as uiDe } from "@taverncode/tavern-ui/i18n/de"
+import { dict as uiEs } from "@taverncode/tavern-ui/i18n/es"
+import { dict as uiFr } from "@taverncode/tavern-ui/i18n/fr"
+import { dict as uiDa } from "@taverncode/tavern-ui/i18n/da"
+import { dict as uiJa } from "@taverncode/tavern-ui/i18n/ja"
+import { dict as uiPl } from "@taverncode/tavern-ui/i18n/pl"
+import { dict as uiRu } from "@taverncode/tavern-ui/i18n/ru"
+import { dict as uiAr } from "@taverncode/tavern-ui/i18n/ar"
+import { dict as uiNo } from "@taverncode/tavern-ui/i18n/no"
+import { dict as uiBr } from "@taverncode/tavern-ui/i18n/br"
+import { dict as uiTh } from "@taverncode/tavern-ui/i18n/th"
+import { dict as uiBs } from "@taverncode/tavern-ui/i18n/bs"
+import { dict as uiTr } from "@taverncode/tavern-ui/i18n/tr"
+import { dict as uiNl } from "@taverncode/tavern-ui/i18n/nl"
+import { dict as uiUk } from "@taverncode/tavern-ui/i18n/uk"
+import { dict as uiIt } from "@taverncode/tavern-ui/i18n/it"
+import { dict as uiFa } from "@taverncode/tavern-ui/i18n/fa"
 import { dict as appEn } from "../i18n/en"
 import { dict as appZh } from "../i18n/zh"
 import { dict as appZht } from "../i18n/zht"
@@ -72,26 +72,26 @@ import { dict as amNl } from "../../agent-manager/i18n/nl"
 import { dict as amUk } from "../../agent-manager/i18n/uk"
 import { dict as amIt } from "../../agent-manager/i18n/it"
 import { dict as amFa } from "../../agent-manager/i18n/fa"
-import { dict as kiloEn } from "@kilocode/kilo-i18n/en"
-import { dict as kiloZh } from "@kilocode/kilo-i18n/zh"
-import { dict as kiloZht } from "@kilocode/kilo-i18n/zht"
-import { dict as kiloKo } from "@kilocode/kilo-i18n/ko"
-import { dict as kiloDe } from "@kilocode/kilo-i18n/de"
-import { dict as kiloEs } from "@kilocode/kilo-i18n/es"
-import { dict as kiloFr } from "@kilocode/kilo-i18n/fr"
-import { dict as kiloDa } from "@kilocode/kilo-i18n/da"
-import { dict as kiloJa } from "@kilocode/kilo-i18n/ja"
-import { dict as kiloPl } from "@kilocode/kilo-i18n/pl"
-import { dict as kiloRu } from "@kilocode/kilo-i18n/ru"
-import { dict as kiloAr } from "@kilocode/kilo-i18n/ar"
-import { dict as kiloNo } from "@kilocode/kilo-i18n/no"
-import { dict as kiloBr } from "@kilocode/kilo-i18n/br"
-import { dict as kiloTh } from "@kilocode/kilo-i18n/th"
-import { dict as kiloBs } from "@kilocode/kilo-i18n/bs"
-import { dict as kiloTr } from "@kilocode/kilo-i18n/tr"
-import { dict as kiloNl } from "@kilocode/kilo-i18n/nl"
-import { dict as kiloUk } from "@kilocode/kilo-i18n/uk"
-import { dict as kiloIt } from "@kilocode/kilo-i18n/it"
+import { dict as kiloEn } from "@taverncode/tavern-i18n/en"
+import { dict as kiloZh } from "@taverncode/tavern-i18n/zh"
+import { dict as kiloZht } from "@taverncode/tavern-i18n/zht"
+import { dict as kiloKo } from "@taverncode/tavern-i18n/ko"
+import { dict as kiloDe } from "@taverncode/tavern-i18n/de"
+import { dict as kiloEs } from "@taverncode/tavern-i18n/es"
+import { dict as kiloFr } from "@taverncode/tavern-i18n/fr"
+import { dict as kiloDa } from "@taverncode/tavern-i18n/da"
+import { dict as kiloJa } from "@taverncode/tavern-i18n/ja"
+import { dict as kiloPl } from "@taverncode/tavern-i18n/pl"
+import { dict as kiloRu } from "@taverncode/tavern-i18n/ru"
+import { dict as kiloAr } from "@taverncode/tavern-i18n/ar"
+import { dict as kiloNo } from "@taverncode/tavern-i18n/no"
+import { dict as kiloBr } from "@taverncode/tavern-i18n/br"
+import { dict as kiloTh } from "@taverncode/tavern-i18n/th"
+import { dict as kiloBs } from "@taverncode/tavern-i18n/bs"
+import { dict as kiloTr } from "@taverncode/tavern-i18n/tr"
+import { dict as kiloNl } from "@taverncode/tavern-i18n/nl"
+import { dict as kiloUk } from "@taverncode/tavern-i18n/uk"
+import { dict as kiloIt } from "@taverncode/tavern-i18n/it"
 import { useVSCode } from "./vscode"
 import { normalizeLocale as _normalizeLocale, resolveTemplate as _resolveTemplate } from "./language-utils"
 
@@ -124,7 +124,7 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   fa: "فارسی",
 }
 
-// Merge 4 dict layers: app + ui + kilo + agent manager (kilo and agent manager override last)
+// Merge 4 dict layers: app + ui + tavern + agent manager (tavern and agent manager override last)
 const base = { ...appEn, ...uiEn, ...kiloEn }
 const dicts: Record<Locale, Record<string, string>> = {
   en: { ...base, ...amEn },
@@ -147,8 +147,8 @@ const dicts: Record<Locale, Record<string, string>> = {
   nl: { ...base, ...appNl, ...uiNl, ...kiloNl, ...amEn, ...amNl },
   uk: { ...base, ...appUk, ...uiUk, ...kiloUk, ...amEn, ...amUk },
   it: { ...base, ...appIt, ...uiIt, ...kiloIt, ...amEn, ...amIt },
-  // Persian (Kilo fork addition). App, UI, and agent-manager layers are localized;
-  // the Kilo overrides layer falls back to English via `base`.
+  // Persian (Tavern fork addition). App, UI, and agent-manager layers are localized;
+  // the Tavern overrides layer falls back to English via `base`.
   fa: { ...base, ...appFa, ...uiFa, ...amEn, ...amFa },
 }
 
@@ -219,7 +219,7 @@ export const LanguageProvider: ParentComponent<LanguageProviderProps> = (props) 
       value={{ locale, setLocale, userOverride, t: t as (key: string, params?: UiI18nParams) => string }}
     >
       {/* Shared UI formats dates and numbers with Intl from this value, so it
-          must be a BCP-47 tag (Kilo's "zht" is not one). */}
+          must be a BCP-47 tag (Tavern's "zht" is not one). */}
       <I18nProvider value={{ locale: () => localeToBcp47(locale()), t, plural }}>{props.children}</I18nProvider>
     </LanguageContext.Provider>
   )

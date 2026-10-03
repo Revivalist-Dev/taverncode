@@ -47,7 +47,7 @@ const model = () =>
     cost: { input: 3, output: 15, cache: { read: 0.3, write: 3.75 } },
   })
 
-const kilo = { id: "kilo" } as Provider.Info
+const tavern = { id: "tavern" } as Provider.Info
 
 // Calculated cost for the `model()` + `baseUsage` pair: 1M input * $3 + 100k output * $15 = 3 + 1.5
 const fallback = 3 + 1.5
@@ -56,7 +56,7 @@ describe("KiloSession.providerCost — Anthropic Messages / OpenAI Responses", (
   test("uses preserved AI SDK raw usage cost_details", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: new Usage({
         inputTokens: baseUsage.inputTokens,
         outputTokens: baseUsage.outputTokens,
@@ -76,7 +76,7 @@ describe("KiloSession.providerCost — Anthropic Messages / OpenAI Responses", (
   test("ignores provider `cost` when no upstream_inference_cost is reported", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: new Usage({
         inputTokens: baseUsage.inputTokens,
         outputTokens: baseUsage.outputTokens,
@@ -93,12 +93,12 @@ describe("KiloSession.providerCost — Vercel AI Gateway", () => {
   test("uses metadata.gateway.marketCost", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: baseUsage,
       metadata: {
         gateway: {
           // Strings, exactly as emitted by the AI Gateway. `cost` is the gateway fee,
-          // which Kilo doesn't pass on to end users — must be ignored.
+          // which Tavern doesn't pass on to end users — must be ignored.
           cost: "0",
           marketCost: "0.35349075",
         },
@@ -111,7 +111,7 @@ describe("KiloSession.providerCost — Vercel AI Gateway", () => {
   test("ignores metadata.gateway.cost when marketCost is missing", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: baseUsage,
       metadata: {
         gateway: {
@@ -162,7 +162,7 @@ describe("KiloSession.providerCost — OpenRouter chat completions", () => {
       metadata: {
         openrouter: {
           usage: {
-            // Observed BYOK shape in kilo-gateway fixtures: `cost` is OpenRouter's
+            // Observed BYOK shape in tavern-gateway fixtures: `cost` is OpenRouter's
             // routing fee; upstream is billed to the user's own key. True spend is
             // the sum.
             cost: 0.0032093125,
@@ -208,10 +208,10 @@ describe("KiloSession.providerCost — OpenRouter chat completions", () => {
     expect(result.cost).toBe(0.0123)
   })
 
-  test("prefers upstream_inference_cost for the Kilo provider", () => {
+  test("prefers upstream_inference_cost for the Tavern provider", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: baseUsage,
       metadata: {
         openrouter: {
@@ -231,7 +231,7 @@ describe("KiloSession.providerCost — fallback", () => {
   test("falls back to calculated cost when no provider cost is reported", () => {
     const result = SessionNs.getUsage({
       model: model(),
-      provider: kilo,
+      provider: tavern,
       usage: baseUsage,
       // No metadata or provider usage cost — should fall back
     })

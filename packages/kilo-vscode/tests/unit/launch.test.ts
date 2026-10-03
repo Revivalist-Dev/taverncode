@@ -11,16 +11,16 @@ afterEach(() => {
 })
 
 async function fixture() {
-  const repo = realpathSync(mkdtempSync(join(tmpdir(), "kilo-launch-")))
+  const repo = realpathSync(mkdtempSync(join(tmpdir(), "tavern-launch-")))
   dirs.push(repo)
-  for (const path of ["", "packages/kilo-vscode", "packages/opencode", "packages/sdk/js"]) {
+  for (const path of ["", "packages/tavern-vscode", "packages/opencode", "packages/sdk/js"]) {
     const dir = join(repo, path)
     mkdirSync(dir, { recursive: true })
     symlinkSync(join(source, path, "node_modules"), join(dir, "node_modules"), "junction")
   }
-  const root = join(repo, "packages/kilo-vscode")
+  const root = join(repo, "packages/tavern-vscode")
   mkdirSync(join(root, "script"))
-  cpSync(join(source, "packages/kilo-vscode/script/launch.ts"), join(root, "script/launch.ts"))
+  cpSync(join(source, "packages/tavern-vscode/script/launch.ts"), join(root, "script/launch.ts"))
   await Bun.write(join(root, "package.json"), JSON.stringify({ scripts: { "build:launch": "bun build.ts" } }))
   await Bun.write(join(root, "build.ts"), 'await Bun.write("dist/extension.js", "built")')
   const workspace = join(repo, "workspace")

@@ -7,7 +7,7 @@ import { cloudPromptOptions, withCloudPrompt } from "./cloud-stdin"
 // Keep the top-level import graph light: this module is registered eagerly at CLI
 // startup, so the cloud implementation is imported inside handlers (same deferral
 // pattern as upstream opencode#30453).
-const cloud = Effect.promise(() => import("@/kilocode/cloud/commands").then((m) => m.CloudCommands))
+const cloud = Effect.promise(() => import("@/taverncode/cloud/commands").then((m) => m.CloudCommands))
 
 export const CloudStartCommand = effectCmd({
   command: "start",
@@ -37,7 +37,7 @@ export const CloudStartCommand = effectCmd({
       })
       .option("org-id", {
         type: "string",
-        describe: "Kilo organization ID",
+        describe: "Tavern organization ID",
       })
       .option("stream", {
         type: "boolean",

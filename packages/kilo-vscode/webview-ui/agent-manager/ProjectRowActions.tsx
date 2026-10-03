@@ -1,7 +1,7 @@
 /** @jsxImportSource solid-js */
 
 import { Show, type Component } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
 import { WorktreeCreate, type WorktreeCreateProps } from "./ProjectActions"
 
 interface Props extends Omit<WorktreeCreateProps, "loaded"> {

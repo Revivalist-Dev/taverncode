@@ -12,7 +12,7 @@ import { Effect, Layer } from "effect"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import type { PermissionV1 } from "@opencode-ai/core/v1/permission"
-import { hardenExplore, patchAgents } from "../../../src/kilocode/agent"
+import { hardenExplore, patchAgents } from "../../../src/taverncode/agent"
 import { Permission } from "../../../src/permission"
 import { ShellPermission } from "../../../src/tool/shell"
 import { SessionID, MessageID } from "../../../src/session/schema"
@@ -159,7 +159,7 @@ const denied = [
   "git log --reverse --format='%h %s' $(git merge-base origin/main HEAD)..HEAD",
   "bun -e 'console.log(\"x => \" + import.meta.resolve(\"y\"))'",
   "python3 -c 'import json; print(1)'",
-  'ls packages/kilo-ui/src/components/ | grep -iE "text|input" | awk 1',
+  'ls packages/tavern-ui/src/components/ | grep -iE "text|input" | awk 1',
   // Quoting the parser resolves correctly where a text scanner did not.
   "cat $" + q + "a\\" + q + "b" + q + " > out.txt",
   "cat $" + q + "a\\" + q + "b" + q + " | tee out.txt",

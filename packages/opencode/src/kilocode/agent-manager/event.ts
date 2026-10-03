@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { BusEvent } from "@/bus/bus-event"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -34,5 +34,5 @@ export const AgentManagerStart = Schema.Struct({
 export type AgentManagerStart = Schema.Schema.Type<typeof AgentManagerStart>
 
 export const AgentManagerEvent = {
-  Start: BusEvent.define("kilocode.agent_manager.start", AgentManagerStart),
+  Start: BusEvent.define("taverncode.agent_manager.start", AgentManagerStart),
 }

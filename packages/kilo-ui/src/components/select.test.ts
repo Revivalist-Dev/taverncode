@@ -9,7 +9,7 @@ describe("changed", () => {
   })
 
   test("reports selected and cleared values", () => {
-    expect(changed({ value: "ollama" }, { value: "kilo" }, key)).toBe(true)
+    expect(changed({ value: "ollama" }, { value: "tavern" }, key)).toBe(true)
     expect(changed({ value: "ollama" }, undefined, key)).toBe(true)
     expect(changed(undefined, { value: "ollama" }, key)).toBe(true)
     expect(changed(undefined, undefined, key)).toBe(false)

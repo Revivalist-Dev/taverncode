@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { ProjectContext } from "../../src/agent-manager/project/context"
 import type { LifecycleHost } from "../../src/agent-manager/provider-lifecycle"
 import { discardWorktree } from "../../src/agent-manager/discard-worktree"
@@ -12,7 +12,7 @@ describe("Agent Manager PTY cleanup", () => {
   it("tears down worktree PTYs through the project root instance", async () => {
     const calls: unknown[] = []
     const client = {
-      kilocode: {
+      taverncode: {
         teardownWorktree: async (input: { directory: string; worktree: string }) => {
           calls.push(input)
           return { data: { disposed: true } }
@@ -27,23 +27,23 @@ describe("Agent Manager PTY cleanup", () => {
         return client
       },
       "/root",
-      "/root/.kilo/worktrees/wt",
+      "/root/.tavern/worktrees/wt",
     )
-    expect(calls).toEqual([{ directory: "/root", worktree: "/root/.kilo/worktrees/wt" }])
+    expect(calls).toEqual([{ directory: "/root", worktree: "/root/.tavern/worktrees/wt" }])
   })
 
   it("propagates a teardown failure so callers can isolate it from disk cleanup", async () => {
     const client = {
-      kilocode: { teardownWorktree: async () => ({ error: new Error("offline") }) },
+      taverncode: { teardownWorktree: async () => ({ error: new Error("offline") }) },
     } as unknown as KiloClient
 
-    await expect(teardown(async () => client, "/root", "/root/.kilo/worktrees/wt")).rejects.toThrow("offline")
+    await expect(teardown(async () => client, "/root", "/root/.tavern/worktrees/wt")).rejects.toThrow("offline")
   })
 
   it("closes integrated terminals before removing embedded worktree PTYs", async () => {
     const calls: string[] = []
     const client = {
-      kilocode: {
+      taverncode: {
         teardownWorktree: async () => {
           calls.push("teardown")
           return { data: { disposed: false } }
@@ -119,7 +119,7 @@ describe("Agent Manager PTY cleanup", () => {
       client: () =>
         ({
           session: { delete: async () => undefined },
-          kilocode: { removeSnapshot: async () => calls.push("snapshots") },
+          taverncode: { removeSnapshot: async () => calls.push("snapshots") },
         }) as unknown as KiloClient,
       log: () => undefined,
     } as unknown as LifecycleHost
@@ -144,7 +144,7 @@ describe("Agent Manager PTY cleanup", () => {
               throw new Error("session offline")
             },
           },
-          kilocode: { removeSnapshot: async () => calls.push("snapshots") },
+          taverncode: { removeSnapshot: async () => calls.push("snapshots") },
         }) as unknown as KiloClient,
       log: () => calls.push("log"),
     } as unknown as LifecycleHost

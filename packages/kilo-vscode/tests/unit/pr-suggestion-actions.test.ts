@@ -72,7 +72,7 @@ describe("working-tree PR suggestions", () => {
 
   beforeEach(async () => {
     pending.clear()
-    directory = await fs.mkdtemp(path.join(tmpdir(), "kilo-suggestion-"))
+    directory = await fs.mkdtemp(path.join(tmpdir(), "tavern-suggestion-"))
     await git("init", "-b", "feature")
     await fs.writeFile(path.join(directory, "file.txt"), "first\nold\nthird\nfourth\nfifth\nlast\n")
     await fs.writeFile(path.join(directory, "other.txt"), "unrelated\n")

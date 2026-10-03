@@ -1,5 +1,5 @@
 import { parsePluginSpecifier } from "@/plugin/shared"
-import { gitPluginIdentity, isGitPluginSpec } from "@/kilocode/plugin/git-source"
+import { gitPluginIdentity, isGitPluginSpec } from "@/taverncode/plugin/git-source"
 
 // Marketplace plugin items key installed state by catalog id, while the installed
 // config stores a package spec. Resolve both to the same identity so install,

@@ -1,10 +1,10 @@
 ---
-title: "Using ZenMux with Kilo Code | Unified AI Gateway"
-description: "Access OpenAI, Anthropic, Google, and other AI models through ZenMux in Kilo Code with automatic routing and cost optimization."
+title: "Using ZenMux with Tavern Code | Unified AI Gateway"
+description: "Access OpenAI, Anthropic, Google, and other AI models through ZenMux in Tavern Code with automatic routing and cost optimization."
 sidebar_label: ZenMux
 ---
 
-# Using ZenMux With Kilo Code
+# Using ZenMux With Tavern Code
 
 [ZenMux](https://zenmux.ai) provides a unified API gateway to access multiple AI models from different providers through a single endpoint. It supports OpenAI, Anthropic, Google, and other major AI providers, automatically handling routing, fallbacks, and cost optimization.
 
@@ -12,21 +12,21 @@ sidebar_label: ZenMux
 
 1. **Sign up for ZenMux:** Visit [zenmux.ai](https://zenmux.ai) to create an account.
 2. **Get your API key:** After signing up, navigate to your dashboard to generate an API key.
-3. **Configure in Kilo Code:** Add your API key to Kilo Code settings.
+3. **Configure in Tavern Code:** Add your API key to Tavern Code settings.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add ZenMux and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -34,7 +34,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export ZENMUX_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {
@@ -229,4 +229,4 @@ For additional support:
 
 - Visit the [ZenMux documentation](https://zenmux.ai/docs)
 - Contact ZenMux support through their dashboard
-- Check the [Kilo Code GitHub repository](https://github.com/Kilo-Org/kilocode) for integration-specific issues
+- Check the [Tavern Code GitHub repository](https://github.com/Kilo-Org/kilocode) for integration-specific issues

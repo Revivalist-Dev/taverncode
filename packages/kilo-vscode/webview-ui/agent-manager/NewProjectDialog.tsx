@@ -1,8 +1,8 @@
 /** @jsxImportSource solid-js */
 
 import { type Component, Show, createSignal, onCleanup, onMount } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
 import { useVSCode } from "../src/context/vscode"
 import { useLanguage } from "../src/context/language"
 import { joinPath } from "./project-utils"

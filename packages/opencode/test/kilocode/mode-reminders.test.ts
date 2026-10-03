@@ -8,7 +8,7 @@ import { Session } from "../../src/session/session"
 import { SessionReminders } from "../../src/session/reminders"
 import { MessageV2 } from "../../src/session/message-v2"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
-import { KiloModeReminders } from "../../src/kilocode/session/mode-reminders"
+import { KiloModeReminders } from "../../src/taverncode/session/mode-reminders"
 
 const sessionID = SessionID.make("ses_mode")
 const model = { providerID: ProviderV2.ID.make("openai"), modelID: ModelV2.ID.make("gpt-4") }
@@ -26,7 +26,7 @@ const docsmith = { name: "docsmith", permission: Permission.fromConfig({ "*": "a
 const plan = {
   name: "plan",
   native: true,
-  permission: Permission.fromConfig({ "*": "deny", edit: { "*": "deny", ".kilo/plans/*.md": "allow" } }),
+  permission: Permission.fromConfig({ "*": "deny", edit: { "*": "deny", ".tavern/plans/*.md": "allow" } }),
 }
 const debug = { name: "debug", native: true, permission: Permission.fromConfig({ "*": "ask", edit: "allow" }) }
 // An organization override of a native agent keeps native: true; capability must follow permissions, not the name.

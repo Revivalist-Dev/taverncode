@@ -1,23 +1,23 @@
 ---
 title: "Workflows"
-description: "Create automated workflows with Kilo Code"
+description: "Create automated workflows with Tavern Code"
 platform: new
 ---
 
 # Workflows
 
-Workflows (also called **slash commands** in the new extension) automate repetitive tasks by defining step-by-step instructions for Kilo Code to execute.
+Workflows (also called **slash commands** in the new extension) automate repetitive tasks by defining step-by-step instructions for Tavern Code to execute.
 
-{% image src="/docs/img/screenshot-tests/kilo-vscode/visual-regression/settings/agent-behaviour-workflows-chromium-linux.png" alt="Workflows tab in Kilo Code" width="420" caption="Workflows tab in Kilo Code" /%}
+{% image src="/docs/img/screenshot-tests/tavern-vscode/visual-regression/settings/agent-behaviour-workflows-chromium-linux.png" alt="Workflows tab in Tavern Code" width="420" caption="Workflows tab in Tavern Code" /%}
 
 ## Creating Workflows
 
-Workflows are Markdown files stored as **slash commands** in `.kilo/commands/`:
+Workflows are Markdown files stored as **slash commands** in `.tavern/commands/`:
 
-- **Global commands**: `~/.config/kilo/commands/` (available in all projects)
-- **Project commands**: `[project]/.kilo/commands/` (project-specific)
+- **Global commands**: `~/.config/tavern/commands/` (available in all projects)
+- **Project commands**: `[project]/.tavern/commands/` (project-specific)
 
-If `.kilo/commands/` is a symlink to a directory outside the project, allow that exact source in your global `~/.config/kilo/kilo.jsonc`:
+If `.tavern/commands/` is a symlink to a directory outside the project, allow that exact source in your global `~/.config/tavern/tavern.jsonc`:
 
 ```jsonc
 {
@@ -37,7 +37,7 @@ Project configuration cannot grant this permission. External command files remai
 2. Save it in your commands directory
 3. Type `/command-name` in the chat (just the filename without `.md` extension) to execute
 
-For example, a file at `.kilo/commands/submit-pr.md` is invoked with `/submit-pr`.
+For example, a file at `.tavern/commands/submit-pr.md` is invoked with `/submit-pr`.
 
 ### Optional Frontmatter
 
@@ -64,7 +64,7 @@ You are helping submit a pull request...
 
 Each workflow can run with its own model and reasoning effort variant. In the VS Code extension, open **Settings → Agent Behaviour → Workflows**, expand a workflow, and choose a model and variant. The selection is saved as a command override in your global config, so the workflow's template file stays unchanged.
 
-You can also set `model` and `variant` in the command's frontmatter or in the `command` section of `kilo.jsonc`.  A variant only applies when the selected model supports it — picking a different model clears a variant the new model does not offer.
+You can also set `model` and `variant` in the command's frontmatter or in the `command` section of `tavern.jsonc`.  A variant only applies when the selected model supports it — picking a different model clears a variant the new model does not offer.
 
 ### Workflow Capabilities
 
@@ -72,7 +72,7 @@ Workflows can leverage all built-in tools: `read`, `glob`, `grep`, `edit`, `writ
 
 ### Migration from Legacy Workflows
 
-The new extension automatically migrates legacy workflows from `.kilocode/workflows/` to the new command format on startup. You can also manually move files and remove the `.md` extension from invocations.
+The new extension automatically migrates legacy workflows from `.taverncode/workflows/` to the new command format on startup. You can also manually move files and remove the `.md` extension from invocations.
 
 ## Common Workflow Patterns
 
@@ -109,7 +109,7 @@ The new extension automatically migrates legacy workflows from `.kilocode/workfl
 
 Let's walk through creating a workflow for submitting a pull request.
 
-Create a file called `submit-pr.md` in your `.kilo/commands` directory:
+Create a file called `submit-pr.md` in your `.tavern/commands` directory:
 
 ```markdown
 ---
@@ -134,7 +134,7 @@ Parameters needed (ask if not provided):
 
 Trigger this workflow by typing `/submit-pr` in the chat.
 
-Kilo Code will:
+Tavern Code will:
 
 - Scan your code for common issues before committing
 - Run your test suite to catch problems early

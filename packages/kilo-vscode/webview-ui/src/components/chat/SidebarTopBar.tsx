@@ -8,8 +8,8 @@
  */
 
 import { Component, For } from "solid-js"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import { TelemetryEventName } from "../../../../src/services/telemetry/types"

@@ -1,5 +1,5 @@
 /**
- * Kilo-specific TUI app customizations.
+ * Tavern-specific TUI app customizations.
  *
  * Everything in this module is called from the shared upstream `app.tsx`
  * via thin integration points so the upstream diff stays minimal.
@@ -19,37 +19,37 @@ import { useTheme } from "@tui/context/theme"
 import { DialogAlert } from "@tui/ui/dialog-alert"
 import { DialogSelect } from "@tui/ui/dialog-select"
 import { Link } from "@tui/ui/link"
-import { isKiloError, showKiloErrorToast } from "@/kilocode/kilo-errors"
-import { registerKiloCommands } from "@/kilocode/kilo-commands"
-import { initializeTUIDependencies } from "@kilocode/kilo-gateway/tui"
-import { DialogProcessList } from "@/kilocode/cli/cmd/tui/component/dialog-process-list"
-import { useIndexingWarnings } from "@/kilocode/cli/cmd/tui/indexing-warning"
+import { isKiloError, showKiloErrorToast } from "@/taverncode/tavern-errors"
+import { registerKiloCommands } from "@/taverncode/tavern-commands"
+import { initializeTUIDependencies } from "@taverncode/tavern-gateway/tui"
+import { DialogProcessList } from "@/taverncode/cli/cmd/tui/component/dialog-process-list"
+import { useIndexingWarnings } from "@/taverncode/cli/cmd/tui/indexing-warning"
 import { KiloTerminalTitle } from "./terminal-title"
 import type { KiloTitleIcon } from "./title-icon"
 import { Session as SessionApi } from "@/session/session"
 import { useCaffeination } from "./caffeination"
-import { useLinkInteractions } from "@tui/kilocode/link-interactions"
+import { useLinkInteractions } from "@tui/taverncode/link-interactions"
 
 // Re-export so upstream can render the route without importing directly
 export { KiloTerminalTitle } from "./terminal-title"
 
-// Hot reload TUI-local settings (keybinds/theme/ui) when changed from the Kilo Console.
+// Hot reload TUI-local settings (keybinds/theme/ui) when changed from the Tavern Console.
 // Called from the App body (below SDKProvider and the TuiConfig provider).
-export { useTuiConfigHotReload } from "@/kilocode/cli/cmd/tui/context/tui-config-hot-reload"
-export { KiloTuiConfig } from "@/kilocode/cli/cmd/tui/context/tui-config"
+export { useTuiConfigHotReload } from "@/taverncode/cli/cmd/tui/context/tui-config-hot-reload"
+export { KiloTuiConfig } from "@/taverncode/cli/cmd/tui/context/tui-config"
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
 /** Default terminal window title. */
-export const APP_TITLE = "Kilo CLI"
+export const APP_TITLE = "Tavern CLI"
 
 /** Public docs URL shown in the command palette. */
-export const DOCS_URL = "https://kilo.ai/docs"
+export const DOCS_URL = "https://tavern.ai/docs"
 
 /** Human-readable product name used in user-facing messages. */
-export const APP_NAME = "Kilo"
+export const APP_NAME = "Tavern"
 
 // ---------------------------------------------------------------------------
 // Utilities
@@ -217,7 +217,7 @@ export function getTerminalTitle(input: {
 // ---------------------------------------------------------------------------
 
 /**
- * Intercepts Kilo-specific errors and shows a warning toast.
+ * Intercepts Tavern-specific errors and shows a warning toast.
  * Returns `true` if the error was handled, `false` otherwise.
  */
 export function handleSessionError(error: unknown, toast: ReturnType<typeof useToast>): boolean {
@@ -235,8 +235,8 @@ export function handleSessionError(error: unknown, toast: ReturnType<typeof useT
 /**
  * One-shot initialiser called from the App component body.
  *
- * - Injects TUI dependencies into kilo-gateway
- * - Registers Kilo Gateway commands (profile, teams, etc.)
+ * - Injects TUI dependencies into tavern-gateway
+ * - Registers Tavern Gateway commands (profile, teams, etc.)
  * - Registers the auto-approve toggle command
  */
 export function init() {
@@ -247,7 +247,7 @@ export function init() {
 
   useIndexingWarnings()
 
-  // Inject TUI dependencies for kilo-gateway
+  // Inject TUI dependencies for tavern-gateway
   initializeTUIDependencies({
     useSync,
     useDialog,
@@ -262,7 +262,7 @@ export function init() {
     TextAttributes,
   })
 
-  // Register Kilo Gateway commands (profile, teams, remote, etc.)
+  // Register Tavern Gateway commands (profile, teams, remote, etc.)
   registerKiloCommands(useSDK)
   useCaffeination()
 
@@ -274,7 +274,7 @@ export function init() {
         name: "background_process.list",
         title: "Background processes",
         desc: "List and manage tracked background processes",
-        category: "Kilo",
+        category: "Tavern",
         slashName: "process",
         slashAliases: ["processes"],
         run: () => {
@@ -289,7 +289,7 @@ export function init() {
             ? "Disable saved auto-approve"
             : "Enable saved auto-approve"
         },
-        // kilocode_change - the saved rule is server side, so it also stops VS Code, JetBrains and
+        // taverncode_change - the saved rule is server side, so it also stops VS Code, JetBrains and
         // headless runs from prompting
         desc: "Toggle auto-approve for all permission prompts, saved to global config and shared with every client",
         category: "System",

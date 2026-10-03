@@ -1,8 +1,8 @@
 import { Component, Show, createMemo, createSignal, For } from "solid-js"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { Card } from "@kilocode/kilo-ui/card"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { Card } from "@taverncode/tavern-ui/card"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
 
 import { useConfig } from "../../context/config"
 import { useLanguage } from "../../context/language"
@@ -76,7 +76,7 @@ const McpEditView: Component<Props> = (props) => {
       >
         <div style={{ display: "flex", "align-items": "center" }}>
           <IconButton size="small" variant="ghost" icon="arrow-left" onClick={props.onBack} />
-          <span style={{ "font-weight": "600", "font-size": "var(--kilo-font-size-14)", "margin-left": "8px" }}>
+          <span style={{ "font-weight": "600", "font-size": "var(--tavern-font-size-14)", "margin-left": "8px" }}>
             {language.t("settings.agentBehaviour.editMcp")} — {props.name}
           </span>
         </div>
@@ -87,7 +87,7 @@ const McpEditView: Component<Props> = (props) => {
       <Card style={{ "margin-bottom": "12px" }}>
         <div
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
             padding: "4px 0",
           }}
@@ -197,7 +197,7 @@ const McpEditView: Component<Props> = (props) => {
                 <span
                   style={{
                     "font-family": "var(--vscode-editor-font-family, monospace)",
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--tavern-font-size-12)",
                   }}
                 >
                   {key}={val}

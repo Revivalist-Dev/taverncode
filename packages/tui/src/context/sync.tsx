@@ -9,8 +9,8 @@ import type {
   Command,
   PermissionRequest,
   QuestionRequest,
-  SuggestionRequest, // kilocode_change
-  SessionNetworkWait, // kilocode_change
+  SuggestionRequest, // taverncode_change
+  SessionNetworkWait, // taverncode_change
   LspStatus,
   McpStatus,
   McpResource,
@@ -21,9 +21,9 @@ import type {
   VcsInfo,
   SnapshotFileDiff,
   ConsoleState,
-  BackgroundProcessInfo, // kilocode_change
-  IndexingStatus, // kilocode_change
-} from "@kilocode/sdk/v2"
+  BackgroundProcessInfo, // taverncode_change
+  IndexingStatus, // taverncode_change
+} from "@taverncode/sdk/v2"
 import { createStore, produce, reconcile } from "solid-js/store"
 import { useProject } from "./project"
 import { useEvent } from "./event"
@@ -32,14 +32,14 @@ import { useTuiStartup } from "./runtime"
 import { createSimpleContext } from "./helper"
 import { useExit } from "./exit"
 import { useArgs } from "./args"
-import { batch, createEffect, on, onMount } from "solid-js" // kilocode_change
+import { batch, createEffect, on, onMount } from "solid-js" // taverncode_change
 import path from "path"
 import { useKV } from "./kv"
-import { handleSuggestionEvent } from "@/kilocode/suggestion/tui/sync" // kilocode_change
-import { at, recent, slot } from "../kilocode/message-order" // kilocode_change
-import { useToast } from "../ui/toast" // kilocode_change
+import { handleSuggestionEvent } from "@/taverncode/suggestion/tui/sync" // taverncode_change
+import { at, recent, slot } from "../taverncode/message-order" // taverncode_change
+import { useToast } from "../ui/toast" // taverncode_change
 import { usePermission } from "./permission"
-import { GoalSync } from "@/kilocode/cli/cmd/tui/goal-sync" // kilocode_change
+import { GoalSync } from "@/taverncode/cli/cmd/tui/goal-sync" // taverncode_change
 
 const emptyConsoleState: ConsoleState = {
   consoleManagedProviders: [],
@@ -87,12 +87,12 @@ export const {
       question: {
         [sessionID: string]: QuestionRequest[]
       }
-      // kilocode_change start
+      // taverncode_change start
       suggestion: Record<string, SuggestionRequest[]>
       network: Record<string, SessionNetworkWait[]>
-      // kilocode_change end
+      // taverncode_change end
       config: Config
-      globalConfig: Config // kilocode_change
+      globalConfig: Config // taverncode_change
       session: Session[]
       session_status: {
         [sessionID: string]: SessionStatus
@@ -103,7 +103,7 @@ export const {
       todo: {
         [sessionID: string]: Todo[]
       }
-      background_process: Record<string, BackgroundProcessInfo[]> // kilocode_change
+      background_process: Record<string, BackgroundProcessInfo[]> // taverncode_change
       message: {
         [sessionID: string]: Message[]
       }
@@ -119,7 +119,7 @@ export const {
       }
       formatter: FormatterStatus[]
       vcs: VcsInfo | undefined
-      indexing: IndexingStatus // kilocode_change
+      indexing: IndexingStatus // taverncode_change
     }>({
       provider_next: {
         all: [],
@@ -129,17 +129,17 @@ export const {
       },
       console_state: emptyConsoleState,
       capabilities: {
-        experimentalBackgroundSubagents: true, // kilocode_change - background subagents are enabled by default
+        experimentalBackgroundSubagents: true, // taverncode_change - background subagents are enabled by default
       },
       provider_auth: {},
       config: {},
-      globalConfig: {}, // kilocode_change
+      globalConfig: {}, // taverncode_change
       status: "loading",
       agent: [],
       permission: {},
       question: {},
-      suggestion: {}, // kilocode_change
-      network: {}, // kilocode_change
+      suggestion: {}, // taverncode_change
+      network: {}, // taverncode_change
       command: [],
       provider: [],
       provider_default: {},
@@ -147,7 +147,7 @@ export const {
       session_status: {},
       session_diff: {},
       todo: {},
-      background_process: {}, // kilocode_change
+      background_process: {}, // taverncode_change
       message: {},
       part: {},
       lsp: [],
@@ -155,16 +155,16 @@ export const {
       mcp_resource: {},
       formatter: [],
       vcs: undefined,
-      indexing: { state: "Disabled", message: "Indexing disabled.", processedFiles: 0, totalFiles: 0, percent: 0 }, // kilocode_change
+      indexing: { state: "Disabled", message: "Indexing disabled.", processedFiles: 0, totalFiles: 0, percent: 0 }, // taverncode_change
     })
 
     const event = useEvent()
     const project = useProject()
     const sdk = useSDK()
-    const toast = useToast() // kilocode_change
-    GoalSync.watch(sdk, project.workspace.current, store, (fn) => setStore(produce(fn))) // kilocode_change
+    const toast = useToast() // taverncode_change
+    GoalSync.watch(sdk, project.workspace.current, store, (fn) => setStore(produce(fn))) // taverncode_change
 
-    // kilocode_change start
+    // taverncode_change start
     function evict(sessionID: string) {
       const children = store.session.filter((session) => session.parentID === sessionID).map((session) => session.id)
       setStore(
@@ -191,12 +191,12 @@ export const {
       if (message.role !== "user" || !message.summary?.diffs) return message
       return { ...message, summary: { ...message.summary, diffs: [] } } as Message
     }
-    // kilocode_change end
+    // taverncode_change end
 
     const fullSyncedSessions = new Set<string>()
-    const deleted = new Set<string>() // kilocode_change
-    let syncedWorkspace = project.workspace.current() // kilocode_change
-    let vcsVersion = 0 // kilocode_change
+    const deleted = new Set<string>() // taverncode_change
+    let syncedWorkspace = project.workspace.current() // taverncode_change
+    let vcsVersion = 0 // taverncode_change
     const syncingSessions = new Map<string, Promise<void>>()
     const hydratingSessions = new Map<string, { messages: Set<string>; parts: Set<string> }>()
     const touchMessage = (sessionID: string, messageID: string) => {
@@ -225,10 +225,10 @@ export const {
     event.subscribe((event, { directory, workspace }) => {
       switch (event.type) {
         case "server.instance.disposed":
-          // kilocode_change start
+          // taverncode_change start
           deleted.clear()
           setStore("background_process", {})
-          // kilocode_change end
+          // taverncode_change end
           void bootstrap()
           break
         case "permission.replied": {
@@ -315,7 +315,7 @@ export const {
           break
         }
 
-        // kilocode_change start
+        // taverncode_change start
         case "session.network.replied":
         case "session.network.rejected": {
           const requests = store.network[event.properties.sessionID]
@@ -347,7 +347,7 @@ export const {
         case "suggestion.shown":
           handleSuggestionEvent(event, store, setStore)
           break
-        // kilocode_change end
+        // taverncode_change end
 
         case "todo.updated":
           setStore("todo", event.properties.sessionID, event.properties.todos)
@@ -367,7 +367,7 @@ export const {
               }),
             )
           }
-          evict(event.properties.info.id) // kilocode_change
+          evict(event.properties.info.id) // taverncode_change
           break
         }
         case "session.updated": {
@@ -406,7 +406,7 @@ export const {
           break
         }
 
-        // kilocode_change start
+        // taverncode_change start
         case "background_process.updated": {
           const info = event.properties.info
           deleted.delete(info.id)
@@ -442,7 +442,7 @@ export const {
           )
           break
         }
-        // kilocode_change end
+        // taverncode_change end
 
         case "message.updated": {
           touchMessage(event.properties.info.sessionID, event.properties.info.id)
@@ -451,7 +451,7 @@ export const {
             setStore("message", event.properties.info.sessionID, [event.properties.info])
             break
           }
-          const result = slot(messages, event.properties.info) // kilocode_change - order by created time, ids wrap
+          const result = slot(messages, event.properties.info) // taverncode_change - order by created time, ids wrap
           if (result.found) {
             setStore("message", event.properties.info.sessionID, result.index, reconcile(event.properties.info))
             break
@@ -487,7 +487,7 @@ export const {
         case "message.removed": {
           touchMessage(event.properties.sessionID, event.properties.messageID)
           const messages = store.message[event.properties.sessionID]
-          const result = at(messages, event.properties.messageID) // kilocode_change - list is time-ordered, not id-sorted
+          const result = at(messages, event.properties.messageID) // taverncode_change - list is time-ordered, not id-sorted
           if (result.found) {
             setStore(
               "message",
@@ -564,12 +564,12 @@ export const {
 
         case "vcs.branch.updated": {
           if (workspace === project.workspace.current()) {
-            vcsVersion += 1 // kilocode_change
+            vcsVersion += 1 // taverncode_change
             setStore("vcs", { branch: event.properties.branch })
           }
           break
         }
-        // kilocode_change start
+        // taverncode_change start
         case "global.config.updated": {
           void sdk.client.global.config.get().then((result) => {
             if (result.data) setStore("globalConfig", reconcile(result.data))
@@ -582,11 +582,11 @@ export const {
         case "indexing.status":
           setStore("indexing", reconcile(event.properties.status))
           break
-        // kilocode_change end
+        // taverncode_change end
       }
     })
 
-    // kilocode_change start - retain versioned Sync events used by Kilo clients
+    // taverncode_change start - retain versioned Sync events used by Tavern clients
     event.sync((event) => {
       switch (event.name) {
         case "session.created.1": {
@@ -607,7 +607,7 @@ export const {
           setStore(
             "session",
             match.index,
-            reconcile(event.data.info), // kilocode_change - session.updated carries a full snapshot, including omitted optional fields
+            reconcile(event.data.info), // taverncode_change - session.updated carries a full snapshot, including omitted optional fields
           )
           break
         }
@@ -630,7 +630,7 @@ export const {
             setStore("message", info.sessionID, [info])
             break
           }
-          const match = slot(messages, info) // kilocode_change - order by created time, ids wrap
+          const match = slot(messages, info) // taverncode_change - order by created time, ids wrap
           if (match.found) {
             setStore("message", info.sessionID, match.index, reconcile(info))
             break
@@ -660,7 +660,7 @@ export const {
           touchMessage(event.data.sessionID, event.data.messageID)
           const messages = store.message[event.data.sessionID]
           if (!messages) break
-          const match = at(messages, event.data.messageID) // kilocode_change - list is time-ordered, not id-sorted
+          const match = at(messages, event.data.messageID) // taverncode_change - list is time-ordered, not id-sorted
           if (!match.found) break
           setStore(
             "message",
@@ -704,7 +704,7 @@ export const {
         }
       }
     })
-    // kilocode_change end
+    // taverncode_change end
 
     const exit = useExit()
     const args = useArgs()
@@ -712,17 +712,17 @@ export const {
     async function bootstrap(input: { fatal?: boolean } = {}) {
       const fatal = input.fatal ?? true
       const workspace = project.workspace.current()
-      // kilocode_change start - isolate workspace-scoped Kilo state
+      // taverncode_change start - isolate workspace-scoped Tavern state
       if (workspace !== syncedWorkspace) {
         fullSyncedSessions.clear()
         deleted.clear()
         setStore("background_process", {})
         syncedWorkspace = workspace
       }
-      // kilocode_change end
+      // taverncode_change end
       const projectPromise = project.sync()
       const sessionListPromise = projectPromise.then(() => listSessions())
-      const version = vcsVersion // kilocode_change
+      const version = vcsVersion // taverncode_change
 
       // blocking - include session.list when continuing a session
       const providersPromise = sdk.client.config.providers({ workspace }, { throwOnError: true })
@@ -737,14 +737,14 @@ export const {
         .catch(() => emptyConsoleState)
       const agentsPromise = sdk.client.app.agents({ workspace }, { throwOnError: true })
       const configPromise = sdk.client.config.get({ workspace }, { throwOnError: true })
-      const globalConfigPromise = sdk.client.global.config.get({ throwOnError: true }) // kilocode_change
+      const globalConfigPromise = sdk.client.global.config.get({ throwOnError: true }) // taverncode_change
       await Promise.all([
         providersPromise,
         providerListPromise,
         capabilitiesPromise,
         agentsPromise,
         configPromise,
-        globalConfigPromise, // kilocode_change
+        globalConfigPromise, // taverncode_change
         projectPromise,
         ...(args.continue ? [sessionListPromise] : []),
       ])
@@ -755,7 +755,7 @@ export const {
           const consoleStateResponse = consoleStatePromise
           const agentsResponse = agentsPromise.then((x) => x.data ?? [])
           const configResponse = configPromise.then((x) => x.data!)
-          const globalConfigResponse = globalConfigPromise.then((x) => x.data!) // kilocode_change
+          const globalConfigResponse = globalConfigPromise.then((x) => x.data!) // taverncode_change
           const sessionListResponse = args.continue ? sessionListPromise : undefined
 
           return Promise.all([
@@ -765,7 +765,7 @@ export const {
             consoleStateResponse,
             agentsResponse,
             configResponse,
-            globalConfigResponse, // kilocode_change
+            globalConfigResponse, // taverncode_change
             ...(sessionListResponse ? [sessionListResponse] : []),
           ]).then((responses) => {
             const providers = responses[0]
@@ -774,24 +774,24 @@ export const {
             const consoleState = responses[3]
             const agents = responses[4]
             const config = responses[5]
-            const globalConfig = responses[6] // kilocode_change
+            const globalConfig = responses[6] // taverncode_change
             const sessions = responses[7]
 
             batch(() => {
               setStore("provider", reconcile(providers.providers))
               setStore("provider_default", reconcile(providers.default))
               setStore("provider_next", reconcile(providerList))
-              // kilocode_change start - fail closed when the backend omits the capability
+              // taverncode_change start - fail closed when the backend omits the capability
               setStore(
                 "capabilities",
                 "experimentalBackgroundSubagents",
                 capabilities?.backgroundSubagents === true,
               )
-              // kilocode_change end
+              // taverncode_change end
               setStore("console_state", reconcile(consoleState))
               setStore("agent", reconcile(agents))
               setStore("config", reconcile(config))
-              setStore("globalConfig", reconcile(globalConfig)) // kilocode_change
+              setStore("globalConfig", reconcile(globalConfig)) // taverncode_change
               if (sessions !== undefined) setStore("session", reconcile(sessions))
             })
           })
@@ -809,7 +809,7 @@ export const {
               .list({ workspace })
               .then((x) => setStore("mcp_resource", reconcile(x.data ?? {}))),
             sdk.client.formatter.status({ workspace }).then((x) => setStore("formatter", reconcile(x.data ?? []))),
-            // kilocode_change start
+            // taverncode_change start
             sdk.client.network.list().then((result) => {
               const next: Record<string, SessionNetworkWait[]> = {}
               for (const item of result.data ?? []) (next[item.sessionID] ??= []).push(item)
@@ -824,7 +824,7 @@ export const {
               for (const list of Object.values(next)) list.sort((a, b) => a.id.localeCompare(b.id))
               setStore("background_process", reconcile(next))
             }),
-            // kilocode_change end
+            // taverncode_change end
             sdk.client.session.status({ workspace }).then((x) => {
               setStore("session_status", reconcile(x.data ?? {}))
             }),
@@ -835,7 +835,7 @@ export const {
               }
             }),
             project.workspace.sync(),
-            // kilocode_change start
+            // taverncode_change start
             sdk.client.config.warnings().then((result) => {
               const list = result.data ?? []
               if (!list.length) return
@@ -850,7 +850,7 @@ export const {
             sdk.client.indexing
               .status()
               .then((result) => setStore("indexing", reconcile(result.data ?? store.indexing))),
-            // kilocode_change end
+            // taverncode_change end
           ]).then(() => {
             setStore("status", "complete")
           })
@@ -873,7 +873,7 @@ export const {
       void bootstrap()
     })
 
-    // kilocode_change start - re-bootstrap when Agent Manager changes workspace
+    // taverncode_change start - re-bootstrap when Agent Manager changes workspace
     createEffect(
       on(
         () => project.workspace.current(),
@@ -884,7 +884,7 @@ export const {
         { defer: true },
       ),
     )
-    // kilocode_change end
+    // taverncode_change end
 
     const result = {
       data: store,
@@ -900,7 +900,7 @@ export const {
         return project.instance.path()
       },
       session: {
-        evict, // kilocode_change
+        evict, // taverncode_change
         get(sessionID: string) {
           const match = search(store.session, sessionID, (s) => s.id)
           if (match.found) return store.session[match.index]
@@ -944,7 +944,7 @@ export const {
                 draft.todo[sessionID] = todo.data ?? []
                 const currentMessages = draft.message[sessionID] ?? []
                 const infos = (messages.data ?? []).flatMap((message) => {
-                  if (!tracker.messages.has(message.info.id)) return [strip(message.info)] // kilocode_change
+                  if (!tracker.messages.has(message.info.id)) return [strip(message.info)] // taverncode_change
                   const current = currentMessages.find((item) => item.id === message.info.id)
                   return current ? [current] : []
                 })
@@ -953,11 +953,11 @@ export const {
                     (message) => tracker.messages.has(message.id) && !infos.some((item) => item.id === message.id),
                   ),
                 )
-                // kilocode_change start - window by created time so wrapped ids stay visible
+                // taverncode_change start - window by created time so wrapped ids stay visible
                 const visible = recent(infos)
                 const visibleIDs = new Set(visible.map((message) => message.id))
                 const removed = infos.filter((message) => !visibleIDs.has(message.id))
-                // kilocode_change end
+                // taverncode_change end
                 for (const message of messages.data ?? []) {
                   if (!visibleIDs.has(message.info.id)) {
                     delete draft.part[message.info.id]

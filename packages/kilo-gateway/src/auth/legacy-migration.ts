@@ -1,21 +1,21 @@
 /**
- * Legacy Kilo CLI migration module
+ * Legacy Tavern CLI migration module
  *
- * Migrates authentication from the legacy Kilo Code VS Code extension CLI
- * config path (~/.kilocode/cli/config.json) to the new auth.json format.
+ * Migrates authentication from the legacy Tavern Code VS Code extension CLI
+ * config path (~/.taverncode/cli/config.json) to the new auth.json format.
  */
 import fs from "fs/promises"
 import os from "os"
 import path from "path"
 
-export const LEGACY_CONFIG_PATH = path.join(os.homedir(), ".kilocode", "cli", "config.json")
+export const LEGACY_CONFIG_PATH = path.join(os.homedir(), ".taverncode", "cli", "config.json")
 
 interface LegacyProvider {
   id: string
   provider: string
-  kilocodeToken?: string
-  kilocodeModel?: string
-  kilocodeOrganizationId?: string
+  taverncodeToken?: string
+  taverncodeModel?: string
+  taverncodeOrganizationId?: string
 }
 
 interface LegacyConfig {
@@ -33,27 +33,27 @@ type OAuthAuth = { type: "oauth"; access: string; refresh: string; expires: numb
 type AuthInfo = ApiAuth | OAuthAuth
 
 /**
- * Extract kilo auth from legacy config
+ * Extract tavern auth from legacy config
  */
 function extractKiloAuth(config: LegacyConfig): LegacyKiloAuth | undefined {
   if (!config.providers) return undefined
 
-  const provider = config.providers.find((p) => p.provider === "kilocode")
-  if (!provider?.kilocodeToken) return undefined
+  const provider = config.providers.find((p) => p.provider === "taverncode")
+  if (!provider?.taverncodeToken) return undefined
 
   return {
-    token: provider.kilocodeToken,
-    organizationId: provider.kilocodeOrganizationId,
+    token: provider.taverncodeToken,
+    organizationId: provider.taverncodeOrganizationId,
   }
 }
 
 /**
- * Migrate Kilo authentication from legacy CLI config path.
+ * Migrate Tavern authentication from legacy CLI config path.
  *
- * Checks ~/.kilocode/cli/config.json for existing kilo credentials
+ * Checks ~/.taverncode/cli/config.json for existing tavern credentials
  * and migrates them to the new auth.json format.
  *
- * @param hasKiloAuth - Callback to check if kilo auth already exists
+ * @param hasKiloAuth - Callback to check if tavern auth already exists
  * @param saveKiloAuth - Callback to save the migrated auth
  * @returns true if migration was performed, false otherwise
  */
@@ -61,7 +61,7 @@ export async function migrateLegacyKiloAuth(
   hasKiloAuth: () => Promise<boolean>,
   saveKiloAuth: (auth: AuthInfo) => Promise<void>,
 ): Promise<boolean> {
-  // Skip if kilo auth already configured
+  // Skip if tavern auth already configured
   if (await hasKiloAuth()) return false
 
   // Check if legacy config exists and parse it
@@ -75,7 +75,7 @@ export async function migrateLegacyKiloAuth(
     return false
   }
 
-  // Extract kilo auth from legacy config
+  // Extract tavern auth from legacy config
   const legacy = extractKiloAuth(config)
   if (!legacy) return false
 

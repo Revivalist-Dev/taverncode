@@ -1,11 +1,11 @@
 ---
 title: "File Encoding"
-description: "How Kilo handles text file encodings when reading and editing files"
+description: "How Tavern handles text file encodings when reading and editing files"
 ---
 
 # File Encoding
 
-Kilo automatically detects the text encoding of each file it reads and preserves that encoding when writing changes back. You can work with source files in any supported encoding without worrying about Kilo corrupting them or showing the model garbled text.
+Tavern automatically detects the text encoding of each file it reads and preserves that encoding when writing changes back. You can work with source files in any supported encoding without worrying about Tavern corrupting them or showing the model garbled text.
 
 ## Supported Encodings
 
@@ -17,7 +17,7 @@ Kilo automatically detects the text encoding of each file it reads and preserves
 - The ISO-8859 family
 - Other common legacy Latin and CJK encodings detected by [chardet](https://github.com/runk/node-chardet) and decoded by [iconv-lite](https://github.com/ashtuchkin/iconv-lite)
 
-New files Kilo creates are always UTF-8 without a BOM. Encoding detection only runs when Kilo reads or overwrites an existing file.
+New files Tavern creates are always UTF-8 without a BOM. Encoding detection only runs when Tavern reads or overwrites an existing file.
 
 ## Not Supported
 
@@ -29,7 +29,7 @@ Encoding detection is statistical. Very short files, or files whose byte pattern
 
 ## Reporting Issues
 
-If Kilo displays a file as garbled text, or writes it back in a different encoding than it was saved in, please open an issue at [github.com/Kilo-Org/kilocode/issues](https://github.com/Kilo-Org/kilocode/issues) and include all of the following:
+If Tavern displays a file as garbled text, or writes it back in a different encoding than it was saved in, please open an issue at [github.com/Kilo-Org/kilocode/issues](https://github.com/Kilo-Org/kilocode/issues) and include all of the following:
 
 - **A file that reproduces the issue.** Attach the actual file to the issue — do not paste its contents into the issue body, since the web form will re-encode the text.
 - **The exact name of the encoding** the file is saved in, for example `Shift_JIS`, `windows-1251`, or `UTF-16 LE with BOM`.
@@ -47,5 +47,5 @@ If Kilo displays a file as garbled text, or writes it back in a different encodi
   Get-FileHash path\to\file -Algorithm SHA256
   ```
 
-- **The model and provider** you were using when the issue occurred, for example `claude-sonnet-4.5` via Kilo Gateway.
-- **The exact Kilo version** you are running. For the CLI, run `kilo --version`. For the VS Code extension, open the Extensions view and check the version next to "Kilo Code".
+- **The model and provider** you were using when the issue occurred, for example `claude-sonnet-4.5` via Tavern Gateway.
+- **The exact Tavern version** you are running. For the CLI, run `tavern --version`. For the VS Code extension, open the Extensions view and check the version next to "Tavern Code".

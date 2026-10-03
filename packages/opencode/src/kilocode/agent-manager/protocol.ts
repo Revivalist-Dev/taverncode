@@ -192,9 +192,9 @@ export const Failure = Schema.Struct({
 export type Failure = Schema.Schema.Type<typeof Failure>
 
 export const Event = {
-  Requested: BusEvent.define("kilocode.agent_manager.requested", Request),
+  Requested: BusEvent.define("taverncode.agent_manager.requested", Request),
   Cancelled: BusEvent.define(
-    "kilocode.agent_manager.cancelled",
+    "taverncode.agent_manager.cancelled",
     Schema.Struct({
       requestID: RequestID,
       sessionID: SessionID,

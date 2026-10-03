@@ -1,4 +1,4 @@
-import type { ToolPart } from "@kilocode/sdk/v2"
+import type { ToolPart } from "@taverncode/sdk/v2"
 import type { JSX } from "@opentui/solid"
 import { createMemo, For, Show, type Component } from "solid-js"
 import { useTheme } from "../context/theme"

@@ -1,6 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "settings--agent-behaviour-skills-overflow"
 
 const SEEDED_PATH = "/home/user/projects/very-long-directory-name/skills-collection/team-shared"
@@ -85,7 +85,7 @@ test.describe("skills settings responsive layout", () => {
       // path is visible without resizing.
       await trigger.hover()
       const content = page.locator('[data-component="tooltip"]').filter({ hasText: seeded })
-      await expect(content, `Kilo Tooltip exposes full path on hover: ${seeded}`).toBeVisible()
+      await expect(content, `Tavern Tooltip exposes full path on hover: ${seeded}`).toBeVisible()
       await assertTooltipFitsViewport(content, `path tooltip "${seeded}"`, page)
     }
 
@@ -112,7 +112,7 @@ test.describe("skills settings responsive layout", () => {
       // URL is visible without resizing.
       await trigger.hover()
       const content = page.locator('[data-component="tooltip"]').filter({ hasText: seeded })
-      await expect(content, `Kilo Tooltip exposes full URL on hover: ${seeded}`).toBeVisible()
+      await expect(content, `Tavern Tooltip exposes full URL on hover: ${seeded}`).toBeVisible()
       await assertTooltipFitsViewport(content, `URL tooltip "${seeded}"`, page)
     }
 

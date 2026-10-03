@@ -14,17 +14,17 @@ import { resetDatabase } from "../fixture/db"
 import { disposeAllInstances, tmpdir, tmpdirScoped } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 
-// kilocode_change start - PTY route tests do not need an indexing worker per temp project;
+// taverncode_change start - PTY route tests do not need an indexing worker per temp project;
 // detached indexing startup races PTY setup and can exhaust the Darwin test deadline.
 process.env.KILO_DISABLE_CODEBASE_INDEXING = "vscode-no-workspace"
-// kilocode_change end
+// taverncode_change end
 
 const context = Context.empty() as Context.Context<unknown>
 const testPty = process.platform === "win32" ? test.skip : test
 
 function request(route: string, directory: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers)
-  headers.set("x-kilo-directory", directory)
+  headers.set("x-tavern-directory", directory)
   return HttpApiApp.webHandler().handler(
     new Request(`http://localhost${route}`, {
       ...init,
@@ -58,7 +58,7 @@ const effectIt = testEffect(
   ),
 )
 
-const directoryHeader = (dir: string) => HttpClientRequest.setHeader("x-kilo-directory", dir)
+const directoryHeader = (dir: string) => HttpClientRequest.setHeader("x-tavern-directory", dir)
 
 const serverUrl = () => HttpServer.HttpServer.use((server) => Effect.succeed(HttpServer.formatAddress(server.address)))
 
@@ -122,7 +122,7 @@ describe("v2 pty HttpApi", () => {
 
       const token = await request(`/api/pty/${info.id}/connect-token`, tmp.path, {
         method: "POST",
-        headers: { "x-kilo-ticket": "1" },
+        headers: { "x-tavern-ticket": "1" },
       })
       expect(token.status).toBe(200)
       const ticket = Schema.decodeUnknownSync(Location.response(PtyTicket.ConnectToken))(await token.json()).data.ticket
@@ -134,7 +134,7 @@ describe("v2 pty HttpApi", () => {
       await request(`/api/pty/${info.id}`, tmp.path, { method: "DELETE" })
     }
   })
-  // kilocode_change start - portable live PTY coverage on Linux, macOS, and Windows CI
+  // taverncode_change start - portable live PTY coverage on Linux, macOS, and Windows CI
   effectIt.live("serves Agent Manager script terminal create, resize, input, output, exit, and remove routes", () =>
     Effect.gen(function* () {
       const dir = yield* tmpdirScoped({ git: true, config: { formatter: false, lsp: false } })
@@ -230,13 +230,13 @@ describe("v2 pty HttpApi", () => {
       expect(removed.status).toBe(204)
     }),
   )
-  // kilocode_change end
+  // taverncode_change end
   ;(process.platform === "win32" ? effectIt.live.skip : effectIt.live)(
     "applies plugin shell environment before forced PTY values",
     () =>
       Effect.gen(function* () {
         const dir = yield* tmpdirScoped({ git: true, config: { formatter: false, lsp: false } })
-        // kilocode_change start - verify child env precedence and credential stripping through the canonical PTY route
+        // taverncode_change start - verify child env precedence and credential stripping through the canonical PTY route
         const previous = {
           password: process.env.KILO_SERVER_PASSWORD,
           username: process.env.KILO_SERVER_USERNAME,
@@ -332,10 +332,10 @@ describe("v2 pty HttpApi", () => {
 
         const output = yield* takeUntil("caller|plugin|plugin|xterm-256color")
         expect(output).toContain(`caller|plugin|plugin|xterm-256color|1|${info.id}|||${cwd}`)
-        // kilocode_change end
+        // taverncode_change end
         yield* write(new Socket.CloseEvent(1000, "done")).pipe(Effect.catch(() => Effect.void))
         yield* HttpClientRequest.delete(`/api/pty/${info.id}`).pipe(directoryHeader(dir), HttpClient.execute)
       }),
-    30_000, // kilocode_change - external plugin loading and websocket setup can exceed Bun's 5s default
+    30_000, // taverncode_change - external plugin loading and websocket setup can exceed Bun's 5s default
   )
 })

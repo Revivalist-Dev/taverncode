@@ -1,14 +1,14 @@
 import { Component, For, Show, createMemo, createSignal } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Card } from "@kilocode/kilo-ui/card"
-import { DEFAULT_VECTOR_STORE, isFileExtension, parseFileExtensions } from "@kilocode/kilo-indexing/config"
-import { formatKiloEmbeddingModelLabel, getKiloEmbeddingModel } from "@kilocode/kilo-indexing/embedding-models"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Switch } from "@kilocode/kilo-ui/switch"
-import { TextField } from "@kilocode/kilo-ui/text-field"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Card } from "@taverncode/tavern-ui/card"
+import { DEFAULT_VECTOR_STORE, isFileExtension, parseFileExtensions } from "@taverncode/tavern-indexing/config"
+import { formatKiloEmbeddingModelLabel, getKiloEmbeddingModel } from "@taverncode/tavern-indexing/embedding-models"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Switch } from "@taverncode/tavern-ui/switch"
+import { TextField } from "@taverncode/tavern-ui/text-field"
 import { useConfig } from "../../context/config"
 import { formatIndexingLabel, useIndexing } from "../../context/indexing"
-import { useKiloEmbeddingModels } from "../../context/kilo-embedding-models"
+import { useKiloEmbeddingModels } from "../../context/tavern-embedding-models"
 import { useLanguage } from "../../context/language"
 import { useProvider } from "../../context/provider"
 import { useServer } from "../../context/server"
@@ -33,7 +33,7 @@ type Project = { id: string; root: string; label: string }
 type TuningKey = "searchMinScore" | "searchMaxResults" | "embeddingBatchSize" | "scannerMaxBatchRetries"
 
 const allProviders: { value: ProviderId; label: string }[] = [
-  { value: "kilo", label: "Kilo" },
+  { value: "tavern", label: "Tavern" },
   { value: "openai", label: "OpenAI" },
   { value: "ollama", label: "Ollama (local)" },
   { value: "openai-compatible", label: "OpenAI-Compatible" },
@@ -66,7 +66,7 @@ function sourceLabel(source: IndexingSource) {
 }
 
 function providerFields(provider: ProviderId | undefined): Array<{ key: string; label: string; placeholder: string }> {
-  if (provider === "kilo") return []
+  if (provider === "tavern") return []
   if (provider === "openai") return [{ key: "apiKey", label: "API Key", placeholder: "sk-..." }]
   if (provider === "ollama") return [{ key: "baseUrl", label: "Base URL", placeholder: "http://localhost:11434" }]
   if (provider === "openai-compatible") {
@@ -221,15 +221,15 @@ const IndexingTab: Component = () => {
     getKiloEmbeddingModel(model ?? undefined, embeds.catalog())?.id
   const kiloValue = () => knownKiloModel(cfg().model) ?? kiloDefault()
   const kiloAvailable = () => !!server.profileData() || provider.authStates()[KILO_PROVIDER_ID] !== undefined
-  const selectedProvider = () => cfg().provider ?? (kiloAvailable() ? "kilo" : undefined)
-  const staleKiloModel = () => selectedProvider() === "kilo" && !!cfg().model && !knownKiloModel(cfg().model)
+  const selectedProvider = () => cfg().provider ?? (kiloAvailable() ? "tavern" : undefined)
+  const staleKiloModel = () => selectedProvider() === "tavern" && !!cfg().model && !knownKiloModel(cfg().model)
   const providers = createMemo(() =>
-    allProviders.filter((item) => item.value !== "kilo" || kiloAvailable() || selectedProvider() === "kilo"),
+    allProviders.filter((item) => item.value !== "tavern" || kiloAvailable() || selectedProvider() === "tavern"),
   )
   const fields = createMemo(() => providerFields(selectedProvider()))
 
   const saveProvider = (next: ProviderId | undefined) => {
-    if (next === "kilo") {
+    if (next === "tavern") {
       const model = knownKiloModel(cfg().model) ?? (kiloDefault() || null)
       updateIndexing({
         provider: next,
@@ -251,7 +251,7 @@ const IndexingTab: Component = () => {
     if (next && !cfg().provider && kiloAvailable()) {
       updateIndexing({
         enabled: next,
-        provider: "kilo",
+        provider: "tavern",
         model: knownKiloModel(cfg().model) ?? (kiloDefault() || null),
         dimension: null,
       })
@@ -261,7 +261,7 @@ const IndexingTab: Component = () => {
   }
 
   const saveModel = (value: string) => {
-    if (selectedProvider() === "kilo") return
+    if (selectedProvider() === "tavern") return
     const trimmed = value.trim()
     updateIndexing({ model: trimmed || null })
   }
@@ -425,7 +425,7 @@ const IndexingTab: Component = () => {
             placeholder={language.t("settings.providers.notSet")}
           />
         </SettingsRow>
-        <Show when={selectedProvider() === "kilo"}>
+        <Show when={selectedProvider() === "tavern"}>
           <Show when={kiloModels().length > 0}>
             <SettingsRow
               title={language.t("settings.indexing.kiloModel.title")}
@@ -446,7 +446,7 @@ const IndexingTab: Component = () => {
             </SettingsRow>
           </Show>
         </Show>
-        <Show when={selectedProvider() !== "kilo"}>
+        <Show when={selectedProvider() !== "tavern"}>
           <SettingsRow
             title={language.t("settings.indexing.model.title")}
             description={description(language.t("settings.indexing.model.description"), [["model"]])}
@@ -458,12 +458,12 @@ const IndexingTab: Component = () => {
         <SettingsRow
           title={language.t("settings.indexing.dimension.title")}
           description={
-            selectedProvider() === "kilo"
+            selectedProvider() === "tavern"
               ? language.t("settings.indexing.dimension.description")
               : description(language.t("settings.indexing.dimension.description"), [["dimension"]])
           }
-          tag={() => (selectedProvider() === "kilo" ? undefined : tag(scope(), [["dimension"]]))}
-          last={!selectedProvider() || (fields().length === 0 && !(selectedProvider() === "kilo" && !kiloAvailable()))}
+          tag={() => (selectedProvider() === "tavern" ? undefined : tag(scope(), [["dimension"]]))}
+          last={!selectedProvider() || (fields().length === 0 && !(selectedProvider() === "tavern" && !kiloAvailable()))}
         >
           <TextField
             value={
@@ -472,13 +472,13 @@ const IndexingTab: Component = () => {
                 : String(cfg().dimension)
             }
             placeholder={
-              selectedProvider() === "kilo" ? "Provided by Kilo" : language.t("settings.indexing.dimension.placeholder")
+              selectedProvider() === "tavern" ? "Provided by Tavern" : language.t("settings.indexing.dimension.placeholder")
             }
-            disabled={selectedProvider() === "kilo"}
+            disabled={selectedProvider() === "tavern"}
             onChange={(value) => saveNumber("dimension", value, { integer: true, min: 1 })}
           />
         </SettingsRow>
-        <Show when={selectedProvider() === "kilo" && !kiloAvailable()}>
+        <Show when={selectedProvider() === "tavern" && !kiloAvailable()}>
           <SettingsRow
             title={language.t("settings.indexing.kiloSignIn.title")}
             description={language.t("settings.indexing.kiloSignIn.description")}

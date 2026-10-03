@@ -1,4 +1,4 @@
-import type { UiI18nParams } from "@kilocode/kilo-ui/context"
+import type { UiI18nParams } from "@taverncode/tavern-ui/context"
 import { useConfig } from "../src/context/config"
 import { canUseSpeechToText, selectedSpeechToTextModel } from "../src/components/speech-to-text/availability"
 import { useProvider } from "../src/context/provider"

@@ -2,9 +2,9 @@ import { describe, expect, test } from "bun:test"
 import type { SessionV1 } from "@opencode-ai/core/v1/session"
 import { Effect, Exit } from "effect"
 import { SessionID } from "@/session/schema"
-import { GoalLink } from "@/kilocode/session/goal/link"
-import { GoalPolicy } from "@/kilocode/session/goal/policy"
-import { GoalState } from "@/kilocode/session/goal/state"
+import { GoalLink } from "@/taverncode/session/goal/link"
+import { GoalPolicy } from "@/taverncode/session/goal/policy"
+import { GoalState } from "@/taverncode/session/goal/state"
 
 const part = (tool: string, state: unknown) =>
   ({ type: "tool", tool, state }) as unknown as typeof SessionV1.ToolPart.Type
@@ -148,7 +148,7 @@ describe("GoalLink.hydrate", () => {
   test("restores a waiting goal's wait record and hold", () => {
     const id = sid("hydrate")
     const wait: GoalLink.Wait = { kind: "wakeup", id: "wku_h", label: "later", dueAt: 5 }
-    expect(GoalLink.hydrate(id, { "kilo.goal": { text: "obj", status: "waiting", wait } })).toEqual(wait)
+    expect(GoalLink.hydrate(id, { "tavern.goal": { text: "obj", status: "waiting", wait } })).toEqual(wait)
     expect(GoalLink.get(id)).toEqual(wait)
     expect(GoalState.waiting(id)).toBe(true)
     expect(GoalState.hold(id)).toBe(true)
@@ -157,7 +157,7 @@ describe("GoalLink.hydrate", () => {
 
   test("ignores a goal that is not waiting", () => {
     const id = sid("hydrate-skip")
-    expect(GoalLink.hydrate(id, { "kilo.goal": { text: "obj", status: "active" } })).toBeUndefined()
+    expect(GoalLink.hydrate(id, { "tavern.goal": { text: "obj", status: "active" } })).toBeUndefined()
     expect(GoalLink.get(id)).toBeUndefined()
     expect(GoalState.hold(id)).toBe(false)
   })
@@ -168,7 +168,7 @@ describe("GoalLink.claim", () => {
     const id = sid("claim-inflight")
     GoalState.start(id)
     const info = { id: "wku_fire", prompt: "fired note", dueAt: 1 }
-    expect(GoalLink.claim(id, info, "wakeup", { "kilo.goal": { text: "obj", status: "active" } })).toEqual({
+    expect(GoalLink.claim(id, info, "wakeup", { "tavern.goal": { text: "obj", status: "active" } })).toEqual({
       kind: "wakeup",
       id: "wku_fire",
       label: "fired note",
@@ -180,7 +180,7 @@ describe("GoalLink.claim", () => {
   test("a waiting goal owns only its matching wait", () => {
     const id = sid("claim-wait")
     const wait: GoalLink.Wait = { kind: "wakeup", id: "wku_w", label: "later" }
-    const metadata = { "kilo.goal": { text: "obj", status: "waiting", wait } }
+    const metadata = { "tavern.goal": { text: "obj", status: "waiting", wait } }
     expect(GoalLink.claim(id, { id: "wku_w", prompt: "later" }, "wakeup", metadata)).toEqual(wait)
     expect(GoalLink.claim(id, { id: "wku_other", prompt: "nope" }, "wakeup", metadata)).toBeUndefined()
   })
@@ -194,10 +194,10 @@ describe("GoalLink.claim", () => {
     const id = sid("claim-live")
     const wait: GoalLink.Wait = { kind: "wakeup", id: "wku_live", label: "later" }
     GoalLink.set(id, wait)
-    expect(GoalLink.claim(id, { id: "wku_live", prompt: "later" }, "wakeup", { "kilo.goal": { text: "obj", status: "active" } })).toEqual(
+    expect(GoalLink.claim(id, { id: "wku_live", prompt: "later" }, "wakeup", { "tavern.goal": { text: "obj", status: "active" } })).toEqual(
       wait,
     )
-    expect(GoalLink.claim(id, { id: "wku_other", prompt: "nope" }, "wakeup", { "kilo.goal": { text: "obj", status: "active" } })).toBeUndefined()
+    expect(GoalLink.claim(id, { id: "wku_other", prompt: "nope" }, "wakeup", { "tavern.goal": { text: "obj", status: "active" } })).toBeUndefined()
     GoalLink.clear(id)
   })
 })
@@ -259,7 +259,7 @@ describe("GoalLink.release", () => {
 describe("GoalState waiting", () => {
   test("reads and keeps a waiting goal's wait record", () => {
     const wait: GoalLink.Wait = { kind: "wakeup", id: "wku_w", label: "later", dueAt: 5 }
-    expect(GoalState.read({ "kilo.goal": { text: "obj", status: "waiting", wait } })).toEqual({
+    expect(GoalState.read({ "tavern.goal": { text: "obj", status: "waiting", wait } })).toEqual({
       text: "obj",
       status: "waiting",
       active: false,
@@ -269,7 +269,7 @@ describe("GoalState waiting", () => {
 
   test("drops a malformed wait record", () => {
     expect(
-      GoalState.read({ "kilo.goal": { text: "obj", status: "waiting", wait: { kind: "nope", id: "x" } } }),
+      GoalState.read({ "tavern.goal": { text: "obj", status: "waiting", wait: { kind: "nope", id: "x" } } }),
     ).toEqual({ text: "obj", status: "waiting", active: false })
   })
 
@@ -277,11 +277,11 @@ describe("GoalState waiting", () => {
     const id = sid("project")
     const metadata = {
       retained: true,
-      "kilo.goal": { text: "obj", status: "waiting", wait: { kind: "process", id: "bgp_1", label: "bgp_1" } },
+      "tavern.goal": { text: "obj", status: "waiting", wait: { kind: "process", id: "bgp_1", label: "bgp_1" } },
     }
     expect(GoalState.project(id, metadata)).toEqual({
       retained: true,
-      "kilo.goal": {
+      "tavern.goal": {
         text: "obj",
         status: "waiting",
         active: false,

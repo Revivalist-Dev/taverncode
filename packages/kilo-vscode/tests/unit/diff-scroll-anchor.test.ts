@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import { Window } from "happy-dom"
-import { capture } from "../../../kilo-ui/src/pierre/scroll"
+import { capture } from "../../../tavern-ui/src/pierre/scroll"
 
 function setup() {
   const window = new Window()

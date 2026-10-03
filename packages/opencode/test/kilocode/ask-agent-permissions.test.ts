@@ -1,6 +1,6 @@
 import { test, expect, describe } from "bun:test"
 import { Permission } from "../../src/permission"
-import { readOnlyBash } from "../../src/kilocode/agent"
+import { readOnlyBash } from "../../src/taverncode/agent"
 
 /** Build the Ask agent ruleset without MCP servers */
 function askRuleset() {

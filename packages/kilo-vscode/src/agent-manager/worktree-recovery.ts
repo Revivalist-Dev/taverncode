@@ -6,7 +6,7 @@
  *
  * - restore: re-create a deleted worktree directory from its surviving branch
  * - forget: drop the state row but keep the conversations, moving them to Local
- * - clean: delete directories under `.kilo/worktrees/` that no worktree claims
+ * - clean: delete directories under `.tavern/worktrees/` that no worktree claims
  */
 
 import { pauseOrphanSizes, resumeOrphanSizes } from "./orphans/sizing"
@@ -81,7 +81,7 @@ export async function restoreWorktree(ctx: ProjectContext, host: RecoveryHost, w
 }
 
 /**
- * Delete orphaned directories under `.kilo/worktrees/`.
+ * Delete orphaned directories under `.tavern/worktrees/`.
  *
  * Every path is re-validated against a *fresh* reconcile — not the possibly-stale `ctx.report` the
  * dialog was built from — before it is touched, so a directory the worktree pool just claimed in the

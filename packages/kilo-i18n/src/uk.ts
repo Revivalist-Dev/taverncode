@@ -1,12 +1,12 @@
 export const dict = {
-  // Kilo Gateway provider translations
+  // Tavern Gateway provider translations
   "provider.connect.kiloGateway.byok.prefix": "Для отримання додаткової статистики використання використовуйте ",
-  "provider.connect.kiloGateway.byok.link": "BYOK через Kilo's Gateway",
+  "provider.connect.kiloGateway.byok.link": "BYOK через Tavern's Gateway",
   "provider.connect.kiloGateway.byok.suffix": ".",
 
   // Provider settings translations
   "settings.providers.group.recommended": "Рекомендовані",
-  "settings.providers.note.kilo": "Доступ до 500+ моделей ШІ",
+  "settings.providers.note.tavern": "Доступ до 500+ моделей ШІ",
   "settings.providers.note.opencode": "Добірні моделі, зокрема Claude, GPT, Gemini та інші",
   "settings.providers.note.anthropic": "Прямий доступ до моделей Claude, зокрема Pro і Max",
   "settings.providers.note.deepseek": "Моделі DeepSeek для завдань міркування та програмування",
@@ -37,18 +37,18 @@ export const dict = {
   "marketplace.install.destination": "Місце встановлення",
   "marketplace.install.includedSkills": "Включені навички",
   "marketplace.install.about.mcp":
-    "MCP-сервер надає Kilo додаткові інструменти для роботи із зовнішніми сервісами або локальними програмами.",
+    "MCP-сервер надає Tavern додаткові інструменти для роботи із зовнішніми сервісами або локальними програмами.",
   "marketplace.install.about.agent": "Агент додає багаторазову роль із власними інструкціями та дозволами.",
   "marketplace.install.about.skill":
-    "Навичка додає інструкції та ресурси для певних завдань, які Kilo може завантажити за потреби.",
+    "Навичка додає інструкції та ресурси для певних завдань, які Tavern може завантажити за потреби.",
   "marketplace.install.mcp.warning":
-    "MCP-сервери можуть виконувати локальні команди або підключатися до зовнішніх сервісів. Kilo запитає дозвіл перед використанням їхніх інструментів, якщо ваші дозволи не дають змоги робити це автоматично.",
+    "MCP-сервери можуть виконувати локальні команди або підключатися до зовнішніх сервісів. Tavern запитає дозвіл перед використанням їхніх інструментів, якщо ваші дозволи не дають змоги робити це автоматично.",
   "marketplace.install.project.warning":
     "Файли проєкту можуть бути додані до системи контролю версій. Не зберігайте тут секрети, якщо конфігурація не посилається на змінну середовища.",
   "marketplace.install.learnMore": "Дізнайтеся, як працює встановлення з Marketplace",
   "marketplace.install.learnMcp": "Докладніше про MCP",
   "marketplace.install.about.plugin":
-    "Плагін додає до Kilo користувацькі інструменти та інтеграції. Плагіни виконуються з повними правами доступу.",
+    "Плагін додає до Tavern користувацькі інструменти та інтеграції. Плагіни виконуються з повними правами доступу.",
   "marketplace.install.plugin.warning":
     "Плагіни виконують код із повними правами доступу. Вони можуть читати й змінювати ваші файли, виконувати команди та отримувати доступ до ваших облікових даних і мережі. Встановлюйте лише плагіни, яким довіряєте.",
   "marketplace.install.installedAt": "Встановлено в {{path}}",
@@ -119,7 +119,7 @@ export const dict = {
     "Зачекайте, поки знімок завершиться. Наступні ходи будуть швидкими, щойно початковий знімок буде створений.",
   "snapshot.slowRepo.answer.disable": "Вимкнути для цього проєкту",
   "snapshot.slowRepo.answer.disable.description":
-    "Вимкніть знімки Kilo для цього проєкту. Ви втратите скасування/повторення для змін Kilo, але git продовжить відстежувати все.",
+    "Вимкніть знімки Tavern для цього проєкту. Ви втратите скасування/повторення для змін Tavern, але git продовжить відстежувати все.",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "Відкрити в переглядачі відмінностей",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { createLatch, watchRestore } from "../../src/kilo-provider/prompt-focus"
+import { createLatch, watchRestore } from "../../src/tavern-provider/prompt-focus"
 
 function queue() {
   const pending: Array<() => void> = []

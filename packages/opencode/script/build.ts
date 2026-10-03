@@ -2,16 +2,16 @@
 
 import { $ } from "bun"
 import fs from "fs"
-import os from "os" // kilocode_change
+import os from "os" // taverncode_change
 import path from "path"
 import { fileURLToPath } from "url"
 import { createSolidTransformPlugin } from "@opentui/solid/bun-plugin"
-import { createRequire } from "module" // kilocode_change
+import { createRequire } from "module" // taverncode_change
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const dir = path.resolve(__dirname, "..")
-const require = createRequire(import.meta.url) // kilocode_change
+const require = createRequire(import.meta.url) // taverncode_change
 
 process.chdir(dir)
 
@@ -19,13 +19,13 @@ const generated = await import("./generate.ts")
 
 import { Script } from "@opencode-ai/script"
 import pkg from "../package.json"
-// kilocode_change start
-import { stageBubblewrap } from "./kilocode/bubblewrap"
-import { LanceDBRuntime } from "../src/kilocode/lancedb"
-import { KiloSandboxWorker } from "./kilocode/kilo-sandbox-worker"
-import { KiloSandboxNetwork } from "./kilocode/kilo-sandbox-network"
-import * as KiloSbom from "./kilocode/sbom"
-// kilocode_change end
+// taverncode_change start
+import { stageBubblewrap } from "./taverncode/bubblewrap"
+import { LanceDBRuntime } from "../src/taverncode/lancedb"
+import { KiloSandboxWorker } from "./taverncode/tavern-sandbox-worker"
+import { KiloSandboxNetwork } from "./taverncode/tavern-sandbox-network"
+import * as KiloSbom from "./taverncode/sbom"
+// taverncode_change end
 
 const singleFlag = process.argv.includes("--single")
 const baselineFlag = process.argv.includes("--baseline")
@@ -33,7 +33,7 @@ const skipInstall = process.argv.includes("--skip-install")
 const sourcemapsFlag = process.argv.includes("--sourcemaps")
 const plugin = createSolidTransformPlugin()
 
-// kilocode_change start - codebase indexing
+// taverncode_change start - codebase indexing
 async function copyTreeSitterWasms(outputDir: string) {
   const runtimeWasmPath = require.resolve("web-tree-sitter/tree-sitter.wasm")
   const languagePackagePath = require.resolve("tree-sitter-wasms/package.json")
@@ -52,7 +52,7 @@ async function copyTreeSitterWasms(outputDir: string) {
   console.log(`copied ${languageWasmFiles.length + 1} tree-sitter wasm files to ${targetDir}`)
 }
 
-// kilocode_change start
+// taverncode_change start
 async function isKiloConsoleUpToDate(app: string, out: string) {
   const indexHtml = path.join(out, "index.html")
   if (!fs.existsSync(indexHtml)) return false
@@ -62,9 +62,9 @@ async function isKiloConsoleUpToDate(app: string, out: string) {
     path.join(app, "package.json"),
     path.join(app, "vite.config.ts"),
     path.join(app, "index.html"),
-    path.resolve(dir, "../kilo-web-ui/src"),
-    path.resolve(dir, "../kilo-indexing/src"),
-    path.resolve(dir, "../kilo-ui/src"),
+    path.resolve(dir, "../tavern-web-ui/src"),
+    path.resolve(dir, "../tavern-indexing/src"),
+    path.resolve(dir, "../tavern-ui/src"),
     path.resolve(dir, "../ui/src"),
     path.resolve(dir, "../sdk/js/src"),
     path.resolve(dir, "../../bun.lock"),
@@ -86,13 +86,13 @@ async function isKiloConsoleUpToDate(app: string, out: string) {
 }
 
 async function buildKiloConsole() {
-  const app = path.resolve(dir, "../kilo-console")
+  const app = path.resolve(dir, "../tavern-console")
   const out = path.join(app, "dist")
   if (await isKiloConsoleUpToDate(app, out)) {
-    console.log(`reusing existing Kilo Console build at ${out}`)
+    console.log(`reusing existing Tavern Console build at ${out}`)
     return out
   }
-  console.log("building Kilo Console")
+  console.log("building Tavern Console")
   const proc = Bun.spawn([process.execPath, "run", "build"], {
     cwd: app,
     env: { ...process.env, KILO_CONSOLE_BASE: "/console/" },
@@ -101,16 +101,16 @@ async function buildKiloConsole() {
     windowsHide: true,
   })
   const code = await proc.exited
-  if (code !== 0) throw new Error(`Kilo Console build failed with exit code ${code}`)
+  if (code !== 0) throw new Error(`Tavern Console build failed with exit code ${code}`)
   return out
 }
-// kilocode_change end
+// taverncode_change end
 
 async function copyKiloConsole(input: string, outputDir: string) {
   const target = path.join(outputDir, "console")
   await fs.promises.rm(target, { recursive: true, force: true })
   await fs.promises.cp(input, target, { recursive: true })
-  console.log(`copied Kilo Console assets to ${target}`)
+  console.log(`copied Tavern Console assets to ${target}`)
 }
 
 function smokeEnv(root: string) {
@@ -133,7 +133,7 @@ function smokeEnv(root: string) {
 }
 
 async function smokeModels(binaryPath: string) {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "kilo-models-"))
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "tavern-models-"))
   try {
     const out = await $`${binaryPath} --pure models anthropic`.env(smokeEnv(root)).text()
     if (out.split(/\r?\n/).some((line) => line.startsWith("anthropic/"))) return
@@ -145,7 +145,7 @@ async function smokeModels(binaryPath: string) {
   }
 }
 
-// Kilo dropped the packages/app web UI. Kept here as a commented reference so future upstream merges
+// Tavern dropped the packages/app web UI. Kept here as a commented reference so future upstream merges
 // can see the deliberate divergence rather than treating a re-add as a clean re-introduction.
 // const createEmbeddedWebUIBundle = async () => {
 //   console.log(`Building Web UI to embed in the binary`)
@@ -170,7 +170,7 @@ async function smokeModels(binaryPath: string) {
 //     `}`,
 //   ].join("\n")
 // }
-// kilocode_change end
+// taverncode_change end
 
 const treeSitterWorker = await Bun.file(fileURLToPath(import.meta.resolve("@opentui/core/parser.worker"))).text()
 
@@ -258,14 +258,14 @@ const targets = singleFlag
     })
   : allTargets
 
-// kilocode_change start
+// taverncode_change start
 await $`rm -rf dist`
 const [kiloConsoleDist, kiloSandboxWorker, kiloSandboxNetwork] = await Promise.all([
   buildKiloConsole(),
   KiloSandboxWorker.bundle(),
   KiloSandboxNetwork.bundle(),
 ])
-// kilocode_change end
+// taverncode_change end
 
 const binaries: Record<string, string> = {}
 if (!skipInstall) {
@@ -287,33 +287,33 @@ for (const item of targets) {
 
   console.log(`building ${name}`)
   await $`mkdir -p dist/${name}/bin`
-  // kilocode_change start
+  // taverncode_change start
   const bwrap =
     item.os === "linux" && process.env.KILO_SKIP_BUNDLED_BWRAP !== "1"
       ? await stageBubblewrap(item.arch, path.resolve(dir, `dist/${name}/bin`))
       : undefined
-  // kilocode_change end
+  // taverncode_change end
 
   const workerPath = "./src/cli/tui/worker.ts"
   const treeSitterWorkerPath = "opentui-tree-sitter-worker.js"
-  // kilocode_change start
-  const sessionExportWorkerPath = "./src/kilocode/session-export/worker.ts"
-  const indexingWorkerPath = "./src/kilocode/indexing-worker.ts"
-  // kilocode_change end
+  // taverncode_change start
+  const sessionExportWorkerPath = "./src/taverncode/session-export/worker.ts"
+  const indexingWorkerPath = "./src/taverncode/indexing-worker.ts"
+  // taverncode_change end
 
   const bunfsRoot = item.os === "win32" ? "B:/~BUN/root/" : "/$bunfs/root/"
 
   await Bun.build({
-    conditions: ["bun", "node"], // kilocode_change - port anomalyco/opencode#30873; current form from #31566
+    conditions: ["bun", "node"], // taverncode_change - port Kilo-Org/kilocode#30873; current form from #31566
     tsconfig: "./tsconfig.json",
     plugins: [plugin],
-    // kilocode_change start - skip sourcemaps for release builds (each .js.map adds ~50 MB per target → ~600 MB total)
+    // taverncode_change start - skip sourcemaps for release builds (each .js.map adds ~50 MB per target → ~600 MB total)
     sourcemap: Script.release ? "none" : "external",
     external: ["node-gyp", ...LanceDBRuntime.external],
-    // kilocode_change end
+    // taverncode_change end
     format: "esm",
     minify: true,
-    // kilocode_change start - disable code-splitting to avoid a Bun 1.3.14 codegen bug.
+    // taverncode_change start - disable code-splitting to avoid a Bun 1.3.14 codegen bug.
     // With splitting:true Bun emits cross-chunk re-exports like `import{vn as G9}` whose
     // binding isn't top-level, so the compiled binary crashes at startup on the baseline
     // target: "SyntaxError: Exported binding 'G9' needs to refer to a top-level declared
@@ -321,47 +321,47 @@ for (const item of targets) {
     // in Bun#26089, post-1.3.14. Splitting only deduped shared code between the entrypoints;
     // turning it off inlines per entrypoint and produces a valid binary.
     splitting: false,
-    // kilocode_change end
+    // taverncode_change end
     compile: {
       autoloadBunfig: false,
       autoloadDotenv: false,
       autoloadTsconfig: true,
       autoloadPackageJson: true,
       target: name.replace(pkg.name, "bun") as any,
-      // kilocode_change start
-      outfile: `dist/${name}/bin/kilo`,
-      execArgv: [`--user-agent=kilo/${Script.version}`, "--use-system-ca", "--"],
-      // kilocode_change end
+      // taverncode_change start
+      outfile: `dist/${name}/bin/tavern`,
+      execArgv: [`--user-agent=tavern/${Script.version}`, "--use-system-ca", "--"],
+      // taverncode_change end
       windows: {},
     },
-    // kilocode_change start - packages/app was removed; no embedded web UI
+    // taverncode_change start - packages/app was removed; no embedded web UI
     files: { [treeSitterWorkerPath]: treeSitterWorker },
     entrypoints: ["./src/index.ts", workerPath, treeSitterWorkerPath, sessionExportWorkerPath, indexingWorkerPath],
-    // kilocode_change end
+    // taverncode_change end
     define: {
       FFF_LIBC: JSON.stringify(item.abi === "musl" ? "musl" : "gnu"),
       KILO_VERSION: `'${Script.version}'`,
       KILO_MODELS_DEV: generated.modelsData,
       OTUI_TREE_SITTER_WORKER_PATH: bunfsRoot + treeSitterWorkerPath,
       KILO_WORKER_PATH: workerPath,
-      // kilocode_change start
+      // taverncode_change start
       KILO_SESSION_EXPORT_WORKER_PATH: sessionExportWorkerPath,
       KILO_INDEXING_WORKER_PATH: indexingWorkerPath,
       KILO_SANDBOX_MUTATION_WORKER_PATH: JSON.stringify(KiloSandboxWorker.filename),
       KILO_SANDBOX_NETWORK_RELAY_PATH: item.os === "linux" ? JSON.stringify(KiloSandboxNetwork.relay) : "undefined",
       KILO_SANDBOX_SECCOMP_PATH: item.os === "linux" ? JSON.stringify(KiloSandboxNetwork.seccomp) : "undefined",
-      // kilocode_change end
+      // taverncode_change end
       KILO_CHANNEL: `'${Script.channel}'`,
       KILO_LIBC: item.os === "linux" ? `'${item.abi ?? "glibc"}'` : "",
-      // kilocode_change start
+      // taverncode_change start
       KILO_BWRAP_SHA256: bwrap ? `'${bwrap}'` : "undefined",
       KILO_BUILD_KIND: Script.release ? `'release'` : `'source'`,
-      // kilocode_change end
+      // taverncode_change end
       ...(item.os === "linux" ? { "process.env.OPENTUI_LIBC": JSON.stringify(item.abi ?? "glibc") } : {}),
     },
   })
 
-  // kilocode_change start
+  // taverncode_change start
   await copyTreeSitterWasms(path.resolve(dir, `dist/${name}/bin`))
   await copyKiloConsole(kiloConsoleDist, path.resolve(dir, `dist/${name}/bin`))
   await KiloSandboxWorker.copy(kiloSandboxWorker, path.resolve(dir, `dist/${name}/bin`))
@@ -380,39 +380,39 @@ for (const item of targets) {
     const interpreter = interpreters[key]
     if (interpreter) {
       try {
-        await $`patchelf --set-interpreter ${interpreter} dist/${name}/bin/kilo`
+        await $`patchelf --set-interpreter ${interpreter} dist/${name}/bin/tavern`
         console.log(`patched interpreter for ${name} -> ${interpreter}`)
       } catch {
         console.warn(`patchelf not available, skipping interpreter fix for ${name}`)
       }
     }
   }
-  // kilocode_change end
+  // taverncode_change end
 
   // Smoke test: only run if binary is for current platform
   if (item.os === process.platform && item.arch === process.arch && !item.abi) {
-    const binaryPath = `dist/${name}/bin/kilo` // kilocode_change
+    const binaryPath = `dist/${name}/bin/tavern` // taverncode_change
     console.log(`Running smoke test: ${binaryPath} --version`)
     try {
       const versionOutput = await $`${binaryPath} --version`.text()
       console.log(`Smoke test passed: ${versionOutput.trim()}`)
-      // kilocode_change start
+      // taverncode_change start
       console.log(`Running smoke test: ${binaryPath} --pure models anthropic`)
       await smokeModels(binaryPath)
       console.log("Models snapshot smoke test passed")
       await KiloSandboxWorker.smoke(binaryPath)
-      console.log("Kilo sandbox mutation worker smoke test passed")
-      // kilocode_change end
-      // kilocode_change start
+      console.log("Tavern sandbox mutation worker smoke test passed")
+      // taverncode_change end
+      // taverncode_change start
     } catch (e) {
       console.error(`Smoke test failed for ${name}:`, e)
       process.exit(1)
     }
   }
-  // kilocode_change end
+  // taverncode_change end
 
   await $`rm -rf ./dist/${name}/bin/tui`
-  // kilocode_change start
+  // taverncode_change start
   if (item.os === "linux") {
     const content = await Promise.all([
       Bun.file(path.resolve(dir, "../../LICENSE")).text(),
@@ -425,24 +425,24 @@ for (const item of targets) {
     ])
     await Bun.write(`dist/${name}/LICENSE`, content.join("\n\n---\n\n"))
   }
-  // kilocode_change end
+  // taverncode_change end
   await Bun.file(`dist/${name}/package.json`).write(
     JSON.stringify(
       {
         name,
         version: Script.version,
-        license: item.os === "linux" ? "SEE LICENSE IN LICENSE" : pkg.license, // kilocode_change
+        license: item.os === "linux" ? "SEE LICENSE IN LICENSE" : pkg.license, // taverncode_change
         preferUnplugged: true,
         os: [item.os],
         cpu: [item.arch],
-        // kilocode_change start
+        // taverncode_change start
         keywords: pkg.keywords,
         private: pkg.private,
         repository: {
           type: "git",
           url: "https://github.com/Kilo-Org/kilocode",
         },
-        // kilocode_change end
+        // taverncode_change end
         ...(item.abi ? { libc: [item.abi] } : {}),
       },
       null,
@@ -453,24 +453,24 @@ for (const item of targets) {
 }
 
 if (Script.release) {
-  const archives: string[] = [] // kilocode_change
+  const archives: string[] = [] // taverncode_change
   for (const key of Object.keys(binaries)) {
-    const archive = key.replace(pkg.name, "kilo") // kilocode_change
+    const archive = key.replace(pkg.name, "tavern") // taverncode_change
     if (key.includes("linux")) {
-      // kilocode_change start
+      // taverncode_change start
       const out = path.resolve("dist", `${archive}.tar.gz`)
       await $`tar -czf ${out} *`.cwd(`dist/${key}/bin`)
       archives.push(out)
-      // kilocode_change end
+      // taverncode_change end
     } else {
-      // kilocode_change start
+      // taverncode_change start
       const out = path.resolve("dist", `${archive}.zip`)
       await $`zip -r ${out} *`.cwd(`dist/${key}/bin`)
       archives.push(out)
-      // kilocode_change end
+      // taverncode_change end
     }
   }
-  // kilocode_change start - CRA evidence: describe the exact archives that were
+  // taverncode_change start - CRA evidence: describe the exact archives that were
   // just produced, then publish the sidecars with them so the release asset and
   // its SBOM always land together.
   const evidence = await KiloSbom.evidence({
@@ -479,7 +479,7 @@ if (Script.release) {
     expected: targets.length,
   })
   await $`gh release upload v${Script.version} ${[...archives, ...evidence.files]} --clobber`
-  // kilocode_change end
+  // taverncode_change end
 }
 
 export { binaries }

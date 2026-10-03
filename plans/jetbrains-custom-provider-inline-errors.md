@@ -144,7 +144,7 @@ backend test). Do not mock the EDT or add test-only accessors.
 
 ## Verification
 
-From `packages/kilo-jetbrains/`:
+From `packages/tavern-jetbrains/`:
 - `./gradlew typecheck`
 - `./gradlew test`
 

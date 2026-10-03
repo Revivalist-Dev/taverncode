@@ -78,7 +78,7 @@ export class RetentionService {
     try {
       await this.run(false)
     } catch (err) {
-      console.warn("[Kilo New] Scheduled retention pass failed:", err)
+      console.warn("[Tavern New] Scheduled retention pass failed:", err)
     } finally {
       if (!this.disposed) this.schedule(DAY_MS)
     }
@@ -101,7 +101,7 @@ export class RetentionService {
     try {
       const client = this.connection.getClient()
       const directory = this.directory()
-      const response = await client.kilocode.retention.run(
+      const response = await client.taverncode.retention.run(
         { ...(directory ? { directory } : {}), force },
         { throwOnError: true },
       )
@@ -115,7 +115,7 @@ export class RetentionService {
     const client = this.connection.getClient()
     const directory = this.directory()
     const signal = AbortSignal.timeout(10_000)
-    const response = await client.kilocode.retention
+    const response = await client.taverncode.retention
       .status(directory ? { directory } : {}, {
         throwOnError: true,
         signal,
@@ -131,7 +131,7 @@ export class RetentionService {
   async cancel(): Promise<boolean> {
     const client = this.connection.getClient()
     const directory = this.directory()
-    const response = await client.kilocode.retention.cancel(directory ? { directory } : {}, { throwOnError: true })
+    const response = await client.taverncode.retention.cancel(directory ? { directory } : {}, { throwOnError: true })
     return response.data.requested
   }
 

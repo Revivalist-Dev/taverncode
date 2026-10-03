@@ -8,10 +8,10 @@ import {
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
 
-// Routes for migrating work into Kilo from another coding agent. Today that is
+// Routes for migrating work into Tavern from another coding agent. Today that is
 // Claude Code / OpenAI Codex session transcripts; the `migrate` group is the
-// home for any future "bring your existing X into Kilo" route.
-const root = "/kilocode/migrate/sessions"
+// home for any future "bring your existing X into Tavern" route.
+const root = "/taverncode/migrate/sessions"
 
 export const MigrateSessionsPayload = Schema.Struct({
   cwd: Schema.optional(Schema.String).annotate({
@@ -31,7 +31,7 @@ export const MigrateSessionsPayload = Schema.Struct({
     description: "Model reference (providerID/modelID). Defaults to the agent or provider default.",
   }),
   force: Schema.optional(Schema.Boolean).annotate({
-    description: "Migrate sources again even if they already landed, creating additional Kilo sessions.",
+    description: "Migrate sources again even if they already landed, creating additional Tavern sessions.",
   }),
 })
 
@@ -39,7 +39,7 @@ const MigrateSessionsMigrated = Schema.Struct({
   id: Schema.String.annotate({ description: "Source session UUID." }),
   format: Schema.Literals(["claude", "codex"]).annotate({ description: "Source transcript format." }),
   sessionID: Schema.optional(Schema.String).annotate({
-    description: "Kilo session holding the transcript. Absent only when the migration failed.",
+    description: "Tavern session holding the transcript. Absent only when the migration failed.",
   }),
   messageID: Schema.optional(Schema.String).annotate({
     description: "Final assistant message written, when this call performed the migration.",
@@ -96,7 +96,7 @@ const MigrateSessionsDiscovered = Schema.Struct({
   }),
   sessionID: Schema.optional(Schema.String).annotate({
     description:
-      "Kilo session this transcript was already migrated into. Present means a migration would skip this source.",
+      "Tavern session this transcript was already migrated into. Present means a migration would skip this source.",
   }),
 }).annotate({ identifier: "KilocodeMigrateSessionsDiscovered" })
 
@@ -124,10 +124,10 @@ export const MigrateApi = HttpApi.make("migrate").add(
         error: [HttpApiError.BadRequest, MigrateFailedError],
       }).annotateMerge(
         OpenApi.annotations({
-          identifier: "kilocode.migrate.sessions",
-          summary: "Migrate external sessions into Kilo",
+          identifier: "taverncode.migrate.sessions",
+          summary: "Migrate external sessions into Tavern",
           description:
-            "Discover Claude Code and OpenAI Codex JSONL transcripts for a directory and migrate them into new Kilo sessions, one session per transcript. Sources that were already migrated are skipped, so calling this repeatedly is a no-op once everything has landed.",
+            "Discover Claude Code and OpenAI Codex JSONL transcripts for a directory and migrate them into new Tavern sessions, one session per transcript. Sources that were already migrated are skipped, so calling this repeatedly is a no-op once everything has landed.",
         }),
       ),
     )
@@ -139,7 +139,7 @@ export const MigrateApi = HttpApi.make("migrate").add(
         error: [HttpApiError.BadRequest, MigrateFailedError],
       }).annotateMerge(
         OpenApi.annotations({
-          identifier: "kilocode.migrate.discover",
+          identifier: "taverncode.migrate.discover",
           summary: "Discover migratable external session transcripts",
           description:
             "Enumerate Claude Code and OpenAI Codex JSONL transcripts for a directory and preview each, marking the ones already migrated, so callers can render a picker before migrating. Read-only; writes nothing.",
@@ -149,7 +149,7 @@ export const MigrateApi = HttpApi.make("migrate").add(
     .annotateMerge(
       OpenApi.annotations({
         title: "migrate",
-        description: "Kilo routes for migrating sessions from other coding agents into Kilo.",
+        description: "Tavern routes for migrating sessions from other coding agents into Tavern.",
       }),
     )
     .middleware(InstanceContextMiddleware)

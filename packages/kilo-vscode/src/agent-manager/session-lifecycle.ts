@@ -1,5 +1,5 @@
-import type { Session } from "@kilocode/sdk/v2/client"
-import { sessionToWebview } from "../kilo-provider-utils"
+import type { Session } from "@taverncode/sdk/v2/client"
+import { sessionToWebview } from "../tavern-provider-utils"
 import { samePath } from "./project/paths"
 import type { ProjectContexts } from "./project/contexts"
 import type { AgentManagerOutMessage } from "./types"

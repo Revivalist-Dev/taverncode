@@ -5,26 +5,26 @@
 
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
 import { createSignal, type ParentComponent } from "solid-js"
-import { DialogProvider } from "@kilocode/kilo-ui/context/dialog"
-import { DataProvider } from "@kilocode/kilo-ui/context/data"
-import { DiffComponentProvider } from "@kilocode/kilo-ui/context/diff"
-import { CodeComponentProvider } from "@kilocode/kilo-ui/context/code"
-import { FileComponentProvider } from "@kilocode/kilo-ui/context/file"
-import { MarkedProvider } from "@kilocode/kilo-ui/context/marked"
-import { I18nProvider, pluralCategory, pluralKey } from "@kilocode/kilo-ui/context"
-import type { UiI18nPluralKey } from "@kilocode/kilo-ui/context"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { Code } from "@kilocode/kilo-ui/code"
-import { File } from "@kilocode/kilo-ui/file"
+import { DialogProvider } from "@taverncode/tavern-ui/context/dialog"
+import { DataProvider } from "@taverncode/tavern-ui/context/data"
+import { DiffComponentProvider } from "@taverncode/tavern-ui/context/diff"
+import { CodeComponentProvider } from "@taverncode/tavern-ui/context/code"
+import { FileComponentProvider } from "@taverncode/tavern-ui/context/file"
+import { MarkedProvider } from "@taverncode/tavern-ui/context/marked"
+import { I18nProvider, pluralCategory, pluralKey } from "@taverncode/tavern-ui/context"
+import type { UiI18nPluralKey } from "@taverncode/tavern-ui/context"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { Code } from "@taverncode/tavern-ui/code"
+import { File } from "@taverncode/tavern-ui/file"
 import { VSCodeProvider } from "../context/vscode"
 import { ServerProvider } from "../context/server"
 import { ConfigProvider } from "../context/config"
 import { ProviderProvider } from "../context/provider"
 import { SessionContext } from "../context/session"
 import { LanguageContext } from "../context/language"
-import { dict as uiEn } from "@kilocode/kilo-ui/i18n/en"
+import { dict as uiEn } from "@taverncode/tavern-ui/i18n/en"
 import { dict as appEn } from "../i18n/en"
-import { dict as kiloEn } from "@kilocode/kilo-i18n/en"
+import { dict as kiloEn } from "@taverncode/tavern-i18n/en"
 import { resolveTemplate } from "../context/language-utils"
 import SessionList from "../components/history/SessionList"
 import HistoryView from "../components/history/HistoryView"
@@ -73,7 +73,7 @@ const WithSessions: ParentComponent<{ sessions?: typeof mockSessions }> = (props
     questionErrors: () => new Set<string>(),
     scopedPermissions: () => [] as any[],
     scopedQuestions: () => [] as any[],
-    selected: () => ({ providerID: "kilo", modelID: "anthropic/claude-sonnet-4-6" }),
+    selected: () => ({ providerID: "tavern", modelID: "anthropic/claude-sonnet-4-6" }),
     selectModel: noop,
     costBreakdown: () => [],
     contextUsage: () => undefined,

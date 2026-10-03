@@ -1,17 +1,17 @@
 /**
  * SessionList component
  * Displays all sessions grouped by date, with context menu for rename/delete.
- * Uses kilo-ui List component for keyboard navigation and accessibility.
+ * Uses tavern-ui List component for keyboard navigation and accessibility.
  * Header/back button are owned by the parent HistoryView.
  */
 
 import { Component, Show, createMemo, createSignal, onMount, type Accessor, type JSX } from "solid-js"
-import { List } from "@kilocode/kilo-ui/list"
-import { ContextMenu } from "@kilocode/kilo-ui/context-menu"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { List } from "@taverncode/tavern-ui/list"
+import { ContextMenu } from "@taverncode/tavern-ui/context-menu"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import { formatRelativeDate } from "../../utils/date"
@@ -60,7 +60,7 @@ const SessionList: Component<SessionListProps> = (props) => {
   })
 
   onMount(() => {
-    console.log("[Kilo New] SessionList mounted, loading sessions")
+    console.log("[Tavern New] SessionList mounted, loading sessions")
     session.loadSessions()
   })
 

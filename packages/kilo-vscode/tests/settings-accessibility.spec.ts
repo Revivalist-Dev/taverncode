@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const NAMES = [
   "Models",
   "Providers",
@@ -15,7 +15,7 @@ const NAMES = [
   "Commit Message",
   "Experimental",
   "Language",
-  "About Kilo Code",
+  "About Tavern Code",
 ]
 
 function story(page: Page) {
@@ -65,7 +65,7 @@ test.describe("settings tab accessibility", () => {
     await expect(tab).toHaveAttribute("aria-selected", "true")
     await expect(page.getByRole("tabpanel", { name: "Sandboxing" })).toBeVisible()
     const sandbox = page.getByRole("switch", { name: "Sandbox", exact: true })
-    await expect(sandbox).toHaveAccessibleDescription(/restricts writes to the project and Kilo state directories/)
+    await expect(sandbox).toHaveAccessibleDescription(/restricts writes to the project and Tavern state directories/)
     await expect(sandbox).not.toBeChecked()
     const network = page.getByRole("switch", { name: "Restrict Network Access" })
     await expect(network).toHaveAccessibleDescription(/MCP tools are unavailable while restricted/)

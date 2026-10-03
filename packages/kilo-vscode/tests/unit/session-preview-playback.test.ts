@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import { fileURLToPath } from "node:url"
-import type { AssistantMessage, Part } from "@kilocode/sdk/v2"
+import type { AssistantMessage, Part } from "@taverncode/sdk/v2"
 import { previewDuration, previewFrame } from "../../webview-ui/src/components/settings/session-preview-playback"
 import { dict } from "../../webview-ui/src/i18n/en"
 

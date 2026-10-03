@@ -78,24 +78,24 @@ describe("Agent Manager document state", () => {
   })
 
   it("keeps Markdown in the document inspector and opens source files in VS Code", () => {
-    expect(isMarkdownPath(".kilo/plans/feature.md")).toBe(true)
+    expect(isMarkdownPath(".tavern/plans/feature.md")).toBe(true)
     expect(isMarkdownPath("docs/architecture.MDX")).toBe(true)
     expect(isMarkdownPath("src/index.ts")).toBe(false)
 
     const opened: unknown[] = []
     const native: unknown[] = []
-    const markdown = new CustomEvent("kilo:open-file", {
+    const markdown = new CustomEvent("tavern:open-file", {
       cancelable: true,
-      detail: { filePath: ".kilo/plans/feature.md", sessionID: "wt-a", line: 4, column: 2 },
+      detail: { filePath: ".tavern/plans/feature.md", sessionID: "wt-a", line: 4, column: 2 },
     })
     handleDocumentOpen(markdown, (...args) => {
       opened.push(args)
       return true
     })
     expect(markdown.defaultPrevented).toBe(true)
-    expect(opened).toEqual([[".kilo/plans/feature.md", "wt-a", 4, 2]])
+    expect(opened).toEqual([[".tavern/plans/feature.md", "wt-a", 4, 2]])
 
-    const source = new CustomEvent("kilo:open-file", {
+    const source = new CustomEvent("tavern:open-file", {
       cancelable: true,
       detail: { filePath: "src/index.ts", sessionID: "wt-a", line: 8, column: 3 },
     })
@@ -107,7 +107,7 @@ describe("Agent Manager document state", () => {
     expect(source.defaultPrevented).toBe(true)
     expect(native).toEqual([["src/index.ts", 8, 3, "wt-a"]])
 
-    const missing = new CustomEvent("kilo:open-file", {
+    const missing = new CustomEvent("tavern:open-file", {
       cancelable: true,
       detail: { filePath: "src/missing.ts" },
     })

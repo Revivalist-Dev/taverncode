@@ -11,7 +11,7 @@ import { Pty } from "@opencode-ai/core/pty"
 import type { PtyID } from "@opencode-ai/core/pty/schema"
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { WorkspaceV2 } from "@opencode-ai/core/workspace"
-import * as Registry from "../../src/kilocode/pty/registry"
+import * as Registry from "../../src/taverncode/pty/registry"
 import { tmpdir } from "../fixture/tmpdir"
 import { testEffect } from "../lib/effect"
 

@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-gateway/event-service"
+export * from "@taverncode/tavern-gateway/event-service"

@@ -1,5 +1,5 @@
-import { Notebook, HostError } from "@/kilocode/notebook/service"
-import { Path } from "@/kilocode/notebook/protocol"
+import { Notebook, HostError } from "@/taverncode/notebook/service"
+import { Path } from "@/taverncode/notebook/protocol"
 import { NonNegativeInt } from "@opencode-ai/core/schema"
 import * as Tool from "@/tool/tool"
 import { Effect, Schema } from "effect"

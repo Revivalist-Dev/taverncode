@@ -3,7 +3,7 @@ import type { JSX } from "solid-js"
 import { harness } from "./comment-harness"
 
 const { mount, wait } = await harness<{ type: string }>()
-const { toaster } = await import("@kilocode/kilo-ui/toast")
+const { toaster } = await import("@taverncode/tavern-ui/toast")
 const { ServerProvider } = await import("../../webview-ui/src/context/server")
 const { ProviderProvider } = await import("../../webview-ui/src/context/provider")
 const { ConfigProvider } = await import("../../webview-ui/src/context/config")

@@ -8,21 +8,21 @@ import {
   WorkspaceRoutingQueryFields,
 } from "@/server/routes/instance/httpapi/middleware/workspace-routing"
 import { described } from "@/server/routes/instance/httpapi/groups/metadata"
-import { ProviderUsage } from "@opencode-ai/schema/kilocode/provider-usage"
+import { ProviderUsage } from "@opencode-ai/schema/taverncode/provider-usage"
 import { AnacondaDesktopApi } from "./anaconda-desktop"
 import {
   Failure as AgentManagerFailure,
   Request as AgentManagerRequest,
   RequestID as AgentManagerRequestID,
   Result as AgentManagerResult,
-} from "@/kilocode/agent-manager/protocol"
+} from "@/taverncode/agent-manager/protocol"
 import {
   Failure as NotebookFailure,
   Request as NotebookRequest,
   RequestID as NotebookRequestID,
   Result as NotebookResult,
-} from "@/kilocode/notebook/protocol"
-import { ModelUsage } from "@/kilocode/session/model-usage"
+} from "@/taverncode/notebook/protocol"
+import { ModelUsage } from "@/taverncode/session/model-usage"
 import { MessageID, SessionID } from "@/session/schema"
 import {
   ApiNotFoundError,
@@ -30,19 +30,19 @@ import {
   InvalidRequestError,
   UnknownError,
 } from "@/server/routes/instance/httpapi/errors"
-import { BoardStore } from "@/kilocode/board/store"
+import { BoardStore } from "@/taverncode/board/store"
 import {
   MarketplaceInstallPayload,
   MarketplaceInstallResult,
   MarketplaceListResult,
   MarketplaceRemovePayload,
   MarketplaceRemoveResult,
-} from "@/kilocode/marketplace/schema"
-import { CommandFiles } from "@/kilocode/command-files"
-import { Token } from "@opencode-ai/schema/kilocode/session-drain"
-import { PendingInfo as WakeupPending } from "@opencode-ai/schema/kilocode/wakeup-event"
+} from "@/taverncode/marketplace/schema"
+import { CommandFiles } from "@/taverncode/command-files"
+import { Token } from "@opencode-ai/schema/taverncode/session-drain"
+import { PendingInfo as WakeupPending } from "@opencode-ai/schema/taverncode/wakeup-event"
 
-const root = "/kilocode"
+const root = "/taverncode"
 const Scope = Schema.Literals(["global", "project"])
 
 export const BackgroundJobInfo = Schema.Struct({
@@ -176,9 +176,9 @@ export const KilocodePaths = {
   wakeups: `${root}/wakeups`,
 } as const
 
-export const KilocodeApi = HttpApi.make("kilocode")
+export const KilocodeApi = HttpApi.make("taverncode")
   .add(
-    HttpApiGroup.make("kilocode")
+    HttpApiGroup.make("taverncode")
       .add(
         HttpApiEndpoint.post("resumeSession", KilocodePaths.resumeSession, {
           params: { sessionID: SessionID },
@@ -188,7 +188,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: [ApiNotFoundError, InvalidRequestError],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.resumeSession",
+            identifier: "taverncode.resumeSession",
             summary: "Resume an interrupted session",
             description:
               "Resume the specified unfinished assistant turn without adding a user message. Active, completed, reverted, and blocked sessions cannot be resumed.",
@@ -202,7 +202,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: ApiNotFoundError,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.drainSession",
+            identifier: "taverncode.drainSession",
             summary: "Wait for session completion",
             description:
               "Wait for active session work and background result delivery, then publish the matching drain acknowledgment.",
@@ -215,7 +215,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: [ApiNotFoundError, InvalidRequestError, ConflictError, UnknownError],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionBoard",
+            identifier: "taverncode.sessionBoard",
             summary: "Observe a session's shared board",
             description: "Read stored board messages without changing the board.",
           }),
@@ -228,7 +228,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: [ApiNotFoundError, InvalidRequestError, ConflictError, UnknownError],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.resetSessionBoard",
+            identifier: "taverncode.resetSessionBoard",
             summary: "Clear a session's shared board",
             description: "Clear visible messages without changing conversations or running tasks.",
           }),
@@ -239,7 +239,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.heap.snapshot",
+            identifier: "taverncode.heap.snapshot",
             summary: "Write heap snapshot",
             description: "Write a heap snapshot for the CLI process to the log directory.",
           }),
@@ -249,7 +249,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(Schema.Array(CommandFiles.Info), "Command files"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.commandFiles",
+            identifier: "taverncode.commandFiles",
             summary: "List command files",
             description: "List commands with editable file locations for settings clients.",
           }),
@@ -261,7 +261,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.removeCommand",
+            identifier: "taverncode.removeCommand",
             summary: "Remove a command",
             description: "Remove a command by deleting its markdown file from disk and clearing it from cache.",
           }),
@@ -273,7 +273,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.removeSkill",
+            identifier: "taverncode.removeSkill",
             summary: "Remove a skill",
             description: "Remove a skill by deleting its manifest from disk and clearing it from cache.",
           }),
@@ -285,7 +285,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.removeAgent",
+            identifier: "taverncode.removeAgent",
             summary: "Remove a custom agent",
             description:
               "Remove a custom (non-native) agent from one writable configuration scope, or every writable scope when omitted, and dispose cached instance state.",
@@ -296,7 +296,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(MarketplaceListResult, "Marketplace catalog and installed metadata"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.marketplace.list",
+            identifier: "taverncode.marketplace.list",
             summary: "List marketplace items",
             description: "Fetch marketplace catalog items and detect the items installed for the routed workspace.",
           }),
@@ -307,10 +307,10 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(MarketplaceInstallResult, "Marketplace install result"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.marketplace.install",
+            identifier: "taverncode.marketplace.install",
             summary: "Install a marketplace item",
             description:
-              "Install a marketplace MCP server, agent, skill, or plugin into project or global Kilo config.",
+              "Install a marketplace MCP server, agent, skill, or plugin into project or global Tavern config.",
           }),
         ),
         HttpApiEndpoint.post("marketplaceRemove", KilocodePaths.marketplaceRemove, {
@@ -319,9 +319,9 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(MarketplaceRemoveResult, "Marketplace removal result"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.marketplace.remove",
+            identifier: "taverncode.marketplace.remove",
             summary: "Remove a marketplace item",
-            description: "Remove a marketplace MCP server, agent, skill, or plugin from project or global Kilo config.",
+            description: "Remove a marketplace MCP server, agent, skill, or plugin from project or global Tavern config.",
           }),
         ),
         HttpApiEndpoint.post("removeSnapshot", KilocodePaths.removeSnapshot, {
@@ -331,7 +331,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.removeSnapshot",
+            identifier: "taverncode.removeSnapshot",
             summary: "Remove a snapshot repository",
             description: "Remove the snapshot repository for an already deleted Agent Manager worktree.",
           }),
@@ -343,7 +343,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.BadRequest,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.teardownWorktree",
+            identifier: "taverncode.teardownWorktree",
             summary: "Tear down backend state for a managed worktree",
             description:
               "Kill the PTYs rooted in an Agent Manager worktree and dispose its backend instance when one is loaded, without booting an instance for the directory.",
@@ -357,7 +357,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           ),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.snapshot.prepare",
+            identifier: "taverncode.snapshot.prepare",
             summary: "Prepare a snapshot repository",
             description:
               "Initialize and seed snapshots for the routed directory without creating a session or tracking ref.",
@@ -369,7 +369,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.ServiceUnavailable,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.providerUsage.get",
+            identifier: "taverncode.providerUsage.get",
             summary: "Get provider usage",
             description: "Get cache-aware, secret-free provider plan usage and personal billing status.",
           }),
@@ -380,7 +380,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.ServiceUnavailable,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.providerUsage.refresh",
+            identifier: "taverncode.providerUsage.refresh",
             summary: "Refresh provider usage",
             description: "Refresh provider plan usage while coalescing concurrent source requests.",
           }),
@@ -390,7 +390,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(Schema.Array(NotebookRequest), "Pending notebook host requests"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.notebook.list",
+            identifier: "taverncode.notebook.list",
             summary: "List pending notebook requests",
             description: "List pending native notebook requests for the routed workspace.",
           }),
@@ -403,7 +403,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: [HttpApiError.BadRequest, HttpApiError.NotFound],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.notebook.reply",
+            identifier: "taverncode.notebook.reply",
             summary: "Reply to a notebook request",
             description: "Complete a pending native notebook request with a structured result.",
           }),
@@ -416,7 +416,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.NotFound,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.notebook.reject",
+            identifier: "taverncode.notebook.reject",
             summary: "Reject a notebook request",
             description: "Complete a pending native notebook request with a structured host error.",
           }),
@@ -426,7 +426,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(Schema.Array(AgentManagerRequest), "Pending Agent Manager host requests"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.agentManager.list",
+            identifier: "taverncode.agentManager.list",
             summary: "List pending Agent Manager requests",
             description: "List pending native Agent Manager orchestration requests for the routed workspace.",
           }),
@@ -439,7 +439,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: [HttpApiError.BadRequest, HttpApiError.NotFound],
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.agentManager.reply",
+            identifier: "taverncode.agentManager.reply",
             summary: "Reply to an Agent Manager request",
             description: "Complete a pending Agent Manager orchestration request with a structured result.",
           }),
@@ -452,7 +452,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.NotFound,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.agentManager.reject",
+            identifier: "taverncode.agentManager.reject",
             summary: "Reject an Agent Manager request",
             description: "Complete a pending Agent Manager orchestration request with a structured host error.",
           }),
@@ -464,7 +464,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.NotFound,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.sessionModelUsage",
+            identifier: "taverncode.sessionModelUsage",
             summary: "Get session model usage",
             description: "Get token usage and direct cost by model for the complete top-level session tree.",
           }),
@@ -474,7 +474,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(Schema.Array(BackgroundJobInfo), "Background jobs"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.backgroundJobs",
+            identifier: "taverncode.backgroundJobs",
             summary: "List background jobs",
             description: "List background subagent jobs owned by one parent session.",
           }),
@@ -486,7 +486,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.NotFound,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.backgroundJob.cancel",
+            identifier: "taverncode.backgroundJob.cancel",
             summary: "Cancel background job",
             description: "Cancel one background subagent job and its session tree.",
           }),
@@ -498,7 +498,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           error: HttpApiError.NotFound,
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.backgroundJob.promote",
+            identifier: "taverncode.backgroundJob.promote",
             summary: "Promote background job",
             description: "Continue one foreground subagent in the background.",
           }),
@@ -508,7 +508,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(Schema.Array(WakeupPending), "Pending wakeups for the routed directory"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.wakeups",
+            identifier: "taverncode.wakeups",
             summary: "List pending wakeups",
             description:
               "List the sessions that hold scheduled wakeups in the routed directory, with each session's pending count.",
@@ -519,7 +519,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(RetentionStatus, "Session retention policy and last run"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.retention.status",
+            identifier: "taverncode.retention.status",
             summary: "Get session retention status",
             description:
               "Read the machine-wide session retention policy and the state of the most recent cleanup pass.",
@@ -531,10 +531,10 @@ export const KilocodeApi = HttpApi.make("kilocode")
           success: described(RetentionStatus, "Retention pass outcome"),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.retention.run",
+            identifier: "taverncode.retention.run",
             summary: "Run session retention",
             description:
-              "Run one machine-wide session retention pass. Does nothing unless the retention policy is enabled in kilo.json; `force` bypasses the minimum spacing between scheduled passes, never the enable check.",
+              "Run one machine-wide session retention pass. Does nothing unless the retention policy is enabled in tavern.json; `force` bypasses the minimum spacing between scheduled passes, never the enable check.",
           }),
         ),
         HttpApiEndpoint.post("retentionCancel", KilocodePaths.retentionCancel, {
@@ -545,7 +545,7 @@ export const KilocodeApi = HttpApi.make("kilocode")
           ),
         }).annotateMerge(
           OpenApi.annotations({
-            identifier: "kilocode.retention.cancel",
+            identifier: "taverncode.retention.cancel",
             summary: "Stop the active session retention pass",
             description:
               "Ask the machine-wide retention pass to stop before deleting more sessions. Already-deleted sessions stay deleted; the interrupted pass still records its partial result and honors the spacing window.",
@@ -554,8 +554,8 @@ export const KilocodeApi = HttpApi.make("kilocode")
       )
       .annotateMerge(
         OpenApi.annotations({
-          title: "kilocode",
-          description: "Kilo-specific routes.",
+          title: "taverncode",
+          description: "Tavern-specific routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -565,8 +565,8 @@ export const KilocodeApi = HttpApi.make("kilocode")
   .addHttpApi(AnacondaDesktopApi)
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

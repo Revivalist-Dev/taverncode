@@ -6,10 +6,10 @@ describe("ProjectRouteService", () => {
     const routes = new ProjectRouteService()
     routes.registerProject("a", "/repo/a", 1)
     routes.registerSession({ projectId: "a", sessionId: "local" }, "/repo/a", 1)
-    routes.registerSession({ projectId: "a", sessionId: "work" }, "/repo/a/.kilo/wt", 1)
+    routes.registerSession({ projectId: "a", sessionId: "work" }, "/repo/a/.tavern/wt", 1)
     expect(routes.projectRoot({ projectId: "a" })).toBe("/repo/a")
     expect(routes.trySessionDirectoryFor({ projectId: "a", sessionId: "local" })).toBe("/repo/a")
-    expect(routes.trySessionDirectoryFor({ projectId: "a", sessionId: "work" })).toBe("/repo/a/.kilo/wt")
+    expect(routes.trySessionDirectoryFor({ projectId: "a", sessionId: "work" })).toBe("/repo/a/.tavern/wt")
   })
 
   it("invalidates routes when a project generation changes", () => {

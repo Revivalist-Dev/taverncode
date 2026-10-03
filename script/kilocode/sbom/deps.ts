@@ -1,14 +1,14 @@
 /**
  * Production dependency closure from `bun.lock`.
  *
- * Kilo compiles its JavaScript into Bun single-file executables and minified
+ * Tavern compiles its JavaScript into Bun single-file executables and minified
  * bundles, so scanning the shipped artifact cannot recover the npm packages that
  * went into it. The lockfile is the only complete, exact record of what was
  * compiled in. Resolving it here keeps SBOMs honest about compiled-in
  * dependencies while the physical artifact scan covers everything on disk.
  *
  * Dev dependencies are never included: they are not shipped, and listing them
- * would inflate Kilo's own vulnerability-handling surface with tooling that
+ * would inflate Tavern's own vulnerability-handling surface with tooling that
  * users never receive.
  */
 
@@ -169,19 +169,19 @@ export function closure(input: { lock: Lock; workspace: string; platform?: Platf
   const workspaceRefs = new Map<string, string>()
   for (const [dir, meta] of Object.entries(input.lock.workspaces)) {
     if (dir === "" || !meta.name) continue
-    workspaceRefs.set(meta.name, `kilocode:workspace:${meta.name}@${meta.version ?? "0.0.0"}`)
+    workspaceRefs.set(meta.name, `taverncode:workspace:${meta.name}@${meta.version ?? "0.0.0"}`)
   }
 
   const queue: { from: string; owner: string; deps: Record<string, string>; optional: boolean }[] = [
     {
       from: "",
-      owner: input.root ?? `kilocode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`,
+      owner: input.root ?? `taverncode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`,
       deps: { ...workspace.dependencies },
       optional: false,
     },
     {
       from: "",
-      owner: input.root ?? `kilocode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`,
+      owner: input.root ?? `taverncode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`,
       deps: { ...workspace.optionalDependencies },
       optional: true,
     },
@@ -216,7 +216,7 @@ export function closure(input: { lock: Lock; workspace: string; platform?: Platf
             name: resolved.name,
             version: meta.version ?? "0.0.0",
             ref,
-            supplier: "Kilo Code",
+            supplier: "Tavern Code",
             delivery: "contained",
             properties: { origin: "workspace", workspace: dir },
           })
@@ -230,7 +230,7 @@ export function closure(input: { lock: Lock; workspace: string; platform?: Platf
 
       const id = purl(resolved.name, resolved.version)
       edge(dependencies, task.owner, id)
-      if (task.owner === (input.root ?? `kilocode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`)) {
+      if (task.owner === (input.root ?? `taverncode:workspace:${workspace.name}@${workspace.version ?? "0.0.0"}`)) {
         roots.push(id)
       }
       if (visited.has(key)) continue

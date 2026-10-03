@@ -10,7 +10,7 @@ type EditResponseData = { content?: string; usage?: { prompt_tokens?: number; co
 
 export interface MercuryEditProviderOptions {
   connectionService: KiloConnectionService
-  /** Provider id to send to the gateway (e.g. `"kilo"` or `"inception"`). */
+  /** Provider id to send to the gateway (e.g. `"tavern"` or `"inception"`). */
   providerId?: string
   /** Model id to send to the gateway (e.g. `"inception/mercury-next-edit"`). */
   modelId?: string
@@ -19,8 +19,8 @@ export interface MercuryEditProviderOptions {
 }
 
 /**
- * Thin wrapper around the SDK's `client.kilo.edit(...)` endpoint (non-streaming).
- * The gateway (`packages/kilo-gateway/src/server/edit.ts`) handles auth, routing
+ * Thin wrapper around the SDK's `client.tavern.edit(...)` endpoint (non-streaming).
+ * The gateway (`packages/tavern-gateway/src/server/edit.ts`) handles auth, routing
  * to Mercury's `/v1/edit/completions`, and unwrapping the triple-backtick fence —
  * so the VSCode side only deals in already-parsed code.
  */
@@ -32,13 +32,13 @@ export class MercuryEditProvider {
     const provider = this.options.providerId ?? DEFAULT_PROVIDER_ID
     const model = this.options.modelId ?? DEFAULT_MODEL_ID
     nesLog(
-      `-> /kilo/edit provider=${provider} model=${model} region=[${ctx.editableRegionStartLine},${ctx.editableRegionEndLine}] diffs=${ctx.editDiffHistory.length} snippets=${ctx.recentlyViewedSnippets.length}`,
+      `-> /tavern/edit provider=${provider} model=${model} region=[${ctx.editableRegionStartLine},${ctx.editableRegionEndLine}] diffs=${ctx.editDiffHistory.length} snippets=${ctx.recentlyViewedSnippets.length}`,
     )
 
     const client = await this.options.connectionService.getClientAsync()
     try {
       // Send structured editor context; the gateway assembles the Mercury prompt.
-      const { data, error, response } = await client.kilo.edit(
+      const { data, error, response } = await client.tavern.edit(
         {
           provider,
           model,

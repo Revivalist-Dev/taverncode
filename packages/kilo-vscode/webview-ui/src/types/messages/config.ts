@@ -2,7 +2,7 @@ import type { PermissionConfig } from "./permissions"
 import type { AgentConfig } from "./agents"
 import type { ProviderConfig } from "./providers"
 
-type SdkIndexingStatus = import("@kilocode/sdk/v2/client").IndexingStatus
+type SdkIndexingStatus = import("@taverncode/sdk/v2/client").IndexingStatus
 
 export interface McpConfig {
   type?: "local" | "remote"
@@ -75,7 +75,7 @@ export interface CommitMessageConfig {
 }
 
 export type IndexingProvider =
-  | "kilo"
+  | "tavern"
   | "openai"
   | "ollama"
   | "openai-compatible"
@@ -92,7 +92,7 @@ export interface IndexingConfig {
   model?: string | null
   dimension?: number | null
   vectorStore?: "lancedb" | "qdrant"
-  kilo?: { apiKey?: string; baseUrl?: string; organizationId?: string }
+  tavern?: { apiKey?: string; baseUrl?: string; organizationId?: string }
   openai?: { apiKey?: string }
   ollama?: { baseUrl?: string }
   "openai-compatible"?: { baseUrl?: string; apiKey?: string }

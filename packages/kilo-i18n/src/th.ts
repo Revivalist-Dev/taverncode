@@ -1,12 +1,12 @@
 export const dict = {
-  // Kilo Gateway provider translations
+  // Tavern Gateway provider translations
   "provider.connect.kiloGateway.byok.prefix": "สำหรับสถิติการใช้งานเพิ่มเติม โปรดใช้ ",
-  "provider.connect.kiloGateway.byok.link": "BYOK ผ่าน Kilo's Gateway",
+  "provider.connect.kiloGateway.byok.link": "BYOK ผ่าน Tavern's Gateway",
   "provider.connect.kiloGateway.byok.suffix": "",
 
   // Provider settings translations
   "settings.providers.group.recommended": "แนะนำ",
-  "settings.providers.note.kilo": "เข้าถึงโมเดล AI มากกว่า 500 รายการ",
+  "settings.providers.note.tavern": "เข้าถึงโมเดล AI มากกว่า 500 รายการ",
   "settings.providers.note.opencode": "โมเดลที่คัดสรร รวมถึง Claude, GPT, Gemini และอื่น ๆ",
   "settings.providers.note.anthropic": "เข้าถึงโมเดล Claude โดยตรง รวมถึง Pro และ Max",
   "settings.providers.note.deepseek": "โมเดล DeepSeek สำหรับงานใช้เหตุผลและเขียนโค้ด",
@@ -36,17 +36,17 @@ export const dict = {
   "marketplace.install.destination": "ปลายทางการติดตั้ง",
   "marketplace.install.includedSkills": "ทักษะที่รวมมาด้วย",
   "marketplace.install.about.mcp":
-    "เซิร์ฟเวอร์ MCP เพิ่มเครื่องมือให้ Kilo สำหรับทำงานกับบริการภายนอกหรือโปรแกรมในเครื่อง",
+    "เซิร์ฟเวอร์ MCP เพิ่มเครื่องมือให้ Tavern สำหรับทำงานกับบริการภายนอกหรือโปรแกรมในเครื่อง",
   "marketplace.install.about.agent": "เอเจนต์เพิ่มบทบาทที่นำกลับมาใช้ใหม่ได้พร้อมคำสั่งและสิทธิ์ของตนเอง",
-  "marketplace.install.about.skill": "ทักษะเพิ่มคำสั่งและทรัพยากรเฉพาะงานที่ Kilo สามารถโหลดได้เมื่อจำเป็น",
+  "marketplace.install.about.skill": "ทักษะเพิ่มคำสั่งและทรัพยากรเฉพาะงานที่ Tavern สามารถโหลดได้เมื่อจำเป็น",
   "marketplace.install.mcp.warning":
-    "เซิร์ฟเวอร์ MCP สามารถเรียกใช้คำสั่งในเครื่องหรือเชื่อมต่อกับบริการภายนอกได้ Kilo จะขออนุญาตก่อนใช้เครื่องมือ เว้นแต่สิทธิ์ของคุณจะอนุญาตโดยอัตโนมัติ",
+    "เซิร์ฟเวอร์ MCP สามารถเรียกใช้คำสั่งในเครื่องหรือเชื่อมต่อกับบริการภายนอกได้ Tavern จะขออนุญาตก่อนใช้เครื่องมือ เว้นแต่สิทธิ์ของคุณจะอนุญาตโดยอัตโนมัติ",
   "marketplace.install.project.warning":
     "ไฟล์โปรเจกต์อาจถูกเพิ่มลงในระบบควบคุมเวอร์ชัน อย่าเก็บข้อมูลลับไว้ที่นี่ เว้นแต่การกำหนดค่าจะอ้างอิงตัวแปรสภาพแวดล้อม",
   "marketplace.install.learnMore": "เรียนรู้วิธีการติดตั้งจาก Marketplace",
   "marketplace.install.learnMcp": "เรียนรู้เพิ่มเติมเกี่ยวกับ MCP",
   "marketplace.install.about.plugin":
-    "ปลั๊กอินเพิ่มเครื่องมือและการเชื่อมต่อแบบกำหนดเองให้กับ Kilo ปลั๊กอินทำงานโดยมีสิทธิ์เต็มรูปแบบ",
+    "ปลั๊กอินเพิ่มเครื่องมือและการเชื่อมต่อแบบกำหนดเองให้กับ Tavern ปลั๊กอินทำงานโดยมีสิทธิ์เต็มรูปแบบ",
   "marketplace.install.plugin.warning":
     "ปลั๊กอินเรียกใช้โค้ดโดยมีสิทธิ์เต็มรูปแบบ สามารถอ่านและแก้ไขไฟล์ของคุณ เรียกใช้คำสั่ง และเข้าถึงข้อมูลรับรองและเครือข่ายของคุณได้ ติดตั้งเฉพาะปลั๊กอินที่คุณเชื่อถือเท่านั้น",
   "marketplace.install.installedAt": "ติดตั้งไปยัง {{path}} แล้ว",
@@ -117,7 +117,7 @@ export const dict = {
     "รอจนกว่าสแน็ปช็อตจะเสร็จ เทิร์นถัดไปจะเร็วขึ้นเมื่อสร้างสแน็ปช็อตแรกเสร็จแล้ว",
   "snapshot.slowRepo.answer.disable": "ปิดใช้งานสำหรับโปรเจกต์นี้",
   "snapshot.slowRepo.answer.disable.description":
-    "ปิดสแน็ปช็อตของ Kilo สำหรับโปรเจกต์นี้ คุณจะสูญเสียการยกเลิก/ทำซ้ำสำหรับการเปลี่ยนแปลงของ Kilo แต่ git ยังคงติดตามทุกอย่าง",
+    "ปิดสแน็ปช็อตของ Tavern สำหรับโปรเจกต์นี้ คุณจะสูญเสียการยกเลิก/ทำซ้ำสำหรับการเปลี่ยนแปลงของ Tavern แต่ git ยังคงติดตามทุกอย่าง",
 
   // Edit-tool header and shell-tool section labels
   "ui.messagePart.openInDiffViewer": "เปิดในตัวดูความแตกต่าง",

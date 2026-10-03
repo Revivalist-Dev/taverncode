@@ -9,7 +9,7 @@ import { PluginV2 } from "@opencode-ai/core/plugin"
 import { RepositoryCache } from "@opencode-ai/core/repository-cache"
 import { Reference } from "@opencode-ai/core/reference"
 import { AbsolutePath } from "@opencode-ai/core/schema"
-import { isInterrupted } from "@/kilocode/effect/cause"
+import { isInterrupted } from "@/taverncode/effect/cause"
 
 export type Resolved =
   | {
@@ -150,7 +150,7 @@ function same(left: Reference.Source | undefined, right: Reference.Source) {
   return false
 }
 
-// Keep Core V2 tools on the same effective Kilo config used by stable tools. Core's standalone
+// Keep Core V2 tools on the same effective Tavern config used by stable tools. Core's standalone
 // scanner cannot see account/managed config or KILO_CONFIG_CONTENT, so replace its provisional
 // references after both config systems finish booting.
 export const sync = Effect.fn("KiloReference.sync")(function* (input: {

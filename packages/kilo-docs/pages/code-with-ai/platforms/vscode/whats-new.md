@@ -1,13 +1,13 @@
 ---
-title: "What's New in Kilo Code (April 2026)"
-description: "The Kilo Code extension has been rebuilt from the ground up on the Kilo CLI — faster, more flexible, and with access to 500+ models."
+title: "What's New in Tavern Code (April 2026)"
+description: "The Tavern Code extension has been rebuilt from the ground up on the Tavern CLI — faster, more flexible, and with access to 500+ models."
 ---
 
-# What's New in Kilo Code
+# What's New in Tavern Code
 
-The Kilo Code extension has been completely rebuilt on a portable, open-source core shared across VS Code, the CLI, and Cloud Agents. This is the biggest update since launch: faster execution with parallel tool calls and subagents, the new Agent Manager for running multiple agents side by side, inline code review with line-level comments, multi-model comparisons, and access to 500+ models.
+The Tavern Code extension has been completely rebuilt on a portable, open-source core shared across VS Code, the CLI, and Cloud Agents. This is the biggest update since launch: faster execution with parallel tool calls and subagents, the new Agent Manager for running multiple agents side by side, inline code review with line-level comments, multi-model comparisons, and access to 500+ models.
 
-Whether you're writing features in VS Code, debugging over SSH, or reviewing code on Slack, Kilo now goes with you. Read the [full announcement on the Kilo Blog](https://blog.kilo.ai/p/new-kilo-for-vs-code-is-live) for everything that's new.
+Whether you're writing features in VS Code, debugging over SSH, or reviewing code on Slack, Tavern now goes with you. Read the [full announcement on the Tavern Blog](https://blog.tavern.ai/p/new-tavern-for-vs-code-is-live) for everything that's new.
 
 ---
 
@@ -43,7 +43,7 @@ Yes — the context progress graph (also known as the task timeline) is now avai
 - **Context window progress** — a three-segment bar showing used, reserved, and available tokens, with a visual indicator when usage exceeds 50%
 - **Token breakdown** — input, output, cache writes, and cache reads display
 
-You can expand or collapse the graph — your preference is saved in the `kilo-code.new.showTaskTimeline` setting.
+You can expand or collapse the graph — your preference is saved in the `tavern-code.new.showTaskTimeline` setting.
 
 ### I like to closely monitor and approve the behavior of the agent. How can I do that better in the new version?
 
@@ -51,12 +51,12 @@ We are working to improve the experience in closely managing an agent. Identifie
 
 In the meantime we suggest exploring:
 
-- [Auto-approval](https://kilo.ai/docs/getting-started/settings/auto-approving-actions) of actions: to control what the agent is allowed to do, and require approval when desired
-- [Agents](https://kilo.ai/docs/code-with-ai/agents/using-agents) (previously known as Modes): Managing the agent types in the extension, adding new ones, and setting the default models for each.
+- [Auto-approval](https://tavern.ai/docs/getting-started/settings/auto-approving-actions) of actions: to control what the agent is allowed to do, and require approval when desired
+- [Agents](https://tavern.ai/docs/code-with-ai/agents/using-agents) (previously known as Modes): Managing the agent types in the extension, adding new ones, and setting the default models for each.
 
 ### How can I control which models each agent/mode uses?
 
-Modes have been renamed to Agents in the new extension. You can set the default model for each agent in `Settings -> Models -> Model per Mode`. For more information please check the [agents documentation](https://kilo.ai/docs/code-with-ai/agents/using-agents).
+Modes have been renamed to Agents in the new extension. You can set the default model for each agent in `Settings -> Models -> Model per Mode`. For more information please check the [agents documentation](https://tavern.ai/docs/code-with-ai/agents/using-agents).
 
 ### Where is the diff view for file changes?
 

@@ -1,8 +1,8 @@
 import { Bus } from "@/bus"
 import { BusEvent } from "@/bus/bus-event"
-import { capture as captureInstance } from "@/kilocode/instance"
+import { capture as captureInstance } from "@/taverncode/instance"
 import * as Log from "@opencode-ai/core/util/log"
-import { MemoryEvents as Core } from "@kilocode/kilo-memory/effect/events"
+import { MemoryEvents as Core } from "@taverncode/tavern-memory/effect/events"
 
 const log = Log.create({ service: "memory.events" })
 

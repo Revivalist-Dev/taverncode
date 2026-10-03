@@ -23,7 +23,7 @@ describe("config resilience", () => {
         const project = path.join(dir, "project")
         const instruction = path.join(dir, "external.md")
         await Filesystem.write(
-          path.join(project, "kilo.json"),
+          path.join(project, "tavern.json"),
           JSON.stringify({ instructions: [instruction], skills: { paths: ["../external-skills"] } }),
         )
         await Filesystem.write(instruction, "external")
@@ -58,8 +58,8 @@ describe("config resilience", () => {
           const project = path.join(dir, "project")
           const secret = path.join(dir, "secret.txt")
           const prompt = [`{file:${secret}}`, `{env:${name}}`].join("\n")
-          await Filesystem.write(path.join(project, ".kilo", "agent", "unsafe.md"), prompt)
-          await Filesystem.write(path.join(project, ".kilo", "command", "unsafe.md"), prompt)
+          await Filesystem.write(path.join(project, ".tavern", "agent", "unsafe.md"), prompt)
+          await Filesystem.write(path.join(project, ".tavern", "command", "unsafe.md"), prompt)
           await Filesystem.write(secret, "file secret")
           return project
         },
@@ -86,7 +86,7 @@ describe("config resilience", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         const project = path.join(dir, "project")
-        const item = path.join(project, ".kilo", "agent", "unsafe.md")
+        const item = path.join(project, ".tavern", "agent", "unsafe.md")
         const secret = path.join(dir, "secret.md")
         await Filesystem.write(secret, "file secret")
         await fs.mkdir(path.dirname(item), { recursive: true })
@@ -130,10 +130,10 @@ describe("config resilience", () => {
           await Filesystem.write(secret, "file secret")
           await Filesystem.write(escaped, "Escaped agent prompt")
           await fs.symlink(escaped, path.join(agents, "escaped.md"))
-          await fs.mkdir(path.join(project, ".kilo"), { recursive: true })
+          await fs.mkdir(path.join(project, ".tavern"), { recursive: true })
           const type = process.platform === "win32" ? "junction" : "dir"
-          await fs.symlink(agents, path.join(project, ".kilo", "agents"), type)
-          await fs.symlink(commands, path.join(project, ".kilo", "commands"), type)
+          await fs.symlink(agents, path.join(project, ".tavern", "agents"), type)
+          await fs.symlink(commands, path.join(project, ".tavern", "commands"), type)
           await Filesystem.write(
             global,
             JSON.stringify({
@@ -184,14 +184,14 @@ describe("config resilience", () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "skip.md"),
+          path.join(dir, ".tavern", "agent", "skip.md"),
           `---
 mode: "banana"
 ---
 Broken agent prompt`,
         )
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "keep.md"),
+          path.join(dir, ".tavern", "agent", "keep.md"),
           `---
 model: test/model
 ---
@@ -219,7 +219,7 @@ Valid agent prompt`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "skip.md"),
+          path.join(dir, ".tavern", "agent", "skip.md"),
           `---
 mode: "banana"
 ---
@@ -243,14 +243,14 @@ Broken agent prompt`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "skip.md"),
+          path.join(dir, ".tavern", "command", "skip.md"),
           `---
 subtask: "banana"
 ---
 Broken command template`,
         )
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "keep.md"),
+          path.join(dir, ".tavern", "command", "keep.md"),
           `---
 description: Valid command
 ---
@@ -277,7 +277,7 @@ Valid command template`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "skip.md"),
+          path.join(dir, ".tavern", "command", "skip.md"),
           `---
 subtask: "banana"
 ---
@@ -301,7 +301,7 @@ Broken command template`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "agent", "broken.md"),
+          path.join(dir, ".tavern", "agent", "broken.md"),
           `---
 mode: "banana"
 ---
@@ -325,7 +325,7 @@ Broken agent`,
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "command", "broken.md"),
+          path.join(dir, ".tavern", "command", "broken.md"),
           `---
 subtask: "banana"
 ---
@@ -345,10 +345,10 @@ Broken command`,
     })
   })
 
-  test("collects warnings for invalid JSON in .kilo directory config", async () => {
+  test("collects warnings for invalid JSON in .tavern directory config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        await Filesystem.write(path.join(dir, ".kilo", "kilo.json"), "{ not valid json !!!")
+        await Filesystem.write(path.join(dir, ".tavern", "tavern.json"), "{ not valid json !!!")
       },
     })
 
@@ -361,16 +361,16 @@ Broken command`,
         // Config loading should not crash
         expect(cfg).toBeDefined()
         // Warning should reference the bad file
-        expect(warns.some((w) => w.path.includes("kilo.json") && w.message.includes("not valid JSON"))).toBe(true)
+        expect(warns.some((w) => w.path.includes("tavern.json") && w.message.includes("not valid JSON"))).toBe(true)
       },
     })
   })
 
-  test("collects warnings for invalid schema in .kilo directory config", async () => {
+  test("collects warnings for invalid schema in .tavern directory config", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Filesystem.write(
-          path.join(dir, ".kilo", "kilo.json"),
+          path.join(dir, ".tavern", "tavern.json"),
           JSON.stringify({ model: "test/model", unknownField: true }),
         )
       },
@@ -385,7 +385,7 @@ Broken command`,
         expect(cfg.model).toBe("test/model")
         expect(
           warns.some(
-            (w) => w.path.includes("kilo.json") && w.message.includes("invalid") && w.message.includes("unknownField"),
+            (w) => w.path.includes("tavern.json") && w.message.includes("invalid") && w.message.includes("unknownField"),
           ),
         ).toBe(true)
       },

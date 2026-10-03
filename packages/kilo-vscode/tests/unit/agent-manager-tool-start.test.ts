@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, mock } from "bun:test"
 import { parseToolRequest, startFromTool, type ToolDeps, type ToolRequest } from "../../src/agent-manager/tool-start"
 import type { CreateWorktreeResult } from "../../src/agent-manager/WorktreeManager"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import { handleToolEvent } from "../../src/agent-manager/tool-project"
 import { normalize } from "../../src/services/cli-backend/sdk-sse-adapter"
 
@@ -20,7 +20,7 @@ function session(id: string): Session {
 }
 
 function result(path: string): CreateWorktreeResult {
-  return { path, branch: "kilo/test", parentBranch: "main", startPointSource: "fallback" } as CreateWorktreeResult
+  return { path, branch: "tavern/test", parentBranch: "main", startPointSource: "fallback" } as CreateWorktreeResult
 }
 
 function deps(overrides: Partial<ToolDeps> = {}): ToolDeps {
@@ -42,12 +42,12 @@ function deps(overrides: Partial<ToolDeps> = {}): ToolDeps {
     getPanel: () => panel as never,
     openPanel: mock(() => calls.push("openPanel")),
     waitReady: mock(async () => calls.push("waitReady")),
-    createWorktree: mock(async () => ({ worktree: { id: "wt-1" }, result: result("/repo/.kilo/worktrees/wt-1") })),
+    createWorktree: mock(async () => ({ worktree: { id: "wt-1" }, result: result("/repo/.tavern/worktrees/wt-1") })),
     cleanupWorktree: mock(async () => calls.push("cleanupWorktree")),
     hasScript: () => true,
     setup: mock(async () => calls.push("setup")),
     createSessionInWorktree: mock(async () => session("s-wt")),
-    sessionMetadata: mock(async () => ({ "kilocode.sandbox": { enabled: true, version: 0 } })),
+    sessionMetadata: mock(async () => ({ "taverncode.sandbox": { enabled: true, version: 0 } })),
     registerWorktreeSession: mock(() => calls.push("registerWorktreeSession")),
     notifyReady: mock(() => calls.push("notifyReady")),
     push: mock(() => calls.push("push")),
@@ -127,7 +127,7 @@ describe("agent manager tool start", () => {
           expect(client.session.promptAsync).toHaveBeenCalledWith(
             expect.objectContaining({
               parts: [
-                { type: "text", text: source ? `${text}\n\n<!-- kilo-agent-manager source=${source} -->` : text },
+                { type: "text", text: source ? `${text}\n\n<!-- tavern-agent-manager source=${source} -->` : text },
               ],
             }),
             { throwOnError: true },
@@ -145,7 +145,7 @@ describe("agent manager tool start", () => {
       const owner = { id: "project" }
       handleToolEvent(
         normalize({
-          type: "kilocode.agent_manager.start",
+          type: "taverncode.agent_manager.start",
           properties: {
             requestID: `am-routed-${mode}`,
             sessionID: "ses_caller",
@@ -174,7 +174,7 @@ describe("agent manager tool start", () => {
       await done.promise
       expect(client.session.promptAsync).toHaveBeenCalledWith(
         expect.objectContaining({
-          parts: [{ type: "text", text: "Initial delivery\n\n<!-- kilo-agent-manager source=ses_caller -->" }],
+          parts: [{ type: "text", text: "Initial delivery\n\n<!-- tavern-agent-manager source=ses_caller -->" }],
         }),
         { throwOnError: true },
       )
@@ -345,7 +345,7 @@ describe("agent manager tool start", () => {
       {
         directory: "/repo",
         platform: "agent-manager",
-        metadata: { "kilocode.sandbox": { enabled: true, version: 0 } },
+        metadata: { "taverncode.sandbox": { enabled: true, version: 0 } },
       },
       { throwOnError: true },
     )
@@ -450,8 +450,8 @@ describe("agent manager tool start", () => {
     )
     expect(c.setup).toHaveBeenCalled()
     expect(c.createSessionInWorktree).toHaveBeenCalledWith(
-      "/repo/.kilo/worktrees/wt-1",
-      "kilo/test",
+      "/repo/.tavern/worktrees/wt-1",
+      "tavern/test",
       "wt-1",
       {
         sessionID: "s-parent",
@@ -460,12 +460,12 @@ describe("agent manager tool start", () => {
       expect.any(Object),
       expect.any(Object),
     )
-    expect(c.registerWorktreeSession).toHaveBeenCalledWith("s-wt", "/repo/.kilo/worktrees/wt-1")
+    expect(c.registerWorktreeSession).toHaveBeenCalledWith("s-wt", "/repo/.tavern/worktrees/wt-1")
     expect(c.notifyReady).toHaveBeenCalled()
     expect(client.session.promptAsync).toHaveBeenCalledWith(
       expect.objectContaining({
         sessionID: "s-wt",
-        directory: "/repo/.kilo/worktrees/wt-1",
+        directory: "/repo/.tavern/worktrees/wt-1",
         model: { providerID: "test", modelID: "reasoning/model" },
         variant: "low",
       }),
@@ -546,7 +546,7 @@ describe("agent manager tool start", () => {
       createWorktree: mock(async () => {
         pending.resolve()
         await resume.promise
-        return { worktree: { id: "wt-1" }, result: result("/repo/.kilo/worktrees/wt-1") }
+        return { worktree: { id: "wt-1" }, result: result("/repo/.tavern/worktrees/wt-1") }
       }),
     })
     const req: ToolRequest = {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { SkillShellPrompt } from "@/kilocode/acp/permission"
+import { SkillShellPrompt } from "@/taverncode/acp/permission"
 
 describe("SkillShellPrompt", () => {
   test("detects the skillShell metadata flag", () => {

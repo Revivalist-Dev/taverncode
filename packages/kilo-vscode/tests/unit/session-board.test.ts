@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test"
-import { createKiloClient, type SessionBoard } from "@kilocode/sdk/v2/client"
+import { createKiloClient, type SessionBoard } from "@taverncode/sdk/v2/client"
 import { ProjectRouteService } from "../../src/agent-manager/project/route"
-import * as Board from "../../src/kilo-provider/session-board"
+import * as Board from "../../src/tavern-provider/session-board"
 
 const snapshot: SessionBoard = { ownerSessionID: "ses_owner", revision: 12, messages: [], hasMore: false }
 
@@ -43,7 +43,7 @@ describe("session board requests", () => {
     const request = state.calls.at(0)!
     const url = new URL(request.url)
     expect(request.method).toBe("GET")
-    expect(url.pathname).toBe("/kilocode/session/ses_owner/board")
+    expect(url.pathname).toBe("/taverncode/session/ses_owner/board")
     expect(Object.fromEntries(url.searchParams)).toEqual({
       directory: "/repo/worktree",
       before: "board_before",
@@ -86,7 +86,7 @@ describe("session board requests", () => {
     const request = state.calls.at(0)!
     const url = new URL(request.url)
     expect(request.method).toBe("POST")
-    expect(url.pathname).toBe("/kilocode/session/ses_owner/board/reset")
+    expect(url.pathname).toBe("/taverncode/session/ses_owner/board/reset")
     expect(url.searchParams.get("directory")).toBe("/alpha/worktree")
     expect(await request.json()).toEqual({ revision: 12 })
     expect(state.posts).toEqual([

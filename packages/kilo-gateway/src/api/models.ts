@@ -81,14 +81,14 @@ function parseApiPrice(price: string | null | undefined): number | undefined {
 }
 
 /**
- * Fetch models from Kilo API (OpenRouter-compatible endpoint)
+ * Fetch models from Tavern API (OpenRouter-compatible endpoint)
  *
  * @param options - Configuration options
  * @returns Typed result with models and optional error info
  */
 export async function fetchKiloModels(options?: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
+  taverncodeToken?: string
+  taverncodeOrganizationId?: string
   baseURL?: string
 }): Promise<KiloModelsResult> {
   const raw = await fetchRawKiloModels(options)
@@ -98,7 +98,7 @@ export async function fetchKiloModels(options?: {
   const models: Record<string, any> = {}
 
   for (const model of raw.data) {
-    // Skip models that explicitly don't support tools — Kilo requires tool calling
+    // Skip models that explicitly don't support tools — Tavern requires tool calling
     if (!supportsTools(model)) continue
 
     const transformedModel = transformToModelDevFormat(model)
@@ -130,13 +130,13 @@ export type KiloTranscriptionModelsResult = {
 }
 
 /**
- * Fetch image-capable models from Kilo API (OpenRouter-compatible endpoint).
+ * Fetch image-capable models from Tavern API (OpenRouter-compatible endpoint).
  * Uses the same raw fetch as {@link fetchKiloModels} but keeps only models
  * whose `output_modalities` include `"image"`.
  */
 export async function fetchKiloImageModels(options?: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
+  taverncodeToken?: string
+  taverncodeOrganizationId?: string
   baseURL?: string
 }): Promise<KiloImageModelsResult> {
   const raw = await fetchRawKiloModels(options)
@@ -154,17 +154,17 @@ export async function fetchKiloImageModels(options?: {
 }
 
 export async function fetchKiloTranscriptionModels(options?: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
+  taverncodeToken?: string
+  taverncodeOrganizationId?: string
   baseURL?: string
 }): Promise<KiloTranscriptionModelsResult> {
-  const token = options?.kilocodeToken
-  const organizationId = options?.kilocodeOrganizationId
+  const token = options?.taverncodeToken
+  const organizationId = options?.taverncodeOrganizationId
   const url = new URL("transcription-models", resolveKiloGatewayBaseUrl({ baseURL: options?.baseURL, token }))
   const response = await fetch(url, {
     headers: {
       ...getDefaultHeaders(),
-      ...buildKiloHeaders(undefined, { kilocodeOrganizationId: organizationId }),
+      ...buildKiloHeaders(undefined, { taverncodeOrganizationId: organizationId }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     signal: AbortSignal.timeout(MODELS_FETCH_TIMEOUT_MS),
@@ -203,14 +203,14 @@ function isTranscriptionModel(value: unknown): value is TranscriptionModelRespon
  * Shared raw fetch + validate used by both {@link fetchKiloModels} and {@link fetchKiloImageModels}.
  */
 async function fetchRawKiloModels(options?: {
-  kilocodeToken?: string
-  kilocodeOrganizationId?: string
+  taverncodeToken?: string
+  taverncodeOrganizationId?: string
   baseURL?: string
 }): Promise<
   { data: OpenRouterModel[]; error?: undefined } | { data?: undefined; error: NonNullable<KiloModelsResult["error"]> }
 > {
-  const token = options?.kilocodeToken
-  const organizationId = options?.kilocodeOrganizationId
+  const token = options?.taverncodeToken
+  const organizationId = options?.taverncodeOrganizationId
 
   // Construct base URL
   const defaultBaseURL = organizationId ? `${KILO_API_BASE}/api/organizations/${organizationId}` : KILO_OPENROUTER_BASE
@@ -226,7 +226,7 @@ async function fetchRawKiloModels(options?: {
   const response = await fetch(modelsURL, {
     headers: {
       ...getDefaultHeaders(),
-      ...buildKiloHeaders(undefined, { kilocodeOrganizationId: organizationId }),
+      ...buildKiloHeaders(undefined, { taverncodeOrganizationId: organizationId }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
     signal: AbortSignal.timeout(MODELS_FETCH_TIMEOUT_MS),
@@ -261,7 +261,7 @@ async function fetchRawKiloModels(options?: {
 }
 
 /**
- * Kilo requires tool calling, so models that explicitly omit "tools" are hidden.
+ * Tavern requires tool calling, so models that explicitly omit "tools" are hidden.
  * Optimistically assume models with a missing or empty supported_parameters list
  * support tools (e.g. routers like typesafe/jev-router report an empty list).
  */

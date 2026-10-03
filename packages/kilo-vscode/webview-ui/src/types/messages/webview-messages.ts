@@ -38,7 +38,7 @@ export interface SendMessageRequest {
   browserFeedback?: BrowserFeedbackData
   agentManagerContext?: string
   contextDirectory?: string
-  /** Label for a prompt Kilo composed, such as an editor code action. */
+  /** Label for a prompt Tavern composed, such as an editor code action. */
   injectedTitle?: string
 }
 
@@ -161,7 +161,7 @@ export interface ImportAndSendMessage {
   browserFeedback?: BrowserFeedbackData
   command?: string
   commandArgs?: string
-  /** Label for a prompt Kilo composed, such as an editor code action. */
+  /** Label for a prompt Tavern composed, such as an editor code action. */
   injectedTitle?: string
 }
 
@@ -620,10 +620,10 @@ export interface OpenSettingsTabRequest {
 
 export interface UpdateConfigMessage {
   type: "updateConfig"
-  /** Global config patch written to ~/.config/kilo/kilo.json. */
+  /** Global config patch written to ~/.config/tavern/tavern.json. */
   config: Partial<Config>
   globalUnset?: string[][]
-  /** Project config patch written to the workspace's .kilo/kilo.jsonc or existing project config. */
+  /** Project config patch written to the workspace's .tavern/tavern.jsonc or existing project config. */
   projectConfig?: Partial<Config>
   projectUnset?: string[][]
   globalBindingId?: string
@@ -716,7 +716,7 @@ export interface RestoreWorktreeRequest {
   worktreeId: string
 }
 
-// Delete folders under .kilo/worktrees that no worktree claims
+// Delete folders under .tavern/worktrees that no worktree claims
 export interface CleanOrphanDirectoriesRequest {
   type: "agentManager.cleanOrphanDirectories"
   projectId?: string

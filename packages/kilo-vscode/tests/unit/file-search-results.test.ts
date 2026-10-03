@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { mergeFileSearchResults } from "../../src/kilo-provider/file-search-results"
+import { mergeFileSearchResults } from "../../src/tavern-provider/file-search-results"
 
 describe("mergeFileSearchResults", () => {
   it("returns backend results when no open files", () => {
@@ -164,11 +164,11 @@ describe("mergeFileSearchResults", () => {
     const result = mergeFileSearchResults({
       query: "amprov",
       backend: [
-        "packages/kilo-docs/pages/contributing/architecture/onboarding-improvements.md",
-        "packages/kilo-vscode/src/agent-manager/AgentManagerProvider.ts",
+        "packages/tavern-docs/pages/contributing/architecture/onboarding-improvements.md",
+        "packages/tavern-vscode/src/agent-manager/AgentManagerProvider.ts",
       ],
       open: new Set(),
     })
-    expect(result[0]).toBe("packages/kilo-vscode/src/agent-manager/AgentManagerProvider.ts")
+    expect(result[0]).toBe("packages/tavern-vscode/src/agent-manager/AgentManagerProvider.ts")
   })
 })

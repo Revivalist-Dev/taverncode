@@ -39,7 +39,7 @@ export const TelemetryApi = HttpApi.make("telemetry")
           OpenApi.annotations({
             identifier: "telemetry.capture",
             summary: "Capture telemetry event",
-            description: "Forward a telemetry event to PostHog via kilo-telemetry.",
+            description: "Forward a telemetry event to PostHog via tavern-telemetry.",
           }),
         ),
         HttpApiEndpoint.post("setEnabled", TelemetryPaths.setEnabled, {
@@ -59,7 +59,7 @@ export const TelemetryApi = HttpApi.make("telemetry")
       .annotateMerge(
         OpenApi.annotations({
           title: "telemetry",
-          description: "Kilo telemetry routes.",
+          description: "Tavern telemetry routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -68,8 +68,8 @@ export const TelemetryApi = HttpApi.make("telemetry")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

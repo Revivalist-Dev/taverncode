@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { providerMetadata } from "../../src/kilocode/provider/metadata"
+import { providerMetadata } from "../../src/taverncode/provider/metadata"
 
 describe("providerMetadata", () => {
   test("returns shared provider key, icon, and priority metadata", () => {
@@ -17,10 +17,10 @@ describe("providerMetadata", () => {
     })
   })
 
-  test("uses the Kilo icon for Kilo Gateway", () => {
-    expect(providerMetadata("kilo")).toEqual({
-      noteKey: "settings.providers.note.kilo",
-      icon: "kilo",
+  test("uses the Tavern icon for Tavern Gateway", () => {
+    expect(providerMetadata("tavern")).toEqual({
+      noteKey: "settings.providers.note.tavern",
+      icon: "tavern",
       priority: 0,
     })
   })

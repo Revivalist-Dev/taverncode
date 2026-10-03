@@ -7,7 +7,7 @@ function createProvider(state = "connected") {
   ;(vscode.window as any).onDidChangeTextEditorSelection = () => ({ dispose: () => {} })
   return new AutocompleteInlineCompletionProvider(
     {} as any,
-    "kilo/mistralai/codestral-2508",
+    "tavern/mistralai/codestral-2508",
     { getConnectionState: () => state } as any,
     () => {},
     () => ({ enableAutoTrigger: true }),

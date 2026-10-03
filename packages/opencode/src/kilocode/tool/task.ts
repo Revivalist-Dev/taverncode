@@ -16,7 +16,7 @@ import { Provider } from "../../provider/provider"
 import z from "zod"
 import { selectModel } from "./model-selection"
 
-const log = Log.create({ service: "kilocode-task-model" })
+const log = Log.create({ service: "taverncode-task-model" })
 
 // RATIONALE: Mirror narrow state slice Task tool consumes and ignore unrelated TUI fields.
 const ModelState = z
@@ -42,7 +42,7 @@ export namespace KiloTask {
     }),
     provider: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description:
-        "Optional provider ID from agent_manager_models. Only set when the user explicitly requests a provider. Requires model; omit or send null to prefer the current turn's provider, then Kilo Gateway.",
+        "Optional provider ID from agent_manager_models. Only set when the user explicitly requests a provider. Requires model; omit or send null to prefer the current turn's provider, then Tavern Gateway.",
     }),
     variant: Schema.optional(Schema.NullOr(Schema.String)).annotate({
       description:
@@ -93,7 +93,7 @@ export namespace KiloTask {
    * overriding the selected subagent's own allowlist with parent ask/allow rules.
    *
    * OpenCode removed parent-agent inheritance entirely in anomalyco/opencode#31696.
-   * Kilo intentionally differs: parent edit/notebook/MCP denials remain hard ceilings
+   * Tavern intentionally differs: parent edit/notebook/MCP denials remain hard ceilings
    * for Plan Mode and MCP restrictions, while parent ask/allow rules must not replace
    * the selected subagent's policy. Preserve this distinction during upstream merges.
    *

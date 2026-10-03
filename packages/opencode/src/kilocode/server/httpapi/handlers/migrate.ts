@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
 import { NamedError } from "@opencode-ai/core/util/error"
-import { SessionResumeImport } from "@/kilocode/session-resume/import"
+import { SessionResumeImport } from "@/taverncode/session-resume/import"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { MigrateFailedError, MigrateSessionsDiscoverPayload, MigrateSessionsPayload } from "../groups/migrate"
 

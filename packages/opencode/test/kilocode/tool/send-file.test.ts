@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import { Effect, Layer } from "effect"
 import { Agent } from "@/agent/agent"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
-import { KiloToolRegistry } from "@/kilocode/tool/registry"
-import { SendFileTool } from "@/kilocode/tool/send-file"
+import { KiloSessions } from "@/tavern-sessions/tavern-sessions"
+import { KiloToolRegistry } from "@/taverncode/tool/registry"
+import { SendFileTool } from "@/taverncode/tool/send-file"
 import { MessageID, SessionID } from "@/session/schema"
 import * as Truncate from "@/tool/truncate"
 import type { Tool } from "@/tool/tool"
@@ -168,7 +168,7 @@ describe("send_file tool", () => {
     }
   })
 
-  // kilocode_change start — send_file now authorizes missing files with external_directory + read
+  // taverncode_change start — send_file now authorizes missing files with external_directory + read
   // before returning a structured fail() result, matching the read.ts security sequence.
   test("authorizes missing file before returning fail result", async () => {
     const dir = await tmpdir()
@@ -207,9 +207,9 @@ describe("send_file tool", () => {
       await fs.rm(dir, { recursive: true, force: true })
     }
   })
-  // kilocode_change end
+  // taverncode_change end
 
-  // kilocode_change start — send_file now authorizes directories before returning a
+  // taverncode_change start — send_file now authorizes directories before returning a
   // structured fail() result.
   test("authorizes directory before returning fail result", async () => {
     const dir = await tmpdir()
@@ -248,7 +248,7 @@ describe("send_file tool", () => {
       await fs.rm(dir, { recursive: true, force: true })
     }
   })
-  // kilocode_change end
+  // taverncode_change end
 
   test("rejects file larger than 4 MiB before reading", async () => {
     const dir = await tmpdir()
@@ -500,7 +500,7 @@ describe("send_file tool", () => {
     }
   })
 })
-// kilocode_change start — fsService mock now includes stat + realPath for the
+// taverncode_change start — fsService mock now includes stat + realPath for the
 // missing/directory authorization sequence that runs before KiloReadObject.file().
 // stat only fabricates NotFound for ENOENT; other errors propagate.
 const fsService = FSUtil.Service.of({
@@ -530,4 +530,4 @@ const fsService = FSUtil.Service.of({
       catch: (cause) => cause,
     }),
 } as FSUtil.Interface)
-// kilocode_change end
+// taverncode_change end

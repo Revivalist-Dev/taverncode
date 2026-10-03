@@ -3,7 +3,7 @@ import { localeToBcp47, type Locale } from "../context/language-utils"
 /**
  * Wall-clock time for chat-line metadata in the user's timezone and the UI
  * language's conventions (12h or 24h). Same Intl call as the user-message
- * stamp in kilo-ui and the TUI session view.
+ * stamp in tavern-ui and the TUI session view.
  */
 export function formatClock(ms: number, locale: Locale): string {
   return new Intl.DateTimeFormat(localeToBcp47(locale), { timeStyle: "short" }).format(new Date(ms))

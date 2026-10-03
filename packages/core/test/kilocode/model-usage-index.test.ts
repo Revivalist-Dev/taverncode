@@ -3,7 +3,7 @@ import { SqliteClient } from "@effect/sql-sqlite-bun"
 import { EffectDrizzleSqlite } from "@opencode-ai/effect-drizzle-sqlite"
 import { DatabaseMigration } from "@opencode-ai/core/database/migration"
 import { migrations } from "@opencode-ai/core/database/migration.gen"
-import migration from "@opencode-ai/core/database/migration/20260907102000_kilocode_model_usage_index"
+import migration from "@opencode-ai/core/database/migration/20260907102000_taverncode_model_usage_index"
 import { sql } from "drizzle-orm"
 import { Effect } from "effect"
 

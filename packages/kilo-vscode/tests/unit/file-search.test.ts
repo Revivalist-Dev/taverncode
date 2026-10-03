@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test"
 import * as path from "path"
 import * as vscode from "vscode"
-import { handleFileSearch, splitRoots } from "../../src/kilo-provider/file-search"
+import { handleFileSearch, splitRoots } from "../../src/tavern-provider/file-search"
 
 type Query = { query: string; directory: string; type: "file" | "directory"; limit: number }
 
@@ -353,7 +353,7 @@ describe("handleFileSearch", () => {
   })
 
   it("drops files an added folder's own ignore rules exclude", async () => {
-    // Editor exclusions and this folder's Kilo ignore rules are separate filters.
+    // Editor exclusions and this folder's Tavern ignore rules are separate filters.
     const api = multiClient({ "/repo": { files: [], folders: [] } })
     const index = editorIndex({ "/repo": [], "/other": ["src/keep.ts", "vendor/skip.ts"] })
     const posted: Array<Record<string, unknown>> = []

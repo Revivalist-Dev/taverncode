@@ -3,19 +3,19 @@ import { Config } from "@/config/config"
 import { ModelsDev } from "@opencode-ai/core/models-dev"
 import { Provider } from "@/provider/provider"
 
-import { mapValues, pickBy } from "remeda" // kilocode_change
-import { ModelCache } from "@/provider/model-cache" // kilocode_change
-import { Auth } from "@/auth" // kilocode_change
-import { organization, recommend } from "@/kilocode/provider/catalog" // kilocode_change
-import { ModelV2 } from "@opencode-ai/core/model" // kilocode_change
-import { Option } from "effect" // kilocode_change
+import { mapValues, pickBy } from "remeda" // taverncode_change
+import { ModelCache } from "@/provider/model-cache" // taverncode_change
+import { Auth } from "@/auth" // taverncode_change
+import { organization, recommend } from "@/taverncode/provider/catalog" // taverncode_change
+import { ModelV2 } from "@opencode-ai/core/model" // taverncode_change
+import { Option } from "effect" // taverncode_change
 import {
   disposeAllInstancesAfterProviderAuthCallback,
   invalidatePresence,
-} from "@/kilocode/server/provider-auth-lifecycle" // kilocode_change
-import { providerMetadata } from "@/kilocode/provider/metadata" // kilocode_change
-import { filterPromptTrainingModels } from "@/kilocode/provider/model-filter" // kilocode_change
-import { overlay as overlayAnacondaDesktop } from "@/kilocode/anaconda-desktop/provider" // kilocode_change
+} from "@/taverncode/server/provider-auth-lifecycle" // taverncode_change
+import { providerMetadata } from "@/taverncode/provider/metadata" // taverncode_change
+import { filterPromptTrainingModels } from "@/taverncode/provider/model-filter" // taverncode_change
+import { overlay as overlayAnacondaDesktop } from "@/taverncode/anaconda-desktop/provider" // taverncode_change
 import { Effect, Schema } from "effect"
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
@@ -38,7 +38,7 @@ function mapProviderAuthError<A, R>(self: Effect.Effect<A, ProviderAuth.Error, R
       if (error instanceof ProviderAuth.ValidationFailed) {
         return new ProviderAuthApiError({ name: error._tag, data: { field: error.field, message: error.message } })
       }
-      return new ProviderAuthApiError({ name: "BadRequest", data: { message: error.message } }) // kilocode_change
+      return new ProviderAuthApiError({ name: "BadRequest", data: { message: error.message } }) // taverncode_change
     }),
   )
 }
@@ -48,12 +48,12 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
     const cfg = yield* Config.Service
     const provider = yield* Provider.Service
     const svc = yield* ProviderAuth.Service
-    const cache = yield* ModelCache.Service // kilocode_change
-    const access = yield* Auth.Service // kilocode_change
+    const cache = yield* ModelCache.Service // taverncode_change
+    const access = yield* Auth.Service // taverncode_change
 
     const list = Effect.fn("ProviderHttpApi.list")(function* () {
       const config = yield* cfg.get()
-      const all = overlayAnacondaDesktop(yield* ModelsDev.Service.use((s) => s.get())) // kilocode_change
+      const all = overlayAnacondaDesktop(yield* ModelsDev.Service.use((s) => s.get())) // taverncode_change
       const disabled = new Set(config.disabled_providers ?? [])
       const enabled = config.enabled_providers ? new Set(config.enabled_providers) : undefined
       const filtered: Record<string, (typeof all)[string]> = {}
@@ -61,10 +61,10 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
         if ((enabled ? enabled.has(key) : true) && !disabled.has(key)) filtered[key] = value
       }
       const connected = yield* provider.list()
-      // kilocode_change start
-      const info = yield* access.get("kilo").pipe(Effect.option)
-      const unavailable = Option.isNone(info) && ("kilo" in filtered || "kilo" in connected)
-      if (Option.isNone(info) || organization(config.provider?.kilo?.options, info.value)) delete filtered.kilo
+      // taverncode_change start
+      const info = yield* access.get("tavern").pipe(Effect.option)
+      const unavailable = Option.isNone(info) && ("tavern" in filtered || "tavern" in connected)
+      if (Option.isNone(info) || organization(config.provider?.tavern?.options, info.value)) delete filtered.tavern
       const providers = filterPromptTrainingModels(
         Object.assign(
           mapValues(filtered, (item) => Provider.fromModelsDevProvider(item)),
@@ -72,39 +72,39 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
         ),
         config.hide_prompt_training_models === true,
       )
-      // kilocode_change end
-      // kilocode_change start
+      // taverncode_change end
+      // taverncode_change start
       const failed = yield* cache.failedProviders()
       // Note: connected only contains providers with non-empty models after Provider.Service.list(),
       // so failed must be checked explicitly for providers whose fetch returned an error.
       const failedSet = new Set(failed)
-      if (unavailable) failedSet.add("kilo")
+      if (unavailable) failedSet.add("tavern")
       const validProviders = pickBy(
         providers,
         (item, id) => Object.keys(item.models).length > 0 || id in connected || failedSet.has(id),
       )
       const defaults = Provider.defaultModelIDs(pickBy(validProviders, (item) => Object.keys(item.models).length > 0))
-      if (connected[ProviderV2.ID.kilo] && defaults[ProviderV2.ID.kilo]) {
+      if (connected[ProviderV2.ID.tavern] && defaults[ProviderV2.ID.tavern]) {
         const model = yield* Effect.promise(() =>
           recommend(
-            validProviders.kilo.models,
-            config.provider?.kilo?.options,
+            validProviders.tavern.models,
+            config.provider?.tavern?.options,
             Option.getOrUndefined(info),
             Option.isSome(info),
           ),
         )
-        if (model) defaults[ProviderV2.ID.kilo] = ModelV2.ID.make(model)
+        if (model) defaults[ProviderV2.ID.tavern] = ModelV2.ID.make(model)
       }
       return {
         all: Object.values(validProviders).map((item) => ({
           ...Provider.toPublicInfo(item),
           metadata: providerMetadata(item.id),
-        })), // kilocode_change
+        })), // taverncode_change
         default: defaults,
         connected: Object.keys(connected),
         failed: [...failedSet],
       }
-      // kilocode_change end
+      // taverncode_change end
     })
 
     const auth = Effect.fn("ProviderHttpApi.auth")(function* () {
@@ -150,10 +150,10 @@ export const providerHandlers = HttpApiBuilder.group(InstanceHttpApi, "provider"
           code: ctx.payload.code,
         }),
       )
-      // kilocode_change start - drop old-user presence before instance disposal on Kilo OAuth callback
-      if (ctx.params.providerID === "kilo") yield* invalidatePresence()
-      // kilocode_change end
-      yield* disposeAllInstancesAfterProviderAuthCallback() // kilocode_change
+      // taverncode_change start - drop old-user presence before instance disposal on Tavern OAuth callback
+      if (ctx.params.providerID === "tavern") yield* invalidatePresence()
+      // taverncode_change end
+      yield* disposeAllInstancesAfterProviderAuthCallback() // taverncode_change
       return true
     })
 

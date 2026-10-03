@@ -6,45 +6,45 @@ export namespace KilocodePaths {
   const home = () => process.env.HOME || process.env.USERPROFILE || os.homedir()
 
   /**
-   * Get the platform-specific VSCode global storage path for Kilocode extension.
-   * - macOS: ~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code
-   * - Windows: %APPDATA%/Code/User/globalStorage/kilocode.kilo-code
-   * - Linux: ~/.config/Code/User/globalStorage/kilocode.kilo-code
+   * Get the platform-specific VSCode global storage path for Taverncode extension.
+   * - macOS: ~/Library/Application Support/Code/User/globalStorage/taverncode.tavern-code
+   * - Windows: %APPDATA%/Code/User/globalStorage/taverncode.tavern-code
+   * - Linux: ~/.config/Code/User/globalStorage/taverncode.tavern-code
    */
   export function vscodeGlobalStorage(): string {
     const home = os.homedir()
     switch (process.platform) {
       case "darwin":
-        return path.join(home, "Library", "Application Support", "Code", "User", "globalStorage", "kilocode.kilo-code")
+        return path.join(home, "Library", "Application Support", "Code", "User", "globalStorage", "taverncode.tavern-code")
       case "win32":
         return path.join(
           process.env.APPDATA || path.join(home, "AppData", "Roaming"),
           "Code",
           "User",
           "globalStorage",
-          "kilocode.kilo-code",
+          "taverncode.tavern-code",
         )
       default:
-        return path.join(home, ".config", "Code", "User", "globalStorage", "kilocode.kilo-code")
+        return path.join(home, ".config", "Code", "User", "globalStorage", "taverncode.tavern-code")
     }
   }
 
-  /** Global Kilo directories in user home: ~/.kilocode and ~/.kilo (legacy first, .kilo wins later) */
+  /** Global Tavern directories in user home: ~/.taverncode and ~/.tavern (legacy first, .tavern wins later) */
   export function globalDirs(): string[] {
-    return [path.join(home(), ".kilocode"), path.join(home(), ".kilo")]
+    return [path.join(home(), ".taverncode"), path.join(home(), ".tavern")]
   }
 
   /**
-   * Discover Kilo directories containing skills.
-   * Returns parent directories (.kilocode/ and .kilo/) for glob pattern "skills/[*]/SKILL.md".
+   * Discover Tavern directories containing skills.
+   * Returns parent directories (.taverncode/ and .tavern/) for glob pattern "skills/[*]/SKILL.md".
    *
-   * - Walks up from projectDir to worktreeRoot for .kilocode/ and .kilo/
-   * - Includes global ~/.kilocode/ and ~/.kilo/
+   * - Walks up from projectDir to worktreeRoot for .taverncode/ and .tavern/
+   * - Includes global ~/.taverncode/ and ~/.tavern/
    * - Includes VSCode extension global storage
    *
    * Does NOT copy/migrate skills - just provides paths for discovery.
    * Skills remain in their original locations and can be managed independently
-   * by the Kilo VSCode extension.
+   * by the Tavern VSCode extension.
    */
   export async function skillDirectories(opts: {
     projectDir: string
@@ -54,7 +54,7 @@ export namespace KilocodePaths {
     const directories: string[] = []
 
     if (!opts.skipGlobalPaths) {
-      // 1. Global ~/.kilocode/ and ~/.kilo/ (loaded first so project-level overrides)
+      // 1. Global ~/.taverncode/ and ~/.tavern/ (loaded first so project-level overrides)
       for (const global of globalDirs()) {
         const globalSkills = path.join(global, "skills")
         if (!(await Filesystem.isDir(globalSkills))) continue
@@ -69,11 +69,11 @@ export namespace KilocodePaths {
       }
     }
 
-    // 3. Walk up from project dir to worktree root for .kilocode/ and .kilo/
+    // 3. Walk up from project dir to worktree root for .taverncode/ and .tavern/
     // Returns parent directories (not skills/) because
     // the glob pattern "skills/[*]/SKILL.md" is applied from the parent
     // Loaded last so project-level skills take precedence over global
-    for (const target of [".kilocode", ".kilo"] as const) {
+    for (const target of [".taverncode", ".tavern"] as const) {
       const projectDirs = await Array.fromAsync(
         Filesystem.up({
           targets: [target],

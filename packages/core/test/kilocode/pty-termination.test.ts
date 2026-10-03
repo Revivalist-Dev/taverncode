@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { KiloPtyTermination } from "../../src/kilocode/pty/termination"
+import { KiloPtyTermination } from "../../src/taverncode/pty/termination"
 
 function fake(pid = 123) {
   const calls: Array<string | undefined> = []

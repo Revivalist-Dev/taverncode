@@ -17,7 +17,7 @@ import {
 } from "./api/constants.js"
 
 /**
- * Header constants for KiloCode API requests
+ * Header constants for TavernCode API requests
  * @deprecated Use HEADER_* constants from constants.ts instead
  */
 export const X_KILOCODE_ORGANIZATIONID = HEADER_ORGANIZATIONID
@@ -48,7 +48,7 @@ export function getUserAgent(): string {
 }
 
 /**
- * Default headers for KiloCode requests
+ * Default headers for TavernCode requests
  */
 export function getDefaultHeaders(): Record<string, string> {
   return {
@@ -61,7 +61,7 @@ export function getDefaultHeaders(): Record<string, string> {
  * Get editor name header value
  * When KILOCODE_EDITOR_NAME is set explicitly, use it verbatim (the caller is
  * responsible for including the version, e.g. "Visual Studio Code 1.114.0").
- * Otherwise defaults to "Kilo CLI" and appends KILOCODE_VERSION when available.
+ * Otherwise defaults to "Tavern CLI" and appends KILOCODE_VERSION when available.
  */
 export function getEditorNameHeader(): string {
   const custom = process.env[ENV_EDITOR_NAME]
@@ -71,13 +71,13 @@ export function getEditorNameHeader(): string {
 }
 
 /**
- * Build KiloCode-specific headers from metadata and options
+ * Build TavernCode-specific headers from metadata and options
  */
 export function buildKiloHeaders(
   metadata?: { taskId?: string; projectId?: string },
   options?: {
-    kilocodeOrganizationId?: string
-    kilocodeTesterWarningsDisabledUntil?: number
+    taverncodeOrganizationId?: string
+    taverncodeTesterWarningsDisabledUntil?: number
     machineId?: string
   },
 ): Record<string, string> {
@@ -91,8 +91,8 @@ export function buildKiloHeaders(
     headers[X_KILOCODE_TASKID] = metadata.taskId
   }
 
-  if (options?.kilocodeOrganizationId) {
-    headers[X_KILOCODE_ORGANIZATIONID] = options.kilocodeOrganizationId
+  if (options?.taverncodeOrganizationId) {
+    headers[X_KILOCODE_ORGANIZATIONID] = options.taverncodeOrganizationId
 
     if (metadata?.projectId) {
       headers[X_KILOCODE_PROJECTID] = metadata.projectId
@@ -100,7 +100,7 @@ export function buildKiloHeaders(
   }
 
   // Add X-KILOCODE-TESTER: SUPPRESS header if the setting is enabled
-  if (options?.kilocodeTesterWarningsDisabledUntil && options.kilocodeTesterWarningsDisabledUntil > Date.now()) {
+  if (options?.taverncodeTesterWarningsDisabledUntil && options.taverncodeTesterWarningsDisabledUntil > Date.now()) {
     headers[X_KILOCODE_TESTER] = TESTER_SUPPRESS_VALUE
   }
 

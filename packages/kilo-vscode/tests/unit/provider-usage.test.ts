@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
-import type { ProviderUsage, ProviderUsageWindow } from "@kilocode/sdk/v2/client"
-import { formatWindow, windowLabel, windowProgress } from "@kilocode/kilo-gateway/provider-usage"
+import type { ProviderUsage, ProviderUsageWindow } from "@taverncode/sdk/v2/client"
+import { formatWindow, windowLabel, windowProgress } from "@taverncode/tavern-gateway/provider-usage"
 
 const { KiloProvider } = await import("../../src/KiloProvider")
 
@@ -34,7 +34,7 @@ const benign = (value: unknown): unknown =>
 
 function bridge(usage: UsageClient, pending?: Promise<void>) {
   const messages: unknown[] = []
-  const client = benign({ kilocode: { providerUsage: usage } })
+  const client = benign({ taverncode: { providerUsage: usage } })
   const provider = new KiloProvider(
     {} as never,
     {

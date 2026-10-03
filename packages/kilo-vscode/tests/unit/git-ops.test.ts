@@ -31,7 +31,7 @@ function runGit(cwd: string, args: string[]): string {
 }
 
 async function withRepo(run: (cwd: string) => Promise<void>): Promise<void> {
-  const cwd = await fs.mkdtemp(nodePath.join(os.tmpdir(), "kilo-gitops-test-"))
+  const cwd = await fs.mkdtemp(nodePath.join(os.tmpdir(), "tavern-gitops-test-"))
   try {
     runGit(cwd, ["init"])
     await run(cwd)
@@ -76,7 +76,7 @@ describe("GitOps", () => {
       const real = Bun.which("git")
       if (!real) throw new Error("Git is required for this test")
 
-      const dir = await fs.mkdtemp(nodePath.join(os.tmpdir(), "kilo-gitops executable-"))
+      const dir = await fs.mkdtemp(nodePath.join(os.tmpdir(), "tavern-gitops executable-"))
       const binary = process.platform === "win32" ? real : nodePath.join(dir, "git")
       try {
         if (process.platform !== "win32") await fs.symlink(real, binary)

@@ -37,7 +37,7 @@ function gitExec(args: string[]) {
 
 /** Create a temp git repo with an initial commit (required for worktrees). */
 async function createTempRepo(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-"))
   tempDirs.push(dir)
   gitExec(["git", "init", "-b", "main", dir])
   gitExec(["git", "-C", dir, "config", "user.email", "test@test.com"])
@@ -61,8 +61,8 @@ async function changedFiles(cwd: string): Promise<string[]> {
 
 /** Create a temp repo with a bare origin remote so origin/<branch> refs exist. */
 async function createTempRepoWithOrigin(): Promise<{ bare: string; clone: string }> {
-  const bare = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-bare-"))
-  const clone = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-clone-"))
+  const bare = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-bare-"))
+  const clone = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-clone-"))
   tempDirs.push(bare, clone)
 
   gitExec(["git", "init", "--bare", "-b", "main", bare])
@@ -216,7 +216,7 @@ describe("versionedName", () => {
 
 describe("WorktreeStateManager.updateWorktreeLabel", () => {
   it("persists label on a worktree", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-label-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-label-"))
     tempDirs.push(dir)
     const state = new WorktreeStateManager(dir, () => {})
     const wt = state.addWorktree({ branch: "test", path: dir, parentBranch: "main" })
@@ -227,7 +227,7 @@ describe("WorktreeStateManager.updateWorktreeLabel", () => {
   })
 
   it("clears label when set to empty string", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-label-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-label-"))
     tempDirs.push(dir)
     const state = new WorktreeStateManager(dir, () => {})
     const wt = state.addWorktree({ branch: "test", path: dir, parentBranch: "main", label: "initial" })
@@ -239,7 +239,7 @@ describe("WorktreeStateManager.updateWorktreeLabel", () => {
   })
 
   it("survives save and reload", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-label-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-label-"))
     tempDirs.push(dir)
     const state = new WorktreeStateManager(dir, () => {})
     const wt = state.addWorktree({ branch: "test", path: dir, parentBranch: "main", label: "persisted" })
@@ -251,7 +251,7 @@ describe("WorktreeStateManager.updateWorktreeLabel", () => {
   })
 
   it("no-ops for nonexistent worktree", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-label-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-label-"))
     tempDirs.push(dir)
     const state = new WorktreeStateManager(dir, () => {})
     state.updateWorktreeLabel("nonexistent", "test")
@@ -273,7 +273,7 @@ describe("WorktreeManager.createWorktree", () => {
     const result = await createManager(root).createWorktree({ branchName: branch })
     expect(result.branch).toBe(branch)
     expect((await simpleGit(result.path).raw(["symbolic-ref", "--short", "HEAD"])).trim()).toBe(branch)
-    expect(path.dirname(result.path)).toBe(path.join(root, ".kilo", "worktrees"))
+    expect(path.dirname(result.path)).toBe(path.join(root, ".tavern", "worktrees"))
     expect(path.basename(result.path)).toMatch(/^[a-zA-Z0-9_-][a-zA-Z0-9._-]*$/)
     expect(path.basename(result.path)).not.toBe("CON")
   })
@@ -283,7 +283,7 @@ describe("WorktreeManager.createWorktree", () => {
     async (branchName) => {
       const root = await createTempRepo()
       await expect(createManager(root).createWorktree({ branchName })).rejects.toThrow()
-      expect(existsSync(path.join(root, ".kilo", "worktrees"))).toBe(false)
+      expect(existsSync(path.join(root, ".tavern", "worktrees"))).toBe(false)
     },
   )
 
@@ -305,7 +305,7 @@ describe("WorktreeManager.createWorktree", () => {
     const real = Bun.which("git")
     if (!real) throw new Error("Git is required for this test")
 
-    const fake = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-no-git-"))
+    const fake = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-no-git-"))
     tempDirs.push(fake)
     const file = path.join(fake, process.platform === "win32" ? "git.cmd" : "git")
     await fs.writeFile(file, process.platform === "win32" ? "@exit /b 127\r\n" : "#!/bin/sh\nexit 127\n")
@@ -314,7 +314,7 @@ describe("WorktreeManager.createWorktree", () => {
     const bin =
       process.platform === "win32"
         ? real
-        : path.join(await fs.mkdtemp(path.join(os.tmpdir(), "kilo-git executable-")), "git")
+        : path.join(await fs.mkdtemp(path.join(os.tmpdir(), "tavern-git executable-")), "git")
     if (process.platform !== "win32") {
       const dir = path.dirname(bin)
       tempDirs.push(dir)
@@ -385,7 +385,7 @@ describe("WorktreeManager.createWorktree", () => {
     const stderr = child.stderr.toString("utf8")
 
     expect(child.exitCode, stderr).toBe(0)
-    expect(existsSync(path.join(root, ".kilo", "worktrees", "configured-git", ".git"))).toBe(true)
+    expect(existsSync(path.join(root, ".tavern", "worktrees", "configured-git", ".git"))).toBe(true)
   }, 120_000)
 
   it("creates a worktree with a new branch", async () => {
@@ -431,7 +431,7 @@ describe("WorktreeManager.createWorktree", () => {
   })
 
   it("reports when an explicit base branch is selected in a repository with no commits", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-empty-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-empty-"))
     tempDirs.push(root)
     gitExec(["git", "init", "-b", "main", root])
 
@@ -451,20 +451,20 @@ describe("WorktreeManager.createWorktree", () => {
   })
 
   it("throws when workspace is not a git repo", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-nogit-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-nogit-"))
     tempDirs.push(dir)
     const mgr = createManager(dir)
 
     await expect(mgr.createWorktree({ prompt: "test" })).rejects.toThrow("not a git repository")
   })
 
-  it("creates worktrees directory under .kilo/worktrees/", async () => {
+  it("creates worktrees directory under .tavern/worktrees/", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
 
     const result = await mgr.createWorktree({ prompt: "test" })
 
-    expect(result.path).toContain(path.join(".kilo", "worktrees"))
+    expect(result.path).toContain(path.join(".tavern", "worktrees"))
   })
 
   it("records parentBranch as default branch", async () => {
@@ -615,7 +615,7 @@ describe("WorktreeManager.removeWorktree", () => {
     const mgr = createManager(root)
 
     // Should not throw
-    await mgr.removeWorktree(path.join(root, ".kilo", "worktrees", "nonexistent"))
+    await mgr.removeWorktree(path.join(root, ".tavern", "worktrees", "nonexistent"))
   })
 
   it("removes orphaned directory that git does not know about", async () => {
@@ -623,7 +623,7 @@ describe("WorktreeManager.removeWorktree", () => {
     const mgr = createManager(root)
 
     // Create an orphaned directory (not a real worktree)
-    const orphanPath = path.join(root, ".kilo", "worktrees", "orphan")
+    const orphanPath = path.join(root, ".tavern", "worktrees", "orphan")
     await fs.mkdir(orphanPath, { recursive: true })
     await fs.writeFile(path.join(orphanPath, "file.txt"), "orphan")
 
@@ -791,17 +791,17 @@ describe("WorktreeManager.removeWorktree", () => {
       await mgr.removeWorktree(result.path)
 
       // Poll until background rm finishes (up to 5s)
-      const worktreesDir = path.join(root, ".kilo", "worktrees")
+      const worktreesDir = path.join(root, ".tavern", "worktrees")
       const deadline = Date.now() + 5000
       while (Date.now() < deadline) {
         const entries = await fs.readdir(worktreesDir)
-        if (!entries.some((e) => e.startsWith(".kilo-delete-"))) break
+        if (!entries.some((e) => e.startsWith(".tavern-delete-"))) break
         await new Promise((r) => setTimeout(r, 100))
       }
 
-      // No .kilo-delete-* temp dirs should remain
+      // No .tavern-delete-* temp dirs should remain
       const entries = await fs.readdir(worktreesDir)
-      const orphans = entries.filter((e) => e.startsWith(".kilo-delete-"))
+      const orphans = entries.filter((e) => e.startsWith(".tavern-delete-"))
       expect(orphans).toHaveLength(0)
     },
     { timeout: 10000 },
@@ -813,7 +813,7 @@ describe("WorktreeManager.removeWorktree", () => {
 // ---------------------------------------------------------------------------
 
 describe("WorktreeManager.discoverWorktrees orphan cleanup", () => {
-  it("cleans up .kilo-delete-* dirs left by interrupted deletions", async () => {
+  it("cleans up .tavern-delete-* dirs left by interrupted deletions", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
 
@@ -821,7 +821,7 @@ describe("WorktreeManager.discoverWorktrees orphan cleanup", () => {
     const wt = await mgr.createWorktree({ prompt: "real-wt" })
 
     // Simulate an orphaned temp dir from an interrupted deletion
-    const orphan = path.join(root, ".kilo", "worktrees", ".kilo-delete-fake-uuid")
+    const orphan = path.join(root, ".tavern", "worktrees", ".tavern-delete-fake-uuid")
     await fs.mkdir(orphan, { recursive: true })
     await fs.writeFile(path.join(orphan, "leftover.txt"), "stale")
 
@@ -904,8 +904,8 @@ describe("WorktreeManager metadata", () => {
 
     await mgr.writeMetadata(result.path, "sess-clean-123", "feature-branch", "origin")
 
-    expect(existsSync(path.join(result.path, ".kilo", "session-id"))).toBe(false)
-    expect(existsSync(path.join(result.path, ".kilo", "metadata.json"))).toBe(false)
+    expect(existsSync(path.join(result.path, ".tavern", "session-id"))).toBe(false)
+    expect(existsSync(path.join(result.path, ".tavern", "metadata.json"))).toBe(false)
     expect(await changedFiles(result.path)).toEqual([])
   })
 
@@ -924,7 +924,7 @@ describe("WorktreeManager metadata", () => {
     const result = await mgr.createWorktree({ prompt: "legacy-test" })
 
     // Write only the legacy session-id file (no metadata.json)
-    const dir = path.join(result.path, ".kilo")
+    const dir = path.join(result.path, ".tavern")
     await fs.mkdir(dir, { recursive: true })
     await fs.writeFile(path.join(dir, "session-id"), "legacy-sess-456", "utf-8")
 
@@ -997,20 +997,20 @@ describe("WorktreeManager.discoverWorktrees", () => {
     expect(found!.parentBranch).toBe("feature/my-branch")
   })
 
-  it("repairs stale gitdir refs when .kilo/worktrees already exists", async () => {
+  it("repairs stale gitdir refs when .tavern/worktrees already exists", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
 
-    const worktree = path.join(root, ".kilo", "worktrees", "partial")
+    const worktree = path.join(root, ".tavern", "worktrees", "partial")
     const gitdir = path.join(root, ".git", "worktrees", "partial", "gitdir")
     await fs.mkdir(worktree, { recursive: true })
     await fs.mkdir(path.dirname(gitdir), { recursive: true })
-    await fs.writeFile(gitdir, path.join(root, ".kilocode", "worktrees", "partial", ".git"), "utf-8")
+    await fs.writeFile(gitdir, path.join(root, ".taverncode", "worktrees", "partial", ".git"), "utf-8")
 
     await mgr.discoverWorktrees()
 
     const fixed = await fs.readFile(gitdir, "utf-8")
-    expect(fixed).toContain(path.join(root, ".kilo", "worktrees", "partial", ".git"))
+    expect(fixed).toContain(path.join(root, ".tavern", "worktrees", "partial", ".git"))
   })
 })
 
@@ -1024,8 +1024,8 @@ describe("WorktreeManager.scanWorktrees", () => {
     const mgr = createManager(root)
 
     const live = await mgr.createWorktree({ prompt: "live" })
-    const leftover = path.join(root, ".kilo", "worktrees", "leftover")
-    await fs.mkdir(path.join(leftover, ".kilo-dev"), { recursive: true })
+    const leftover = path.join(root, ".tavern", "worktrees", "leftover")
+    await fs.mkdir(path.join(leftover, ".tavern-dev"), { recursive: true })
     const broken = await mgr.createWorktree({ prompt: "broken" })
     // Hand-deleted registration: directory intact, git metadata gone.
     await fs.rm(path.join(root, ".git", "worktrees", path.basename(broken.path)), {
@@ -1114,8 +1114,8 @@ describe("WorktreeManager.detachOrphanDirectory", () => {
   it("removes an untracked leftover directory", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
-    const leftover = path.join(root, ".kilo", "worktrees", "leftover")
-    await fs.mkdir(path.join(leftover, ".kilo-dev"), { recursive: true })
+    const leftover = path.join(root, ".tavern", "worktrees", "leftover")
+    await fs.mkdir(path.join(leftover, ".tavern-dev"), { recursive: true })
 
     const { done } = await mgr.detachOrphanDirectory(leftover)
     await done
@@ -1126,7 +1126,7 @@ describe("WorktreeManager.detachOrphanDirectory", () => {
   it("stages the directory instantly, before the background reap finishes", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
-    const leftover = path.join(root, ".kilo", "worktrees", "leftover")
+    const leftover = path.join(root, ".tavern", "worktrees", "leftover")
     await fs.mkdir(leftover, { recursive: true })
 
     const { done } = await mgr.detachOrphanDirectory(leftover)
@@ -1158,10 +1158,10 @@ describe("WorktreeManager.detachOrphanDirectory", () => {
   // delete, so an unanswerable `git worktree list` has to fail closed. Not a repository at all is the
   // simplest way to make the listing fail for real.
   it("refuses to remove anything while git cannot list worktrees", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-wt-nogit-"))
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-wt-nogit-"))
     tempDirs.push(root)
     const mgr = createManager(root)
-    const leftover = path.join(root, ".kilo", "worktrees", "leftover")
+    const leftover = path.join(root, ".tavern", "worktrees", "leftover")
     await fs.mkdir(leftover, { recursive: true })
 
     await expect(mgr.detachOrphanDirectory(leftover)).rejects.toThrow(/cannot list worktrees/)
@@ -1174,9 +1174,9 @@ describe("WorktreeManager.detachOrphanDirectory", () => {
   it("retries once when the original path reappears after the reap", async () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
-    const leftover = path.join(root, ".kilo", "worktrees", "leftover")
+    const leftover = path.join(root, ".tavern", "worktrees", "leftover")
     await fs.mkdir(leftover, { recursive: true })
-    const temp = path.join(root, ".kilo", "worktrees", ".kilo-delete-test")
+    const temp = path.join(root, ".tavern", "worktrees", ".tavern-delete-test")
     await fs.rename(leftover, temp)
     // Simulate a dev backend or the worktree pool recreating the directory while the reap of `temp`
     // was still in flight.
@@ -1202,8 +1202,8 @@ describe("WorktreeManager.ensureGitExclude", () => {
     await mgr.ensureGitExclude()
 
     const content = await fs.readFile(path.join(root, ".git", "info", "exclude"), "utf-8")
-    expect(content).toContain(".kilo/worktrees/")
-    expect(content).toContain(".kilo/agent-manager.json")
+    expect(content).toContain(".tavern/worktrees/")
+    expect(content).toContain(".tavern/agent-manager.json")
   })
 
   it("adds only specific legacy Agent Manager paths", async () => {
@@ -1213,10 +1213,10 @@ describe("WorktreeManager.ensureGitExclude", () => {
     await mgr.ensureGitExclude()
 
     const content = await fs.readFile(path.join(root, ".git", "info", "exclude"), "utf-8")
-    expect(content).toContain(".kilocode/worktrees/")
-    expect(content).toContain(".kilocode/agent-manager.json")
-    expect(content).toContain(".kilocode/setup-script")
-    expect(content).not.toContain("\n.kilocode/\n")
+    expect(content).toContain(".taverncode/worktrees/")
+    expect(content).toContain(".taverncode/agent-manager.json")
+    expect(content).toContain(".taverncode/setup-script")
+    expect(content).not.toContain("\n.taverncode/\n")
   })
 
   it("is idempotent -- does not duplicate entries", async () => {
@@ -1228,7 +1228,7 @@ describe("WorktreeManager.ensureGitExclude", () => {
     await mgr.ensureGitExclude()
 
     const content = await fs.readFile(path.join(root, ".git", "info", "exclude"), "utf-8")
-    const count = content.split(".kilo/worktrees/").length - 1
+    const count = content.split(".tavern/worktrees/").length - 1
     expect(count).toBe(1)
   })
 
@@ -1241,8 +1241,8 @@ describe("WorktreeManager.ensureGitExclude", () => {
     await mgr.ensureGitExclude()
 
     const content = await fs.readFile(path.join(root, ".git", "info", "exclude"), "utf-8")
-    expect(content).toContain("packages/app/.kilo/worktrees/")
-    expect(content).toContain("packages/app/.kilo/agent-manager.json")
+    expect(content).toContain("packages/app/.tavern/worktrees/")
+    expect(content).toContain("packages/app/.tavern/agent-manager.json")
   })
 
   it("keeps a subdirectory workspace clean after pool reconcile", async () => {
@@ -1255,7 +1255,7 @@ describe("WorktreeManager.ensureGitExclude", () => {
 
     const status = await simpleGit(root).raw(["status", "--porcelain", "--untracked-files=all"])
     expect(status.trim()).toBe("")
-    expect(existsSync(path.join(sub, ".kilo", "worktrees"))).toBe(false)
+    expect(existsSync(path.join(sub, ".tavern", "worktrees"))).toBe(false)
   })
 })
 
@@ -1383,7 +1383,7 @@ describe("WorktreeManager.removeWorktree safety", () => {
     const root = await createTempRepo()
     const mgr = createManager(root)
 
-    // Create a directory outside .kilo/worktrees/
+    // Create a directory outside .tavern/worktrees/
     const outside = path.join(root, "important-data")
     await fs.mkdir(outside, { recursive: true })
     await fs.writeFile(path.join(outside, "file.txt"), "precious")
@@ -1848,7 +1848,7 @@ describe("WorktreeManager.createWorktree advanced", () => {
     await expect(manager.createFromPR("https://github.com/org/repo/pull/1")).rejects.toThrow(
       'Could not resolve start point for branch "missing"',
     )
-    expect(existsSync(path.join(clone, ".kilo", "worktrees"))).toBe(false)
+    expect(existsSync(path.join(clone, ".tavern", "worktrees"))).toBe(false)
   })
 })
 

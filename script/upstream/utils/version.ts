@@ -122,7 +122,7 @@ export async function getAvailableUpstreamVersions(): Promise<VersionInfo[]> {
 }
 
 /**
- * Get current Kilo version from package.json
+ * Get current Tavern version from package.json
  */
 export async function getCurrentKiloVersion(): Promise<string> {
   // Resolve path relative to repo root (script is in script/upstream/)

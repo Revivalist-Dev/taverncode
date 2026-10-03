@@ -7,7 +7,7 @@ import {
   consumeRenameAdoption,
   markAutoTitle,
   markRenameAdopted,
-} from "../../../src/kilo-sessions/rename-adoptions"
+} from "../../../src/tavern-sessions/rename-adoptions"
 
 describe("rename-adoptions", () => {
   beforeEach(() => clearAll())

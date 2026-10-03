@@ -1,12 +1,12 @@
 import { Config } from "@/config/config"
 import { InstanceRef } from "@/effect/instance-ref"
-import { isInterrupted } from "@/kilocode/effect/cause"
-import * as KiloReference from "@/kilocode/reference"
+import { isInterrupted } from "@/taverncode/effect/cause"
+import * as KiloReference from "@/taverncode/reference"
 import { InstanceStore } from "@/project/instance-store"
 import { LocationServiceMap } from "@opencode-ai/core/location-services"
 import { Location } from "@opencode-ai/core/location"
-import { PluginV2 } from "@opencode-ai/core/plugin" // kilocode_change
-import { ReferenceReconciler } from "@opencode-ai/server/kilocode/reference-reconciler"
+import { PluginV2 } from "@opencode-ai/core/plugin" // taverncode_change
+import { ReferenceReconciler } from "@opencode-ai/server/taverncode/reference-reconciler"
 import { Effect, Layer } from "effect"
 
 const reconcile = Effect.gen(function* () {
@@ -16,7 +16,7 @@ const reconcile = Effect.gen(function* () {
     const location = yield* Location.Service
     const ctx = yield* store.load({ directory: location.directory })
     const cfg = yield* config.get().pipe(Effect.provideService(InstanceRef, ctx))
-    yield* (yield* PluginV2.Service).wait(PluginV2.ID.make("core/config-reference")) // kilocode_change
+    yield* (yield* PluginV2.Service).wait(PluginV2.ID.make("core/config-reference")) // taverncode_change
     yield* KiloReference.sync({
       references: cfg.references ?? cfg.reference ?? {},
       directory: ctx.directory,

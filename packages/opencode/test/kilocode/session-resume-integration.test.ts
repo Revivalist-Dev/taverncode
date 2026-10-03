@@ -42,11 +42,11 @@ import { Skill } from "../../src/skill"
 import { Snapshot } from "../../src/snapshot"
 import { ToolRegistry } from "../../src/tool/registry"
 import { Truncate } from "../../src/tool/truncate"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
-import { SessionResume } from "../../src/kilocode/session-resume"
-import { SessionResumeImport } from "../../src/kilocode/session-resume/import"
+import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
+import { SessionResume } from "../../src/taverncode/session-resume"
+import { SessionResumeImport } from "../../src/taverncode/session-resume/import"
 import { SessionID, MessageID, PartID } from "../../src/session/schema"
-import { MemoryService } from "@kilocode/kilo-memory/effect/service"
+import { MemoryService } from "@taverncode/tavern-memory/effect/service"
 import { provideTmpdirServer, TestInstance, disposeAllInstances } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 import { TestLLMServer } from "../lib/llm-server"
@@ -255,7 +255,7 @@ const writeText = Effect.fn("test.writeText")(function* (file: string, text: str
 const writeConfig = Effect.fn("test.writeConfig")(function* (dir: string, config: Partial<Config.Info>) {
   yield* writeText(
     path.join(dir, "opencode.json"),
-    JSON.stringify({ $schema: "https://app.kilo.ai/config.json", ...config }),
+    JSON.stringify({ $schema: "https://app.tavern.ai/config.json", ...config }),
   )
 })
 
@@ -538,7 +538,7 @@ it.instance(
       expect(Exit.isFailure(exit)).toBe(true)
       if (Exit.isFailure(exit)) {
         const msg = JSON.stringify(exit.cause)
-        expect(msg).toContain("new Kilo session")
+        expect(msg).toContain("new Tavern session")
       }
     }),
   { config: cfg },
@@ -1059,7 +1059,7 @@ it.instance(
 
 // ── SessionResumeImport.fromContent (shared endpoint logic) ───────────────
 //
-// The HTTP endpoint (POST /kilocode/migrate/sessions) passes raw JSONL content
+// The HTTP endpoint (POST /taverncode/migrate/sessions) passes raw JSONL content
 // straight to SessionResumeImport.fromContent. These tests exercise that shared
 // entry point directly — no file discovery, no slash command — since that is the
 // path every thin client (VS Code, CLI) uses through the server.
@@ -1147,7 +1147,7 @@ it.instance(
       const exit = yield* Effect.exit(SessionResumeImport.fromContent({ sessionID: chat.id, content, agent: "build" }))
       expect(Exit.isFailure(exit)).toBe(true)
       if (Exit.isFailure(exit)) {
-        expect(JSON.stringify(exit.cause)).toContain("new Kilo session")
+        expect(JSON.stringify(exit.cause)).toContain("new Tavern session")
       }
 
       const msgs = yield* sessions.messages({ sessionID: chat.id })
@@ -1250,7 +1250,7 @@ it.instance(
 
 // ── SessionResumeImport.discover (discovery endpoint logic) ───────────────
 //
-// The HTTP endpoint (POST /kilocode/migrate/sessions/discover) delegates to
+// The HTTP endpoint (POST /taverncode/migrate/sessions/discover) delegates to
 // SessionResumeImport.discover. These tests drive that shared entry point
 // directly with fixtures written under redirected discovery roots (via the
 // ResumeRoots test seam), the same seam the slash-command picker uses. Discovery
@@ -1394,8 +1394,8 @@ it.instance(
 
 // ── SessionResumeImport.migrate (migration endpoint logic) ────────────────
 //
-// The HTTP endpoint (POST /kilocode/migrate/sessions) delegates to
-// SessionResumeImport.migrate, which re-discovers server-side, creates one Kilo
+// The HTTP endpoint (POST /taverncode/migrate/sessions) delegates to
+// SessionResumeImport.migrate, which re-discovers server-side, creates one Tavern
 // session per transcript, and records the source on the created session so a
 // second call skips it. These tests drive it through the ResumeRoots seam.
 

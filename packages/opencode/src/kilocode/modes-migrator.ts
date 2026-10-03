@@ -6,10 +6,10 @@ import type { Config } from "../config/config"
 import type { ConfigAgentV1 } from "@opencode-ai/core/v1/config/agent"
 import { ConfigPermissionV1 as ConfigPermission } from "@opencode-ai/core/v1/config/permission"
 import { KilocodePaths } from "./paths"
-import type { OrganizationMode } from "@kilocode/kilo-gateway"
+import type { OrganizationMode } from "@taverncode/tavern-gateway"
 
 export namespace ModesMigrator {
-  // Kilocode mode structure
+  // Taverncode mode structure
   export interface KilocodeMode {
     slug: string
     name: string
@@ -167,11 +167,11 @@ export namespace ModesMigrator {
       allModes.push(...(await readModesFile(vscodeGlobalPath)))
 
       // 2. CLI global settings (fallback/alternative location)
-      const cliGlobalPath = path.join(os.homedir(), ".kilocode", "cli", "global", "settings", "custom_modes.yaml")
+      const cliGlobalPath = path.join(os.homedir(), ".taverncode", "cli", "global", "settings", "custom_modes.yaml")
       allModes.push(...(await readModesFile(cliGlobalPath)))
 
-      // 3. Home directory .kilocodemodes
-      const homeModesPath = path.join(os.homedir(), ".kilocodemodes")
+      // 3. Home directory .taverncodemodes
+      const homeModesPath = path.join(os.homedir(), ".taverncodemodes")
       if (homeModesPath !== options.projectDir) {
         allModes.push(...(await readModesFile(homeModesPath)))
       }
@@ -183,8 +183,8 @@ export namespace ModesMigrator {
       allModes.push(...(await readModesFile(legacyPath)))
     }
 
-    // 5. Project .kilocodemodes
-    const projectModesPath = path.join(options.projectDir, ".kilocodemodes")
+    // 5. Project .taverncodemodes
+    const projectModesPath = path.join(options.projectDir, ".taverncodemodes")
     allModes.push(...(await readModesFile(projectModesPath)))
 
     // Deduplicate by slug (later entries win)

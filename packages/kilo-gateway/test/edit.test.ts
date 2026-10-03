@@ -11,21 +11,21 @@ describe("Edit target resolution", () => {
   })
 
   test("does NOT route the FIM Mercury model to the edit endpoint", () => {
-    // `mercury-edit-2` (kind: fim) must fall through to the kilo placeholder,
+    // `mercury-edit-2` (kind: fim) must fall through to the tavern placeholder,
     // not the edit endpoint — only `mercury-next-edit` (kind: edit) is NES.
-    expect(resolveEditTarget("inception", "mercury-edit-2").provider).toBe("kilo")
+    expect(resolveEditTarget("inception", "mercury-edit-2").provider).toBe("tavern")
   })
 
-  test("routes the Kilo Gateway next-edit model to the gateway proxy", () => {
-    const target = resolveEditTarget("kilo", "inception/mercury-next-edit")
-    expect(target.provider).toBe("kilo")
+  test("routes the Tavern Gateway next-edit model to the gateway proxy", () => {
+    const target = resolveEditTarget("tavern", "inception/mercury-next-edit")
+    expect(target.provider).toBe("tavern")
     expect(target.model).toBe("inception/mercury-edit-2")
     expect(target.url).toMatch(/\/api\/edit\/completions$/)
   })
 
-  test("falls back to a kilo placeholder (no upstream) for non-edit models", () => {
-    expect(resolveEditTarget("kilo", "mistralai/codestral-2508")).toEqual({
-      provider: "kilo",
+  test("falls back to a tavern placeholder (no upstream) for non-edit models", () => {
+    expect(resolveEditTarget("tavern", "mistralai/codestral-2508")).toEqual({
+      provider: "tavern",
       model: "mistralai/codestral-2508",
       url: "",
     })
@@ -33,9 +33,9 @@ describe("Edit target resolution", () => {
 
   test("routes the default model to the gateway proxy", () => {
     expect(resolveEditTarget()).toEqual({
-      provider: "kilo",
+      provider: "tavern",
       model: "inception/mercury-edit-2",
-      url: "https://api.kilo.ai/api/edit/completions",
+      url: "https://api.tavern.ai/api/edit/completions",
     })
   })
 })

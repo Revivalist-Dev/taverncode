@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, spyOn, test } from "bun:test"
 import path from "path"
 import { Server } from "../../../src/server/server"
-import { CommitMessageRuntime } from "../../../src/kilocode/commit-message/generate"
+import { CommitMessageRuntime } from "../../../src/taverncode/commit-message/generate"
 import { resetDatabase } from "../../fixture/db"
 import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
 
@@ -16,7 +16,7 @@ describe("commit-message httpapi", () => {
 
     const res = await Server.Default().app.request("/commit-message", {
       method: "POST",
-      headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+      headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
       body: JSON.stringify({ path: tmp.path }),
     })
 
@@ -36,7 +36,7 @@ describe("commit-message httpapi", () => {
     try {
       const res = await Server.Default().app.request("/commit-message", {
         method: "POST",
-        headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+        headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
         body: JSON.stringify({ path: tmp.path }),
       })
 

@@ -1,11 +1,11 @@
 ---
 title: "Skills"
-description: "Extend Kilo Code capabilities with skills"
+description: "Extend Tavern Code capabilities with skills"
 ---
 
 # Skills
 
-Kilo Code implements [Agent Skills](https://agentskills.io/home), a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
+Tavern Code implements [Agent Skills](https://agentskills.io/home), a lightweight, open format for extending AI agent capabilities with specialized knowledge and workflows.
 
 ## What Are Agent Skills?
 
@@ -20,7 +20,7 @@ This approach keeps agents fast while giving them access to more context on dema
 - **Extensible**: Skills can range in complexity from simple text instructions to bundled scripts, templates, and reference materials
 - **Shareable**: Skills are portable and can be easily shared between projects and developers
 
-## How Skills Work in Kilo Code
+## How Skills Work in Tavern Code
 
 Skills can be:
 
@@ -29,7 +29,7 @@ Skills can be:
 
 The workflow is:
 
-1. **Discovery**: Skills are scanned from designated directories when Kilo Code initializes. Only the metadata (name, description, and file path) is read at this stage—not the full instructions.
+1. **Discovery**: Skills are scanned from designated directories when Tavern Code initializes. Only the metadata (name, description, and file path) is read at this stage—not the full instructions.
 2. **Prompt inclusion**: When a mode is active, the metadata for relevant skills is included in the system prompt. The agent sees a list of available skills with their descriptions.
 3. **On-demand loading**: When the agent determines that a task matches a skill's description, it reads the full `SKILL.md` file into context and follows the instructions.
 
@@ -47,20 +47,20 @@ This means:
 
 Skills are loaded from multiple locations, allowing both personal skills and project-specific instructions.
 
-To share personal skills across projects, install them at `~/.agents/skills/<name>/SKILL.md`. Kilo discovers this user-level directory by default, without a `skills.paths` entry or a plugin to register the skills. This does not register plugin hooks. Skills in this trusted user-level location can execute [embedded shell commands](/docs/customize/skills#shell-commands-in-skills) when invoked.
+To share personal skills across projects, install them at `~/.agents/skills/<name>/SKILL.md`. Tavern discovers this user-level directory by default, without a `skills.paths` entry or a plugin to register the skills. This does not register plugin hooks. Skills in this trusted user-level location can execute [embedded shell commands](/docs/customize/skills#shell-commands-in-skills) when invoked.
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 ### Global Skills (User-Level)
 
-Global skills are located in the `.kilo` directory within your Home directory:
+Global skills are located in the `.tavern` directory within your Home directory:
 
-- Mac and Linux: `~/.kilo/skills/`
-- Windows: `\Users\<yourUser>\.kilo\skills\`
+- Mac and Linux: `~/.tavern/skills/`
+- Windows: `\Users\<yourUser>\.tavern\skills\`
 
 ```
-~/.kilo/
+~/.tavern/
 └── skills/                    # Generic skills (all modes)
     ├── my-skill/
     │   └── SKILL.md
@@ -70,11 +70,11 @@ Global skills are located in the `.kilo` directory within your Home directory:
 
 ### Project Skills (Workspace-Level)
 
-Located in `.kilo/skills/` within your project:
+Located in `.tavern/skills/` within your project:
 
 ```
 your-project/
-└── .kilo/
+└── .tavern/
     └── skills/               # Generic skills for this project
         └── project-conventions/
             └── SKILL.md
@@ -82,14 +82,14 @@ your-project/
 
 ### Compatibility Directories
 
-For interoperability with other tools, Kilo Code also loads skills from:
+For interoperability with other tools, Tavern Code also loads skills from:
 
 - `~/.agents/skills/` and `.agents/skills/` - Open agent standard, loaded by default
 - `~/.claude/skills/` and `.claude/skills/` - Claude Code compatibility, loaded when Claude Code Compatibility is enabled
 
 ### Additional Skill Paths and Remote URLs
 
-You can configure extra skill locations and remote skill URLs in your `kilo.jsonc` config (project or global):
+You can configure extra skill locations and remote skill URLs in your `tavern.jsonc` config (project or global):
 
 ```jsonc
 {
@@ -102,7 +102,7 @@ You can configure extra skill locations and remote skill URLs in your `kilo.json
 
 The `skills.paths` key accepts absolute paths, `~/` home-relative paths, or paths relative to the project root. The `skills.urls` key accepts URLs to remote skill directories that serve an `index.json` manifest.
 
-A path that starts with `/` or `\` but has no drive letter, such as `/.github/skills`, is tried as an absolute path first. If that directory does not exist, Kilo resolves it relative to the project root instead, so `/.github/skills` and `.github/skills` load the same repository skills. Skills loaded through this fallback are treated as project skills.
+A path that starts with `/` or `\` but has no drive letter, such as `/.github/skills`, is tried as an absolute path first. If that directory does not exist, Tavern resolves it relative to the project root instead, so `/.github/skills` and `.github/skills` load the same repository skills. Skills loaded through this fallback are treated as project skills.
 
 The remote server must serve an `index.json` file at the URL path with the following structure:
 
@@ -121,20 +121,20 @@ Each skill object contains:
 
 Files are downloaded from `{url}/{skill-name}/{file}` paths.
 
-When you change a remote skill's contents or file list, also change its `version`. On the next skill rediscovery (`/reload` or a new session), Kilo downloads the complete new version before atomically replacing the cached directory. If any download fails, Kilo keeps the previous cached version.
+When you change a remote skill's contents or file list, also change its `version`. On the next skill rediscovery (`/reload` or a new session), Tavern downloads the complete new version before atomically replacing the cached directory. If any download fails, Tavern keeps the previous cached version.
 
 {% /tab %}
 {% tab label="CLI" %}
 
 ### Global Skills (User-Level)
 
-Global skills are located in the `.kilo` directory within your Home directory:
+Global skills are located in the `.tavern` directory within your Home directory:
 
-- Mac and Linux: `~/.kilo/skills/`
-- Windows: `\Users\<yourUser>\.kilo\skills\`
+- Mac and Linux: `~/.tavern/skills/`
+- Windows: `\Users\<yourUser>\.tavern\skills\`
 
 ```
-~/.kilo/
+~/.tavern/
 └── skills/                    # Generic skills (all modes)
     ├── my-skill/
     │   └── SKILL.md
@@ -144,11 +144,11 @@ Global skills are located in the `.kilo` directory within your Home directory:
 
 ### Project Skills (Workspace-Level)
 
-Located in `.kilo/skills/` within your project:
+Located in `.tavern/skills/` within your project:
 
 ```
 your-project/
-└── .kilo/
+└── .tavern/
     └── skills/               # Generic skills for this project
         └── project-conventions/
             └── SKILL.md
@@ -163,7 +163,7 @@ For interoperability with other tools, the CLI also loads skills from:
 
 ### Additional Skill Paths and Remote URLs
 
-You can configure extra skill locations and remote skill URLs in your `kilo.jsonc` config (project or global):
+You can configure extra skill locations and remote skill URLs in your `tavern.jsonc` config (project or global):
 
 ```jsonc
 {
@@ -176,7 +176,7 @@ You can configure extra skill locations and remote skill URLs in your `kilo.json
 
 The `skills.paths` key accepts absolute paths, `~/` home-relative paths, or paths relative to the project root. The `skills.urls` key accepts URLs to remote skill directories that serve an `index.json` manifest.
 
-A path that starts with `/` or `\` but has no drive letter, such as `/.github/skills`, is tried as an absolute path first. If that directory does not exist, Kilo resolves it relative to the project root instead, so `/.github/skills` and `.github/skills` load the same repository skills. Skills loaded through this fallback are treated as project skills.
+A path that starts with `/` or `\` but has no drive letter, such as `/.github/skills`, is tried as an absolute path first. If that directory does not exist, Tavern resolves it relative to the project root instead, so `/.github/skills` and `.github/skills` load the same repository skills. Skills loaded through this fallback are treated as project skills.
 
 The remote server must serve an `index.json` file at the URL path with the following structure:
 
@@ -195,13 +195,13 @@ Each skill object contains:
 
 Files are downloaded from `{url}/{skill-name}/{file}` paths.
 
-When you change a remote skill's contents or file list, also change its `version`. On the next skill rediscovery (`/reload` or a new session), Kilo downloads the complete new version before atomically replacing the cached directory. If any download fails, Kilo keeps the previous cached version.
+When you change a remote skill's contents or file list, also change its `version`. On the next skill rediscovery (`/reload` or a new session), Tavern downloads the complete new version before atomically replacing the cached directory. If any download fails, Tavern keeps the previous cached version.
 
 {% /tab %}
 {% /tabs %}
 
 {% callout type="warning" title="External skill paths" %}
-To load skills from outside the project, declare their `skills.paths` entries in your user-level config, such as `~/.config/kilo/kilo.jsonc`.
+To load skills from outside the project, declare their `skills.paths` entries in your user-level config, such as `~/.config/tavern/tavern.jsonc`.
 
 Paths declared only in project config remain untrusted. Their `SKILL.md` files and `{file:...}` references must stay inside the project, even if the configured path is absolute or starts with `~/`. External files fail to load with `blocked file reference outside project config scope`. Granting `external_directory` permission does not make these skill paths trusted.
 {% /callout %}
@@ -230,14 +230,14 @@ If you need a skill to only apply in certain situations, write a clear and speci
 {% tabs %}
 {% tab label="VSCode" %}
 
-When multiple skills share the same name, project-level skills (`.kilo/skills/`) take precedence over global skills (`~/.kilo/skills/`). Skills from compatibility directories (`.claude/skills/`, `.agents/skills/`) and additional configured paths are loaded alongside project and global skills.
+When multiple skills share the same name, project-level skills (`.tavern/skills/`) take precedence over global skills (`~/.tavern/skills/`). Skills from compatibility directories (`.claude/skills/`, `.agents/skills/`) and additional configured paths are loaded alongside project and global skills.
 
 Every loaded skill is also available as a slash command. The `/` menu lists skills in a separate **Skills** group. When a skill shares its name with a custom command or MCP prompt, the command keeps `/name` and the skill is listed as `/name:skill`, so both stay reachable.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-When multiple skills share the same name, project-level skills (`.kilo/skills/`) take precedence over global skills (`~/.kilo/skills/`). Skills from compatibility directories (`.claude/skills/`, `.agents/skills/`) and additional configured paths are loaded alongside project and global skills.
+When multiple skills share the same name, project-level skills (`.tavern/skills/`) take precedence over global skills (`~/.tavern/skills/`). Skills from compatibility directories (`.claude/skills/`, `.agents/skills/`) and additional configured paths are loaded alongside project and global skills.
 
 Every loaded skill is also available as a slash command. When a skill shares its name with a custom command or MCP prompt, the command keeps `/name` and the skill is offered as `/name:skill` in autocomplete, so both stay reachable.
 
@@ -251,7 +251,7 @@ Every loaded skill is also available as a slash command. When a skill shares its
 
 Skills are discovered when a session starts. The CLI scans all configured skill directories and reads metadata (name, description, file path) for each skill.
 
-- In the **CLI**: Skills are loaded when you start a new session or run `kilo run`
+- In the **CLI**: Skills are loaded when you start a new session or run `tavern run`
 - In the **VS Code extension**: Skills are loaded when the extension connects to the CLI server
 
 Skills are re-scanned at the start of each new session. To pick up newly added or modified skills without starting a new session, use `/reload`.
@@ -261,7 +261,7 @@ Skills are re-scanned at the start of each new session. To pick up newly added o
 
 Skills are discovered when a session starts. The CLI scans all configured skill directories and reads metadata (name, description, file path) for each skill.
 
-- In the **CLI**: Skills are loaded when you start a new session or run `kilo run`
+- In the **CLI**: Skills are loaded when you start a new session or run `tavern run`
 - In the **VS Code extension**: Skills are loaded when the extension connects to the CLI server
 
 Skills are re-scanned at the start of each new session. To pick up newly added or modified skills without starting a new session, use `/reload`.
@@ -326,7 +326,7 @@ metadata:
 
 ### Name Matching Rule
 
-In Kilo Code, the `name` field **must match** the parent directory name:
+In Tavern Code, the `name` field **must match** the parent directory name:
 
 ```
 ✅ Correct:
@@ -371,7 +371,7 @@ The working tree currently contains:
 
 Because the agent decides when to load a skill, embedded commands never run silently:
 
-- **Trusted skills only** — commands execute only in skills from trusted locations: global skills (such as `~/.kilo/skills/`, `~/.agents/skills/`, and `~/.claude/skills/`), skills built into Kilo Code, and absolute skill paths declared in global config. Project skills (`.kilo/skills/` in a repository) and skills fetched from remote URLs never execute commands; their placeholders are replaced with a marker noting the skill is untrusted.
+- **Trusted skills only** — commands execute only in skills from trusted locations: global skills (such as `~/.tavern/skills/`, `~/.agents/skills/`, and `~/.claude/skills/`), skills built into Tavern Code, and absolute skill paths declared in global config. Project skills (`.tavern/skills/` in a repository) and skills fetched from remote URLs never execute commands; their placeholders are replaced with a marker noting the skill is untrusted.
 - **Approval required** — when the agent loads a trusted skill containing commands, every command in the file is listed in a single permission prompt before anything runs. Approving runs all of them; rejecting aborts the skill load. This prompt appears even when bash commands are otherwise auto-approved, and a deny rule on any command still blocks it.
 - **Kill switch** — set the `KILO_DISABLE_SKILL_SHELL` environment variable to disable embedded command execution entirely.
 
@@ -385,7 +385,7 @@ Commands run in the project directory with a per-command timeout, and output is 
 1. Create the skill directory:
 
    ```bash
-   mkdir -p ~/.kilo/skills/api-design
+   mkdir -p ~/.tavern/skills/api-design
    ```
 
 2. Create `SKILL.md` (see content below)
@@ -398,7 +398,7 @@ Commands run in the project directory with a per-command timeout, and output is 
 1. Create the skill directory:
 
    ```bash
-   mkdir -p ~/.kilo/skills/api-design
+   mkdir -p ~/.tavern/skills/api-design
    ```
 
 2. Create `SKILL.md` (see content below)
@@ -450,7 +450,7 @@ When designing REST APIs, follow these conventions:
 
 The new platform does not have a marketplace UI yet. You can find and share skills through:
 
-- **[Kilo Marketplace repository](https://github.com/Kilo-Org/kilo-marketplace)** — Browse community skills on GitHub and manually download them into your skills directory
+- **[Tavern Marketplace repository](https://github.com/Kilo-Org/tavern-marketplace)** — Browse community skills on GitHub and manually download them into your skills directory
 - **[Agent Skills Specification](https://agentskills.io/home)** — The open specification that skills follow, enabling interoperability across different AI agents
 - **Remote URLs** — Use the `skills.urls` config key to load skills directly from URLs without manually downloading them
 
@@ -459,7 +459,7 @@ The new platform does not have a marketplace UI yet. You can find and share skil
 
 The new platform does not have a marketplace UI yet. You can find and share skills through:
 
-- **[Kilo Marketplace repository](https://github.com/Kilo-Org/kilo-marketplace)** — Browse community skills on GitHub and manually download them into your skills directory
+- **[Tavern Marketplace repository](https://github.com/Kilo-Org/tavern-marketplace)** — Browse community skills on GitHub and manually download them into your skills directory
 - **[Agent Skills Specification](https://agentskills.io/home)** — The open specification that skills follow, enabling interoperability across different AI agents
 - **Remote URLs** — Use the `skills.urls` config key to load skills directly from URLs without manually downloading them
 
@@ -477,9 +477,9 @@ The new platform does not have a marketplace UI yet. You can find and share skil
 
 2. **Reload or start a new session**: Use `/reload` to pick up changes without losing your current session, or start a new session.
 
-3. **Check file location**: Ensure `SKILL.md` is directly inside the skill directory (e.g., `.kilo/skills/my-skill/SKILL.md`), not nested further.
+3. **Check file location**: Ensure `SKILL.md` is directly inside the skill directory (e.g., `.tavern/skills/my-skill/SKILL.md`), not nested further.
 
-4. **Check config paths**: If using `skills.paths` or `skills.urls`, verify the paths and URLs are correct in your `kilo.jsonc`.
+4. **Check config paths**: If using `skills.paths` or `skills.urls`, verify the paths and URLs are correct in your `tavern.jsonc`.
 
 {% /tab %}
 {% tab label="CLI" %}
@@ -488,9 +488,9 @@ The new platform does not have a marketplace UI yet. You can find and share skil
 
 2. **Reload or start a new session**: Use `/reload` to pick up changes without losing your current session, or start a new session.
 
-3. **Check file location**: Ensure `SKILL.md` is directly inside the skill directory (e.g., `.kilo/skills/my-skill/SKILL.md`), not nested further.
+3. **Check file location**: Ensure `SKILL.md` is directly inside the skill directory (e.g., `.tavern/skills/my-skill/SKILL.md`), not nested further.
 
-4. **Check config paths**: If using `skills.paths` or `skills.urls`, verify the paths and URLs are correct in your `kilo.jsonc`.
+4. **Check config paths**: If using `skills.paths` or `skills.urls`, verify the paths and URLs are correct in your `tavern.jsonc`.
 
 {% /tab %}
 {% /tabs %}
@@ -532,17 +532,17 @@ When the agent uses a skill, it invokes the `skill` tool with the skill's name. 
 
 ## Contributing to the Marketplace
 
-Have you created a skill that others might find useful? Share it with the community by contributing to the [Kilo Marketplace](https://github.com/Kilo-Org/kilo-marketplace)!
+Have you created a skill that others might find useful? Share it with the community by contributing to the [Tavern Marketplace](https://github.com/Kilo-Org/tavern-marketplace)!
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-While the new platform does not yet have a built-in marketplace UI, skills from the [Kilo Marketplace repository](https://github.com/Kilo-Org/kilo-marketplace) can be manually downloaded into your `.kilo/skills/` directory or loaded via `skills.urls` in config.
+While the new platform does not yet have a built-in marketplace UI, skills from the [Tavern Marketplace repository](https://github.com/Kilo-Org/tavern-marketplace) can be manually downloaded into your `.tavern/skills/` directory or loaded via `skills.urls` in config.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-While the new platform does not yet have a built-in marketplace UI, skills from the [Kilo Marketplace repository](https://github.com/Kilo-Org/kilo-marketplace) can be manually downloaded into your `.kilo/skills/` directory or loaded via `skills.urls` in config.
+While the new platform does not yet have a built-in marketplace UI, skills from the [Tavern Marketplace repository](https://github.com/Kilo-Org/tavern-marketplace) can be manually downloaded into your `.tavern/skills/` directory or loaded via `skills.urls` in config.
 
 {% /tab %}
 {% /tabs %}
@@ -551,7 +551,7 @@ While the new platform does not yet have a built-in marketplace UI, skills from 
 
 1. **Prepare your skill**: Ensure your skill directory contains a valid `SKILL.md` file with proper frontmatter
 2. **Test thoroughly**: Verify your skill works correctly across different scenarios and modes
-3. **Fork the marketplace repository**: Visit [github.com/Kilo-Org/kilo-marketplace](https://github.com/Kilo-Org/kilo-marketplace) and create a fork
+3. **Fork the marketplace repository**: Visit [github.com/Kilo-Org/tavern-marketplace](https://github.com/Kilo-Org/tavern-marketplace) and create a fork
 4. **Add your skill**: Place your skill directory in the appropriate location following the repository's structure
 5. **Submit a pull request**: Create a PR with a clear description of what your skill does and when it's useful
 
@@ -561,9 +561,9 @@ While the new platform does not yet have a built-in marketplace UI, skills from 
 - Include a clear `name` and `description` in the frontmatter
 - Document any dependencies or requirements (scripts, external tools, etc.)
 - If your skill includes bundled resources (scripts, templates), ensure they are well-documented
-- Follow the [contribution guidelines](https://github.com/Kilo-Org/kilo-marketplace/blob/main/CONTRIBUTING.md) in the marketplace repository
+- Follow the [contribution guidelines](https://github.com/Kilo-Org/tavern-marketplace/blob/main/CONTRIBUTING.md) in the marketplace repository
 
-For more details on contributing to Kilo Code, see the [Contributing Guide](/docs/contributing).
+For more details on contributing to Tavern Code, see the [Contributing Guide](/docs/contributing).
 
 ## Related
 

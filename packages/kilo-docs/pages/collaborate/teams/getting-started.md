@@ -1,11 +1,11 @@
 ---
 title: "Getting Started with Teams"
-description: "Set up your Kilo Code team account"
+description: "Set up your Tavern Code team account"
 ---
 
-# Get Started with Kilo Seats in 10 Minutes
+# Get Started with Tavern Seats in 10 Minutes
 
-Seats for Kilo in the Teams or Enterprise subscription bring transparent AI coding to your entire engineering organization. Model inference is charged at provider rates with no markup, while credit purchases have a separate 5% payment-processing fee.
+Seats for Tavern in the Teams or Enterprise subscription bring transparent AI coding to your entire engineering organization. Model inference is charged at provider rates with no markup, while credit purchases have a separate 5% payment-processing fee.
 
 ## Before You Begin
 
@@ -18,7 +18,7 @@ Seats for Kilo in the Teams or Enterprise subscription bring transparent AI codi
 
 ### Step 1: Create Your Organization
 
-1. Visit [app.kilo.ai](https://app.kilo.ai)
+1. Visit [app.tavern.ai](https://app.tavern.ai)
 2. Sign up using your company Google Workspaces or GitHub account
    - Note: We recommend starting with your GitHub account rather than a personal Google account, but we can change it later.
 3. Click **Organizations** in the left sidebar and then **Create New Organization**
@@ -50,7 +50,7 @@ Seats for Kilo in the Teams or Enterprise subscription bring transparent AI codi
 Team members receive invitation emails with these steps:
 
 1. Accept the team invitation
-2. Install Kilo Code from [VS Code Marketplace](vscode:extension/kilocode.kilo-code)
+2. Install Tavern Code from [VS Code Marketplace](vscode:extension/taverncode.tavern-code)
 3. Sign in with their invited email
 4. Start coding with AI assistance
 

@@ -1,8 +1,8 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { RGBA } from "@opentui/core"
 import { For, type JSX } from "solid-js"
 import { useTheme, tint } from "@tui/context/theme"
-import { tui } from "@/kilocode/cli/logo"
+import { tui } from "@/taverncode/cli/logo"
 
 // Shadow markers (rendered chars in parens):
 // _ = full shadow cell (space with bg=shadow)

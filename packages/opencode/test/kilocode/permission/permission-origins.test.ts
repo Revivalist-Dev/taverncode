@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 // Verifies that Config.permission_origins attributes each permission key to the scope
 // (global XDG vs local project) that last set it, which drives auto-approval provenance.
 
@@ -46,9 +46,9 @@ const testLayer = AppNodeBuilder.build(Config.node, [
 test("project config permission keys are attributed to the local scope", async () => {
   await using tmp = await tmpdir()
   const dir = path.join(tmp.path, "a")
-  const kilo = path.join(dir, ".kilo")
-  await fs.mkdir(kilo, { recursive: true })
-  await Bun.write(path.join(kilo, "kilo.json"), JSON.stringify({ permission: { bash: { "echo *": "allow" } } }))
+  const tavern = path.join(dir, ".tavern")
+  await fs.mkdir(tavern, { recursive: true })
+  await Bun.write(path.join(tavern, "tavern.json"), JSON.stringify({ permission: { bash: { "echo *": "allow" } } }))
 
   await provideTestInstance({
     directory: dir,
@@ -65,9 +65,9 @@ test("project config permission keys are attributed to the local scope", async (
 test("a scalar project bash permission maps to the '*' pattern under the local scope", async () => {
   await using tmp = await tmpdir()
   const dir = path.join(tmp.path, "a")
-  const kilo = path.join(dir, ".kilo")
-  await fs.mkdir(kilo, { recursive: true })
-  await Bun.write(path.join(kilo, "kilo.json"), JSON.stringify({ permission: { bash: "allow" } }))
+  const tavern = path.join(dir, ".tavern")
+  await fs.mkdir(tavern, { recursive: true })
+  await Bun.write(path.join(tavern, "tavern.json"), JSON.stringify({ permission: { bash: "allow" } }))
 
   await provideTestInstance({
     directory: dir,

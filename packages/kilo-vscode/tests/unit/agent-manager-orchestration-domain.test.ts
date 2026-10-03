@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test"
 import * as fs from "fs"
 import * as os from "os"
 import * as path from "path"
-import type { KiloClient, QuestionRequest, Session } from "@kilocode/sdk/v2/client"
+import type { KiloClient, QuestionRequest, Session } from "@taverncode/sdk/v2/client"
 import { OrchestrationError, answer, move, overview, prompt } from "../../src/agent-manager/orchestration-domain"
 import { WorktreeStateManager } from "../../src/agent-manager/WorktreeStateManager"
 import { ProjectContext } from "../../src/agent-manager/project/context"
@@ -21,7 +21,7 @@ describe("Agent Manager orchestration domain", () => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), "am-orchestration-"))
     worktree = path.join(root, "worktree")
     sectioned = path.join(root, "sectioned")
-    fs.mkdirSync(path.join(root, ".kilo"), { recursive: true })
+    fs.mkdirSync(path.join(root, ".tavern"), { recursive: true })
     fs.mkdirSync(worktree)
     fs.mkdirSync(sectioned)
     state = new WorktreeStateManager(root, () => undefined)

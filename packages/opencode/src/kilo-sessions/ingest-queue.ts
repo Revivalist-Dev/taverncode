@@ -1,6 +1,6 @@
 import { ulid } from "ulid"
-import type * as SDK from "@kilocode/sdk/v2"
-import type { KiloSession } from "@/kilocode/session"
+import type * as SDK from "@taverncode/sdk/v2"
+import type { KiloSession } from "@/taverncode/session"
 
 export namespace IngestQueue {
   export type Client = {

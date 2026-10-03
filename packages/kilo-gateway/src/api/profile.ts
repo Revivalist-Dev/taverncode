@@ -3,7 +3,7 @@ import type { KilocodeProfile, Organization, KilocodeBalance } from "../types.js
 import { KILO_API_BASE, DEFAULT_MODEL, DEFAULT_FREE_MODEL } from "./constants.js"
 
 /**
- * Fetch user profile from Kilo API
+ * Fetch user profile from Tavern API
  */
 export async function fetchProfile(token: string): Promise<KilocodeProfile> {
   const response = await fetch(`${KILO_API_BASE}/api/profile`, {
@@ -60,7 +60,7 @@ export function defaultOrganizationId(profile: KilocodeProfile): string | undefi
 }
 
 /**
- * Fetch user balance from Kilo API
+ * Fetch user balance from Tavern API
  * @param token - Authentication token
  * @param organizationId - Optional organization ID for team balance
  */
@@ -75,7 +75,7 @@ export async function fetchBalance(
       "Content-Type": "application/json",
     }
     if (organizationId) {
-      headers["x-kilocode-organizationid"] = organizationId
+      headers["x-taverncode-organizationid"] = organizationId
     }
 
     const response = await fetch(`${KILO_API_BASE}/api/profile/balance`, { headers })

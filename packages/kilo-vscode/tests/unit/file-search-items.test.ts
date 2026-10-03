@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { mergeFileSearchItems } from "../../src/kilo-provider/file-search-items"
+import { mergeFileSearchItems } from "../../src/tavern-provider/file-search-items"
 
 describe("mergeFileSearchItems", () => {
   it("puts exact folder matches before file matches", () => {
@@ -57,25 +57,25 @@ describe("mergeFileSearchItems", () => {
 
   it("normalizes Windows separators for matching and output", () => {
     const result = mergeFileSearchItems({
-      query: "kilo-vscode",
-      files: ["packages\\kilo-vscode\\src\\KiloProvider.ts"],
-      folders: ["packages\\kilo-vscode\\"],
+      query: "tavern-vscode",
+      files: ["packages\\tavern-vscode\\src\\KiloProvider.ts"],
+      folders: ["packages\\tavern-vscode\\"],
     })
     expect(result).toEqual([
-      { path: "packages/kilo-vscode/", type: "folder" },
-      { path: "packages/kilo-vscode/src/KiloProvider.ts", type: "file" },
+      { path: "packages/tavern-vscode/", type: "folder" },
+      { path: "packages/tavern-vscode/src/KiloProvider.ts", type: "file" },
     ])
   })
 
   it("keeps active and open file results before prefix folder matches", () => {
     const result = mergeFileSearchItems({
       query: "e",
-      files: ["packages/kilo-vscode/src/extension.ts"],
+      files: ["packages/tavern-vscode/src/extension.ts"],
       folders: ["packages/extensions/", "packages/example/", "packages/core/src/effect/"],
-      open: new Set(["packages/kilo-vscode/src/extension.ts"]),
+      open: new Set(["packages/tavern-vscode/src/extension.ts"]),
     })
     expect(result).toEqual([
-      { path: "packages/kilo-vscode/src/extension.ts", type: "opened-file" },
+      { path: "packages/tavern-vscode/src/extension.ts", type: "opened-file" },
       { path: "packages/extensions/", type: "folder" },
       { path: "packages/example/", type: "folder" },
       { path: "packages/core/src/effect/", type: "folder" },

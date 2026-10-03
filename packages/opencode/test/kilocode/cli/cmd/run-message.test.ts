@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
-import { KiloRun } from "../../../../src/kilocode/cli/cmd/run"
-import { buildRunMessage } from "../../../../src/kilocode/cli/cmd/run-message"
+import { KiloRun } from "../../../../src/taverncode/cli/cmd/run"
+import { buildRunMessage } from "../../../../src/taverncode/cli/cmd/run-message"
 
 describe("KiloRun", () => {
   test("prefers a configured command over an endpoint-backed built-in", async () => {
@@ -68,7 +68,7 @@ describe("buildRunMessage", () => {
   })
 
   test("passes args['--'] through verbatim without wrap-quote (#9622)", () => {
-    // `kilo run -- "- Who are you?"` - yargs+populate-- captures the leading-dash
+    // `tavern run -- "- Who are you?"` - yargs+populate-- captures the leading-dash
     // phrase as a single atom in args["--"]. The assembler must NOT wrap it,
     // because the user typed `--` precisely to opt out of further parsing.
     expect(buildRunMessage([], ["- Who are you?"])).toBe("- Who are you?")

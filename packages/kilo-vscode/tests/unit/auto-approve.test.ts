@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test"
 import * as vscode from "vscode"
 import { registerToggleAutoApprove, type AutoApproveController } from "../../src/commands/toggle-auto-approve"
-import { createAutoApproveBridge } from "../../src/kilo-provider/auto-approve"
-import type { Event, KiloClient } from "@kilocode/sdk/v2/client"
+import { createAutoApproveBridge } from "../../src/tavern-provider/auto-approve"
+import type { Event, KiloClient } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
 
 type ConfigEvent = { affectsConfiguration(key: string): boolean }
@@ -69,7 +69,7 @@ function config(initial: boolean, info: Record<string, unknown> = {}) {
     set active(value: boolean) {
       state.active = value
     },
-    emit(key = "kilo-code.new.autoApprove.enabled") {
+    emit(key = "tavern-code.new.autoApprove.enabled") {
       for (const handler of handlers) handler({ affectsConfiguration: (name) => name === key })
     },
   }
@@ -157,12 +157,12 @@ describe("registerToggleAutoApprove", () => {
       () => ["/workspace"],
     )
 
-    await ctrl.approve(asked("perm_worktree", "ses_worktree"), "/workspace/.kilo/worktrees/feature")
-    await ctrl.approve(asked("perm_child", "ses_child"), "/workspace/.kilo/worktrees/feature")
+    await ctrl.approve(asked("perm_worktree", "ses_worktree"), "/workspace/.tavern/worktrees/feature")
+    await ctrl.approve(asked("perm_child", "ses_child"), "/workspace/.tavern/worktrees/feature")
 
     expect(replies).toEqual([
-      { requestID: "perm_worktree", directory: "/workspace/.kilo/worktrees/feature", reply: "once" },
-      { requestID: "perm_child", directory: "/workspace/.kilo/worktrees/feature", reply: "once" },
+      { requestID: "perm_worktree", directory: "/workspace/.tavern/worktrees/feature", reply: "once" },
+      { requestID: "perm_child", directory: "/workspace/.tavern/worktrees/feature", reply: "once" },
     ])
   })
 
@@ -171,7 +171,7 @@ describe("registerToggleAutoApprove", () => {
     const replies: unknown[] = []
     const conn = connection(
       client({ reply: async (args) => replies.push(args) }),
-      new Map([["perm_shared", "/workspace/.kilo/worktrees/shared"]]),
+      new Map([["perm_shared", "/workspace/.tavern/worktrees/shared"]]),
     )
     const ctrl = registerToggleAutoApprove(
       context(),
@@ -183,7 +183,7 @@ describe("registerToggleAutoApprove", () => {
     await ctrl.approve(asked("perm_shared", "ses_child"))
 
     expect(replies).toEqual([
-      { requestID: "perm_shared", directory: "/workspace/.kilo/worktrees/shared", reply: "once" },
+      { requestID: "perm_shared", directory: "/workspace/.tavern/worktrees/shared", reply: "once" },
     ])
   })
 

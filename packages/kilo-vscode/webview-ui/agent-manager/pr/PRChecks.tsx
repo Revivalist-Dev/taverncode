@@ -1,9 +1,9 @@
 /** @jsxImportSource solid-js */
 import { For, Show, createMemo, createSignal } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import type { PRStatus } from "../../src/types/messages"
 import type { PRCheck, CheckStatus } from "./pr-types"
 import type { CheckBucket } from "./pr-check-groups"

@@ -6,7 +6,7 @@ import {
   getCloudSessions,
   getOrganizationId,
   getToken,
-} from "@kilocode/kilo-gateway"
+} from "@taverncode/tavern-gateway"
 import {
   HEADER_FEATURE,
   KILO_API_BASE,
@@ -16,11 +16,11 @@ import {
   fetchKiloPassState,
   fetchOrganizationModes,
   fetchProfile,
-} from "@kilocode/kilo-gateway"
-import { DIRECT_FIM_ENV, requestMistralFim, resolveFimTarget } from "@kilocode/kilo-gateway/fim"
-import { DIRECT_EDIT_ENV, extractFencedBody, resolveEditTarget } from "@kilocode/kilo-gateway/edit"
-import { buildMercuryEditPrompt } from "@kilocode/kilo-gateway/edit-prompt"
-import { buildKiloHeaders } from "@kilocode/kilo-gateway"
+} from "@taverncode/tavern-gateway"
+import { DIRECT_FIM_ENV, requestMistralFim, resolveFimTarget } from "@taverncode/tavern-gateway/fim"
+import { DIRECT_EDIT_ENV, extractFencedBody, resolveEditTarget } from "@taverncode/tavern-gateway/edit"
+import { buildMercuryEditPrompt } from "@taverncode/tavern-gateway/edit-prompt"
+import { buildKiloHeaders } from "@taverncode/tavern-gateway"
 import { Effect, Schema } from "effect"
 import * as Stream from "effect/Stream"
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
@@ -28,21 +28,21 @@ import { HttpApiBuilder, HttpApiError } from "effect/unstable/httpapi"
 import * as Log from "@opencode-ai/core/util/log"
 import { Flag } from "@opencode-ai/core/flag/flag"
 import { Database } from "@opencode-ai/core/database/database"
-import { KilocodeConfig } from "@/kilocode/config/config"
-import { ClaudeMigration } from "@/kilocode/config/claude-migration"
+import { KilocodeConfig } from "@/taverncode/config/config"
+import { ClaudeMigration } from "@/taverncode/config/claude-migration"
 import { Auth } from "@/auth"
 import { Config } from "@/config/config"
-import { organization as catalogOrganization } from "@/kilocode/provider/catalog"
+import { organization as catalogOrganization } from "@/taverncode/provider/catalog"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Storage } from "@/storage/storage"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { InstanceStore } from "@/project/instance-store"
 import { ModelCache } from "@/provider/model-cache"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
-import { AudioTranscriptionsBody, CloudSessionImportError, EditBody, FimBody } from "../groups/kilo-gateway"
+import { AudioTranscriptionsBody, CloudSessionImportError, EditBody, FimBody } from "../groups/tavern-gateway"
 
 const FIM_TIMEOUT_MS = 30_000
-const log = Log.create({ service: "kilo-gateway" })
+const log = Log.create({ service: "tavern-gateway" })
 
 function jsonError(error: string, status: number) {
   return HttpServerResponse.jsonUnsafe({ error }, { status })
@@ -52,7 +52,7 @@ function logError(route: string, err: unknown) {
   log.error("unhandled error", { route, err })
 }
 
-export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo", (handlers) =>
+export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "tavern", (handlers) =>
   Effect.gen(function* () {
     const auth = yield* Auth.Service
     const config = yield* Config.Service
@@ -63,7 +63,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
     const storage = yield* Storage.Service
 
     const profile = Effect.fn("KiloGatewayHttpApi.profile")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       if (!info || info.type !== "oauth") return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const currentOrgId = info.accountId ?? null
@@ -80,9 +80,9 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
     })
 
     const authStatus = Effect.fn("KiloGatewayHttpApi.authStatus")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       const cfg = yield* config.get()
-      const organizationId = catalogOrganization(cfg.provider?.kilo?.options, info)
+      const organizationId = catalogOrganization(cfg.provider?.tavern?.options, info)
       const type = getToken(info) && (info?.type === "api" || info?.type === "oauth") ? info.type : undefined
       return {
         authenticated: !!type,
@@ -92,7 +92,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
     })
 
     const proxyAuth = Effect.fn("KiloGatewayHttpApi.proxyAuth")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       return {
         auth: info,
         token: getToken(info),
@@ -101,7 +101,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
     })
 
     const modes = Effect.fn("KiloGatewayHttpApi.modes")(function* () {
-      const info = yield* auth.get("kilo").pipe(Effect.catch(() => Effect.succeed(undefined)))
+      const info = yield* auth.get("tavern").pipe(Effect.catch(() => Effect.succeed(undefined)))
       if (!info || info.type !== "oauth" || !info.access || !info.accountId) return { modes: [] }
 
       const org = info.accountId
@@ -113,15 +113,15 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
 
     const fim = Effect.fn("KiloGatewayHttpApi.fim")(function* (ctx: { payload: typeof FimBody.Type }) {
       const target = resolveFimTarget(ctx.payload.provider, ctx.payload.model)
-      const info = target.provider === "kilo" ? yield* proxyAuth() : undefined
+      const info = target.provider === "tavern" ? yield* proxyAuth() : undefined
       const token = yield* Effect.gen(function* () {
-        if (target.provider === "kilo") return info?.token
+        if (target.provider === "tavern") return info?.token
         const item = yield* auth.get(target.provider).pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
         if (item?.type === "api") return item.key
         return DIRECT_FIM_ENV[target.provider].map((key) => process.env[key]).find(Boolean)
       })
 
-      if (target.provider === "kilo" && !info?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
+      if (target.provider === "tavern" && !info?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const request = yield* HttpServerRequest.HttpServerRequest
@@ -138,10 +138,10 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
-                ...(target.provider === "kilo"
-                  ? buildKiloHeaders(undefined, { kilocodeOrganizationId: info?.organizationId })
+                ...(target.provider === "tavern"
+                  ? buildKiloHeaders(undefined, { taverncodeOrganizationId: info?.organizationId })
                   : {}),
-                ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+                ...(target.provider === "tavern" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
               },
               signal,
               body: JSON.stringify({
@@ -189,17 +189,17 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
 
     const edit = Effect.fn("KiloGatewayHttpApi.edit")(function* (ctx: { payload: typeof EditBody.Type }) {
       const target = resolveEditTarget(ctx.payload.provider, ctx.payload.model)
-      if (target.provider === "kilo" && !target.url) {
+      if (target.provider === "tavern" && !target.url) {
         return yield* Effect.fail(new HttpApiError.BadRequest({}))
       }
-      const proxy = target.provider === "kilo" ? yield* proxyAuth() : undefined
+      const proxy = target.provider === "tavern" ? yield* proxyAuth() : undefined
       const token = yield* Effect.gen(function* () {
-        if (target.provider === "kilo") return proxy?.token
+        if (target.provider === "tavern") return proxy?.token
         const item = yield* auth.get(target.provider).pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
         if (item?.type === "api") return item.key
         return DIRECT_EDIT_ENV[target.provider].map((key) => process.env[key]).find(Boolean)
       })
-      if (target.provider === "kilo" && !proxy?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
+      if (target.provider === "tavern" && !proxy?.auth) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       const request = yield* HttpServerRequest.HttpServerRequest
@@ -228,10 +228,10 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-              ...(target.provider === "kilo"
-                ? buildKiloHeaders(undefined, { kilocodeOrganizationId: proxy?.organizationId })
+              ...(target.provider === "tavern"
+                ? buildKiloHeaders(undefined, { taverncodeOrganizationId: proxy?.organizationId })
                 : {}),
-              ...(target.provider === "kilo" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
+              ...(target.provider === "tavern" ? { [HEADER_FEATURE]: "autocomplete" } : {}),
             },
             signal,
             body: JSON.stringify({
@@ -301,7 +301,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${info.token}`,
-              ...buildKiloHeaders(undefined, { kilocodeOrganizationId: info.organizationId }),
+              ...buildKiloHeaders(undefined, { taverncodeOrganizationId: info.organizationId }),
               [HEADER_FEATURE]: "vscode-extension",
             },
             signal: request.source instanceof Request ? request.source.signal : undefined,
@@ -326,25 +326,25 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       const claude = yield* Effect.promise(() => ClaudeMigration.notification())
       const append = <T>(list: T[]) => [...list, ...(notice ? [notice] : []), ...(claude ? [claude] : [])]
 
-      const info = yield* auth.get("kilo").pipe(Effect.catch(() => Effect.succeed(undefined)))
+      const info = yield* auth.get("tavern").pipe(Effect.catch(() => Effect.succeed(undefined)))
       const token = getToken(info)
       if (!token) return append([])
 
       const cloud = yield* Effect.promise(() =>
         fetchKilocodeNotifications({
-          kilocodeToken: token,
-          kilocodeOrganizationId: getOrganizationId(info),
+          taverncodeToken: token,
+          taverncodeOrganizationId: getOrganizationId(info),
         }),
       )
       return append(cloud)
     })
 
     const organization = Effect.fn("KiloGatewayHttpApi.organization")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       if (!info || info.type !== "oauth") return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
       yield* auth
-        .set("kilo", {
+        .set("tavern", {
           type: "oauth",
           refresh: info.refresh,
           access: info.access,
@@ -353,14 +353,14 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
         })
         .pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
 
-      yield* cache.clear("kilo")
+      yield* cache.clear("tavern")
       clearModesCache()
       yield* store.disposeAll().pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       return true
     })
 
     const cloudSessions = Effect.fn("KiloGatewayHttpApi.cloudSessions")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.BadRequest({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -385,7 +385,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
     })
 
     const cloudSession = Effect.fn("KiloGatewayHttpApi.cloudSession")(function* (ctx) {
-      const info = yield* auth.get("kilo").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
+      const info = yield* auth.get("tavern").pipe(Effect.mapError(() => new HttpApiError.Unauthorized({})))
       const token = getToken(info)
       if (!token) return yield* Effect.fail(new HttpApiError.Unauthorized({}))
 
@@ -412,7 +412,7 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       // request Effect (yield*) so the request-scoped InstanceRef/WorkspaceRef
       // reach the persistence path instead of the AppRuntime default context.
       const { CloudSessionImportInProcess } = yield* Effect.promise(() =>
-        import("@/kilocode/server/import-cloud-session-in-process"),
+        import("@/taverncode/server/import-cloud-session-in-process"),
       )
       const outcome = yield* CloudSessionImportInProcess.importSession(ctx.payload.sessionId).pipe(
         Effect.provideService(Auth.Service, auth),
@@ -453,8 +453,8 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       const result = yield* Effect.tryPromise({
         try: () =>
           fetchKiloImageModels({
-            kilocodeToken: info.token,
-            kilocodeOrganizationId: info.organizationId,
+            taverncodeToken: info.token,
+            taverncodeOrganizationId: info.organizationId,
           }),
         catch: () => new HttpApiError.BadRequest({}),
       })
@@ -476,8 +476,8 @@ export const kiloGatewayHandlers = HttpApiBuilder.group(InstanceHttpApi, "kilo",
       const result = yield* Effect.tryPromise({
         try: () =>
           fetchKiloTranscriptionModels({
-            kilocodeToken: info.token,
-            kilocodeOrganizationId: info.organizationId,
+            taverncodeToken: info.token,
+            taverncodeOrganizationId: info.organizationId,
           }),
         catch: () => new HttpApiError.BadRequest({}),
       })

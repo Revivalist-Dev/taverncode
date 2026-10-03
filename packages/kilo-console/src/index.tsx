@@ -1,4 +1,4 @@
-import "@kilocode/kilo-web-ui/styles"
+import "@taverncode/tavern-web-ui/styles"
 import { Router, Route } from "@solidjs/router"
 import { lazy } from "solid-js"
 import { render } from "solid-js/web"
@@ -32,7 +32,7 @@ render(
         {routes()}
       </Route>
       <Route path="/profile" component={ProfileRoute} />
-      <Route path="/kilo/login" component={LoginRoute} />
+      <Route path="/tavern/login" component={LoginRoute} />
       <Route path="/settings" component={ConfigLayout}>
         {routes()}
       </Route>

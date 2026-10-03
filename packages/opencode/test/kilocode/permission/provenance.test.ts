@@ -3,8 +3,8 @@ import { Effect, Layer } from "effect"
 import { Agent } from "../../../src/agent/agent"
 import { Session } from "../../../src/session/session"
 import { Permission } from "../../../src/permission"
-import { PermissionProvenance } from "../../../src/kilocode/permission/provenance"
-import { KiloSessionPrompt } from "../../../src/kilocode/session/prompt"
+import { PermissionProvenance } from "../../../src/taverncode/permission/provenance"
+import { KiloSessionPrompt } from "../../../src/taverncode/session/prompt"
 import { SessionID } from "../../../src/session/schema"
 
 describe("PermissionProvenance", () => {

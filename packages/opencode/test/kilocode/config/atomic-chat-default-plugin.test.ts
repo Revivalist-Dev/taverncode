@@ -1,13 +1,13 @@
 import { describe, expect, spyOn, test } from "bun:test"
 import { Npm } from "@opencode-ai/core/npm"
 import type { ConfigPlugin } from "@/config/plugin"
-import { hasAtomicChatPlugin } from "@/kilocode/atomic-chat-feature"
-import { KilocodeDefaultPlugins } from "@/kilocode/config/default-plugins"
+import { hasAtomicChatPlugin } from "@/taverncode/atomic-chat-feature"
+import { KilocodeDefaultPlugins } from "@/taverncode/config/default-plugins"
 import { PluginLoader } from "@/plugin/loader"
 
-const atomic = "@kilocode/plugin-atomic-chat"
+const atomic = "@taverncode/plugin-atomic-chat"
 
-describe("kilocode default atomic chat plugin", () => {
+describe("taverncode default atomic chat plugin", () => {
   test("injects atomic chat without registering an external plugin origin", () => {
     const external: ConfigPlugin.Origin = { spec: "global-plugin", source: "global", scope: "global" }
     const cfg = { plugin: [external.spec], plugin_origins: [external] }

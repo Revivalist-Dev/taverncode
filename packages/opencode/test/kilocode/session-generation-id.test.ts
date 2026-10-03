@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { KiloSessionProcessor } from "../../src/kilocode/session/processor"
+import { KiloSessionProcessor } from "../../src/taverncode/session/processor"
 
 describe("session generation id", () => {
   test("extracts a bounded Gateway generation id", () => {

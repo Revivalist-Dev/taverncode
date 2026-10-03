@@ -22,7 +22,7 @@ describe("sandbox profile context", () => {
   let root = ""
 
   beforeAll(async () => {
-    root = await realpath(await mkdtemp(path.join(tmpdir(), "kilo-sandbox-context-")))
+    root = await realpath(await mkdtemp(path.join(tmpdir(), "tavern-sandbox-context-")))
   })
 
   afterAll(async () => {

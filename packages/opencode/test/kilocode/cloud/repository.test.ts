@@ -3,7 +3,7 @@ import { describe, expect } from "bun:test"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Effect, Layer } from "effect"
 import { Git } from "../../../src/git"
-import { CloudRepository } from "../../../src/kilocode/cloud/repository"
+import { CloudRepository } from "../../../src/taverncode/cloud/repository"
 import { tmpdirScoped } from "../../fixture/fixture"
 import { testEffect } from "../../lib/effect"
 
@@ -22,24 +22,24 @@ describe("CloudRepository", () => {
       const cwd = yield* tmpdirScoped()
       const result = yield* CloudRepository.resolve({
         cwd,
-        repo: "kilo-org/kilo",
+        repo: "tavern-org/tavern",
         branch: "feature/cloud-start",
       })
 
       expect(result).toEqual({
         type: "github",
-        repo: "kilo-org/kilo",
+        repo: "tavern-org/tavern",
         branch: "feature/cloud-start",
       })
 
-      const error = yield* CloudRepository.resolve({ cwd, repo: "kilo-org/kilo", branch: "feature.lock" }).pipe(
+      const error = yield* CloudRepository.resolve({ cwd, repo: "tavern-org/tavern", branch: "feature.lock" }).pipe(
         Effect.flip,
       )
       expect(error).toBeInstanceOf(CloudRepository.InvalidBranchError)
 
       const type = yield* CloudRepository.resolve({
         cwd,
-        repo: "https://github.com/kilo-org/kilo.git",
+        repo: "https://github.com/tavern-org/tavern.git",
         type: "gitlab",
       }).pipe(Effect.flip)
       expect(type).toBeInstanceOf(CloudRepository.InvalidRepositoryError)
@@ -50,7 +50,7 @@ describe("CloudRepository", () => {
     Effect.gen(function* () {
       const cwd = yield* tmpdirScoped()
 
-      for (const repo of ["https://github.com/kilo-org/...git", "git@github.com:kilo-org/...git"]) {
+      for (const repo of ["https://github.com/tavern-org/...git", "git@github.com:tavern-org/...git"]) {
         const error = yield* CloudRepository.resolve({ cwd, repo }).pipe(Effect.flip)
         expect(error).toBeInstanceOf(CloudRepository.InvalidRepositoryError)
       }
@@ -60,19 +60,19 @@ describe("CloudRepository", () => {
   it.live("normalizes an inferred GitHub SCP remote without adding the current branch", () =>
     Effect.gen(function* () {
       const cwd = yield* tmpdirScoped({ git: true })
-      yield* run(cwd, "remote", "add", "origin", "git@github.com:kilo-org/ssh-repo.git")
+      yield* run(cwd, "remote", "add", "origin", "git@github.com:tavern-org/ssh-repo.git")
       yield* run(cwd, "checkout", "-b", "feature/not-in-output")
 
       const result = yield* CloudRepository.resolve({ cwd })
 
-      expect(result).toEqual({ type: "github", repo: "kilo-org/ssh-repo" })
+      expect(result).toEqual({ type: "github", repo: "tavern-org/ssh-repo" })
     }),
   )
 
   it.live("rejects inferred local remotes that resemble GitHub shorthand", () =>
     Effect.gen(function* () {
       const cwd = yield* tmpdirScoped({ git: true })
-      yield* run(cwd, "remote", "add", "origin", "kilo-org/local-repo")
+      yield* run(cwd, "remote", "add", "origin", "tavern-org/local-repo")
 
       const error = yield* CloudRepository.resolve({ cwd }).pipe(Effect.flip)
 
@@ -87,18 +87,18 @@ describe("CloudRepository", () => {
       const branch = yield* git.branch(cwd)
       if (!branch) yield* Effect.die(new Error("temporary repository has no current branch"))
 
-      yield* run(cwd, "remote", "add", "origin", "https://github.com/kilo-org/origin.git")
-      yield* run(cwd, "remote", "add", "tracked", "https://github.com/kilo-org/tracked.git")
-      yield* run(cwd, "remote", "set-url", "--add", "--push", "tracked", "https://github.com/kilo-org/push.git")
+      yield* run(cwd, "remote", "add", "origin", "https://github.com/tavern-org/origin.git")
+      yield* run(cwd, "remote", "add", "tracked", "https://github.com/tavern-org/tracked.git")
+      yield* run(cwd, "remote", "set-url", "--add", "--push", "tracked", "https://github.com/tavern-org/push.git")
       yield* run(cwd, "config", `branch.${branch}.remote`, "tracked")
 
-      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "kilo-org/tracked" })
+      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "tavern-org/tracked" })
 
       yield* run(cwd, "config", `branch.${branch}.remote`, "missing")
-      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "kilo-org/origin" })
+      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "tavern-org/origin" })
 
       yield* run(cwd, "remote", "remove", "origin")
-      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "kilo-org/tracked" })
+      expect(yield* CloudRepository.resolve({ cwd })).toEqual({ type: "github", repo: "tavern-org/tracked" })
     }),
   )
 
@@ -109,8 +109,8 @@ describe("CloudRepository", () => {
       const none = yield* CloudRepository.resolve({ cwd }).pipe(Effect.flip)
       expect(none).toBeInstanceOf(CloudRepository.NoRemoteError)
 
-      yield* run(cwd, "remote", "add", "alpha", "https://github.com/kilo-org/alpha.git")
-      yield* run(cwd, "remote", "add", "beta", "https://github.com/kilo-org/beta.git")
+      yield* run(cwd, "remote", "add", "alpha", "https://github.com/tavern-org/alpha.git")
+      yield* run(cwd, "remote", "add", "beta", "https://github.com/tavern-org/beta.git")
 
       const ambiguous = yield* CloudRepository.resolve({ cwd }).pipe(Effect.flip)
       expect(ambiguous).toBeInstanceOf(CloudRepository.AmbiguousRemoteError)

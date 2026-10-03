@@ -2,13 +2,13 @@ import { afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:
 import { Effect, Schema } from "effect"
 import { Global } from "@opencode-ai/core/global"
 import path from "path"
-import * as KiloAgent from "@/kilocode/agent"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryTool } from "@kilocode/kilo-memory/tool"
-import { MemorySaveTool } from "@/kilocode/tool/memory-save"
+import * as KiloAgent from "@/taverncode/agent"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryTool } from "@taverncode/tavern-memory/tool"
+import { MemorySaveTool } from "@/taverncode/tool/memory-save"
 import { MessageID, SessionID } from "@/session/schema"
 import { Permission } from "@/permission"
-import { RemoteSender } from "@/kilo-sessions/remote-sender"
+import { RemoteSender } from "@/tavern-sessions/remote-sender"
 import type { Tool } from "@/tool/tool"
 import { resetDatabase } from "../../fixture/db"
 import { provideTestInstance, tmpdir } from "../../fixture/fixture"
@@ -53,7 +53,7 @@ async function withConfig<T>(dir: string, fn: () => Promise<T> | T) {
   const prior = Global.Path.config
   const data = Global.Path.data
   ;(Global.Path as { config: string }).config = dir
-  ;(Global.Path as { data: string }).data = path.basename(dir) === ".kilo" ? path.dirname(dir) : dir
+  ;(Global.Path as { data: string }).data = path.basename(dir) === ".tavern" ? path.dirname(dir) : dir
   try {
     return await fn()
   } finally {
@@ -110,15 +110,15 @@ describe("kilo_memory_save", () => {
   })
 
   test("defaults mutating memory tool permission to ask", () => {
-    const kilo = KiloAgent.prepare({}, { experimentalSharedAgentBoard: false })
+    const tavern = KiloAgent.prepare({}, { experimentalSharedAgentBoard: false })
 
-    expect(Permission.evaluate("kilo_memory_recall", "typed", kilo.defaultsPatch).action).toBe("ask")
-    expect(Permission.evaluate("kilo_memory_save", "remember", kilo.defaultsPatch).action).toBe("ask")
+    expect(Permission.evaluate("kilo_memory_recall", "typed", tavern.defaultsPatch).action).toBe("ask")
+    expect(Permission.evaluate("kilo_memory_save", "remember", tavern.defaultsPatch).action).toBe("ask")
   })
 
   test("remembers, corrects, and forgets explicit project memory", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const asks: Request[] = []
       const gate = approved(asks)
@@ -129,7 +129,7 @@ describe("kilo_memory_save", () => {
         {
           action: "remember",
           key: "kilo_cli_tui",
-          text: "Kilo CLI is a TUI.",
+          text: "Tavern CLI is a TUI.",
         },
         gate,
       )
@@ -138,21 +138,21 @@ describe("kilo_memory_save", () => {
         {
           action: "correct",
           key: "kilo_cli_tui",
-          text: "Kilo CLI should be treated as a terminal UI.",
+          text: "Tavern CLI should be treated as a terminal UI.",
         },
         gate,
       )
       const shown = await KiloMemory.show({ ctx: memory })
 
-      expect(saved.title).toBe("Kilo memory saved: 1 op")
-      expect(corrected.title).toBe("Kilo memory correction saved: 1 op")
-      expect(shown.sources.project).toContain("- kilo_cli_tui :: Kilo CLI is a TUI.")
-      expect(shown.sources.corrections).toContain("- kilo_cli_tui :: Kilo CLI should be treated as a terminal UI.")
+      expect(saved.title).toBe("Tavern memory saved: 1 op")
+      expect(corrected.title).toBe("Tavern memory correction saved: 1 op")
+      expect(shown.sources.project).toContain("- kilo_cli_tui :: Tavern CLI is a TUI.")
+      expect(shown.sources.corrections).toContain("- kilo_cli_tui :: Tavern CLI should be treated as a terminal UI.")
 
       const forgotten = await execute(dir.path, { action: "forget", query: "kilo_cli_tui" }, gate)
       const next = await KiloMemory.show({ ctx: memory })
 
-      expect(forgotten.title).toBe("Kilo memory updated: 2 removed")
+      expect(forgotten.title).toBe("Tavern memory updated: 2 removed")
       expect(next.sources.project).not.toContain("kilo_cli_tui")
       expect(next.sources.corrections).not.toContain("kilo_cli_tui")
       expect(asks.map((req) => req.permission)).toEqual(["kilo_memory_save", "kilo_memory_save", "kilo_memory_save"])
@@ -162,12 +162,12 @@ describe("kilo_memory_save", () => {
       expect(asks[0].metadata).toMatchObject({
         action: "remember",
         key: "kilo_cli_tui",
-        text: "Kilo CLI is a TUI.",
+        text: "Tavern CLI is a TUI.",
       })
       expect(asks[1].metadata).toMatchObject({
         action: "correct",
         key: "kilo_cli_tui",
-        text: "Kilo CLI should be treated as a terminal UI.",
+        text: "Tavern CLI should be treated as a terminal UI.",
       })
       expect(asks[2].metadata).toMatchObject({
         action: "forget",
@@ -178,17 +178,17 @@ describe("kilo_memory_save", () => {
 
   test("does not save when project memory is disabled", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const result = await execute(dir.path, { action: "remember", text: "Do not write while disabled." })
 
-      expect(result.title).toBe("Kilo memory: disabled")
+      expect(result.title).toBe("Tavern memory: disabled")
       expect(result.output).toContain("disabled")
     })
   })
 
   test("does not mutate project memory when permission is denied", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       const asks: Request[] = []
       const gate = denied(asks)
@@ -257,7 +257,7 @@ describe("kilo_memory_save", () => {
 
   test("declines user-level memory but saves project conventions", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
 
@@ -278,12 +278,12 @@ describe("kilo_memory_save", () => {
       })
       const shown = await KiloMemory.show({ ctx: memory })
 
-      expect(skipped.title).toBe("Kilo memory skipped: out of scope")
+      expect(skipped.title).toBe("Tavern memory skipped: out of scope")
       expect(skipped.output).toContain("user-level memory is not supported yet")
-      expect(blocked.title).toBe("Kilo memory unchanged")
+      expect(blocked.title).toBe("Tavern memory unchanged")
       expect(blocked.output).toContain("operationCount=0")
       expect(blocked.metadata.operationCount).toBe(0)
-      expect(saved.title).toBe("Kilo memory saved: 1 op")
+      expect(saved.title).toBe("Tavern memory saved: 1 op")
       expect(shown.sources.project).not.toContain("rubicon fennel")
       expect(shown.sources.project).not.toContain("reply_style")
       expect(shown.sources.project).not.toContain("I prefer terse summaries")
@@ -293,7 +293,7 @@ describe("kilo_memory_save", () => {
 
   test("handles malformed save inputs without corrupting memory files", async () => {
     await using dir = await tmpdir({ git: true })
-    await withConfig(path.join(dir.path, "global", ".kilo"), async () => {
+    await withConfig(path.join(dir.path, "global", ".tavern"), async () => {
       const memory = { directory: dir.path, worktree: dir.path }
       await KiloMemory.enable({ ctx: memory })
 
@@ -311,11 +311,11 @@ describe("kilo_memory_save", () => {
       })
       const shown = await KiloMemory.show({ ctx: memory })
 
-      expect(missing.title).toBe("Kilo memory remember: no text")
-      expect(forget.title).toBe("Kilo memory forget: no query")
-      expect(secret.title).toBe("Kilo memory: error")
+      expect(missing.title).toBe("Tavern memory remember: no text")
+      expect(forget.title).toBe("Tavern memory forget: no query")
+      expect(secret.title).toBe("Tavern memory: error")
       expect(secret.output).toContain("rejected secret-like content")
-      expect(noisy.title).toBe("Kilo memory saved: 1 op")
+      expect(noisy.title).toBe("Tavern memory saved: 1 op")
       expect(shown.sources.project).not.toContain("secret_input")
       expect(shown.sources.project).not.toContain("api_key")
       expect(shown.sources.project).toContain("- noisy_key :: Keep noisy oversized memory input bounded.")

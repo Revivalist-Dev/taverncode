@@ -268,7 +268,7 @@ export function feedbackMetadata(
 ): Record<string, unknown> | undefined {
   if (!review && !browserFeedback) return undefined
   return {
-    kilo: {
+    tavern: {
       ...(review ? { review } : {}),
       ...(browserFeedback ? { browserFeedback } : {}),
     },
@@ -277,14 +277,14 @@ export function feedbackMetadata(
 
 export function partFeedback(metadata: unknown, content: string): FeedbackView | undefined {
   const root = record(metadata)
-  const kilo = record(root?.kilo)
-  const reviewValue = kilo?.review
-  const browserValue = kilo?.browserFeedback
+  const tavern = record(root?.tavern)
+  const reviewValue = tavern?.review
+  const browserValue = tavern?.browserFeedback
   let body = content
   let review: ReviewMessageData | undefined
   let browserFeedback: BrowserFeedbackData | undefined
   if (reviewValue !== undefined) {
-    const parsed = partReview({ kilo: { review: reviewValue } }, body)
+    const parsed = partReview({ tavern: { review: reviewValue } }, body)
     if (!parsed) return undefined
     review = parsed.data
     body = parsed.body
@@ -303,7 +303,7 @@ export function parseFeedback(
   metadata: { review?: unknown; browserFeedback?: unknown },
   content: string,
 ): Pick<FeedbackView, "review" | "browserFeedback"> | undefined {
-  const parsed = partFeedback({ kilo: metadata }, content)
+  const parsed = partFeedback({ tavern: metadata }, content)
   if (!parsed) return undefined
   return { review: parsed.review, browserFeedback: parsed.browserFeedback }
 }

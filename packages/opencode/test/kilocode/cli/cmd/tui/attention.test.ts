@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import Attention from "@/kilocode/plugins/attention"
-import type { Event, Session, SessionNetworkWait, SuggestionRequest } from "@kilocode/sdk/v2"
-import type { TuiAttentionNotifyInput } from "@kilocode/plugin/tui"
+import Attention from "@/taverncode/plugins/attention"
+import type { Event, Session, SessionNetworkWait, SuggestionRequest } from "@taverncode/sdk/v2"
+import type { TuiAttentionNotifyInput } from "@taverncode/plugin/tui"
 import { createTuiPluginApi } from "../../../../fixture/tui-plugin"
 
 async function setup() {
@@ -95,7 +95,7 @@ const networkNotification: TuiAttentionNotifyInput = {
   sound: { name: "question", when: "always" },
 }
 
-describe("Kilo attention TUI plugin", () => {
+describe("Tavern attention TUI plugin", () => {
   test("requests upstream attention for suggestions and network prompts", async () => {
     const harness = await setup()
 

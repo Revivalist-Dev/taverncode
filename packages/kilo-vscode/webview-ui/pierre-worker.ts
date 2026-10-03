@@ -1,4 +1,4 @@
-// Kilo-specific replacement for the shared `@opencode-ai/ui/pierre/worker`
+// Tavern-specific replacement for the shared `@opencode-ai/ui/pierre/worker`
 // module (wired up by the pierre-worker-alias plugin in esbuild.js).
 //
 // The upstream module loads Pierre's Shiki worker through a Vite-only
@@ -12,13 +12,13 @@
 // the page. Pierre can offload highlighted updates to the pool after its initial
 // plain render. The diff wrapper still needs to keep that initial render cheap,
 // which is why review surfaces pass hunk-bounded patches instead of full files.
-import { LINE_DIFF_TYPE } from "@kilocode/kilo-ui/pierre"
+import { LINE_DIFF_TYPE } from "@taverncode/tavern-ui/pierre"
 import { WorkerPoolManager } from "@pierre/diffs/worker"
-import { ensureKiloDiffTheme, KILO_DIFF_THEME } from "@opencode-ai/ui/pierre/kilo-diff-theme"
+import { ensureKiloDiffTheme, KILO_DIFF_THEME } from "@opencode-ai/ui/pierre/tavern-diff-theme"
 
-// Register the "Kilo" theme before any pool initializes. resolveThemes([theme])
+// Register the "Tavern" theme before any pool initializes. resolveThemes([theme])
 // runs on the main thread during initialize() and throws "resolveTheme: No valid
-// loader for Kilo" if the theme name was never registered. Registering here makes
+// loader for Tavern" if the theme name was never registered. Registering here makes
 // the worker self-sufficient rather than depending on the markdown context module
 // having been imported first.
 ensureKiloDiffTheme()
@@ -47,7 +47,7 @@ function createPool() {
     { workerFactory, poolSize: 2 },
     { theme: KILO_DIFF_THEME, lineDiffType: LINE_DIFF_TYPE, preferredHighlighter: ENGINE },
   )
-  void pool.initialize().catch((err) => console.warn("[Kilo New] Failed to initialize Pierre worker pool", err))
+  void pool.initialize().catch((err) => console.warn("[Tavern New] Failed to initialize Pierre worker pool", err))
   return pool
 }
 

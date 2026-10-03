@@ -1,16 +1,16 @@
 #!/usr/bin/env bun
 /**
- * Transform package names and branding from opencode to kilo
+ * Transform package names and branding from opencode to tavern
  *
  * This script transforms:
- * - opencode-ai -> @kilocode/cli
- * - @opencode-ai/cli -> @kilocode/cli
- * - @opencode-ai/sdk -> @kilocode/sdk
- * - @opencode-ai/plugin -> @kilocode/plugin
+ * - opencode-ai -> @taverncode/cli
+ * - @opencode-ai/cli -> @taverncode/cli
+ * - @opencode-ai/sdk -> @taverncode/sdk
+ * - @opencode-ai/plugin -> @taverncode/plugin
  * - OPENCODE_* -> KILO_* (env variables, excluding OPENCODE_API_KEY)
- * - x-opencode-* -> x-kilo-* (HTTP headers)
- * - opencode.db -> kilo.db (database filename)
- * - window.__OPENCODE__ -> window.__KILO__ (window global)
+ * - x-tavern-* -> x-tavern-* (HTTP headers)
+ * - tavern.db -> tavern.db (database filename)
+ * - window.__TAVERN__ -> window.__KILO__ (window global)
  */
 
 import { Glob } from "bun"
@@ -30,65 +30,65 @@ export interface TransformOptions {
 
 const PACKAGE_PATTERNS = [
   // In package.json name field
-  { pattern: /"name":\s*"opencode-ai"/, replacement: '"name": "@kilocode/cli"' },
-  { pattern: /"name":\s*"@opencode-ai\/cli"/, replacement: '"name": "@kilocode/cli"' },
+  { pattern: /"name":\s*"opencode-ai"/, replacement: '"name": "@taverncode/cli"' },
+  { pattern: /"name":\s*"@opencode-ai\/cli"/, replacement: '"name": "@taverncode/cli"' },
 
   // In dependencies/devDependencies
-  { pattern: /"opencode-ai":\s*"/g, replacement: '"@kilocode/cli": "' },
-  { pattern: /"@opencode-ai\/cli":\s*"/g, replacement: '"@kilocode/cli": "' },
-  { pattern: /"@opencode-ai\/sdk":\s*"/g, replacement: '"@kilocode/sdk": "' },
-  { pattern: /"@opencode-ai\/plugin":\s*"/g, replacement: '"@kilocode/plugin": "' },
+  { pattern: /"opencode-ai":\s*"/g, replacement: '"@taverncode/cli": "' },
+  { pattern: /"@opencode-ai\/cli":\s*"/g, replacement: '"@taverncode/cli": "' },
+  { pattern: /"@opencode-ai\/sdk":\s*"/g, replacement: '"@taverncode/sdk": "' },
+  { pattern: /"@opencode-ai\/plugin":\s*"/g, replacement: '"@taverncode/plugin": "' },
 
   // In any string context (mock.module, dynamic references, etc.)
   // Only cli, sdk, and plugin are renamed — other @opencode-ai/* packages
   // (e.g. @opencode-ai/ui, @opencode-ai/util) keep their upstream names.
-  { pattern: /@opencode-ai\/cli(?=\/|"|'|`|$)/g, replacement: "@kilocode/cli" },
-  { pattern: /@opencode-ai\/sdk(?=\/|"|'|`|$)/g, replacement: "@kilocode/sdk" },
-  { pattern: /@opencode-ai\/plugin(?=\/|"|'|`|$)/g, replacement: "@kilocode/plugin" },
+  { pattern: /@opencode-ai\/cli(?=\/|"|'|`|$)/g, replacement: "@taverncode/cli" },
+  { pattern: /@opencode-ai\/sdk(?=\/|"|'|`|$)/g, replacement: "@taverncode/sdk" },
+  { pattern: /@opencode-ai\/plugin(?=\/|"|'|`|$)/g, replacement: "@taverncode/plugin" },
 
-  // In import statements (supports subpaths like @opencode-ai/sdk/v2)
-  { pattern: /from\s+["']opencode-ai["']/g, replacement: 'from "@kilocode/cli"' },
-  { pattern: /from\s+["']@opencode-ai\/cli(\/[^"']*)?["']/g, replacement: 'from "@kilocode/cli$1"' },
-  { pattern: /from\s+["']@opencode-ai\/sdk(\/[^"']*)?["']/g, replacement: 'from "@kilocode/sdk$1"' },
-  { pattern: /from\s+["']@opencode-ai\/plugin(\/[^"']*)?["']/g, replacement: 'from "@kilocode/plugin$1"' },
+  // In import statements (supports subpaths like @taverncode/sdk/v2)
+  { pattern: /from\s+["']opencode-ai["']/g, replacement: 'from "@taverncode/cli"' },
+  { pattern: /from\s+["']@opencode-ai\/cli(\/[^"']*)?["']/g, replacement: 'from "@taverncode/cli$1"' },
+  { pattern: /from\s+["']@opencode-ai\/sdk(\/[^"']*)?["']/g, replacement: 'from "@taverncode/sdk$1"' },
+  { pattern: /from\s+["']@opencode-ai\/plugin(\/[^"']*)?["']/g, replacement: 'from "@taverncode/plugin$1"' },
 
-  // In require statements (supports subpaths like @opencode-ai/sdk/v2)
-  { pattern: /require\(["']opencode-ai["']\)/g, replacement: 'require("@kilocode/cli")' },
-  { pattern: /require\(["']@opencode-ai\/cli(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/cli$1")' },
-  { pattern: /require\(["']@opencode-ai\/sdk(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/sdk$1")' },
-  { pattern: /require\(["']@opencode-ai\/plugin(\/[^"']*)?["']\)/g, replacement: 'require("@kilocode/plugin$1")' },
+  // In require statements (supports subpaths like @taverncode/sdk/v2)
+  { pattern: /require\(["']opencode-ai["']\)/g, replacement: 'require("@taverncode/cli")' },
+  { pattern: /require\(["']@opencode-ai\/cli(\/[^"']*)?["']\)/g, replacement: 'require("@taverncode/cli$1")' },
+  { pattern: /require\(["']@opencode-ai\/sdk(\/[^"']*)?["']\)/g, replacement: 'require("@taverncode/sdk$1")' },
+  { pattern: /require\(["']@opencode-ai\/plugin(\/[^"']*)?["']\)/g, replacement: 'require("@taverncode/plugin$1")' },
 
   // Internal placeholder hostname used for in-process RPC (never resolved by DNS)
-  { pattern: /opencode\.internal/g, replacement: "kilo.internal" },
+  { pattern: /opencode\.internal/g, replacement: "tavern.internal" },
 
   // In npx/npm commands
-  { pattern: /npx opencode-ai/g, replacement: "npx @kilocode/cli" },
-  { pattern: /npm install opencode-ai/g, replacement: "npm install @kilocode/cli" },
-  { pattern: /bun add opencode-ai/g, replacement: "bun add @kilocode/cli" },
+  { pattern: /npx @taverncode/cli/g, replacement: "npx @taverncode/cli" },
+  { pattern: /npm install @taverncode/cli/g, replacement: "npm install @taverncode/cli" },
+  { pattern: /bun add @taverncode/cli/g, replacement: "bun add @taverncode/cli" },
 
-  // SDK public API renames (Opencode → Kilo)
+  // SDK public API renames (Opencode → Tavern)
   // Order matters: longer names first to avoid partial matches
-  { pattern: /OpencodeClientConfig/g, replacement: "KiloClientConfig" },
-  { pattern: /createOpencodeClient/g, replacement: "createKiloClient" },
-  { pattern: /createOpencodeServer/g, replacement: "createKiloServer" },
-  { pattern: /createOpencodeTui/g, replacement: "createKiloTui" },
-  { pattern: /OpencodeClient/g, replacement: "KiloClient" },
-  // createOpencode (without suffix) needs negative lookahead to avoid matching createOpencodeClient
+  { pattern: /TavernClientConfig/g, replacement: "KiloClientConfig" },
+  { pattern: /createTavernClient/g, replacement: "createKiloClient" },
+  { pattern: /createTavernServer/g, replacement: "createKiloServer" },
+  { pattern: /createTavernTui/g, replacement: "createKiloTui" },
+  { pattern: /TavernClient/g, replacement: "KiloClient" },
+  // createTavern (without suffix) needs negative lookahead to avoid matching createTavernClient
   { pattern: /\bcreateOpencode\b(?!Client|Server|Tui)/g, replacement: "createKilo" },
 
   // Branding: environment variables (exclude OPENCODE_API_KEY — upstream Zen SaaS key)
   { pattern: /\bOPENCODE_(?!API_KEY\b)([A-Z_]+)\b/g, replacement: "KILO_$1" },
-  { pattern: /VITE_OPENCODE_/g, replacement: "VITE_KILO_" },
-  { pattern: /_EXTENSION_OPENCODE_/g, replacement: "_EXTENSION_KILO_" },
+  { pattern: /VITE_TAVERN_/g, replacement: "VITE_KILO_" },
+  { pattern: /_EXTENSION_TAVERN_/g, replacement: "_EXTENSION_KILO_" },
 
   // Branding: HTTP header prefix
-  { pattern: /x-opencode-/g, replacement: "x-kilo-" },
+  { pattern: /x-tavern-/g, replacement: "x-tavern-" },
 
   // Branding: window global
   { pattern: /window\.__OPENCODE__/g, replacement: "window.__KILO__" },
 
   // Branding: database filename
-  { pattern: /opencode\.db/g, replacement: "kilo.db" },
+  { pattern: /opencode\.db/g, replacement: "tavern.db" },
 ]
 
 /**

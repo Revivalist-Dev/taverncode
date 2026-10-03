@@ -13,18 +13,18 @@ describe("injected prompt metadata", () => {
     expect(partInjected(injectedMetadata("Update from main"))).toEqual({ title: "Update from main" })
   })
 
-  it("merges the title without dropping other kilo metadata", () => {
-    expect(mergeInjected({ kilo: { review: { version: 1 } } }, "Explain selected code")).toEqual({
-      kilo: { review: { version: 1 }, injected: { title: "Explain selected code" } },
+  it("merges the title without dropping other tavern metadata", () => {
+    expect(mergeInjected({ tavern: { review: { version: 1 } } }, "Explain selected code")).toEqual({
+      tavern: { review: { version: 1 }, injected: { title: "Explain selected code" } },
     })
     expect(mergeInjected({ existing: "keep" }, undefined)).toEqual({ existing: "keep" })
   })
 
   it("ignores missing or malformed metadata", () => {
     expect(partInjected(undefined)).toBeUndefined()
-    expect(partInjected({ kilo: { review: {} } })).toBeUndefined()
-    expect(partInjected({ kilo: { injected: { title: "  " } } })).toBeUndefined()
-    expect(partInjected({ kilo: { injected: "x" } })).toBeUndefined()
+    expect(partInjected({ tavern: { review: {} } })).toBeUndefined()
+    expect(partInjected({ tavern: { injected: { title: "  " } } })).toBeUndefined()
+    expect(partInjected({ tavern: { injected: "x" } })).toBeUndefined()
   })
 
   it("previews only long prompts with their first paragraph", () => {
@@ -41,33 +41,33 @@ describe("injectedView", () => {
   it("labels marked prompts and collapses long ones", () => {
     const long = "Update the branch.\n\nFetch.\nMerge.\nTest.\nPush."
     expect(injectedView(injectedMetadata("Update from main"), long)).toEqual({
-      label: "Sent by Kilo \u00B7 Update from main",
+      label: "Sent by Tavern \u00B7 Update from main",
       preview: "Update the branch.",
     })
-    expect(injectedView(injectedMetadata("/init"), "short")).toEqual({ label: "Sent by Kilo \u00B7 /init" })
+    expect(injectedView(injectedMetadata("/init"), "short")).toEqual({ label: "Sent by Tavern \u00B7 /init" })
   })
 
   it("does not collapse a long body that has no paragraph break", () => {
     expect(injectedView(injectedMetadata("/demo"), "one\ntwo\nthree\nfour\nfive")).toEqual({
-      label: "Sent by Kilo \u00B7 /demo",
+      label: "Sent by Tavern \u00B7 /demo",
     })
   })
 
-  it("labels an auto-sent pull request fix as sent by Kilo", () => {
+  it("labels an auto-sent pull request fix as sent by Tavern", () => {
     expect(injectedView(undefined, PUSH_INSTRUCTION)).toEqual({
-      label: "Sent by Kilo \u00B7 Fix pull request feedback",
+      label: "Sent by Tavern \u00B7 Fix pull request feedback",
     })
   })
 
   it("shows the user's text and hides the added push instruction until expanded", () => {
     expect(injectedView(undefined, `${PUSH_INSTRUCTION}\n\nPlease also rename the helper.`)).toEqual({
-      label: "Kilo added: push fixes to the pull request",
+      label: "Tavern added: push fixes to the pull request",
       preview: "Please also rename the helper.",
     })
   })
 
   it("returns undefined for a plain user message", () => {
     expect(injectedView(undefined, "hello")).toBeUndefined()
-    expect(injectedView({ kilo: { review: {} } }, "Do not force-push.")).toBeUndefined()
+    expect(injectedView({ tavern: { review: {} } }, "Do not force-push.")).toBeUndefined()
   })
 })

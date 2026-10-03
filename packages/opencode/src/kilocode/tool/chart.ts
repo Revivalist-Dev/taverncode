@@ -1,7 +1,7 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { Effect, Schema } from "effect"
 import * as Tool from "../../tool/tool"
-import { Telemetry } from "@kilocode/kilo-telemetry"
+import { Telemetry } from "@taverncode/tavern-telemetry"
 
 const Parameters = Schema.Struct({
   title: Schema.String.annotate({

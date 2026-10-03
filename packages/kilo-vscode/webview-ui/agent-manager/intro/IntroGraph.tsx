@@ -1,5 +1,5 @@
 import { For } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { useLanguage } from "../../src/context/language"
 import { WorktreeItem } from "../WorktreeItem"
 
@@ -43,7 +43,7 @@ export function IntroGraph(props: { base: string }) {
                       worktree={{
                         id: `intro-${example.label}`,
                         branch: example.branch,
-                        path: `.kilo/worktrees/${example.branch}`,
+                        path: `.tavern/worktrees/${example.branch}`,
                         parentBranch: props.base,
                         createdAt: "2026-01-01T00:00:00.000Z",
                       }}

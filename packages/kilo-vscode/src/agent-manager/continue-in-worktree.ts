@@ -1,8 +1,8 @@
-import type { KiloClient, Session } from "@kilocode/sdk/v2/client"
+import type { KiloClient, Session } from "@taverncode/sdk/v2/client"
 import type { CreateWorktreeResult } from "./WorktreeManager"
 import type { WorktreeStateManager } from "./WorktreeStateManager"
 import { capture as captureGitState, apply as applyGitState, type GitSnapshot } from "./git-transfer"
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { PLATFORM } from "./constants"
 import { recordForkHandoff } from "./fork-handoff"
 

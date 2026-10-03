@@ -1,7 +1,7 @@
 import type { Component, JSXElement } from "solid-js"
 import { createSignal, Show } from "solid-js"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useLanguage } from "../src/context/language"
 import type { DiffSourceDescriptor } from "../../src/diff/sources/types"
 

@@ -1,5 +1,5 @@
 import { lazy, type Component } from "solid-js"
-import type { IconProps } from "@kilocode/kilo-web-ui/icon"
+import type { IconProps } from "@taverncode/tavern-web-ui/icon"
 
 const AgentBuilderRoute = lazy(() => import("./AgentsRoute").then((mod) => ({ default: mod.AgentBuilderRoute })))
 const AgentsRoute = lazy(() => import("./AgentsRoute").then((mod) => ({ default: mod.AgentsRoute })))

@@ -208,7 +208,7 @@ export class PRSuggestionActions {
         stat.ino === directory.ino &&
         fs.realpathSync(parent) === parent, "Suggestion parent directory changed")
     }
-    const temp = path.join(parent, `.kilo-suggestion-${randomUUID()}.tmp`)
+    const temp = path.join(parent, `.tavern-suggestion-${randomUUID()}.tmp`)
     const fd = fs.openSync(
       temp,
       fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW,

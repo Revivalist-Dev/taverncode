@@ -1,5 +1,5 @@
 import { describe, expect, it, mock } from "bun:test"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import { createMultiVersion, type MultiVersionHost } from "../../src/agent-manager/provider-multi-version"
 import type { ProjectContext } from "../../src/agent-manager/project/context"
 import type { CreateWorktreeOnDiskResult } from "../../src/agent-manager/worktree-create"

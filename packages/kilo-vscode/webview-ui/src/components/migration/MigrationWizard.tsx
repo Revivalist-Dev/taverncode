@@ -1,7 +1,7 @@
 import { Show, createSignal, onMount, onCleanup } from "solid-js"
 import type { Component, JSX } from "solid-js"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import SessionMigrationProgress, { type SessionMigrationProgressState } from "./SessionMigrationProgress"
@@ -30,10 +30,10 @@ const KiloLogo = (): JSX.Element => {
   const iconsBaseUri = (window as { ICONS_BASE_URI?: string }).ICONS_BASE_URI || ""
   const isLight =
     document.body.classList.contains("vscode-light") || document.body.classList.contains("vscode-high-contrast-light")
-  const icon = isLight ? "kilo-light.svg" : "kilo-dark.svg"
+  const icon = isLight ? "tavern-light.svg" : "tavern-dark.svg"
   return (
     <div class="migration-wizard__logo">
-      <img src={`${iconsBaseUri}/${icon}`} alt="Kilo Code" />
+      <img src={`${iconsBaseUri}/${icon}`} alt="Tavern Code" />
     </div>
   )
 }

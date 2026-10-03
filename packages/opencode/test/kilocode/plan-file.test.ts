@@ -3,8 +3,8 @@ import { describe, expect, test } from "bun:test"
 import { Effect, ManagedRuntime } from "effect"
 import path from "path"
 import { Agent } from "../../src/agent/agent"
-import { PlanFile } from "../../src/kilocode/plan-file"
-import { Instance } from "../../src/kilocode/instance"
+import { PlanFile } from "../../src/taverncode/plan-file"
+import { Instance } from "../../src/taverncode/instance"
 import { provideTestInstance } from "../fixture/fixture"
 import { Session } from "../../src/session/session"
 import { MessageID, PartID } from "../../src/session/schema"
@@ -67,7 +67,7 @@ describe("PlanFile", () => {
       directory: tmp.path,
       fn: async () => {
         const session = await rt.runPromise(Session.Service.use((svc) => svc.create({ title: "wrong-name" })))
-        const file = path.join(Instance.worktree, ".kilo", "plans", `${session.time.created}-xy.md`)
+        const file = path.join(Instance.worktree, ".tavern", "plans", `${session.time.created}-xy.md`)
         await Bun.write(file, "Do implementation step 1")
 
         const tool = await init()
@@ -86,7 +86,7 @@ describe("PlanFile", () => {
           ),
         )
 
-        expect(result.metadata.plan.replaceAll(path.sep, "/")).toBe(`.kilo/plans/${session.time.created}-xy.md`)
+        expect(result.metadata.plan.replaceAll(path.sep, "/")).toBe(`.tavern/plans/${session.time.created}-xy.md`)
       },
     })
   })

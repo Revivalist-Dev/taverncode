@@ -1,11 +1,11 @@
 {
-  "name": "@kilocode/kilo-docs",
+  "name": "@taverncode/tavern-docs",
   "version": "7.8.3",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack --port 3002",
     "build": "next build --webpack",
-    "lint": "bun run --cwd ../.. lint packages/kilo-docs",
+    "lint": "bun run --cwd ../.. lint packages/tavern-docs",
     "start": "next start",
     "test": "vitest run",
     "test:ci": "mkdir -p .artifacts/unit && vitest run --reporter=junit --outputFile=.artifacts/unit/junit.xml",

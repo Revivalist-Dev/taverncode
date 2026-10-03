@@ -414,10 +414,10 @@ try {
       Date.now = original
     }
   }
-  const auto = { providerID: "kilo", modelID: "kilo-auto/free" }
-  const personal = { providerID: "kilo", modelID: "personal" }
-  const first = { providerID: "kilo", modelID: "z-first" }
-  const recommended = { providerID: "kilo", modelID: "a-recommended" }
+  const auto = { providerID: "tavern", modelID: "tavern-auto/free" }
+  const personal = { providerID: "tavern", modelID: "personal" }
+  const first = { providerID: "tavern", modelID: "z-first" }
+  const recommended = { providerID: "tavern", modelID: "a-recommended" }
   const external = { providerID: "openai", modelID: "external" }
   const choice = (actual: ModelSelection | null, expected: ModelSelection) => {
     assert.equal(actual?.providerID, expected.providerID)
@@ -438,9 +438,9 @@ try {
       organizationId,
       ready,
       providers: {
-        kilo: {
-          id: "kilo",
-          name: "Kilo",
+        tavern: {
+          id: "tavern",
+          name: "Tavern",
           models: Object.fromEntries(
             ids.map((id) => [
               id,
@@ -450,8 +450,8 @@ try {
         },
         openai: { id: "openai", name: "OpenAI", models: { external: { id: "external", name: "External" } } },
       },
-      connected: ["kilo", "openai"],
-      defaults: model ? { kilo: model } : {},
+      connected: ["tavern", "openai"],
+      defaults: model ? { tavern: model } : {},
       defaultSelection: auto,
       authMethods: {},
       authStates: {},
@@ -584,9 +584,9 @@ try {
   await emit({ type: "modelSelectionsLoaded", selections: {} })
   await emit({ type: "recentsLoaded", recents: [auto] })
   choice(value.selected(), personal)
-  setSettings({ model: "kilo/personal" })
+  setSettings({ model: "tavern/personal" })
   await settle()
-  setSettings({ model: "kilo/a-recommended" })
+  setSettings({ model: "tavern/a-recommended" })
   await catalog("org-a", [first.modelID, recommended.modelID], recommended.modelID)
   choice(value.selected(), recommended)
   setSettings({})
@@ -637,7 +637,7 @@ try {
   const before = requests().length
   value.sendMessage("invalid explicit", personal.providerID, personal.modelID)
   value.sendCommand("invalid", "", undefined, undefined, undefined, undefined, undefined, undefined, {
-    model: "kilo/personal",
+    model: "tavern/personal",
   })
   assert.equal(requests().length, before)
   assert.deepEqual(writes(), remembered)
@@ -741,7 +741,7 @@ try {
   await catalog("org-a", [auto.modelID, first.modelID, recommended.modelID], recommended.modelID)
   await emit({ type: "modelSelectionsLoaded", selections: { code: auto } })
   choice(value.selected(), auto)
-  setSettings({ agent: { code: { model: "kilo/z-first" } } })
+  setSettings({ agent: { code: { model: "tavern/z-first" } } })
   await settle()
   choice(value.modelForAgent("code"), auto)
   choice(value.selected(), auto)
@@ -752,7 +752,7 @@ try {
 
   // Mode changes preserve both explicit and inherited session choices, including Default.
   await catalog("org-a", [personal.modelID, first.modelID, recommended.modelID], recommended.modelID)
-  setSettings({ agent: { ask: { model: "kilo/z-first", variant: "low" } } })
+  setSettings({ agent: { ask: { model: "tavern/z-first", variant: "low" } } })
   for (const effort of ["high", ""]) {
     for (const scope of [`selection-${effort}`, `pending:${effort}`, `sidebar-pending:${effort}`]) {
       value.setSessionAgent(scope, "code")
@@ -772,7 +772,7 @@ try {
     }
   }
   setSettings({
-    agent: { code: { model: "kilo/personal", variant: "high" }, ask: { model: "kilo/z-first", variant: "low" } },
+    agent: { code: { model: "tavern/personal", variant: "high" }, ask: { model: "tavern/z-first", variant: "low" } },
   })
   value.setSessionAgent("inherited-mode", "code")
   await emit({ type: "messagesLoaded", sessionID: "inherited-mode", messages: [] })
@@ -838,7 +838,7 @@ try {
           scope === "command-draft" ? null : scope,
           {
             agent: "ask",
-            model: reason === "invalid" ? "kilo/unavailable" : reason === "malformed" ? "invalid" : undefined,
+            model: reason === "invalid" ? "tavern/unavailable" : reason === "malformed" ? "invalid" : undefined,
             variant: "high",
           },
         ),
@@ -855,7 +855,7 @@ try {
 
   for (const configured of [false, true]) {
     const scope = `ses_command-${configured ? "configured" : "preferred"}`
-    setSettings(configured ? { agent: { ask: { model: "kilo/z-first", variant: "low" } } } : {})
+    setSettings(configured ? { agent: { ask: { model: "tavern/z-first", variant: "low" } } } : {})
     await emit({ type: "modelSelectionsLoaded", selections: { code: first, ask: recommended } })
     value.setCurrentSessionID(scope)
     value.setSessionAgent(scope, "code")
@@ -895,9 +895,9 @@ try {
   value.selectAgent("code")
   await settle()
   setSettings({
-    agent: { code: { model: "kilo/z-first", variant: "high" }, ask: { model: "kilo/a-recommended", variant: "low" } },
+    agent: { code: { model: "tavern/z-first", variant: "high" }, ask: { model: "tavern/a-recommended", variant: "low" } },
   })
-  await emit({ type: "variantsLoaded", variants: { "agent/code/kilo/z-first": "high" } })
+  await emit({ type: "variantsLoaded", variants: { "agent/code/tavern/z-first": "high" } })
   value.setCurrentSessionID("ses_command-cached")
   value.setSessionAgent("ses_command-cached", "code")
   await emit({ type: "messagesLoaded", sessionID: "ses_command-cached", messages: [] })
@@ -986,7 +986,7 @@ try {
       undefined,
       undefined,
       null,
-      { agent: "ask", model: "kilo/personal", variant: "high" },
+      { agent: "ask", model: "tavern/personal", variant: "high" },
     ),
     true,
   )
@@ -1019,7 +1019,7 @@ try {
       .some(
         (message) =>
           message.type === "persistVariant" &&
-          message.key === "session/ses_command-promoted/kilo/personal" &&
+          message.key === "session/ses_command-promoted/tavern/personal" &&
           message.value === "high",
       ),
   )
@@ -1106,7 +1106,7 @@ try {
       type: "commandsLoaded",
       commands: [
         { name: "review-test", description: "Test command", hints: [] },
-        { name: "unavailable-test", description: "Unavailable command", hints: [], model: "kilo/unavailable" },
+        { name: "unavailable-test", description: "Unavailable command", hints: [], model: "tavern/unavailable" },
       ],
     })
     assert.equal(input().value, text)
@@ -1431,13 +1431,13 @@ try {
       const accepted = value.sendCommand(
         "goal",
         args,
-        "kilo",
+        "tavern",
         "unavailable",
         undefined,
         undefined,
         undefined,
         undefined,
-        control ? { agent: "ask", model: "kilo/unavailable", variant: "high" } : undefined,
+        control ? { agent: "ask", model: "tavern/unavailable", variant: "high" } : undefined,
       )
       const posted = sent.slice(start)
       if (!control && phase !== "ready") {
@@ -2170,7 +2170,7 @@ try {
   await catalog("org-a", [personal.modelID, first.modelID, recommended.modelID], recommended.modelID)
   await emit({ type: "modelSelectionsLoaded", selections: {} })
   setSettings({
-    agent: { code: { model: "kilo/z-first", variant: "low" }, ask: { model: "kilo/a-recommended", variant: "low" } },
+    agent: { code: { model: "tavern/z-first", variant: "low" }, ask: { model: "tavern/a-recommended", variant: "low" } },
   })
   value.setCurrentSessionID("preference-active")
   value.setSessionAgent("preference-active", "ask")
@@ -2273,14 +2273,14 @@ try {
   fresh.selectModel(personal.providerID, personal.modelID)
   fresh.selectVariant("high")
   await emit({ type: "modelSelectionsLoaded", selections: { code: first }, preferred: { ...first, variant: "low" } })
-  await emit({ type: "variantsLoaded", variants: { "agent/code/kilo/personal": "low" } })
+  await emit({ type: "variantsLoaded", variants: { "agent/code/tavern/personal": "low" } })
   choice(fresh.selected(), personal)
   assert.equal(fresh.currentVariant(), "high")
   assert.deepEqual(fresh.preferredSelection(), { ...personal, variant: "high" })
   assert.equal(fresh.preferencesReady(), true)
 
   // Unset effort defers to the new model; only a real choice can override its preference.
-  const outgoing = { providerID: "kilo", modelID: "unset-effort" }
+  const outgoing = { providerID: "tavern", modelID: "unset-effort" }
   await catalog("org-a", [outgoing.modelID, first.modelID], first.modelID)
   for (const target of ["remembered", "configured"]) {
     for (const effort of [undefined, "", "low"]) {
@@ -2292,11 +2292,11 @@ try {
         const instance = peer.value
         assert(instance)
         instance.selectAgent("code")
-        setSettings(target === "configured" ? { agent: { code: { model: "kilo/z-first", variant: "high" } } } : {})
+        setSettings(target === "configured" ? { agent: { code: { model: "tavern/z-first", variant: "high" } } } : {})
         await emit({ type: "modelSelectionsLoaded", selections: { code: outgoing } })
         await emit({
           type: "variantsLoaded",
-          variants: target === "remembered" ? { "agent/code/kilo/z-first": "high" } : {},
+          variants: target === "remembered" ? { "agent/code/tavern/z-first": "high" } : {},
         })
         if (scope) instance.setSessionAgent(scope, "code")
         if (effort !== undefined) instance.selectVariant(effort, scope)
@@ -2344,7 +2344,7 @@ try {
     const instance = peer.value
     assert(instance)
     setSettings({
-      agent: { code: { model: "kilo/z-first", variant: "high" }, ask: { model: "kilo/unset-effort", variant: "low" } },
+      agent: { code: { model: "tavern/z-first", variant: "high" }, ask: { model: "tavern/unset-effort", variant: "low" } },
     })
     await emit({ type: "modelSelectionsLoaded", selections: {} })
     await emit({ type: "variantsLoaded", variants: {} })

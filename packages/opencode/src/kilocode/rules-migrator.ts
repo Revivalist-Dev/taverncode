@@ -3,13 +3,13 @@ import * as path from "path"
 import os from "os"
 
 export namespace RulesMigrator {
-  // Only support .kilocoderules (no migration for .roorules or .clinerules)
-  const LEGACY_RULE_FILE = ".kilocoderules"
+  // Only support .taverncoderules (no migration for .roorules or .clinerules)
+  const LEGACY_RULE_FILE = ".taverncoderules"
   const home = () => process.env.KILO_TEST_HOME || process.env.HOME || process.env.USERPROFILE || os.homedir()
 
-  // Directory-based rules (read from both .kilo and .kilocode)
-  const KILO_RULES_DIRS = [".kilo/rules", ".kilocode/rules"]
-  const globalRulesDirs = () => [path.join(home(), ".kilo", "rules"), path.join(home(), ".kilocode", "rules")]
+  // Directory-based rules (read from both .tavern and .taverncode)
+  const KILO_RULES_DIRS = [".tavern/rules", ".taverncode/rules"]
+  const globalRulesDirs = () => [path.join(home(), ".tavern", "rules"), path.join(home(), ".taverncode", "rules")]
 
   // Known modes for mode-specific rule discovery
   const KNOWN_MODES = ["code", "architect", "ask", "debug", "orchestrator"]
@@ -50,7 +50,7 @@ export namespace RulesMigrator {
   export async function discoverRules(projectDir: string): Promise<RuleFile[]> {
     const rules: RuleFile[] = []
 
-    // 1. Global rules directories (~/.kilo/rules/*.md and ~/.kilocode/rules/*.md)
+    // 1. Global rules directories (~/.tavern/rules/*.md and ~/.taverncode/rules/*.md)
     const globalSeen = new Set<string>()
     for (const dir of globalRulesDirs()) {
       if (!(await isDirectory(dir))) continue
@@ -63,7 +63,7 @@ export namespace RulesMigrator {
       }
     }
 
-    // 2. Project .kilo/rules/ and .kilocode/rules/ directories
+    // 2. Project .tavern/rules/ and .taverncode/rules/ directories
     const seen = new Set<string>()
     for (const rulesRel of KILO_RULES_DIRS) {
       const projectRulesDir = path.join(projectDir, rulesRel)
@@ -79,7 +79,7 @@ export namespace RulesMigrator {
       }
     }
 
-    // 3. Legacy .kilocoderules file (only kilocode, not roo/cline)
+    // 3. Legacy .taverncoderules file (only taverncode, not roo/cline)
     const legacyFile = path.join(projectDir, LEGACY_RULE_FILE)
     if (await exists(legacyFile)) {
       rules.push({ path: legacyFile, source: "legacy" })
@@ -87,9 +87,9 @@ export namespace RulesMigrator {
 
     // 4. Mode-specific rules
     for (const mode of KNOWN_MODES) {
-      // Mode-specific directories (.kilo/rules-{mode}/*.md and .kilocode/rules-{mode}/*.md)
+      // Mode-specific directories (.tavern/rules-{mode}/*.md and .taverncode/rules-{mode}/*.md)
       const modeSeen = new Set<string>()
-      for (const prefix of [".kilo", ".kilocode"]) {
+      for (const prefix of [".tavern", ".taverncode"]) {
         const modeDir = path.join(projectDir, `${prefix}/rules-${mode}`)
         if (await isDirectory(modeDir)) {
           const files = await findMarkdownFiles(modeDir)
@@ -103,8 +103,8 @@ export namespace RulesMigrator {
         }
       }
 
-      // Legacy mode-specific file (.kilocoderules-{mode})
-      const legacyModeFile = path.join(projectDir, `.kilocoderules-${mode}`)
+      // Legacy mode-specific file (.taverncoderules-{mode})
+      const legacyModeFile = path.join(projectDir, `.taverncoderules-${mode}`)
       if (await exists(legacyModeFile)) {
         rules.push({ path: legacyModeFile, source: "legacy", mode })
       }
@@ -143,7 +143,7 @@ export namespace RulesMigrator {
       // Warn about legacy files
       if (rule.source === "legacy") {
         warnings.push(
-          `Legacy rule file '${path.basename(rule.path)}' found. Consider migrating to .kilo/rules/ directory.`,
+          `Legacy rule file '${path.basename(rule.path)}' found. Consider migrating to .tavern/rules/ directory.`,
         )
       }
     }

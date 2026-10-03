@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "@solidjs/router"
-import { Button } from "@kilocode/kilo-web-ui/button"
-import { Card } from "@kilocode/kilo-web-ui/card"
+import { Button } from "@taverncode/tavern-web-ui/button"
+import { Card } from "@taverncode/tavern-web-ui/card"
 import { createEffect, createMemo, createSignal, Match, onCleanup, Show, Switch } from "solid-js"
 import { LoadingScreen } from "../../components/LoadingScreen"
 import { completeKiloLogin, loadKiloProfile, startKiloLogin, type ProjectQuery } from "../../client"
@@ -135,9 +135,9 @@ export function LoginRoute() {
     <section class="route-empty">
       <div class="profile-login-page">
         <header class="profile-login-header">
-          <p class="eyebrow">Kilo Login</p>
-          <h1>Login to Kilo</h1>
-          <p>Authorize this Kilo Console through the same device auth flow used by the editor clients.</p>
+          <p class="eyebrow">Tavern Login</p>
+          <h1>Login to Tavern</h1>
+          <p>Authorize this Tavern Console through the same device auth flow used by the editor clients.</p>
         </header>
 
         <Show when={!server.query() && server.discoverable()}>
@@ -146,8 +146,8 @@ export function LoginRoute() {
 
         <Show when={!server.query() && !server.discoverable()}>
           <Card class="profile-login-card" variant="warning">
-            <strong>Kilo server not found</strong>
-            <p>Start a local Kilo server or pass a server URL with ?server=.</p>
+            <strong>Tavern server not found</strong>
+            <p>Start a local Tavern server or pass a server URL with ?server=.</p>
             <a class="profile-link-button" href={profile()}>
               Back to Profile
             </a>

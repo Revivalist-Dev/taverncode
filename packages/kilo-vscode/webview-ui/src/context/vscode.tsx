@@ -5,7 +5,7 @@
 
 import { createContext, useContext, onCleanup, ParentComponent, createSignal } from "solid-js"
 import type { VSCodeAPI, WebviewMessage, ExtensionMessage } from "../types/messages"
-import { ClipboardProvider } from "@kilocode/kilo-ui/context/clipboard"
+import { ClipboardProvider } from "@taverncode/tavern-ui/context/clipboard"
 import { edge } from "../sidebar-position"
 import { protect } from "../utils/webview-message"
 
@@ -19,9 +19,9 @@ export function getVSCodeAPI(): VSCodeAPI {
       vscodeApi = acquireVsCodeApi()
     } else {
       // Mock for development/testing outside VS Code
-      console.warn("[Kilo New] Running outside VS Code, using mock API")
+      console.warn("[Tavern New] Running outside VS Code, using mock API")
       vscodeApi = {
-        postMessage: (msg) => console.log("[Kilo New] Mock postMessage:", msg),
+        postMessage: (msg) => console.log("[Tavern New] Mock postMessage:", msg),
         getState: () => undefined,
         setState: () => {},
       }

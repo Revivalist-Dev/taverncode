@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { CodexAuthExpiredError, refreshCodexAuth } from "../../src/kilocode/provider/codex-refresh"
+import { CodexAuthExpiredError, refreshCodexAuth } from "../../src/taverncode/provider/codex-refresh"
 import { MessageV2 } from "../../src/session/message-v2"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { spawn } from "child_process"
@@ -113,7 +113,7 @@ async function race(input: { reuse: "early" | "late"; delay: number; lock?: Lock
   })
 
   try {
-    const data = path.join(dir, "share", "kilo")
+    const data = path.join(dir, "share", "tavern")
     const start = path.join(dir, "start")
     const first = path.join(dir, "first")
     const second = path.join(dir, "second")

@@ -128,11 +128,11 @@ describe("Agent Manager CSS Prefix", () => {
     // Exceptions:
     // - VS Code sets these body classes on webview elements (scoping
     //   selectors for high contrast theme support).
-    // - `kilo-diff-theme` is the shared Pierre diff theme utility defined
+    // - `tavern-diff-theme` is the shared Pierre diff theme utility defined
     //   in webview-ui/src/styles/diff.css and reused across webviews.
     // - `css` is matched from `@import "./diff.css"` file extension, not a
     //   class selector.
-    const host = new Set(["vscode-high-contrast", "vscode-high-contrast-light", "kilo-diff-theme", "css"])
+    const host = new Set(["vscode-high-contrast", "vscode-high-contrast-light", "tavern-diff-theme", "css"])
     const invalid = names.filter((n) => !n!.startsWith("am-") && !host.has(n!))
 
     expect(invalid, `Classes missing "am-" prefix: ${invalid.join(", ")}`).toEqual([])
@@ -143,8 +143,8 @@ describe("Agent Manager CSS Prefix", () => {
     const matches = [...css.matchAll(/--([a-z][a-z0-9-]*)\s*:/gi)]
     const names = [...new Set(matches.map((m) => m[1]))]
 
-    // Allow kilo-ui design tokens, vscode theme variables, and third-party
-    // library tokens (@pierre/diffs, kilo-ui sticky-accordion) used as fallbacks
+    // Allow tavern-ui design tokens, vscode theme variables, and third-party
+    // library tokens (@pierre/diffs, tavern-ui sticky-accordion) used as fallbacks
     const allowed = ["am-", "vscode-", "surface-", "text-", "border-", "diffs-", "sticky-", "syntax-"]
     const invalid = names.filter((n) => !allowed.some((p) => n!.startsWith(p)))
 
@@ -558,10 +558,10 @@ describe("Agent Manager Worktree Actions", () => {
       contributes: { keybindings: { command: string; key?: string; mac?: string }[] }
     }
     const dialog = manifest.contributes.keybindings.find(
-      (item) => item.command === "kilo-code.new.agentManager.newWorktree",
+      (item) => item.command === "tavern-code.new.agentManager.newWorktree",
     )
     const quick = manifest.contributes.keybindings.find(
-      (item) => item.command === "kilo-code.new.agentManager.quickWorktree",
+      (item) => item.command === "tavern-code.new.agentManager.quickWorktree",
     )
 
     expect(dialog).toMatchObject({ key: "ctrl+n", mac: "cmd+n" })
@@ -576,7 +576,7 @@ describe("Agent Manager Worktree Actions", () => {
       contributes: { keybindings: { command: string; key?: string; mac?: string }[] }
     }
     const removed = manifest.contributes.keybindings.find((item) => item.command === "-workbench.actions.view.problems")
-    const manager = manifest.contributes.keybindings.find((item) => item.command === "kilo-code.new.agentManagerOpen")
+    const manager = manifest.contributes.keybindings.find((item) => item.command === "tavern-code.new.agentManagerOpen")
 
     expect(removed).toMatchObject({ key: "ctrl+shift+m", mac: "cmd+shift+m" })
     expect(manager).toMatchObject({ key: "ctrl+shift+m", mac: "cmd+shift+m" })
@@ -610,8 +610,8 @@ describe("Agent Manager Worktree Actions", () => {
 
   it("forwards the quick-worktree command to immediate creation", () => {
     const source = fs.readFileSync(path.join(ROOT, "src/extension.ts"), "utf-8")
-    const start = source.indexOf('vscode.commands.registerCommand("kilo-code.new.agentManager.quickWorktree"')
-    const end = source.indexOf('vscode.commands.registerCommand("kilo-code.new.agentManager.openWorktree"', start)
+    const start = source.indexOf('vscode.commands.registerCommand("tavern-code.new.agentManager.quickWorktree"')
+    const end = source.indexOf('vscode.commands.registerCommand("tavern-code.new.agentManager.openWorktree"', start)
     const command = source.slice(start, end)
 
     expect(start).toBeGreaterThanOrEqual(0)
@@ -1023,7 +1023,7 @@ describe("Agent Manager Webview — non-git sessionsLoaded fix", () => {
   const tsx = readAllTsx()
 
   /**
-   * Regression: when isGitRepo is false, the Kilo server never sends a
+   * Regression: when isGitRepo is false, the Tavern server never sends a
    * "sessionsLoaded" message, so the skeleton was stuck forever.
    * The fix must set sessionsLoaded(true) when receiving a state message
    * with isGitRepo === false.
@@ -1046,7 +1046,7 @@ describe("Agent Manager Webview — non-git sessionsLoaded fix", () => {
 
 describe("KiloProvider — pending session refresh on reconnect", () => {
   const provider = fs.readFileSync(KILO_PROVIDER_FILE, "utf-8")
-  const utils = fs.readFileSync(path.join(ROOT, "src/kilo-provider-utils.ts"), "utf-8")
+  const utils = fs.readFileSync(path.join(ROOT, "src/tavern-provider-utils.ts"), "utf-8")
 
   /**
    * Regression: when the Agent Manager opens its panel, initializeState()
@@ -1056,13 +1056,13 @@ describe("KiloProvider — pending session refresh on reconnect", () => {
    * The worktree would show up in the sidebar but display "No sessions open".
    *
    * The fix uses a pendingSessionRefresh flag: loadSessions() (in
-   * kilo-provider-utils) sets it when httpClient is unavailable, and
+   * tavern-provider-utils) sets it when httpClient is unavailable, and
    * both initializeConnection() and the "connected" state handler flush
    * the pending refresh.
    */
   it("loadSessions sets pendingSessionRefresh when client is null", () => {
     const start = utils.indexOf("async function loadPage")
-    expect(start, "loadPage must exist in kilo-provider-utils").toBeGreaterThan(-1)
+    expect(start, "loadPage must exist in tavern-provider-utils").toBeGreaterThan(-1)
     const snippet = utils.slice(start, start + 700)
     expect(snippet, "must set pendingSessionRefresh when client missing").toContain("ctx.pendingSessionRefresh = true")
     expect(snippet, "must avoid noisy errors while still connecting").toContain('ctx.connectionState !== "connecting"')

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 import { decode, type ModelRemains, type Native } from "./native"
-import type { ProviderUsage } from "@opencode-ai/schema/kilocode/provider-usage"
+import type { ProviderUsage } from "@opencode-ai/schema/taverncode/provider-usage"
 
 export const bindings = {
   "minimax-coding-plan": {

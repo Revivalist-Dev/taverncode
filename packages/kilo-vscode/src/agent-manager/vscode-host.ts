@@ -8,7 +8,7 @@
 import * as vscode from "vscode"
 import * as fs from "node:fs/promises"
 import * as path from "node:path"
-import type { Session } from "@kilocode/sdk/v2/client"
+import type { Session } from "@taverncode/sdk/v2/client"
 import type { Host, PanelContext, OutputHandle, SessionProvider, Disposable } from "./host"
 import type { PRMergeMethod } from "./types"
 import { ProjectRouteService } from "./project/route"
@@ -25,7 +25,7 @@ import type { AutoApproveController } from "../commands/toggle-auto-approve"
 import type { RemoteStatusService } from "../services/RemoteStatusService"
 import type { CaffeinationService } from "../services/caffeination"
 
-const INTRO_KEY = "kilo.agentManager.introDismissed"
+const INTRO_KEY = "tavern.agentManager.introDismissed"
 const PR_MERGE_METHODS_KEY = "agentManager.prMergeMethod"
 
 export class VscodeHost implements Host {
@@ -65,7 +65,7 @@ export class VscodeHost implements Host {
     worktreeDirectories?: () => string[]
   }): PanelContext {
     const panel = vscode.window.createWebviewPanel(
-      "kilo-code.new.AgentManagerPanel",
+      "tavern-code.new.AgentManagerPanel",
       "Agent Manager",
       vscode.ViewColumn.One,
       {
@@ -107,8 +107,8 @@ export class VscodeHost implements Host {
     }
 
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-dark.svg"),
     }
 
     const port = this.connectionService.getServerInfo()?.port
@@ -137,9 +137,9 @@ export class VscodeHost implements Host {
       disableViewedRegistration: true,
       disableStatsPolling: true,
       focusTargetContext: {
-        prompt: "kilo-code.new.agentManagerPromptFocused",
-        mainTerminal: "kilo-code.new.agentManagerMainTerminalFocused",
-        sideTerminal: "kilo-code.new.agentManagerSideTerminalFocused",
+        prompt: "tavern-code.new.agentManagerPromptFocused",
+        mainTerminal: "tavern-code.new.agentManagerMainTerminalFocused",
+        sideTerminal: "tavern-code.new.agentManagerSideTerminalFocused",
       },
       onFocused: () => this.focus?.gained(),
       routeService: this.routes,
@@ -265,7 +265,7 @@ export class VscodeHost implements Host {
       const res = await client.session.list({ directory: dir, roots: true }, { throwOnError: true })
       return res.data
     } catch (err) {
-      console.warn(`[Kilo New] Agent Manager: failed to list project sessions for ${dir}:`, err)
+      console.warn(`[Tavern New] Agent Manager: failed to list project sessions for ${dir}:`, err)
       return []
     }
   }
@@ -411,11 +411,11 @@ export class VscodeHost implements Host {
   }
 
   multiProject(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.experimental").get("multiProject", false)
+    return vscode.workspace.getConfiguration("tavern-code.new.experimental").get("multiProject", false)
   }
 
   browserAutomation(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.experimental").get("browserAutomation", false)
+    return vscode.workspace.getConfiguration("tavern-code.new.experimental").get("browserAutomation", false)
   }
 
   async approveBrowserNavigation(origin: string): Promise<boolean> {
@@ -428,7 +428,7 @@ export class VscodeHost implements Host {
   }
 
   worktreePool(): boolean {
-    return vscode.workspace.getConfiguration("kilo-code.new.agentManager").get("worktreePool", true)
+    return vscode.workspace.getConfiguration("tavern-code.new.agentManager").get("worktreePool", true)
   }
 
   readProjects(): unknown {
@@ -461,13 +461,13 @@ export class VscodeHost implements Host {
 
   onDidChangeMultiProject(cb: (enabled: boolean) => void): Disposable {
     return vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration("kilo-code.new.experimental.multiProject")) cb(this.multiProject())
+      if (e.affectsConfiguration("tavern-code.new.experimental.multiProject")) cb(this.multiProject())
     })
   }
 
   onDidChangeWorktreePool(cb: (enabled: boolean) => void): Disposable {
     return vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration("kilo-code.new.agentManager.worktreePool")) cb(this.worktreePool())
+      if (e.affectsConfiguration("tavern-code.new.agentManager.worktreePool")) cb(this.worktreePool())
     })
   }
 
@@ -476,7 +476,7 @@ export class VscodeHost implements Host {
   }
 
   autoBranchNaming(): { enabled: boolean; prefix: string } {
-    const cfg = vscode.workspace.getConfiguration("kilo-code.new.agentManager")
+    const cfg = vscode.workspace.getConfiguration("tavern-code.new.agentManager")
     return {
       enabled: cfg.get("autoBranchNaming", true),
       prefix: cfg.get("branchPrefix", ""),
@@ -495,7 +495,7 @@ export class VscodeHost implements Host {
 
   revealInOS(path: string): void {
     if (vscode.env.remoteName) {
-      console.warn(`[Kilo New] Cannot reveal ${path} in the OS file manager on a remote workspace`)
+      console.warn(`[Tavern New] Cannot reveal ${path} in the OS file manager on a remote workspace`)
       return
     }
     void vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(path))
@@ -536,7 +536,7 @@ export class VscodeHost implements Host {
   }
 
   extensionKeybindings(): Array<{ command: string; key?: string; mac?: string; when?: string }> {
-    const ext = vscode.extensions.getExtension("kilocode.kilo-code")
+    const ext = vscode.extensions.getExtension("taverncode.tavern-code")
     return ext?.packageJSON?.contributes?.keybindings ?? []
   }
 
@@ -557,7 +557,7 @@ export class VscodeHost implements Host {
   }
 
   openSettings(tab?: string, projectId?: string): void {
-    void vscode.commands.executeCommand("kilo-code.new.settingsButtonClicked", tab, projectId)
+    void vscode.commands.executeCommand("tavern-code.new.settingsButtonClicked", tab, projectId)
   }
 
   refreshGit(): void {

@@ -10,10 +10,10 @@ import { FSUtil } from "@opencode-ai/core/fs-util"
 import { AppProcess } from "@opencode-ai/core/process"
 import { Hash } from "@opencode-ai/core/util/hash"
 import { Snapshot } from "../../src/snapshot"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/taverncode/instance"
 import { Filesystem } from "../../src/util/filesystem"
-import { KiloSnapshotMaterialize } from "../../src/kilocode/snapshot/materialize"
-import { KiloSnapshotSeed } from "../../src/kilocode/snapshot/seed"
+import { KiloSnapshotMaterialize } from "../../src/taverncode/snapshot/materialize"
+import { KiloSnapshotSeed } from "../../src/taverncode/snapshot/seed"
 import { disposeAllInstances, provideInstance, testInstanceStoreLayer, tmpdir } from "../fixture/fixture"
 
 const fwd = (...parts: string[]) => path.join(...parts).replaceAll("\\", "/")
@@ -287,17 +287,17 @@ test(
     expect((await $`git --git-dir=${common} rev-parse --verify --quiet ${sourceRef}`.nothrow().text()).trim()).toBe("")
     expect((await run(tmp.path, (snapshot) => snapshot.patch(result.value!))).value.files).toEqual([])
 
-    const expired = `refs/kilo/snapshots/1/${result.value!}`
+    const expired = `refs/tavern/snapshots/1/${result.value!}`
     await $`git --git-dir=${result.gitdir} update-ref ${expired} ${result.value!}`.quiet()
     await run(tmp.path, (snapshot) => snapshot.cleanup())
     expect(
       (await $`git --git-dir=${result.gitdir} rev-parse --verify --quiet ${expired}`.nothrow().text()).trim(),
     ).toBe("")
-    expect((await $`git --git-dir=${result.gitdir} for-each-ref refs/kilo/snapshots`.text()).trim()).toContain(
+    expect((await $`git --git-dir=${result.gitdir} for-each-ref refs/tavern/snapshots`.text()).trim()).toContain(
       result.value!,
     )
 
-    const locked = `refs/kilo/snapshots/2/${result.value!}`
+    const locked = `refs/tavern/snapshots/2/${result.value!}`
     await $`git --git-dir=${result.gitdir} update-ref ${locked} ${result.value!}`.quiet()
     const lock = path.join(result.gitdir, `${locked}.lock`)
     await Filesystem.write(lock, "")

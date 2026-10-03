@@ -60,7 +60,7 @@ function isProgrammatic(text: string): boolean {
   )
     return true
   // Known programmatic identifiers and config values
-  if (/^(local|pending:|kilo-vscode|data-theme|use:sortable)/.test(trimmed)) return true
+  if (/^(local|pending:|tavern-vscode|data-theme|use:sortable)/.test(trimmed)) return true
   // navigator/platform detection strings
   if (/^(Mac|iPhone|iPad)/.test(trimmed)) return true
   // Keyboard modifier symbols
@@ -86,7 +86,7 @@ function isProgrammatic(text: string): boolean {
   // CSS selector strings
   if (/^\[data-/.test(trimmed) || /^\.am-/.test(trimmed)) return true
   // Log prefixes
-  if (/^\[Kilo/.test(trimmed)) return true
+  if (/^\[Tavern/.test(trimmed)) return true
   // Platform-specific modifier display (already keybinding tokens)
   if (/^(Ctrl\+|⌘|⇧|⌃|⌥)/.test(trimmed) && trimmed.length <= 6) return true
   return false

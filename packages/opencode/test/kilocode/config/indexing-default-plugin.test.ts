@@ -4,14 +4,14 @@ import { Effect, Layer, Option } from "effect"
 import { NodeFileSystem, NodePath } from "@effect/platform-node"
 import path from "path"
 import { Flag } from "@opencode-ai/core/flag/flag"
-import { hasIndexingPlugin } from "@kilocode/kilo-indexing/detect"
+import { hasIndexingPlugin } from "@taverncode/tavern-indexing/detect"
 import { Account } from "../../../src/account/account"
 import { Auth } from "../../../src/auth"
 import { Config } from "../../../src/config/config"
 import type { ConfigPlugin } from "../../../src/config/plugin"
 import type { ConfigPluginV1 } from "@opencode-ai/core/v1/config/plugin"
-import { KilocodeDefaultPlugins } from "../../../src/kilocode/config/default-plugins"
-import { INDEXING_PLUGIN } from "../../../src/kilocode/indexing-feature"
+import { KilocodeDefaultPlugins } from "../../../src/taverncode/config/default-plugins"
+import { INDEXING_PLUGIN } from "../../../src/taverncode/indexing-feature"
 import * as CrossSpawnSpawner from "@opencode-ai/core/cross-spawn-spawner"
 import { Env } from "../../../src/env"
 import { Git } from "../../../src/git"
@@ -50,7 +50,7 @@ const layer = AppNodeBuilder.build(Config.node, [
 ]).pipe(Layer.provideMerge(infra))
 
 const load = () => Effect.runPromise(Config.Service.use((svc) => svc.get()).pipe(Effect.scoped, Effect.provide(layer)))
-describe("kilocode default indexing plugin", () => {
+describe("taverncode default indexing plugin", () => {
   afterEach(async () => {
     await disposeAllInstances()
   })
@@ -87,7 +87,7 @@ describe("kilocode default indexing plugin", () => {
           await Filesystem.write(
             path.join(dir, "opencode.json"),
             JSON.stringify({
-              $schema: "https://app.kilo.ai/config.json",
+              $schema: "https://app.tavern.ai/config.json",
               plugin: ["global-plugin-1"],
             }),
           )

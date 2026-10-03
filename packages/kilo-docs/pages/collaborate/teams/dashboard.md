@@ -1,11 +1,11 @@
 ---
 title: "Dashboard"
-description: "Manage your team from the Kilo Code dashboard"
+description: "Manage your team from the Tavern Code dashboard"
 ---
 
 # Dashboard
 
-The Kilo seats dashboard is the first screen that comes up when you visit [the Kilo Code web app](https://app.kilo.ai). It provides complete visibility into your team's AI usage, costs, and management.
+The Tavern seats dashboard is the first screen that comes up when you visit [the Tavern Code web app](https://app.tavern.ai). It provides complete visibility into your team's AI usage, costs, and management.
 
 {% image src="/docs/img/teams/dashboard.png" alt="Invite your team members" width="700" /%}
 
@@ -90,7 +90,7 @@ Interactive graphs displaying:
 
 ## Billing Tab
 
-Complete financial management for your Kilo Teams subscription.
+Complete financial management for your Tavern Teams subscription.
 
 - **Available credits** remaining
 - **Downloadable invoices** for expense reporting
@@ -107,11 +107,11 @@ Complete financial management for your Kilo Teams subscription.
 
 ## Subscriptions Tab
 
-Manage your Kilo Teams plan and seat allocation.
+Manage your Tavern Teams plan and seat allocation.
 
 ### Current Plan Details
 
-- **Plan type** (Kilo Teams)
+- **Plan type** (Tavern Teams)
 - **Monthly cost** per seat ($15/user/month)
 - **Billing cycle** dates and next charge
 - **Plan benefits** and included features

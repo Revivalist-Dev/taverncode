@@ -1,4 +1,4 @@
-import { normalizeHunk } from "@kilocode/kilo-ui/session-diff"
+import { normalizeHunk } from "@taverncode/tavern-ui/session-diff"
 import type { PRDiffSnapshot } from "../../src/shared/pr-comment-actions"
 import { parsePatch } from "../../src/shared/pr-patch"
 import type { WorktreeFileDiff } from "../src/types/messages"

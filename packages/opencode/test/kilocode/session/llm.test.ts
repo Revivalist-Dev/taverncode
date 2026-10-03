@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import { Effect, Stream } from "effect"
 import { LLMEvent } from "@opencode-ai/llm"
-import { KiloLLM } from "@/kilocode/session/llm"
+import { KiloLLM } from "@/taverncode/session/llm"
 
-describe("kilocode.session.llm.timeout", () => {
+describe("taverncode.session.llm.timeout", () => {
   test("uses prepared options before the provider fallback", () => {
     const result = KiloLLM.timeout({
       options: { chunkTimeout: 15_000 },
@@ -36,7 +36,7 @@ describe("kilocode.session.llm.timeout", () => {
   })
 })
 
-describe("kilocode.session.llm.text", () => {
+describe("taverncode.session.llm.text", () => {
   test("joins text delta events", async () => {
     const out = await Effect.runPromise(
       KiloLLM.text(

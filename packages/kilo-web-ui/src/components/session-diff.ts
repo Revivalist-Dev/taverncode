@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-ui/session-diff"
+export * from "@taverncode/tavern-ui/session-diff"

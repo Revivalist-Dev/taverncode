@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { createRoot } from "solid-js"
-import { createDoublePress } from "../../src/kilocode/double-press"
+import { createDoublePress } from "../../src/taverncode/double-press"
 
 function setup(window: number) {
   return createRoot((dispose) => ({ press: createDoublePress(window), dispose }))

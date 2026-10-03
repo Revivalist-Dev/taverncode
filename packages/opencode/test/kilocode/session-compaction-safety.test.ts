@@ -3,8 +3,8 @@
 // re-shipping multi-MB base-64 images after a successful summary.
 
 import { describe, expect, test } from "bun:test"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
-import { KiloSessionMessageOrder } from "../../src/kilocode/session/message-order"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
+import { KiloSessionMessageOrder } from "../../src/taverncode/session/message-order"
 import { MessageV2 } from "../../src/session/message-v2"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"

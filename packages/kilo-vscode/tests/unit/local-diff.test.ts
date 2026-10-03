@@ -185,7 +185,7 @@ describe("generatedLike", () => {
   it("rejects normal source files", () => {
     expect(generatedLike("src/index.ts")).toBe(false)
     expect(generatedLike("README.md")).toBe(false)
-    expect(generatedLike("packages/kilo-vscode/src/extension.ts")).toBe(false)
+    expect(generatedLike("packages/tavern-vscode/src/extension.ts")).toBe(false)
   })
 
   it("handles Windows-style separators", () => {

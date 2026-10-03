@@ -11,7 +11,7 @@ const response = () =>
   )
 
 describe("fetchKiloEmbeddingModelCatalog", () => {
-  test("fetches catalog from Kilo Gateway", async () => {
+  test("fetches catalog from Tavern Gateway", async () => {
     const prev = global.fetch
     const fn = mock(() => Promise.resolve(response())) as unknown as typeof fetch
     global.fetch = fn
@@ -70,7 +70,7 @@ describe("fetchKiloEmbeddingModelCatalog", () => {
       ).resolves.toEqual(EMPTY_KILO_EMBEDDING_MODEL_CATALOG)
       expect(issue).toHaveBeenCalledWith({
         code: "http",
-        message: "Unable to load Kilo embedding models (HTTP 500).",
+        message: "Unable to load Tavern embedding models (HTTP 500).",
         status: 500,
       })
       expect(warn).not.toHaveBeenCalled()

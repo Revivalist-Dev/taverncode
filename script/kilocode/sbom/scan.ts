@@ -4,7 +4,7 @@
  * The lockfile closure covers code compiled into bundles; this covers everything
  * that exists as a file in the shipped artifact: JARs, copied npm packages,
  * native helpers, WASM, licences, and OS packages in container images. Both
- * halves are required, because neither one alone describes a Kilo artifact.
+ * halves are required, because neither one alone describes a Tavern artifact.
  *
  * Syft is optional at runtime. When it is unavailable the scan degrades to a
  * recorded coverage gap rather than pretending the artifact has no file-level
@@ -35,9 +35,9 @@ function version(binary: string) {
 }
 
 /**
- * Convert a Syft CycloneDX document into Kilo components.
+ * Convert a Syft CycloneDX document into Tavern components.
  *
- * Syft's own root component describes the scan target, which Kilo replaces with
+ * Syft's own root component describes the scan target, which Tavern replaces with
  * its own product root, so it is dropped here.
  */
 export function convert(document: any, delivery: Component["delivery"] = "contained"): Component[] {
@@ -72,8 +72,8 @@ export function convert(document: any, delivery: Component["delivery"] = "contai
 /**
  * Scan a file, directory, archive, or image reference.
  *
- * `target` uses Syft scheme syntax, e.g. `file:dist/kilo-linux-x64.tar.gz` or
- * `registry:ghcr.io/kilo-org/kilocode@sha256:...`.
+ * `target` uses Syft scheme syntax, e.g. `file:dist/tavern-linux-x64.tar.gz` or
+ * `registry:ghcr.io/tavern-org/taverncode@sha256:...`.
  */
 export async function scan(target: string): Promise<Scan> {
   // `SYFT` pins a specific binary; setting it to an empty string disables the
@@ -87,7 +87,7 @@ export async function scan(target: string): Promise<Scan> {
     }
   }
 
-  const out = path.join(await fs.promises.mkdtemp(path.join(os.tmpdir(), "kilo-sbom-")), "syft.cdx.json")
+  const out = path.join(await fs.promises.mkdtemp(path.join(os.tmpdir(), "tavern-sbom-")), "syft.cdx.json")
   const proc = Bun.spawn([binary, "scan", target, "-o", `cyclonedx-json=${out}`, "-q"], {
     stdout: "inherit",
     stderr: "inherit",

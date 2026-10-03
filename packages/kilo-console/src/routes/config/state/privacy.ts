@@ -1,7 +1,7 @@
-import type { Model, Provider } from "@kilocode/sdk/v2/client"
+import type { Model, Provider } from "@taverncode/sdk/v2/client"
 
 export function hasGateway(providers: Pick<Provider, "id">[]) {
-  return providers.some((provider) => provider.id === "kilo")
+  return providers.some((provider) => provider.id === "tavern")
 }
 
 export function visible(
@@ -9,5 +9,5 @@ export function visible(
   model: Pick<Model, "mayTrainOnYourPrompts">,
   privacy: boolean,
 ) {
-  return !privacy || provider.id !== "kilo" || model.mayTrainOnYourPrompts !== true
+  return !privacy || provider.id !== "tavern" || model.mayTrainOnYourPrompts !== true
 }

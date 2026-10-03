@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 const yes = new Set(["1", "true", "yes", "on"])
 const no = new Set(["0", "false", "no", "off"])
 
@@ -75,5 +75,5 @@ export function session(
   platform = process.platform,
 ) {
   const logo = supports(env, platform) ? modern.exit : fallback.exit
-  return [``, `${logo[0]}${dim}${title}${normal}`, `${logo[1]}${dim}kilo -s ${id}${normal}`, logo[2]].join("\n")
+  return [``, `${logo[0]}${dim}${title}${normal}`, `${logo[1]}${dim}tavern -s ${id}${normal}`, logo[2]].join("\n")
 }

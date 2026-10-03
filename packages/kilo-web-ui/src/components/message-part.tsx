@@ -1,1 +1,1 @@
-export * from "@kilocode/kilo-ui/message-part"
+export * from "@taverncode/tavern-ui/message-part"

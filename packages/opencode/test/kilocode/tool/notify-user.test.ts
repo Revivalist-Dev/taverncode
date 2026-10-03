@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import { Effect, Layer, Schema } from "effect"
 import { Agent } from "@/agent/agent"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
-import { KiloToolRegistry } from "@/kilocode/tool/registry"
-import { NotifyUserTool } from "@/kilocode/tool/notify-user"
+import { KiloSessions } from "@/tavern-sessions/tavern-sessions"
+import { KiloToolRegistry } from "@/taverncode/tool/registry"
+import { NotifyUserTool } from "@/taverncode/tool/notify-user"
 import { MessageID, SessionID } from "@/session/schema"
 import * as Truncate from "@/tool/truncate"
 import type { Tool } from "@/tool/tool"
@@ -153,7 +153,7 @@ describe("notify_user tool", () => {
     const result = await runNotifyTool({ message: "hello" }, sessions)
 
     expect(result.metadata.ok).toBe(false)
-    expect(result.output).toContain("not connected to Kilo cloud")
+    expect(result.output).toContain("not connected to Tavern cloud")
   })
 
   test("does not send when remote is disabled", async () => {

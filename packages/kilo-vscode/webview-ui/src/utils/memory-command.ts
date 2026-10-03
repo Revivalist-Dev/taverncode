@@ -1,5 +1,5 @@
-import { MEMORY_USAGE, parseMemoryCommand as parse } from "@kilocode/kilo-memory/commands"
-import type { ParsedMemoryCommand as SharedMemoryCommand } from "@kilocode/kilo-memory/commands"
+import { MEMORY_USAGE, parseMemoryCommand as parse } from "@taverncode/tavern-memory/commands"
+import type { ParsedMemoryCommand as SharedMemoryCommand } from "@taverncode/tavern-memory/commands"
 
 export type ParsedMemoryCommand = SharedMemoryCommand
 export { MEMORY_USAGE }

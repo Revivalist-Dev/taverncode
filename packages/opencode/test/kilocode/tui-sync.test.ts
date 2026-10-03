@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { KiloSessionTuiSync } from "../../src/kilocode/session/tui-sync"
+import { KiloSessionTuiSync } from "../../src/taverncode/session/tui-sync"
 
 type Message = {
   role: string

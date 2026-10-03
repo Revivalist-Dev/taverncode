@@ -2,8 +2,8 @@ import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { SessionProjector } from "@opencode-ai/core/session/projector"
 import { expect } from "bun:test"
 import { Effect } from "effect"
-import { RecallSearch } from "../../src/kilocode/session/recall-search"
-import { Instance } from "../../src/kilocode/instance"
+import { RecallSearch } from "../../src/taverncode/session/recall-search"
+import { Instance } from "../../src/taverncode/instance"
 import { Session } from "../../src/session/session"
 import { MessageV2 } from "../../src/session/message-v2"
 import { MessageTable, PartTable, SessionTable } from "@opencode-ai/core/session/sql"
@@ -325,7 +325,7 @@ it.instance(
         url: "file:///tmp/recall-search.ts",
         source: {
           type: "symbol",
-          path: "packages/opencode/src/kilocode/session/recall-search.ts",
+          path: "packages/opencode/src/taverncode/session/recall-search.ts",
           name: "RecallSearch",
           kind: 12,
           range: { start: { line: 0, character: 0 }, end: { line: 1, character: 0 } },

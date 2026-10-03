@@ -9,7 +9,7 @@ import type { RunTerminalDestination } from "../../src/agent-manager/run/destina
 const destination: RunTerminalDestination = "vscode"
 
 function setup() {
-  const root = mkdtempSync(path.join(tmpdir(), "kilo-run-controller-"))
+  const root = mkdtempSync(path.join(tmpdir(), "tavern-run-controller-"))
   const configs: RunTaskConfig[] = []
   const statuses: RunStatus[] = []
   const controller = new RunController({

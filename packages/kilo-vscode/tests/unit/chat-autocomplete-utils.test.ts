@@ -102,11 +102,11 @@ describe("buildChatPrefix", () => {
 
 describe("getChatAutocompleteModel", () => {
   it("uses the matching FIM model for Next Edit settings", () => {
-    expect(getChatAutocompleteModel("kilo", "inception/mercury-next-edit").id).toBe("kilo/inception/mercury-edit-2")
+    expect(getChatAutocompleteModel("tavern", "inception/mercury-next-edit").id).toBe("tavern/inception/mercury-edit-2")
     expect(getChatAutocompleteModel("inception", "mercury-next-edit").id).toBe("inception/mercury-edit-2")
   })
 
   it("keeps FIM settings unchanged", () => {
-    expect(getChatAutocompleteModel("kilo", "mistralai/codestral-2508").id).toBe("kilo/mistralai/codestral-2508")
+    expect(getChatAutocompleteModel("tavern", "mistralai/codestral-2508").id).toBe("tavern/mistralai/codestral-2508")
   })
 })

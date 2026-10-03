@@ -15,14 +15,14 @@ export const anacondaDesktopDict = {
   "provider.anaconda.status.unavailable": "Utilgjengelig",
   "provider.anaconda.state.unsupported": "Anaconda Desktop støttes ikke på {{platform}}.",
   "provider.anaconda.state.notInstalled":
-    "Installer Anaconda Desktop på denne maskinen, og kom deretter tilbake hit. Kilo kjører ikke installasjonsprogrammet for deg.",
+    "Installer Anaconda Desktop på denne maskinen, og kom deretter tilbake hit. Tavern kjører ikke installasjonsprogrammet for deg.",
   "provider.anaconda.state.notRunning":
     "Åpne Anaconda Desktop, fullfør oppsettet og logg inn, og velg deretter Sjekk igjen.",
   "provider.anaconda.state.invalidConfig":
     "Oppsettet av Anaconda Desktop er ufullstendig. Åpne Desktop, fullfør oppsettet, og start det på nytt om nødvendig.",
-  "provider.anaconda.state.signedOut": "Åpne Anaconda Desktop og logg inn før du kobler til Kilo.",
+  "provider.anaconda.state.signedOut": "Åpne Anaconda Desktop og logg inn før du kobler til Tavern.",
   "provider.anaconda.state.unauthorized":
-    "Kilo fikk ikke tilgang til Anaconda Desktop. Åpne Desktop, logg inn på nytt, og start det på nytt om nødvendig.",
+    "Tavern fikk ikke tilgang til Anaconda Desktop. Åpne Desktop, logg inn på nytt, og start det på nytt om nødvendig.",
   "provider.anaconda.state.unavailable":
     "Anaconda Desktop svarer ikke ennå. Åpne det og vent til applikasjonen er ferdig med å starte.",
   "provider.anaconda.state.noModel":
@@ -34,7 +34,7 @@ export const anacondaDesktopDict = {
   "provider.anaconda.state.unhealthy":
     "Den aktive inferensserveren er ikke sunn ennå. Sjekk den i Anaconda Desktop og start serveren på nytt om nødvendig.",
   "provider.anaconda.state.ready":
-    "Kilo fant en sunn lokal tekstgenereringsserver og kan importere de gjeldende tilkoblingsinnstillingene.",
+    "Tavern fant en sunn lokal tekstgenereringsserver og kan importere de gjeldende tilkoblingsinnstillingene.",
   "provider.anaconda.server": "Aktiv inferensserver",
   "provider.anaconda.context": "Kontekstvindu",
   "provider.anaconda.contextValue": "{{count}} tokens",
@@ -51,7 +51,7 @@ export const anacondaDesktopDict = {
   "provider.anaconda.action.continue": "Fortsett likevel",
   "provider.anaconda.action.manage": "Administrer / Oppdater",
   "provider.anaconda.toast.refreshed.title": "Anaconda Desktop oppdatert",
-  "provider.anaconda.toast.refreshed.description": "Den aktive lokale serveren og modellene er oppdatert i Kilo.",
+  "provider.anaconda.toast.refreshed.description": "Den aktive lokale serveren og modellene er oppdatert i Tavern.",
   "settings.providers.note.anacondaDesktop": "Kjør en modell som serveres lokalt av Anaconda Desktop.",
   "settings.providers.tag.local": "Lokal",
 } as const
@@ -99,7 +99,7 @@ export const dict = {
     "Samtalen er tilbakeført. Statusen for gjenoppretting av arbeidsområdet er ikke tilgjengelig for denne tidligere tilbakeføringen.",
   "revert.banner.workspace.enableSnapshots": "Aktiver øyeblikksbilder",
   "revert.disabled.agentBusy": "Vent til agenten er ferdig",
-  "revert.error.body": "Repositoriet er kanskje i bruk. Prøv igjen, eller se Kilo-loggene for detaljer.",
+  "revert.error.body": "Repositoriet er kanskje i bruk. Prøv igjen, eller se Tavern-loggene for detaljer.",
   "command.session.compact": "Komprimer sesjon",
   "command.session.export": "Eksporter sesjonsutskrift",
 
@@ -124,7 +124,7 @@ export const dict = {
   "provider.connect.status.waiting": "Venter på autorisering...",
   "provider.connect.status.failed": "Autorisering mislyktes: {{error}}",
   "provider.connect.apiKey.description":
-    "Skriv inn din {{provider}} API-nøkkel for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    "Skriv inn din {{provider}} API-nøkkel for å koble til kontoen din og bruke {{provider}}-modeller i Tavern.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -147,14 +147,14 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Besøk ",
   "provider.connect.oauth.code.visit.link": "denne lenken",
   "provider.connect.oauth.code.visit.suffix":
-    " for å hente autorisasjonskoden din for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    " for å hente autorisasjonskoden din for å koble til kontoen din og bruke {{provider}}-modeller i Tavern.",
   "provider.connect.oauth.code.label": "{{method}} autorisasjonskode",
   "provider.connect.oauth.code.placeholder": "Autorisasjonskode",
   "provider.connect.oauth.code.required": "Autorisasjonskode er påkrevd",
   "provider.connect.oauth.auto.visit.prefix": "Besøk ",
   "provider.connect.oauth.auto.visit.link": "denne lenken",
   "provider.connect.oauth.auto.visit.suffix":
-    " og skriv inn koden nedenfor for å koble til kontoen din og bruke {{provider}}-modeller i Kilo.",
+    " og skriv inn koden nedenfor for å koble til kontoen din og bruke {{provider}}-modeller i Tavern.",
   "provider.connect.oauth.auto.confirmationCode": "Bekreftelseskode",
   "provider.connect.toast.connected.title": "{{provider}} tilkoblet",
   "provider.connect.toast.connected.description": "{{provider}}-modeller er nå tilgjengelige.",
@@ -224,9 +224,9 @@ export const dict = {
   "prompt.action.sandbox.enable": "Aktiver sandbox",
   "prompt.action.sandbox.disable": "Deaktiver sandbox",
   "prompt.action.sandbox.enabled":
-    "Sandbox er aktivert. Shell-kommandoer for agenten er begrenset til prosjekt- og Kilo-mappene.",
+    "Sandbox er aktivert. Shell-kommandoer for agenten er begrenset til prosjekt- og Tavern-mappene.",
   "prompt.action.sandbox.disabled":
-    "Sandbox er deaktivert. Klikk for å begrense skriving av shell-kommandoer for agenten til prosjekt- og Kilo-mappene.",
+    "Sandbox er deaktivert. Klikk for å begrense skriving av shell-kommandoer for agenten til prosjekt- og Tavern-mappene.",
   "prompt.action.sandbox.status.enabled": "Sandbox aktivert",
   "prompt.action.sandbox.status.disabled": "Sandbox deaktivert",
   "prompt.action.sandbox.filesystem": "Filsystem",
@@ -235,7 +235,7 @@ export const dict = {
   "prompt.action.sandbox.network.blocked": "Blokkert",
   "prompt.action.sandbox.network.allowed": "Tillatt",
   "prompt.action.sandbox.unrestricted": "Ubegrenset",
-  "prompt.action.sandbox.description.enabled": "Skrivetilgang er begrenset til prosjekt- og Kilo-mappene.",
+  "prompt.action.sandbox.description.enabled": "Skrivetilgang er begrenset til prosjekt- og Tavern-mappene.",
   "prompt.action.sandbox.description.escalation":
     "Tillatelsesregler og automatisk godkjenning gjelder inne i sandkassen. Kommandoer som må forlate den, spør alltid.",
   "prompt.action.sandbox.description.disabled":
@@ -251,7 +251,7 @@ export const dict = {
   "speechToText.tooltip.transcribing": "Transkriberer... Klikk for å avbryte.",
   "speechToText.tooltip.error": "Taleinndata mislyktes. Klikk for å tømme.",
   "speechToText.error.title": "Taleinndata mislyktes",
-  "speechToText.error.loginRequired": "Logg på Kilo for å bruke taleinndata.",
+  "speechToText.error.loginRequired": "Logg på Tavern for å bruke taleinndata.",
   "speechToText.error.emptyTranscript": "Ingen tale ble oppdaget.",
 
   "prompt.toast.promptSendFailed.title": "Kunne ikke sende forespørsel",
@@ -290,7 +290,7 @@ export const dict = {
     "Dette kjører hele kommandoen uten begrensninger for filsystem og nettverk, kun for denne kommandoen. Git må skrive til .git, som er skrivebeskyttet i sandkassen og ligger utenfor arbeidstreet i et koblet worktree. Bash-tillatelsesregler og automatisk godkjenning godkjenner aldri denne forespørselen automatisk.",
   "ui.permission.manageAutoApprove": "Administrer regler for automatisk godkjenning",
   "ui.permission.reject": "Avvis",
-  "ui.permission.feedbackPlaceholder": "Fortell Kilo hva den skal gjøre annerledes",
+  "ui.permission.feedbackPlaceholder": "Fortell Tavern hva den skal gjøre annerledes",
   "ui.permission.feedbackHint": "Enter for å avvise, Esc for å avbryte",
   "ui.permission.doomLoop.prompt": "Mulig løkke oppdaget for verktøyet {{tool}}. Fortsette kjøringen?",
   "ui.permission.doomLoop.rule": "Fortsett {{tool}}-kall",
@@ -336,7 +336,7 @@ export const dict = {
   "session.messages.loadEarlier": "Last inn tidligere meldinger",
   "session.messages.loading": "Laster meldinger...",
 
-  "sidebar.topBar.label": "Kilo Code-navigasjon",
+  "sidebar.topBar.label": "Tavern Code-navigasjon",
   "sidebar.topBar.newTask": "Ny Oppgave",
   "sidebar.topBar.history": "Historikk",
   "sidebar.topBar.agentManager": "Agent Manager",
@@ -446,7 +446,7 @@ export const dict = {
     "Standardmodell og resonneringsinnsats for task-tool-underagenter. La stå tom for å arve den kallende agentens modell.",
   "settings.models.hidePromptTraining.title": "Skjul modeller som trener på ledetekster",
   "settings.models.hidePromptTraining.description":
-    "Skjul Kilo Gateway-modeller der leverandørene kan bruke ledetekstene dine til trening.",
+    "Skjul Tavern Gateway-modeller der leverandørene kan bruke ledetekstene dine til trening.",
   "settings.providers.modeModels": "Modell per modus",
   "settings.providers.modeModels.description":
     "Overstyr standardmodellen for bestemte moduser. Hvis ikke angitt, brukes den globale standardmodellen.",
@@ -512,21 +512,21 @@ export const dict = {
   "settings.config.status.loadedLegacy": "lastet inn eldre konfigurasjon",
   "settings.config.status.notLoaded": "ikke lastet",
   "settings.config.status.create": "ikke funnet - opprett denne filen",
-  "settings.config.title": "Åpne {{scope}} Kilo-konfigurasjonsfil",
+  "settings.config.title": "Åpne {{scope}} Tavern-konfigurasjonsfil",
   "settings.config.placeholder":
     "Konfigurasjonsfiler slås sammen i rekkefølge; filer merket som lastet påvirker for øyeblikket innstillingene.",
-  "settings.config.noWorkspace": "Åpne en arbeidsområdemappe for å redigere den lokale Kilo-konfigurasjonsfilen.",
-  "settings.config.openFailed": "Klarte ikke å åpne {{scope}} Kilo-konfigurasjonsfil: {{message}}",
+  "settings.config.noWorkspace": "Åpne en arbeidsområdemappe for å redigere den lokale Tavern-konfigurasjonsfilen.",
+  "settings.config.openFailed": "Klarte ikke å åpne {{scope}} Tavern-konfigurasjonsfil: {{message}}",
   "settings.config.source.xdg": "XDG global konfigurasjon",
-  "settings.config.source.homeKilo": "Home .kilo-konfigurasjon",
-  "settings.config.source.homeKilocode": "Home .kilocode-konfigurasjon",
+  "settings.config.source.homeKilo": "Home .tavern-konfigurasjon",
+  "settings.config.source.homeKilocode": "Home .taverncode-konfigurasjon",
   "settings.config.source.homeOpencode": "Home .opencode-konfigurasjon",
   "settings.config.source.envFile": "KILO_CONFIG miljøfil",
   "settings.config.source.envDir": "KILO_CONFIG_DIR",
   "settings.config.source.envContent": "Innebygd miljøkonfigurasjon",
-  "settings.config.source.projectKilo": "Prosjekt .kilo-konfigurasjon",
+  "settings.config.source.projectKilo": "Prosjekt .tavern-konfigurasjon",
   "settings.config.source.projectRoot": "Prosjektets rotkonfigurasjon",
-  "settings.config.source.projectKilocode": "Eldre .kilocode-konfigurasjon",
+  "settings.config.source.projectKilocode": "Eldre .taverncode-konfigurasjon",
   "settings.config.source.projectOpencode": "Eldre .opencode-konfigurasjon",
   "settings.models.title": "Modeller",
 
@@ -576,7 +576,7 @@ export const dict = {
   "feedback.dialog.github": "Rapporter et problem på GitHub",
   "feedback.dialog.discord": "Bli med i Discord-fellesskapet vårt",
   "feedback.dialog.support": "Kundestøtte",
-  "workStyle.onboarding.welcome": "Velkommen til Kilo",
+  "workStyle.onboarding.welcome": "Velkommen til Tavern",
   "workStyle.onboarding.title": "Velg hvordan du vil arbeide",
   "workStyle.onboarding.settingsNote": "Du kan endre disse alternativene når som helst under",
   "workStyle.onboarding.settings": "Innstillinger.",
@@ -586,7 +586,7 @@ export const dict = {
   "workStyle.choice.visibility": "Synlighet",
   "workStyle.choice.human-in-the-loop.eyebrow": "Menneskelig kontroll",
   "workStyle.choice.human-in-the-loop.title": "Gjennomgå først",
-  "workStyle.choice.human-in-the-loop.description": "Kilo tar pause og viser deg planen sin mens den arbeider.",
+  "workStyle.choice.human-in-the-loop.description": "Tavern tar pause og viser deg planen sin mens den arbeider.",
   "workStyle.choice.human-in-the-loop.permissions": "Ber om tillatelse før filer redigeres eller kommandoer kjøres.",
   "workStyle.choice.human-in-the-loop.bash": "Ber om tillatelse til alle terminalkommandoer.",
   "workStyle.choice.human-in-the-loop.visibility": "Utvider resonnering, kommandoer og redigeringer for gjennomgang.",
@@ -598,7 +598,7 @@ export const dict = {
   "workStyle.choice.autonomous.visibility":
     "Slår sammen verktøydetaljer, med en kompakt forhåndsvisning av resonneringen.",
   "session.cloud.import.title": "Importer fra skyen",
-  "session.cloud.import.placeholder": "Økt-ID, URL eller kilo import-kommando",
+  "session.cloud.import.placeholder": "Økt-ID, URL eller tavern import-kommando",
   "session.cloud.import.button": "Importer",
   "session.cloud.import.invalid": "Ugyldig økt-ID-format",
   "session.cloud.import.legacy": "Dette ser ut til å være en eldre økt som ikke lenger støttes.",
@@ -608,7 +608,7 @@ export const dict = {
   "deviceAuth.toast.codeCopied": "Kode kopiert til utklippstavlen",
   "deviceAuth.toast.errorCopied": "Feil kopiert til utklippstavlen",
   "deviceAuth.status.initiating": "Starter pålogging...",
-  "deviceAuth.title": "Logg inn på Kilo Code",
+  "deviceAuth.title": "Logg inn på Tavern Code",
   "deviceAuth.step1": "Trinn 1: Åpne denne URLen",
   "deviceAuth.action.copyUrl": "Kopier URL",
   "deviceAuth.action.openBrowser": "Åpne nettleser",
@@ -631,7 +631,7 @@ export const dict = {
 
   "profile.title": "Profil",
   "profile.notLoggedIn": "Ikke pålogget",
-  "profile.action.login": "Logg inn med Kilo Code",
+  "profile.action.login": "Logg inn med Tavern Code",
   "profile.balance.title": "Saldo",
   "profile.balance.refresh": "Oppdater saldo",
   "profile.usage.title": "Abonnementer og forbruk",
@@ -647,7 +647,7 @@ export const dict = {
   "profile.usage.plan.unknown": "Abonnement: Status ukjent",
   "profile.usage.action.manage": "Administrer",
   "profile.usage.action.managePlan": "Administrer {{plan}}",
-  "profile.usage.routing": "Abonnementsfakturering er aktiv. Kilo Gateway-ruting er {{state}}.",
+  "profile.usage.routing": "Abonnementsfakturering er aktiv. Tavern Gateway-ruting er {{state}}.",
   "profile.usage.routingState.disabled": "deaktivert",
   "profile.usage.routingState.missing": "fraværende",
   "profile.usage.routingState.replaced": "erstattet",
@@ -673,11 +673,11 @@ export const dict = {
   "profile.usage.status.exhausted": "Oppbrukt",
   "profile.action.dashboard": "Kontrollpanel",
   "profile.action.topUp": "Fyll på",
-  "profile.pass.subscribe": "Få Kilo Pass for å legge til kreditt og tjene bonuser",
+  "profile.pass.subscribe": "Få Tavern Pass for å legge til kreditt og tjene bonuser",
   "profile.pass.bonus": "Bonus",
   "profile.pass.usage": "Denne månedens forbruk",
   "profile.pass.paid": "Betalt",
-  "profile.pass.meter": "Månedlig Kilo Pass-forbruk",
+  "profile.pass.meter": "Månedlig Tavern Pass-forbruk",
   "profile.pass.renews": "Fornyes",
   "profile.action.logout": "Logg ut",
 
@@ -699,10 +699,10 @@ export const dict = {
 
   "settings.experimental.title": "Eksperimentelt",
   "settings.language.title": "Språk",
-  "settings.aboutKiloCode.title": "Om Kilo Code",
+  "settings.aboutKiloCode.title": "Om Tavern Code",
 
   "session.messages.welcome":
-    "Kilo Code er en AI-kodingsassistent. Be den om å bygge funksjoner, fikse feil eller forklare kodebasen din.",
+    "Tavern Code er en AI-kodingsassistent. Be den om å bygge funksjoner, fikse feil eller forklare kodebasen din.",
   "session.messages.scrollToBottom": "Rull til bunnen",
   "session.messages.initializing": "Initialiserer...",
   "session.messages.taskStarting": "Starter...",
@@ -785,10 +785,10 @@ export const dict = {
   "settings.aboutKiloCode.exportSettings": "Eksporter",
   "settings.aboutKiloCode.importSettings": "Importer",
   "settings.aboutKiloCode.importSettings.invalidJson": "Ugyldig JSON-fil. Vennligst velg en gyldig innstillingsfil.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Filen inneholder ikke gyldige Kilo-innstillinger.",
+  "settings.aboutKiloCode.importSettings.invalidConfig": "Filen inneholder ikke gyldige Tavern-innstillinger.",
   "settings.aboutKiloCode.importSettings.tooLarge": "Filen er for stor. Innstillingsfiler må være under 1 MB.",
   "settings.aboutKiloCode.importSettings.newerVersion":
-    "Denne filen ble eksportert fra en nyere versjon av Kilo. Noen innstillinger kan bli ignorert.",
+    "Denne filen ble eksportert fra en nyere versjon av Tavern. Noen innstillinger kan bli ignorert.",
   "settings.aboutKiloCode.importSettings.success":
     "Innstillinger importert. Gjennomgå endringene ovenfor, og klikk deretter på Lagre.",
 
@@ -804,7 +804,7 @@ export const dict = {
   "settings.agentBehaviour.subtab.skills": "Ferdigheter",
 
   "settings.browser.description":
-    "Konfigurer innebygd nettleserautomatisering drevet av Playwright. Kilo kan navigere, samhandle med og ta skjermbilder av nettsider i øktene dine.",
+    "Konfigurer innebygd nettleserautomatisering drevet av Playwright. Tavern kan navigere, samhandle med og ta skjermbilder av nettsider i øktene dine.",
   "settings.browser.enable.title": "Aktiver nettleserautomatisering",
   "settings.browser.enable.description":
     "Aktiver den øktspesifikke nettleseren i Agent Manager for lokale applikasjoner og offentlige HTTPS-sider.",
@@ -814,7 +814,7 @@ export const dict = {
   "settings.browser.headless.title": "Headless-modus",
   "settings.browser.headless.description": "Kjør i headless-modus (uten synlig nettleservindu).",
 
-  "settings.language.description": 'Velg språket for Kilo Code-grensesnittet. "Auto" bruker VS Codes visningsspråk.',
+  "settings.language.description": 'Velg språket for Tavern Code-grensesnittet. "Auto" bruker VS Codes visningsspråk.',
   "settings.language.auto": "Auto (VS Code-språk)",
   "settings.language.current": "Nåværende:",
 
@@ -834,10 +834,10 @@ export const dict = {
     "Spill av lyder når økter fullføres, det oppstår en feil eller det trengs innspill fra deg",
   "settings.notifications.workbench.title": "Aktiver VS Code-varsler",
   "settings.notifications.workbench.description":
-    "Vis VS Code-varsler når Kilo fullfører en oppgave eller trenger innspill fra deg",
+    "Vis VS Code-varsler når Tavern fullfører en oppgave eller trenger innspill fra deg",
   "settings.notifications.os.title": "Aktiver OS-varsler",
   "settings.notifications.os.description":
-    "Vis opprinnelige operativsystemvarsler når Kilo fullfører en oppgave eller trenger innspill fra deg mens VS Code ikke er aktiv.",
+    "Vis opprinnelige operativsystemvarsler når Tavern fullfører en oppgave eller trenger innspill fra deg mens VS Code ikke er aktiv.",
   "settings.notifications.testSound": "Test",
   "settings.notifications.testOS": "Test",
   "settings.notifications.testOS.testing": "Sender testvarsel…",
@@ -860,7 +860,7 @@ export const dict = {
   "settings.experimental.batch.description": "Aktiver batchbehandling av verktøykall",
   "settings.experimental.imageGeneration.title": "Bildegenerering",
   "settings.experimental.imageGeneration.description": "Aktiver AI-bildegenerering",
-  "settings.agentBehaviour.sharedAgentBoard.title": "Kilo Swarm",
+  "settings.agentBehaviour.sharedAgentBoard.title": "Tavern Swarm",
   "settings.agentBehaviour.sharedAgentBoard.description":
     "Del en tavle mellom en hovedøkt og underagentene som utfører oppgavene dens, inkludert nestede underagenter. Bruk den til parallelle løsningsforsøk eller arbeidsoppgaver som utfyller hverandre, ikke til alle oppgaver.",
   "settings.experimental.imageGenerationModel.title": "Bildemodell",
@@ -872,18 +872,18 @@ export const dict = {
   "settings.models.speechToTextModel.customPlaceholder": "whisper-1",
   "settings.models.speechToTextBaseUrl.title": "Tale-til-tekst-basis-URL",
   "settings.models.speechToTextBaseUrl.description":
-    "Bruk et OpenAI-kompatibelt transkripsjons-API i stedet for Kilo Gateway. Modeller leses fra /models, og lyd sendes til /audio/transcriptions. La feltet stå tomt for å bruke Kilo Gateway.",
+    "Bruk et OpenAI-kompatibelt transkripsjons-API i stedet for Tavern Gateway. Modeller leses fra /models, og lyd sendes til /audio/transcriptions. La feltet stå tomt for å bruke Tavern Gateway.",
   "settings.models.speechToTextBaseUrl.placeholder": "https://api.openai.com/v1",
   "settings.models.speechToTextApiKey.title": "Tale-til-tekst-API-nøkkel",
   "settings.models.speechToTextApiKey.description":
-    "Bearer-token som sendes til den egne transkripsjons-basis-URL-en. Lagres i Kilo-konfigurasjonsfilen din.",
+    "Bearer-token som sendes til den egne transkripsjons-basis-URL-en. Lagres i Tavern-konfigurasjonsfilen din.",
   "settings.models.speechToTextApiKey.placeholder": "sk-...",
   "settings.models.speechToText.disabledDescription":
-    "Aktiver og logg på Kilo-leverandøren for å bruke Speech to Text, eller angi en egen transkripsjons-basis-URL nedenfor.",
+    "Aktiver og logg på Tavern-leverandøren for å bruke Speech to Text, eller angi en egen transkripsjons-basis-URL nedenfor.",
   "settings.models.speechToText.remoteDescription":
-    "Taleinndata er ikke tilgjengelig i eksterne vinduer. Åpne Kilo i et lokalt vindu for å bruke mikrofonen.",
+    "Taleinndata er ikke tilgjengelig i eksterne vinduer. Åpne Tavern i et lokalt vindu for å bruke mikrofonen.",
   "settings.models.speechToTextModel.title": "Tale-til-tekst-modell",
-  "settings.models.speechToTextModel.description": "Velg Kilo Gateway-transkripsjonsmodellen for taleinndata.",
+  "settings.models.speechToTextModel.description": "Velg Tavern Gateway-transkripsjonsmodellen for taleinndata.",
   "settings.experimental.nativeNotebookTools.title": "Innebygde notatbok-verktøy",
   "settings.experimental.nativeNotebookTools.description":
     "Aktiver eksperimentelle verktøy for å lese, redigere og kjøre VS Code-notatbøker",
@@ -913,7 +913,7 @@ export const dict = {
   "settings.experimental.mcpTimeout.description": "Tidsavbrudd for MCP-serverforespørsler i millisekunder",
   "settings.experimental.remote.title": "Remote-kontroll",
   "settings.experimental.remote.description":
-    "Aktiver Remote-kontroll av økter via Kilo Cloud. Dette vil også påvirke CLI-er på denne maskinen.",
+    "Aktiver Remote-kontroll av økter via Tavern Cloud. Dette vil også påvirke CLI-er på denne maskinen.",
   "settings.experimental.remote.current": "Nåværende status:",
   "settings.experimental.remote.startup": "Aktiver automatisk ved oppstart:",
   "settings.experimental.remote.active": "Aktiv",
@@ -933,10 +933,10 @@ export const dict = {
     "Aktiver indeksering for dette arbeidsområdet når global indeksering er slått av.",
   "settings.indexing.provider.title": "Embedding-leverandør",
   "settings.indexing.provider.description": "Velg leverandøren som brukes til å generere embeddings for semantisk søk.",
-  "settings.indexing.kiloModel.title": "Kilo-modellforhåndsvalg",
-  "settings.indexing.kiloModel.description": "Velg en støttet Kilo-hostet embedding-modell.",
-  "settings.indexing.kiloSignIn.title": "Kilo-pålogging kreves",
-  "settings.indexing.kiloSignIn.description": "Logg inn på Kilo for å bruke hostede embeddings.",
+  "settings.indexing.kiloModel.title": "Tavern-modellforhåndsvalg",
+  "settings.indexing.kiloModel.description": "Velg en støttet Tavern-hostet embedding-modell.",
+  "settings.indexing.kiloSignIn.title": "Tavern-pålogging kreves",
+  "settings.indexing.kiloSignIn.description": "Logg inn på Tavern for å bruke hostede embeddings.",
   "settings.indexing.model.title": "Embedding-modell",
   "settings.indexing.model.description": "Overstyr standard embedding-modell for den valgte leverandøren.",
   "settings.indexing.vectorStore.title": "Vektordatabase",
@@ -1064,13 +1064,13 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Claude Code-kompatibilitet",
   "settings.agentBehaviour.claudeCompat.title": "Last inn Claude Code-filer",
   "settings.agentBehaviour.claudeCompat.description":
-    "Last inn CLAUDE.md-instruksjoner og ferdigheter fra Claude Code-konfigurasjonsmappen din i økter. Aktiver dette hvis du vil at Kilo skal bruke dine Claude Code-instruksjoner og ferdigheter. Krever omstart.",
+    "Last inn CLAUDE.md-instruksjoner og ferdigheter fra Claude Code-konfigurasjonsmappen din i økter. Aktiver dette hvis du vil at Tavern skal bruke dine Claude Code-instruksjoner og ferdigheter. Krever omstart.",
   "settings.agentBehaviour.mcpDetail.command": "Kommando",
   "settings.agentBehaviour.mcpDetail.args": "Argumenter",
   "settings.agentBehaviour.mcpDetail.env": "Miljø",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Bla gjennom Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "Ingen MCP-servere konfigurert. Legg til MCP-servere i kilo.jsonc, eller be agenten om å legge dem til.",
+    "Ingen MCP-servere konfigurert. Legg til MCP-servere i tavern.jsonc, eller be agenten om å legge dem til.",
   "settings.agentBehaviour.workflows.description":
     "Arbeidsflyter er egendefinerte skråstrekkommandoer definert i konfigurasjonen din. Skriv /command-name i chatten for å kjøre dem. Kommandoer konfigureres i opencode.json under seksjonen 'command'.",
   "settings.agentBehaviour.workflows.empty":
@@ -1085,7 +1085,7 @@ export const dict = {
     "Ruter MCP-verktøykall gjennom en avgrenset JavaScript-runtime med behovsstyrt verktøyoppdagelse i stedet for å eksponere hvert MCP-verktøy direkte. Sparer kontekst når mange MCP-verktøy er tilkoblet.",
   "settings.sandboxing.enabled.title": "Sandbox",
   "settings.sandboxing.enabled.description":
-    "Kjør shell-kommandoer for agenten i en sandbox på operativsystemnivå som begrenser skriving til prosjekt- og Kilo-tilstandsmapper",
+    "Kjør shell-kommandoer for agenten i en sandbox på operativsystemnivå som begrenser skriving til prosjekt- og Tavern-tilstandsmapper",
 
   "settings.autoApprove.description":
     "Definer hvordan verktøy kan kjøre. De fleste verktøy har Tillat som standard. doom_loop og external_directory har Spør som standard.",
@@ -1128,7 +1128,7 @@ export const dict = {
   "settings.checkpoints.enable.description": "Opprett kontrollpunkter før filredigeringer",
   "settings.autoCleanup.enable.title": "Aktiver automatisk opprydding av økter",
   "settings.autoCleanup.enable.description":
-    "Sletter gammel økthistorikk automatisk etter et fast antall dager, på tvers av alle prosjekter og alle Kilo-klienter på denne maskinen, ikke bare i dette vinduet. Kjørende økter og økter med nylig forgrening slettes aldri. Sletting er permanent.",
+    "Sletter gammel økthistorikk automatisk etter et fast antall dager, på tvers av alle prosjekter og alle Tavern-klienter på denne maskinen, ikke bare i dette vinduet. Kjørende økter og økter med nylig forgrening slettes aldri. Sletting er permanent.",
   "settings.autoCleanup.defaultRetention.title": "Behold økter i (dager)",
   "settings.autoCleanup.defaultRetention.description":
     "Hvor lenge økthistorikk beholdes før automatisk opprydding sletter den.",
@@ -1146,7 +1146,7 @@ export const dict = {
     "Sletter økter: {{processed}}/{{total}} behandlet ({{deleted}} slettet, {{failed}} feilet)",
   "settings.autoCleanup.runNow": "Kjør opprydding nå",
   "settings.autoCleanup.runNow.confirm":
-    "Slett utløpte økter permanent på tvers av alle prosjekter og alle Kilo-klienter på denne maskinen?",
+    "Slett utløpte økter permanent på tvers av alle prosjekter og alle Tavern-klienter på denne maskinen?",
   "settings.autoCleanup.stop": "Stopp opprydding",
   "settings.autoCleanup.progress.cancelling": "Stopper opprydding av økter...",
   "settings.autoCleanup.lastRun.cancelled": "avbrutt",
@@ -1180,7 +1180,7 @@ export const dict = {
   "settings.context.memory.storage.enable": "Enable memory to create project memory files.",
   "settings.context.memory.inspect": "Inspiser",
   "chat.memory.project.disabled": "Prosjektminne deaktivert",
-  "chat.memory.project.empty": "This project doesn't have any memory yet. It will start showing after you use Kilo.",
+  "chat.memory.project.empty": "This project doesn't have any memory yet. It will start showing after you use Tavern.",
   "chat.memory.command.failed": "Minnekommando mislyktes",
   "chat.memory.updated": "Memory updated",
   "chat.memory.rebuild": "Memory index rebuilt",
@@ -1214,7 +1214,7 @@ export const dict = {
   "settings.display.username.title": "Brukernavn",
   "settings.display.username.description": "Egendefinert brukernavn i samtaler",
   "settings.display.fontSize.title": "Skriftstørrelse",
-  "settings.display.fontSize.description": "Juster skriftstørrelsen for Kilo webview UI uavhengig av VS Code.",
+  "settings.display.fontSize.description": "Juster skriftstørrelsen for Tavern webview UI uavhengig av VS Code.",
   "settings.display.reasoningDisplay.title": "Resonnementblokker",
   "settings.display.reasoningDisplay.description":
     "Velg hvordan resonnementblokker starter. Utvidet viser hele teksten, Forhåndsvisning begrenser den til en kort rullbar forhåndsvisning, og Overskrift viser bare tittelen og strømmingsindikatoren til du åpner den.",
@@ -1355,7 +1355,7 @@ export const dict = {
   "diffViewer.source.unstaged.tooltip": "Filer endret i arbeidstreet, men ikke staget ennå, pluss usporet (nye) filer.",
   "diffViewer.source.session.label": "Økt",
   "diffViewer.source.session.tooltip":
-    "Filer endret av Kilo i løpet av gjeldende økt, basert på øyeblikksbilder per tur. Tilbakestilles når du starter en ny økt.",
+    "Filer endret av Tavern i løpet av gjeldende økt, basert på øyeblikksbilder per tur. Tilbakestilles når du starter en ny økt.",
   "diffViewer.group.session": "Økt",
   "diffViewer.group.git": "Git",
   "diffViewer.comment.postToGithub": "Publiser på GitHub",
@@ -1366,7 +1366,7 @@ export const dict = {
   "diffViewer.comment.openPR": "Åpne pull request",
   "diffViewer.comment.localChanges": "Lokale endringer",
   "diffViewer.comment.prChanges": "PR-endringer",
-  "diffViewer.comment.sendToKilo": "Send til Kilo",
+  "diffViewer.comment.sendToKilo": "Send til Tavern",
   "diffViewer.comment.sendToGithub": "Send til GitHub #{{number}}",
   "diffViewer.comment.chooseDestination": "Velg mål",
   "diffViewer.notice.snapshotsDisabled":

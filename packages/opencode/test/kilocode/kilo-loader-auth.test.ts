@@ -1,5 +1,5 @@
-// kilocode_change - new file
-// Tests that unauthenticated Kilo models are assembled with paid models and autoloaded anonymously.
+// taverncode_change - new file
+// Tests that unauthenticated Tavern models are assembled with paid models and autoloaded anonymously.
 
 import { expect } from "bun:test"
 import { FSUtil } from "@opencode-ai/core/fs-util"
@@ -7,7 +7,7 @@ import { ModelsDev } from "../../src/provider/models"
 import * as CoreModels from "@opencode-ai/core/models-dev"
 import { Effect, Layer } from "effect"
 import { FetchHttpClient } from "effect/unstable/http"
-import { kiloCustomLoaders, patchKiloProviderPrivacy } from "../../src/kilocode/provider/provider"
+import { kiloCustomLoaders, patchKiloProviderPrivacy } from "../../src/taverncode/provider/provider"
 import { Auth } from "../../src/auth"
 import type { Config } from "../../src/config/config"
 import { ModelCache } from "../../src/provider/model-cache"
@@ -17,8 +17,8 @@ import { testEffect } from "../lib/effect"
 import { provideInstance, testInstanceStoreLayer } from "../fixture/fixture"
 
 const input = {
-  id: "kilo",
-  name: "Kilo Gateway",
+  id: "tavern",
+  name: "Tavern Gateway",
   env: ["KILO_API_KEY"],
   models: {
     "free-model": {
@@ -47,7 +47,7 @@ const input = {
 } satisfies ModelsDev.Provider
 
 const seed: Record<string, ModelsDev.Provider> = {
-  kilo: input,
+  tavern: input,
   apertis: {
     id: "apertis",
     name: "Apertis",
@@ -78,7 +78,7 @@ function load(data?: { auth?: object; config?: object; env?: Record<string, stri
     config: () => Effect.succeed(data?.config ?? {}),
     env: () => Effect.succeed(data?.env ?? {}),
     get: () => Effect.succeed(undefined),
-  }).kilo(input)
+  }).tavern(input)
 }
 
 function layer(options?: { config?: Config.Info; info?: Auth.Info; fetch?: ModelCache.KiloModels["fetch"] }) {
@@ -155,17 +155,17 @@ function environment(values: Record<string, string | undefined>) {
   )
 }
 
-it.live("assembles paid Kilo models without auth", () =>
+it.live("assembles paid Tavern models without auth", () =>
   Effect.gen(function* () {
     const providers = yield* ModelsDev.Service.use((models) => models.get()).pipe(
       Effect.provide(layer()),
       provideInstance(process.cwd()),
     )
-    const kilo = Provider.fromModelsDevProvider(providers.kilo)
+    const tavern = Provider.fromModelsDevProvider(providers.tavern)
 
-    expect(kilo.models["paid-model"]).toMatchObject({
+    expect(tavern.models["paid-model"]).toMatchObject({
       id: "paid-model",
-      providerID: "kilo",
+      providerID: "tavern",
       cost: { input: 1, output: 2 },
       isFree: false,
       mayTrainOnYourPrompts: true,
@@ -179,9 +179,9 @@ it.live("does not infer free status from zero catalog prices", () =>
       Effect.provide(layer()),
       provideInstance(process.cwd()),
     )
-    const kilo = Provider.fromModelsDevProvider(providers.kilo)
+    const tavern = Provider.fromModelsDevProvider(providers.tavern)
 
-    expect(kilo.models["free-model"].isFree).toBeUndefined()
+    expect(tavern.models["free-model"].isFree).toBeUndefined()
   }),
 )
 
@@ -193,9 +193,9 @@ for (const context of ["config", "oauth", "env", "url"] as const) {
         const calls: Parameters<ModelCache.KiloModels["fetch"]>[0][] = []
         const config: Config.Info =
           context === "config"
-            ? { provider: { kilo: { options: { kilocodeOrganizationId: "org-config" } } } }
+            ? { provider: { tavern: { options: { taverncodeOrganizationId: "org-config" } } } }
             : context === "url"
-              ? { provider: { kilo: { options: { baseURL: "https://gateway.test/api/organizations/org-url" } } } }
+              ? { provider: { tavern: { options: { baseURL: "https://gateway.test/api/organizations/org-url" } } } }
               : {}
         const info =
           context === "env"
@@ -215,10 +215,10 @@ for (const context of ["config", "oauth", "env", "url"] as const) {
           })
         yield* ModelsDev.Service.use((models) =>
           Effect.gen(function* () {
-            expect((yield* models.get()).kilo.models).toEqual({})
-            expect((yield* models.get()).kilo.models).toEqual({})
+            expect((yield* models.get()).tavern.models).toEqual({})
+            expect((yield* models.get()).tavern.models).toEqual({})
             expect(calls).toHaveLength(outcome === "throw" ? 2 : 1)
-            expect(calls.at(0)?.kilocodeOrganizationId).toBe(`org-${context}`)
+            expect(calls.at(0)?.taverncodeOrganizationId).toBe(`org-${context}`)
           }),
         ).pipe(Effect.provide(layer({ config, info, fetch })), provideInstance(process.cwd()))
       }),
@@ -270,10 +270,10 @@ for (const scenario of [
       const calls: Parameters<ModelCache.KiloModels["fetch"]>[0][] = []
       const config: Config.Info = {
         provider: {
-          kilo: {
+          tavern: {
             options: {
               apiKey: "configured-token",
-              kilocodeOrganizationId: scenario.configured,
+              taverncodeOrganizationId: scenario.configured,
               baseURL: scenario.baseURL,
             },
           },
@@ -301,11 +301,11 @@ for (const scenario of [
         ),
         provideInstance(process.cwd()),
       )
-      expect(Object.keys(providers.kilo.models)).toEqual(["allowed"])
+      expect(Object.keys(providers.tavern.models)).toEqual(["allowed"])
       expect(calls).toHaveLength(1)
       expect(calls.at(0)).toMatchObject({
-        kilocodeOrganizationId: scenario.org,
-        kilocodeToken: "env-token",
+        taverncodeOrganizationId: scenario.org,
+        taverncodeToken: "env-token",
         baseURL: scenario.url,
       })
     }),
@@ -319,18 +319,18 @@ it.live("does not serve a warm or public catalog after an Org-scoped URL conflic
     const calls: Parameters<ModelCache.KiloModels["fetch"]>[0][] = []
     yield* ModelsDev.Service.use((models) =>
       Effect.gen(function* () {
-        expect(Object.keys((yield* models.get()).kilo.models)).toEqual(["allowed"])
+        expect(Object.keys((yield* models.get()).tavern.models)).toEqual(["allowed"])
         options.baseURL = "https://gateway.test/api/organizations/org-other"
-        expect((yield* models.get()).kilo.models).toEqual({})
-        expect((yield* models.get()).kilo.models).toEqual({})
+        expect((yield* models.get()).tavern.models).toEqual({})
+        expect((yield* models.get()).tavern.models).toEqual({})
         options.baseURL = "https://gateway.test/api/organizations/org-env"
-        expect(Object.keys((yield* models.get()).kilo.models)).toEqual(["allowed"])
+        expect(Object.keys((yield* models.get()).tavern.models)).toEqual(["allowed"])
         expect(calls).toHaveLength(1)
       }),
     ).pipe(
       Effect.provide(
         layer({
-          config: { provider: { kilo: { options } } },
+          config: { provider: { tavern: { options } } },
           fetch: (input) => {
             calls.push(input)
             return Effect.succeed({
@@ -360,7 +360,7 @@ it.live("preserves Personal public snapshot fallback", () =>
       Effect.provide(layer({ fetch: () => Effect.succeed({ models: {} }) })),
       provideInstance(process.cwd()),
     )
-    expect(providers.kilo.models).toEqual(input.models)
+    expect(providers.tavern.models).toEqual(input.models)
   }),
 )
 
@@ -374,7 +374,7 @@ it.effect("enables a paid catalog anonymously without auth", () =>
 
 it.effect("enables a paid catalog when config apiKey is present", () =>
   Effect.gen(function* () {
-    const result = yield* load({ config: { provider: { kilo: { options: { apiKey: "test-key" } } } } })
+    const result = yield* load({ config: { provider: { tavern: { options: { apiKey: "test-key" } } } } })
     expect(result.autoload).toBe(true)
     expect(result.options).toEqual({})
   }),
@@ -389,9 +389,9 @@ it.effect("denies provider data collection when prompt-training models are hidde
 
 it.effect("keeps data collection denied after configured options are applied", () =>
   Effect.sync(() => {
-    const provider = { options: { dataCollection: "allow", baseURL: "https://api.kilo.ai" } }
+    const provider = { options: { dataCollection: "allow", baseURL: "https://api.tavern.ai" } }
     patchKiloProviderPrivacy(provider, { hide_prompt_training_models: true })
-    expect(provider.options).toEqual({ dataCollection: "deny", baseURL: "https://api.kilo.ai" })
+    expect(provider.options).toEqual({ dataCollection: "deny", baseURL: "https://api.tavern.ai" })
   }),
 )
 

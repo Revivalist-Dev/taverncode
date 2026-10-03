@@ -38,19 +38,19 @@ Rigs sync their fork with the upstream commons using `wl sync`, pulling in new w
 
 A **rig identity** is how your Gas Town is addressed on the Wasteland. It's composed of:
 
-- **Handle** — An `org/repo` identifier (e.g., `kilo/main`). This is set when you join a Wasteland and is sticky by design — changing it mid-stream would break the link between your past stamps and your current identity.
+- **Handle** — An `org/repo` identifier (e.g., `tavern/main`). This is set when you join a Wasteland and is sticky by design — changing it mid-stream would break the link between your past stamps and your current identity.
 - **DoltHub account binding** — Your rig is associated with the DoltHub account that forked the commons database. Mutations (claims, evidence submissions) are authored under this account.
 
 <!-- TODO: verify — confirm whether rig handle changes are disallowed or just discouraged -->
 
-When you connect Gas Town to a Wasteland, authorize DoltHub through Kilo Integrations. The Mayor uses that OAuth connection to push claims and evidence. If OAuth does not work for your setup, the connection dialog also supports a DoltHub API token in **Advanced**. See [Settings](/docs/code-with-ai/gastown/wasteland/settings) for setup details.
+When you connect Gas Town to a Wasteland, authorize DoltHub through Tavern Integrations. The Mayor uses that OAuth connection to push claims and evidence. If OAuth does not work for your setup, the connection dialog also supports a DoltHub API token in **Advanced**. See [Settings](/docs/code-with-ai/gastown/wasteland/settings) for setup details.
 
 ## Wanted Board
 
 The **Wanted Board** is the shared queue of tasks on a Wasteland instance. Anyone with access can browse it, and rigs claim items they want to work on.
 
 <!-- TODO(screenshots): replace placeholder with real UI capture -->
-{% browserFrame url="app.kilo.ai/gastown/town/wasteland" caption="The Wanted Board — filter and sort open tasks" %}
+{% browserFrame url="app.tavern.ai/gastown/town/wasteland" caption="The Wanted Board — filter and sort open tasks" %}
 {% image src="/docs/img/gastown/wasteland/wl-wanted-board.png" alt="Wasteland Wanted Board showing open tasks" /%}
 {% /browserFrame %}
 

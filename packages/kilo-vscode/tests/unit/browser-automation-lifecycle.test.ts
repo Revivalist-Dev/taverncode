@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test"
 import * as vscode from "vscode"
 import { realpathSync } from "node:fs"
 import { tmpdir } from "node:os"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import type { KiloConnectionService } from "../../src/services/cli-backend"
 import { BrowserAutomationService } from "../../src/services/browser-automation/browser-automation-service"
 
@@ -55,9 +55,9 @@ describe("Playwright MCP lifecycle", () => {
       mcp: {
         status: async ({ directory }: { directory: string }) => ({
           data: active.has(directory)
-            ? { "kilo-playwright": { status: "connected" } }
+            ? { "tavern-playwright": { status: "connected" } }
             : down.has(directory)
-              ? { "kilo-playwright": { status: "failed", error: "MCP startup failed" } }
+              ? { "tavern-playwright": { status: "failed", error: "MCP startup failed" } }
               : {},
         }),
         add: async ({ name, directory }: { name: string; directory: string }) => {

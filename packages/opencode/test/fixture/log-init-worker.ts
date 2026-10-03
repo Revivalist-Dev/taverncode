@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 import fs from "fs/promises"
 import path from "path"
@@ -44,7 +44,7 @@ const log = Log.create({ service: "test" })
 const msg = "x".repeat(1024 * 1024)
 const first = mode === "missing" ? 10 : 55
 
-await fs.mkdir(path.join(dir, "share", "kilo", "log"), { recursive: true })
+await fs.mkdir(path.join(dir, "share", "tavern", "log"), { recursive: true })
 for (const _ of Array.from({ length: first })) {
   log.info(msg)
 }

@@ -13,8 +13,8 @@ flowchart TD
 `
 
 export default {
-  title: "Kilo/Markdown Mermaid",
-  id: "kilocode-markdown-mermaid",
+  title: "Tavern/Markdown Mermaid",
+  id: "taverncode-markdown-mermaid",
 }
 
 export const MermaidError = {

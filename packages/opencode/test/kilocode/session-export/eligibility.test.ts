@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test"
-import { isEligible, setKillSwitch, resetEligibility, type OrgState } from "@/kilocode/session-export/eligibility"
+import { isEligible, setKillSwitch, resetEligibility, type OrgState } from "@/taverncode/session-export/eligibility"
 
 const base = {
   model: {
-    api: { npm: "@kilocode/kilo-gateway" },
+    api: { npm: "@taverncode/tavern-gateway" },
     isFree: true,
   },
   org: { type: "personal" } as OrgState,
@@ -13,11 +13,11 @@ describe("isEligible", () => {
   beforeEach(() => resetEligibility())
   afterEach(() => resetEligibility())
 
-  test("free Kilo Gateway personal context is eligible", () => {
+  test("free Tavern Gateway personal context is eligible", () => {
     expect(isEligible(base)).toBe(true)
   })
 
-  test("paid Kilo Gateway is ineligible", () => {
+  test("paid Tavern Gateway is ineligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, isFree: false } })).toBe(false)
   })
 
@@ -25,7 +25,7 @@ describe("isEligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, isFree: undefined } })).toBe(false)
   })
 
-  test("non-Kilo provider with isFree=true is ineligible", () => {
+  test("non-Tavern provider with isFree=true is ineligible", () => {
     expect(isEligible({ ...base, model: { ...base.model, api: { npm: "@ai-sdk/openai" } } })).toBe(false)
   })
 

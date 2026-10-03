@@ -1,8 +1,8 @@
 /** @jsxImportSource solid-js */
 import { createSignal } from "solid-js"
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 
 const meta: Meta = {
   title: "IconButton",

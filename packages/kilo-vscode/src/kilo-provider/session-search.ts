@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 
 type Item = {
   id: string
@@ -57,7 +57,7 @@ export async function handleSessionSearch(input: Input): Promise<void> {
       }))
     input.post({ type: "sessionSearchResult", sessions, requestId: input.message.requestId })
   } catch (err) {
-    console.error("[Kilo New] Session search failed:", err)
+    console.error("[Tavern New] Session search failed:", err)
     input.post({ type: "sessionSearchResult", sessions: [], requestId: input.message.requestId })
   }
 }

@@ -1,14 +1,14 @@
 import { onCleanup, onMount, type Component, type ParentComponent } from "solid-js"
-import { ThemeProvider } from "@kilocode/kilo-ui/theme"
-import { DialogProvider } from "@kilocode/kilo-ui/context/dialog"
-import { MarkedProvider } from "@kilocode/kilo-ui/context/marked"
-import { CodeComponentProvider } from "@kilocode/kilo-ui/context/code"
-import { DiffComponentProvider } from "@kilocode/kilo-ui/context/diff"
-import { FileComponentProvider } from "@kilocode/kilo-ui/context/file"
-import { Code } from "@kilocode/kilo-ui/code"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { File } from "@kilocode/kilo-ui/file"
-import { Toast } from "@kilocode/kilo-ui/toast"
+import { ThemeProvider } from "@taverncode/tavern-ui/theme"
+import { DialogProvider } from "@taverncode/tavern-ui/context/dialog"
+import { MarkedProvider } from "@taverncode/tavern-ui/context/marked"
+import { CodeComponentProvider } from "@taverncode/tavern-ui/context/code"
+import { DiffComponentProvider } from "@taverncode/tavern-ui/context/diff"
+import { FileComponentProvider } from "@taverncode/tavern-ui/context/file"
+import { Code } from "@taverncode/tavern-ui/code"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { File } from "@taverncode/tavern-ui/file"
+import { Toast } from "@taverncode/tavern-ui/toast"
 import { VSCodeProvider, useVSCode } from "./vscode"
 import { ServerProvider } from "./server"
 import { ProviderProvider } from "./provider"
@@ -20,7 +20,7 @@ import { SessionProvider } from "./session"
 import { LanguageBridge } from "./language-bridge"
 import { NotificationsProvider } from "./notifications"
 import { FeedbackProvider } from "./feedback"
-import { KiloEmbeddingModelsProvider } from "./kilo-embedding-models"
+import { KiloEmbeddingModelsProvider } from "./tavern-embedding-models"
 import { ImageModelsProvider } from "./image-models"
 import { SpeechToTextModelsProvider } from "./speech-to-text-models"
 import { SpeechToTextPrewarm } from "../components/speech-to-text/SpeechToTextPrewarm"
@@ -37,15 +37,15 @@ const MermaidDownloadBridge: Component = () => {
       event.preventDefault()
       vscode.postMessage({ type: "saveImage", dataUrl: detail.dataUrl, filename: detail.filename })
     }
-    window.addEventListener("kilo:save-image", save)
-    onCleanup(() => window.removeEventListener("kilo:save-image", save))
+    window.addEventListener("tavern:save-image", save)
+    onCleanup(() => window.removeEventListener("tavern:save-image", save))
   })
 
   return null
 }
 
 const Root: ParentComponent = (props) => (
-  <ThemeProvider defaultTheme="kilo-vscode">
+  <ThemeProvider defaultTheme="tavern-vscode">
     <DialogProvider>
       <VSCodeProvider>
         <MermaidDownloadBridge />

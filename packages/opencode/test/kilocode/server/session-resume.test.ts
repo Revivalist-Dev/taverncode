@@ -132,9 +132,9 @@ it.live(
         )
         const resume = (id = assistant.id) =>
           Effect.promise(() =>
-            fetch(new URL(`/kilocode/session/${session.id}/resume`, listener.url), {
+            fetch(new URL(`/taverncode/session/${session.id}/resume`, listener.url), {
               method: "POST",
-              headers: { "Content-Type": "application/json", "x-kilo-directory": tmp },
+              headers: { "Content-Type": "application/json", "x-tavern-directory": tmp },
               body: JSON.stringify({ messageID: id }),
             }),
           )

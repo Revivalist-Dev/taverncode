@@ -30,12 +30,12 @@ import {
   onMount,
   untrack,
 } from "solid-js"
-import { AgentAvatar } from "@kilocode/kilo-ui/agent-avatar"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Popover } from "@kilocode/kilo-ui/popover"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { AgentAvatar } from "@taverncode/tavern-ui/agent-avatar"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Popover } from "@taverncode/tavern-ui/popover"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useLanguage } from "../../context/language"
 import { useSession } from "../../context/session"
 import { useVSCode } from "../../context/vscode"

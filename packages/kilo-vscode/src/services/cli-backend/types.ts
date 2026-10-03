@@ -2,10 +2,10 @@
 // Local types — NOT from the SDK / API
 // ============================================
 // These types are specific to the VS Code extension and don't have
-// equivalents in @kilocode/sdk. All API types (Session, Event, Agent,
-// McpStatus, Config, etc.) should be imported from "@kilocode/sdk/v2/client".
+// equivalents in @taverncode/sdk. All API types (Session, Event, Agent,
+// McpStatus, Config, etc.) should be imported from "@taverncode/sdk/v2/client".
 
-import type { IndexingStatus as SdkIndexingStatus } from "@kilocode/sdk/v2/client"
+import type { IndexingStatus as SdkIndexingStatus } from "@taverncode/sdk/v2/client"
 
 /** Connection config used by the extension to reach the local CLI server */
 export interface ServerConfig {
@@ -20,7 +20,7 @@ interface ProviderAuthAuthorization {
   instructions: string
 }
 
-// Profile types from kilo-gateway
+// Profile types from tavern-gateway
 export interface KilocodeOrganization {
   id: string
   name: string
@@ -45,7 +45,7 @@ interface ProfileData {
   currentOrgId: string | null
 }
 
-// Cloud session from the Kilo cloud API (cli_sessions_v2)
+// Cloud session from the Tavern cloud API (cli_sessions_v2)
 interface CloudSessionInfo {
   session_id: string
   title: string | null
@@ -54,7 +54,7 @@ interface CloudSessionInfo {
   version: number
 }
 
-// Full cloud session data for preview (from /kilo/cloud/session/:id)
+// Full cloud session data for preview (from /tavern/cloud/session/:id)
 export interface CloudSessionMessage {
   info: {
     id: string

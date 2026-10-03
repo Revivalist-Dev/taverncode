@@ -1,8 +1,8 @@
 import { createContext, createMemo, Show, useContext } from "solid-js"
-import type { AssistantMessage, Part, Provider, StepFinishPart } from "@kilocode/sdk/v2"
+import type { AssistantMessage, Part, Provider, StepFinishPart } from "@taverncode/sdk/v2"
 import { useTheme } from "@tui/context/theme"
 import * as Model from "@tui/util/model"
-import { KiloRoutedModel } from "@/kilocode/session/routed-model"
+import { KiloRoutedModel } from "@/taverncode/session/routed-model"
 
 export namespace RoutedModelMeta {
   type Providers = Provider[] | ReadonlyMap<string, Provider> | undefined
@@ -41,8 +41,8 @@ export namespace RoutedModelMeta {
 
   function routed(model: StepFinishPart["model"], message: Message) {
     if (!model) return undefined
-    if (message.providerID !== "kilo") return undefined
-    if (!message.modelID.startsWith("kilo-auto/")) return undefined
+    if (message.providerID !== "tavern") return undefined
+    if (!message.modelID.startsWith("tavern-auto/")) return undefined
     if (model.providerID === message.providerID && model.modelID === message.modelID) return undefined
     return model
   }

@@ -9,10 +9,10 @@ import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { SessionProjector } from "@opencode-ai/core/session/projector"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/taverncode/instance"
 import { provideTestInstance } from "../fixture/fixture"
-import { PlanFollowup } from "../../src/kilocode/plan-followup"
-import { KiloSessionPrompt } from "../../src/kilocode/session/prompt"
+import { PlanFollowup } from "../../src/taverncode/plan-followup"
+import { KiloSessionPrompt } from "../../src/taverncode/session/prompt"
 import { makeRuntime } from "../../src/effect/run-service"
 import { Question } from "../../src/question"
 import { Session } from "../../src/session/session"
@@ -196,7 +196,7 @@ describe("plan_exit detection", () => {
           {
             tool: "plan_exit",
             input: {},
-            output: "Plan is ready at .kilo/plans/plan.md. Ending planning turn.",
+            output: "Plan is ready at .tavern/plans/plan.md. Ending planning turn.",
           },
         ],
       })

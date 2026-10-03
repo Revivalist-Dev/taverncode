@@ -5,7 +5,7 @@ import { Database } from "@opencode-ai/core/database/database"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { Config } from "../../../src/config/config"
 import { Session } from "../../../src/session/session"
-import { KiloSessionRetention } from "../../../src/kilocode/session/retention"
+import { KiloSessionRetention } from "../../../src/taverncode/session/retention"
 import { testEffect } from "../../lib/effect"
 
 const it = testEffect(LayerNode.compile(Database.node))

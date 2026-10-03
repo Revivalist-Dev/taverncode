@@ -1,4 +1,4 @@
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/taverncode/background-process"
 import { SessionID } from "@/session/schema"
 import { Schema } from "effect"
 import { HttpApi, HttpApiEndpoint, HttpApiError, HttpApiGroup, OpenApi } from "effect/unstable/httpapi"
@@ -100,7 +100,7 @@ export const BackgroundProcessApi = HttpApi.make("background-process")
       .annotateMerge(
         OpenApi.annotations({
           title: "background-process",
-          description: "Kilo background process routes.",
+          description: "Tavern background process routes.",
         }),
       )
       .middleware(InstanceContextMiddleware)
@@ -109,8 +109,8 @@ export const BackgroundProcessApi = HttpApi.make("background-process")
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

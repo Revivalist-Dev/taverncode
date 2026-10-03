@@ -13,9 +13,9 @@ import type { Accessor } from "solid-js"
 
 export const MAX = 100
 /** The shared list: a flat array, stored exactly as before per-conversation history existed. */
-const SHARED_STORAGE_KEY = "kilo.prompt-history.v1"
+const SHARED_STORAGE_KEY = "tavern.prompt-history.v1"
 /** Per-conversation lists: a map of conversation key to list. */
-const SCOPED_STORAGE_KEY = "kilo.prompt-history.v2"
+const SCOPED_STORAGE_KEY = "tavern.prompt-history.v2"
 /** Bucket for conversations that do not yet have a stable key (e.g. a brand-new tab). */
 const FALLBACK_KEY = "new"
 /** In-memory bucket for the shared list. Never evicted. */
@@ -39,7 +39,7 @@ function read(key: string): unknown {
     const raw = localStorage.getItem(key)
     return raw ? JSON.parse(raw) : undefined
   } catch (err) {
-    console.warn("[Kilo New] prompt history load failed", err)
+    console.warn("[Tavern New] prompt history load failed", err)
     return undefined
   }
 }
@@ -83,14 +83,14 @@ function evict(): boolean {
  */
 function persist(key: string) {
   if (key === GLOBAL_KEY) {
-    if (!write(SHARED_STORAGE_KEY, store.get(GLOBAL_KEY) ?? [])) console.warn("[Kilo New] prompt history save failed")
+    if (!write(SHARED_STORAGE_KEY, store.get(GLOBAL_KEY) ?? [])) console.warn("[Tavern New] prompt history save failed")
     return
   }
   const copy = new Map(store)
   copy.delete(GLOBAL_KEY)
   while (!write(SCOPED_STORAGE_KEY, Object.fromEntries(copy))) {
     const oldest = copy.keys().next().value
-    if (oldest === undefined) return console.warn("[Kilo New] prompt history save failed")
+    if (oldest === undefined) return console.warn("[Tavern New] prompt history save failed")
     copy.delete(oldest)
   }
 }

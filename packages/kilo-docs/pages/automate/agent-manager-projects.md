@@ -11,11 +11,11 @@ One Agent Manager project represents one canonical Git repository. A project is 
 
 ## Enable multi-project mode
 
-1. Open [Kilo Code Settings](/docs/getting-started/settings#experimental-features).
+1. Open [Tavern Code Settings](/docs/getting-started/settings#experimental-features).
 2. Open the **Experimental** tab.
 3. Enable **Multi-Project Agent Manager**.
 
-The setting is also available as `kilo-code.new.experimental.multiProject`. It is an application-scoped VS Code setting and defaults to `false`.
+The setting is also available as `tavern-code.new.experimental.multiProject`. It is an application-scoped VS Code setting and defaults to `false`.
 
 ## Default project
 
@@ -41,10 +41,10 @@ If you select a folder that is not a Git repository, **Open local folder...** as
 Each project keeps its own state:
 
 - A **Local** context and Local sessions, scoped to that repository's root
-- Managed worktrees under `.kilo/worktrees/` in that repository
+- Managed worktrees under `.tavern/worktrees/` in that repository
 - Sections, worktree order, tab layout, and the other sidebar state
 - Setup script, run script, and Agent Manager settings for that repository
-- Agent Manager state in that repository's `.kilo/agent-manager.json`
+- Agent Manager state in that repository's `.tavern/agent-manager.json`
 
 Sessions, worktrees, and sections are not shared between projects. Removing an added project removes it from Agent Manager only. It does not delete the repository, its branches, or its state.
 

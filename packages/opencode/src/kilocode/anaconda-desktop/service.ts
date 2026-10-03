@@ -1,5 +1,5 @@
 import { Auth } from "@/auth"
-import { invalidateAfterProviderAuthChange } from "@/kilocode/server/provider-auth-lifecycle"
+import { invalidateAfterProviderAuthChange } from "@/taverncode/server/provider-auth-lifecycle"
 import { InstanceStore } from "@/project/instance-store"
 import { ModelCache } from "@/provider/model-cache"
 import { Context, Effect, Layer, Redacted } from "effect"
@@ -24,7 +24,7 @@ export interface Interface {
   ) => Effect.Effect<ReadyStatus, NotReadyError | SyncError | ToolAcknowledgementError>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@kilocode/AnacondaDesktop") {}
+export class Service extends Context.Service<Service, Interface>()("@taverncode/AnacondaDesktop") {}
 
 function same(left: Record<string, string> | undefined, right: Record<string, string>) {
   if (!left) return false

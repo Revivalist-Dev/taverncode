@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Build the Kilo VS Code extension and launch it in a development host.
+ * Build the Tavern VS Code extension and launch it in a development host.
  *
  * Usage:
  *   bun script/launch.ts [options] [workspace]
@@ -11,11 +11,11 @@
  *   --mode dev|vsix   "dev" uses --extensionDevelopmentPath, "vsix" packages a VSIX (default: dev)
  *   --app-path PATH   Explicit path to the VS Code executable (auto-detected if omitted)
  *   --state-dir PATH  Directory for isolated VS Code user-data/extensions (default: OS temp per repo)
- *   --kilo-storage-dir PATH  Directory for isolated Kilo XDG storage
- *   --isolated        Shortcut for a persistent isolated instance under <repo>/.kilo-dev
+ *   --tavern-storage-dir PATH  Directory for isolated Tavern XDG storage
+ *   --isolated        Shortcut for a persistent isolated instance under <repo>/.tavern-dev
  *   --insiders        Prefer VS Code Insiders over stable
  *   --wait            Block until the VS Code window is closed
- *   --clean           Wipe isolated VS Code dirs and Kilo storage before launching
+ *   --clean           Wipe isolated VS Code dirs and Tavern storage before launching
  *   --preserve-settings  Merge defaults into existing VS Code user settings
  *   --accessible      Enable VS Code accessibility support for assistive-technology testing
  *
@@ -43,7 +43,7 @@ const temp = tmpdir().trimEnd()
 // Argument parsing
 // ---------------------------------------------------------------------------
 
-const valued = new Set(["workspace", "mode", "app-path", "state-dir", "kilo-storage-dir"])
+const valued = new Set(["workspace", "mode", "app-path", "state-dir", "tavern-storage-dir"])
 
 function parse(argv: string[]) {
   const result: Record<string, string | boolean> = {}
@@ -92,9 +92,9 @@ function expand(input: string) {
 
 const opts = parse(process.argv.slice(2))
 
-// --isolated defaults both the VS Code state and Kilo storage to <repo>/.kilo-dev
+// --isolated defaults both the VS Code state and Tavern storage to <repo>/.tavern-dev
 const isolated = opts["isolated"] === true
-const dev = join(repo, ".kilo-dev")
+const dev = join(repo, ".tavern-dev")
 
 // Stable per-repo directory under OS temp — no accumulation
 const hash = createHash("sha256").update(repo).digest("hex").slice(0, 12)
@@ -103,11 +103,11 @@ const base =
     ? expand(opts["state-dir"])
     : isolated
       ? join(dev, "vscode")
-      : join(temp, `kilo-vscode-dev-${hash}`)
+      : join(temp, `tavern-vscode-dev-${hash}`)
 const userDir = join(base, "user-data")
 const extDir = join(base, "extensions")
-const kilo =
-  typeof opts["kilo-storage-dir"] === "string" ? expand(opts["kilo-storage-dir"]) : isolated ? dev : undefined
+const tavern =
+  typeof opts["tavern-storage-dir"] === "string" ? expand(opts["tavern-storage-dir"]) : isolated ? dev : undefined
 
 const shouldBuild = opts["build"] !== false
 const mode = typeof opts["mode"] === "string" ? opts["mode"] : "dev"
@@ -357,7 +357,7 @@ async function launch() {
   if (clean) {
     console.log("[launch] Cleaning previous state...")
     rmSync(base, { recursive: true, force: true })
-    if (kilo) rmSync(kilo, { recursive: true, force: true })
+    if (tavern) rmSync(tavern, { recursive: true, force: true })
   }
 
   mkdirSync(userDir, { recursive: true })
@@ -371,7 +371,7 @@ async function launch() {
 
   if (mode === "dev") {
     args.push(`--extensionDevelopmentPath=${root}`)
-    args.push("--disable-extension=kilocode.kilo-code")
+    args.push("--disable-extension=taverncode.tavern-code")
   }
 
   if (mode === "vsix") {
@@ -389,11 +389,11 @@ async function launch() {
   // Strip Electron/VS Code env vars so the spawned instance doesn't attach
   // to the current Electron process (e.g. when launched from a VS Code task).
   const env = cleanEnv(process.env)
-  if (kilo) {
-    env.XDG_DATA_HOME = join(kilo, "data")
-    env.XDG_CONFIG_HOME = join(kilo, "config")
-    env.XDG_STATE_HOME = join(kilo, "state")
-    env.XDG_CACHE_HOME = join(kilo, "cache")
+  if (tavern) {
+    env.XDG_DATA_HOME = join(tavern, "data")
+    env.XDG_CONFIG_HOME = join(tavern, "config")
+    env.XDG_STATE_HOME = join(tavern, "state")
+    env.XDG_CACHE_HOME = join(tavern, "cache")
   }
   for (const key of Object.keys(env)) {
     if (key.startsWith("ELECTRON_") || key.startsWith("VSCODE_")) delete env[key]
@@ -403,7 +403,7 @@ async function launch() {
   console.log(`[launch] Executable: ${app}`)
   console.log(`[launch] Workspace:  ${workspace}`)
   console.log(`[launch] State:      ${base}`)
-  if (kilo) console.log(`[launch] Kilo state: ${kilo}`)
+  if (tavern) console.log(`[launch] Tavern state: ${tavern}`)
   console.log(`[launch] Accessibility support: ${accessible ? "on" : "off"}`)
 
   if (blocking) {

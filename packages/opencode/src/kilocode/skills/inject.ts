@@ -1,7 +1,7 @@
 import { Effect } from "effect"
 import { ConfigMarkdown } from "@/config/markdown"
 import { Process } from "@/util/process"
-import { SKILL_SHELL_DISABLED, SKILL_SHELL_UNTRUSTED } from "@/kilocode/skills/display"
+import { SKILL_SHELL_DISABLED, SKILL_SHELL_UNTRUSTED } from "@/taverncode/skills/display"
 import type * as Tool from "@/tool/tool"
 
 // A `!`cmd`` placeholder in SKILL.md is replaced by the command's stdout before the

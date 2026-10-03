@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "bun:test"
-import type { EventSessionTurnClose, Session } from "@kilocode/sdk/v2/client"
+import type { EventSessionTurnClose, Session } from "@taverncode/sdk/v2/client"
 import { KiloProvider } from "../../src/KiloProvider"
 import type { GitOps } from "../../src/agent-manager/GitOps"
 import type { GitStatsPoller } from "../../src/agent-manager/GitStatsPoller"

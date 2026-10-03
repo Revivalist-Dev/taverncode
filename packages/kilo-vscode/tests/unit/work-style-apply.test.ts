@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { applyWorkStyle, type WorkStyleStore } from "../../src/kilo-provider/work-style-apply"
+import { applyWorkStyle, type WorkStyleStore } from "../../src/tavern-provider/work-style-apply"
 import type { WorkStyleConfig } from "../../src/shared/work-style-presets"
 
 function setup(input?: {

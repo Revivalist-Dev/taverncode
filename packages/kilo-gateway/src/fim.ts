@@ -9,7 +9,7 @@ export const DIRECT_FIM_ENV: Record<DirectAutocompleteProviderID, string[]> = {
 }
 
 export type FimTarget =
-  | { provider: "kilo"; model: string; url: string }
+  | { provider: "tavern"; model: string; url: string }
   | { provider: "inception"; model: string; url: string }
   | { provider: "mistral"; model: string }
 
@@ -17,11 +17,11 @@ const KILO_FIM_URL = KILO_API_BASE + "/api/fim/completions"
 const INCEPTION_FIM_URL = "https://api.inceptionlabs.ai/v1/fim/completions"
 
 function kiloTarget(model?: string): FimTarget {
-  return { provider: "kilo", model: model ?? "mistralai/codestral-2501", url: KILO_FIM_URL }
+  return { provider: "tavern", model: model ?? "mistralai/codestral-2501", url: KILO_FIM_URL }
 }
 
 export function resolveFimTarget(provider?: string, model?: string): FimTarget {
-  if (!provider || provider === "kilo") return kiloTarget(model)
+  if (!provider || provider === "tavern") return kiloTarget(model)
 
   const info = getAutocompleteModel(provider, model)
   if (info.directProvider === "mistral") {

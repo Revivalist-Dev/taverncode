@@ -9,14 +9,14 @@ const DIGEST = "a".repeat(64)
 
 function bom(overrides: Partial<Parameters<typeof compose>[0]> = {}) {
   return compose({
-    subject: { name: "kilo-linux-x64.tar.gz", sha256: DIGEST, size: 10 },
-    product: { name: "kilo-cli", version: "7.7.9" },
+    subject: { name: "tavern-linux-x64.tar.gz", sha256: DIGEST, size: 10 },
+    product: { name: "tavern-cli", version: "7.7.9" },
     ...overrides,
   })
 }
 
 async function scratch() {
-  return fs.promises.mkdtemp(path.join(os.tmpdir(), "kilo-sbom-test-"))
+  return fs.promises.mkdtemp(path.join(os.tmpdir(), "tavern-sbom-test-"))
 }
 
 describe("compose", () => {
@@ -31,8 +31,8 @@ describe("compose", () => {
     const document = bom()
     expect(document.metadata.component).toMatchObject({ hashes: [{ alg: "SHA-256", content: DIGEST }] })
     const properties = document.metadata.properties as { name: string; value: string }[]
-    expect(properties).toContainEqual({ name: "kilocode:subject:name", value: "kilo-linux-x64.tar.gz" })
-    expect(properties).toContainEqual({ name: "kilocode:subject:sha256", value: DIGEST })
+    expect(properties).toContainEqual({ name: "taverncode:subject:name", value: "tavern-linux-x64.tar.gz" })
+    expect(properties).toContainEqual({ name: "taverncode:subject:sha256", value: DIGEST })
   })
 
   test("derives a deterministic serial number from the subject digest", () => {
@@ -58,10 +58,10 @@ describe("compose", () => {
       build: { commit: "c".repeat(40), channel: "latest", properties: { "build:tag": "jetbrains/v1.2.3" } },
     })
     const properties = document.metadata.properties as { name: string; value: string }[]
-    expect(properties).toContainEqual({ name: "kilocode:target:abi", value: "musl" })
-    expect(properties).toContainEqual({ name: "kilocode:target:baseline", value: "true" })
-    expect(properties).toContainEqual({ name: "kilocode:build:commit", value: "c".repeat(40) })
-    expect(properties).toContainEqual({ name: "kilocode:build:tag", value: "jetbrains/v1.2.3" })
+    expect(properties).toContainEqual({ name: "taverncode:target:abi", value: "musl" })
+    expect(properties).toContainEqual({ name: "taverncode:target:baseline", value: "true" })
+    expect(properties).toContainEqual({ name: "taverncode:build:commit", value: "c".repeat(40) })
+    expect(properties).toContainEqual({ name: "taverncode:build:tag", value: "jetbrains/v1.2.3" })
   })
 
   test("maps delivery onto CycloneDX scope so host-provided code is not claimed as shipped", async () => {
@@ -80,7 +80,7 @@ describe("compose", () => {
   test("records coverage gaps instead of silently omitting unknown data", () => {
     const document = bom({ gaps: [{ component: "syft", reason: "not installed" }] })
     expect(document.metadata.properties).toContainEqual({
-      name: "kilocode:coverage:gap:syft",
+      name: "taverncode:coverage:gap:syft",
       value: "not installed",
     })
   })
@@ -88,7 +88,7 @@ describe("compose", () => {
   test("keeps a gap with no matching component, since there is nothing to reconcile it against", () => {
     const document = bom({ gaps: [{ component: "ghost", reason: "not resolvable from bun.lock" }] })
     expect(document.metadata.properties).toContainEqual({
-      name: "kilocode:coverage:gap:ghost",
+      name: "taverncode:coverage:gap:ghost",
       value: "not resolvable from bun.lock",
     })
   })
@@ -122,7 +122,7 @@ describe("compose", () => {
       { license: { id: "Apache-2.0" } },
     ])
     expect(document.metadata.properties).not.toContainEqual(
-      expect.objectContaining({ name: "kilocode:coverage:gap:com.squareup.okhttp3:okhttp@4.12.0" }),
+      expect.objectContaining({ name: "taverncode:coverage:gap:com.squareup.okhttp3:okhttp@4.12.0" }),
     )
   })
 
@@ -140,7 +140,7 @@ describe("compose", () => {
       ],
     })
     expect(document.metadata.properties).toContainEqual({
-      name: "kilocode:coverage:gap:com.squareup.okhttp3:okhttp@4.12.0",
+      name: "taverncode:coverage:gap:com.squareup.okhttp3:okhttp@4.12.0",
       value: "licence unknown: not tracked by the Gradle version catalog",
     })
   })
@@ -153,7 +153,7 @@ describe("compose", () => {
       ],
       dependencies: { "pkg:npm/a@1": ["pkg:npm/b@1"] },
     })
-    const root = document.dependencies.find((item) => item.ref.startsWith("kilocode:artifact:"))
+    const root = document.dependencies.find((item) => item.ref.startsWith("taverncode:artifact:"))
     expect(root?.dependsOn).toEqual(["pkg:npm/a@1"])
     expect(document.dependencies.find((item) => item.ref === "pkg:npm/a@1")?.dependsOn).toEqual(["pkg:npm/b@1"])
     expect(await validate(document)).toEqual([])
@@ -200,9 +200,9 @@ describe("dedupe", () => {
   test("resolves a contained-versus-runtime conflict to contained, in either order", () => {
     const contained = {
       type: "application" as const,
-      name: "kilo",
+      name: "tavern",
       version: "7.7.9",
-      ref: "kilo",
+      ref: "tavern",
       delivery: "contained" as const,
     }
     const runtime = { ...contained, delivery: "runtime" as const }
@@ -232,7 +232,7 @@ describe("dedupe", () => {
       dependencies: { cli: ["pkg:npm/dep@1"] },
     })
     expect(await validate(document)).toEqual([])
-    const root = document.dependencies.find((item) => item.ref.startsWith("kilocode:artifact:"))
+    const root = document.dependencies.find((item) => item.ref.startsWith("taverncode:artifact:"))
     expect(root?.dependsOn).toEqual(["cli"])
     expect(document.dependencies.find((item) => item.ref === "cli")?.dependsOn).toEqual(["pkg:npm/dep@1"])
   })
@@ -243,7 +243,7 @@ describe("validate", () => {
     const document = bom()
     document.metadata.properties = []
     expect(await validate(document)).toEqual(
-      expect.arrayContaining([expect.stringContaining("kilocode:subject:name")]),
+      expect.arrayContaining([expect.stringContaining("taverncode:subject:name")]),
     )
   })
 
@@ -355,13 +355,13 @@ describe("deps", () => {
     workspaces: {
       "": { name: "root" },
       "packages/app": {
-        name: "@kilo/app",
+        name: "@tavern/app",
         version: "1.0.0",
-        dependencies: { shipped: "1.0.0", "@kilo/lib": "workspace:*" },
+        dependencies: { shipped: "1.0.0", "@tavern/lib": "workspace:*" },
         devDependencies: { tooling: "1.0.0" },
         optionalDependencies: { "native-linux": "1.0.0", "native-darwin": "1.0.0" },
       },
-      "packages/lib": { name: "@kilo/lib", version: "2.0.0", dependencies: { nested: "1.0.0" } },
+      "packages/lib": { name: "@tavern/lib", version: "2.0.0", dependencies: { nested: "1.0.0" } },
     },
     packages: {
       shipped: ["shipped@1.0.0", "", { dependencies: { transitive: "1.0.0" } }, "sha512-shipped"],
@@ -371,7 +371,7 @@ describe("deps", () => {
       tooling: ["tooling@1.0.0", "", {}, "sha512-tooling"],
       "native-linux": ["native-linux@1.0.0", "", { os: ["linux"], cpu: ["x64"] }, "sha512-native-linux"],
       "native-darwin": ["native-darwin@1.0.0", "", { os: ["darwin"] }, "sha512-native-darwin"],
-      "@kilo/lib": ["@kilo/lib@workspace:packages/lib"],
+      "@tavern/lib": ["@tavern/lib@workspace:packages/lib"],
     },
   }
 
@@ -395,8 +395,8 @@ describe("deps", () => {
 
   test("records workspace packages as first-party without inventing npm purls", () => {
     const result = Deps.closure({ lock, workspace: "packages/app" })
-    const workspace = result.components.find((item) => item.name === "@kilo/lib")
-    expect(workspace).toMatchObject({ version: "2.0.0", supplier: "Kilo Code", properties: { origin: "workspace" } })
+    const workspace = result.components.find((item) => item.name === "@tavern/lib")
+    expect(workspace).toMatchObject({ version: "2.0.0", supplier: "Tavern Code", properties: { origin: "workspace" } })
     expect(workspace?.purl).toBeUndefined()
     expect(result.components.map((item) => item.name)).toContain("nested")
   })
@@ -421,7 +421,7 @@ describe("deps", () => {
   test("reports unresolvable dependencies as gaps", () => {
     const broken: Deps.Lock = {
       ...lock,
-      workspaces: { ...lock.workspaces, "packages/app": { name: "@kilo/app", dependencies: { ghost: "1.0.0" } } },
+      workspaces: { ...lock.workspaces, "packages/app": { name: "@tavern/app", dependencies: { ghost: "1.0.0" } } },
     }
     const result = Deps.closure({ lock: broken, workspace: "packages/app" })
     expect(result.gaps).toEqual([{ component: "ghost", reason: "not resolvable from <root> in bun.lock" }])
@@ -707,7 +707,7 @@ describe("scan", () => {
     const components = Scan.convert({
       metadata: { component: { "bom-ref": "root" } },
       components: [
-        { "bom-ref": "root", type: "file", name: "kilo-linux-x64.tar.gz" },
+        { "bom-ref": "root", type: "file", name: "tavern-linux-x64.tar.gz" },
         {
           "bom-ref": "pkg-1",
           type: "library",
@@ -756,7 +756,7 @@ describe("manifest", () => {
     const subject = await Artifact.subject(file)
     const document = compose({
       subject,
-      product: { name: "kilo-cli", version: "7.7.9" },
+      product: { name: "tavern-cli", version: "7.7.9" },
       ...overrides,
     })
     await Bun.write(Artifact.sidecar(file), `${JSON.stringify(document, null, 2)}\n`)
@@ -771,7 +771,7 @@ describe("manifest", () => {
   test("accepts a complete set", async () => {
     const dir = await scratch()
     try {
-      const entry = await fixture(dir, "kilo-linux-x64.tar.gz")
+      const entry = await fixture(dir, "tavern-linux-x64.tar.gz")
       const report = await Manifest.verify({
         manifest: { version: "7.7.9", product: "cli", generated: "", expected: 1, entries: [entry] },
         dir,
@@ -791,7 +791,7 @@ describe("manifest", () => {
           product: "cli",
           generated: "",
           expected: 1,
-          entries: [{ artifact: "kilo-linux-x64.tar.gz", sha256: DIGEST, sbom: "kilo-linux-x64.tar.gz.cdx.json" }],
+          entries: [{ artifact: "tavern-linux-x64.tar.gz", sha256: DIGEST, sbom: "tavern-linux-x64.tar.gz.cdx.json" }],
         },
         dir,
       })
@@ -805,7 +805,7 @@ describe("manifest", () => {
   test("detects a sidecar generated for different bytes", async () => {
     const dir = await scratch()
     try {
-      const entry = await fixture(dir, "kilo-linux-x64.tar.gz")
+      const entry = await fixture(dir, "tavern-linux-x64.tar.gz")
       const report = await Manifest.verify({
         manifest: {
           version: "7.7.9",
@@ -826,7 +826,7 @@ describe("manifest", () => {
   test("detects an incomplete artifact set", async () => {
     const dir = await scratch()
     try {
-      const entry = await fixture(dir, "kilo-linux-x64.tar.gz")
+      const entry = await fixture(dir, "tavern-linux-x64.tar.gz")
       const report = await Manifest.verify({
         manifest: { version: "7.7.9", product: "cli", generated: "", expected: 12, entries: [entry] },
         dir,
@@ -898,7 +898,7 @@ describe("manifest", () => {
         product: "cli",
         generated: "",
         expected: 1,
-        entries: [{ artifact: "@kilocode/cli@7.7.9", sha256: "", error: "failed" }],
+        entries: [{ artifact: "@taverncode/cli@7.7.9", sha256: "", error: "failed" }],
       },
       dir: "/nonexistent",
     })
@@ -908,13 +908,13 @@ describe("manifest", () => {
   test("writes checksums for artifacts and their sidecars", async () => {
     const dir = await scratch()
     try {
-      const entry = await fixture(dir, "kilo-linux-x64.tar.gz")
+      const entry = await fixture(dir, "tavern-linux-x64.tar.gz")
       const text = await Manifest.checksums({
         manifest: { version: "7.7.9", product: "cli", generated: "", expected: 1, entries: [entry] },
         dir,
       })
-      expect(text).toContain(`${entry.sha256}  kilo-linux-x64.tar.gz\n`)
-      expect(text).toContain("  kilo-linux-x64.tar.gz.cdx.json\n")
+      expect(text).toContain(`${entry.sha256}  tavern-linux-x64.tar.gz\n`)
+      expect(text).toContain("  tavern-linux-x64.tar.gz.cdx.json\n")
     } finally {
       await fs.promises.rm(dir, { recursive: true, force: true })
     }
@@ -972,10 +972,10 @@ describe("artifact", () => {
   test("hashes and names a real file", async () => {
     const dir = await scratch()
     try {
-      const file = path.join(dir, "kilo-darwin-arm64.zip")
+      const file = path.join(dir, "tavern-darwin-arm64.zip")
       await Bun.write(file, "bytes")
       const subject = await Artifact.subject(file)
-      expect(subject.name).toBe("kilo-darwin-arm64.zip")
+      expect(subject.name).toBe("tavern-darwin-arm64.zip")
       expect(subject.size).toBe(5)
       expect(subject.sha256).toBe(new Bun.CryptoHasher("sha256").update("bytes").digest("hex"))
       expect(Artifact.sidecar(file)).toBe(`${file}.cdx.json`)

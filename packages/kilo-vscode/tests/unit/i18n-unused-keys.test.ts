@@ -1,7 +1,7 @@
 /**
- * Localization lint: unused translation keys (all Kilo-owned pools)
+ * Localization lint: unused translation keys (all Tavern-owned pools)
  *
- * Ensures every key in every Kilo-owned english dictionary is either
+ * Ensures every key in every Tavern-owned english dictionary is either
  * referenced from repository source or explicitly protected as a runtime
  * protocol key. Keys that lose their last usage during refactors tend to
  * linger in all 20 locale files forever; this test fails for review instead.
@@ -11,7 +11,7 @@
  *
  * Covered pools:
  *   app           webview sidebar dict (webview-ui/src/i18n)
- *   kilo-i18n     shared webview overrides (packages/kilo-i18n)
+ *   tavern-i18n     shared webview overrides (packages/tavern-i18n)
  *   agent-manager agent manager webview dict
  *   cli-backend   extension server/remote dict
  *   host          extension host dict (autocomplete)
@@ -27,7 +27,7 @@
  *   - a quoted string literal equal to the key appears in scanned code
  *     (covers t("key") calls, ternaries producing key strings, key strings
  *     embedded in the CLI backend that travel to the webview as data, e.g.
- *     provider metadata noteKeys in opencode/src/kilocode/provider), or
+ *     provider metadata noteKeys in opencode/src/taverncode/provider), or
  *   - a template literal with a static dotted head ending right before ${}
  *     covers the key by prefix (e.g. t(`agentManager.setup.error.${code}`),
  *     t(`workStyle.choice.${choice}.title`), const k = `a.b.${x}`).
@@ -42,30 +42,30 @@ import { Glob } from "bun"
 import path from "node:path"
 
 import { dict as appEn } from "../../webview-ui/src/i18n/en"
-import { dict as kiloEn } from "../../../kilo-i18n/src/en"
+import { dict as kiloEn } from "../../../tavern-i18n/src/en"
 import { dict as amEn } from "../../webview-ui/agent-manager/i18n/en"
 import { dict as cliEn } from "../../src/services/cli-backend/i18n/en"
 import { dict as hostEn } from "../../src/services/i18n/en"
 
 const REPO = path.resolve(import.meta.dir, "../../../..")
-const VSCODE = path.join(REPO, "packages/kilo-vscode")
+const VSCODE = path.join(REPO, "packages/tavern-vscode")
 
 // Webview key strings are consumed not only in the webview itself but also
 // embedded as data in the CLI backend / extension host (provider metadata,
 // question flows), so those sources are scanned for webview pools too.
 const WEBVIEW_ROOTS = [
   VSCODE,
-  path.join(REPO, "packages/kilo-ui"),
+  path.join(REPO, "packages/tavern-ui"),
   path.join(REPO, "packages/opencode"),
-  path.join(REPO, "packages/kilo-gateway"),
+  path.join(REPO, "packages/tavern-gateway"),
 ]
 
 const pools = [
   { name: "app", dict: appEn, roots: WEBVIEW_ROOTS, runtime: ["settings.providers.note."] },
-  // kilo-i18n also overrides upstream ui.* keys consumed by components in
+  // tavern-i18n also overrides upstream ui.* keys consumed by components in
   // packages/ui/src (and the TUI), so those count as usage too.
   {
-    name: "kilo-i18n",
+    name: "tavern-i18n",
     dict: kiloEn,
     roots: [...WEBVIEW_ROOTS, path.join(REPO, "packages/ui"), path.join(REPO, "packages/tui")],
     runtime: ["plan.followup.", "snapshot.slowRepo.", "settings.providers.note."],

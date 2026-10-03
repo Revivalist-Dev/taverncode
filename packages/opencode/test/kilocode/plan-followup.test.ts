@@ -1,6 +1,6 @@
 import { describe, expect, spyOn, test } from "bun:test"
 import { Effect } from "effect"
-import { Telemetry } from "@kilocode/kilo-telemetry"
+import { Telemetry } from "@taverncode/tavern-telemetry"
 import { Global } from "@opencode-ai/core/global"
 import * as Log from "@opencode-ai/core/util/log"
 import { Agent } from "../../src/agent/agent"
@@ -13,9 +13,9 @@ import { ModelV2 } from "@opencode-ai/core/model"
 import { EventV2 } from "@opencode-ai/core/event"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { SessionProjector } from "@opencode-ai/core/session/projector"
-import { formatTodos, generateHandover, PlanFollowup, PlanFollowupRuntime } from "../../src/kilocode/plan-followup"
-import { Instance } from "../../src/kilocode/instance"
-import * as KiloInstance from "../../src/kilocode/instance"
+import { formatTodos, generateHandover, PlanFollowup, PlanFollowupRuntime } from "../../src/taverncode/plan-followup"
+import { Instance } from "../../src/taverncode/instance"
+import * as KiloInstance from "../../src/taverncode/instance"
 import { Provider } from "../../src/provider/provider"
 import { Question } from "../../src/question"
 import { Session } from "../../src/session/session"
@@ -572,7 +572,7 @@ describe("plan follow-up", () => {
 
   test("ask - retargets prompt queue so injected message is visible in scope", () =>
     withInstance(async () => {
-      const { KiloSessionPromptQueue } = await import("../../src/kilocode/session/prompt-queue")
+      const { KiloSessionPromptQueue } = await import("../../src/taverncode/session/prompt-queue")
       const seeded = await seed({ text: "1. Refactor\n2. Ship" })
 
       // Simulate the prompt queue having a target set (like during a running loop)

@@ -1,9 +1,9 @@
 import type { KiloConnectionService } from "../services/cli-backend/connection-service"
-import { getErrorMessage } from "../kilo-provider-utils"
+import { getErrorMessage } from "../tavern-provider-utils"
 import { getSpeechToTextModel } from "./models"
 import { hasCustomSource, sourceHeaders, sourceUrl, type SpeechToTextSource } from "./source"
 
-const PATH = "/kilo/audio/transcriptions"
+const PATH = "/tavern/audio/transcriptions"
 const PROMPT =
   "Transcribe exactly what is spoken. Do not paraphrase, summarize, infer intent, or rewrite for clarity. Preserve the speaker's original wording as closely as possible, including incomplete phrases and unusual wording when audible."
 
@@ -41,9 +41,9 @@ export async function transcribeSpeech(
   if (hasCustomSource(source)) return await transcribeWithSource(source, input, signal)
 
   const cfg = connection.getServerConfig()
-  if (!cfg) return { ok: false, error: "Not connected to the Kilo backend", code: "not_connected" }
+  if (!cfg) return { ok: false, error: "Not connected to the Tavern backend", code: "not_connected" }
 
-  const auth = Buffer.from(`kilo:${cfg.password}`).toString("base64")
+  const auth = Buffer.from(`tavern:${cfg.password}`).toString("base64")
   const url = new URL(PATH, cfg.baseUrl)
   const model = getSpeechToTextModel(input.model)
   const prompt = model.verbatim ? PROMPT : undefined
@@ -108,7 +108,7 @@ async function read(res: Response, source?: SpeechToTextSource): Promise<SpeechT
 
   if (!res.ok) {
     // A 401 from a custom endpoint means the user's own key was rejected, so it must not
-    // route the webview into the "sign in to Kilo" flow that `not_authenticated` triggers.
+    // route the webview into the "sign in to Tavern" flow that `not_authenticated` triggers.
     return {
       ok: false,
       error: errorMessage(body, raw) ?? failed(res.status, source),

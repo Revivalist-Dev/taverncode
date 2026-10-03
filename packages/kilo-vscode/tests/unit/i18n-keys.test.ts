@@ -6,7 +6,7 @@
  * 2. Ensures every English key has a translation in all other locale files.
  *
  * Three independent key pools are checked:
- *   - Webview (sidebar + agent manager): merged from app, ui, kilo-i18n, agent-manager dicts
+ *   - Webview (sidebar + agent manager): merged from app, ui, tavern-i18n, agent-manager dicts
  *   - CLI backend (extension-side server-manager): cli-backend/i18n dict
  *   - Extension host: services/i18n aggregate dict
  *
@@ -44,7 +44,7 @@ import { dict as appIt } from "../../webview-ui/src/i18n/it"
 import { dict as appFa } from "../../webview-ui/src/i18n/fa"
 import { REVERT_ERROR_CODE } from "../../src/shared/revert-error"
 
-// Layer 2: upstream UI (@opencode-ai/ui re-exported via @kilocode/kilo-ui)
+// Layer 2: upstream UI (@opencode-ai/ui re-exported via @taverncode/tavern-ui)
 import { dict as uiEn } from "../../../ui/src/i18n/en"
 import { dict as uiZh } from "../../../ui/src/i18n/zh"
 import { dict as uiZht } from "../../../ui/src/i18n/zht"
@@ -66,27 +66,27 @@ import { dict as uiNl } from "../../../ui/src/i18n/nl"
 import { dict as uiUk } from "../../../ui/src/i18n/uk"
 import { dict as uiIt } from "../../../ui/src/i18n/it"
 
-// Layer 3: kilo-i18n overrides
-import { dict as kiloEn } from "../../../kilo-i18n/src/en"
-import { dict as kiloZh } from "../../../kilo-i18n/src/zh"
-import { dict as kiloZht } from "../../../kilo-i18n/src/zht"
-import { dict as kiloKo } from "../../../kilo-i18n/src/ko"
-import { dict as kiloDe } from "../../../kilo-i18n/src/de"
-import { dict as kiloEs } from "../../../kilo-i18n/src/es"
-import { dict as kiloFr } from "../../../kilo-i18n/src/fr"
-import { dict as kiloDa } from "../../../kilo-i18n/src/da"
-import { dict as kiloJa } from "../../../kilo-i18n/src/ja"
-import { dict as kiloPl } from "../../../kilo-i18n/src/pl"
-import { dict as kiloRu } from "../../../kilo-i18n/src/ru"
-import { dict as kiloAr } from "../../../kilo-i18n/src/ar"
-import { dict as kiloNo } from "../../../kilo-i18n/src/no"
-import { dict as kiloBr } from "../../../kilo-i18n/src/br"
-import { dict as kiloTh } from "../../../kilo-i18n/src/th"
-import { dict as kiloBs } from "../../../kilo-i18n/src/bs"
-import { dict as kiloTr } from "../../../kilo-i18n/src/tr"
-import { dict as kiloNl } from "../../../kilo-i18n/src/nl"
-import { dict as kiloUk } from "../../../kilo-i18n/src/uk"
-import { dict as kiloIt } from "../../../kilo-i18n/src/it"
+// Layer 3: tavern-i18n overrides
+import { dict as kiloEn } from "../../../tavern-i18n/src/en"
+import { dict as kiloZh } from "../../../tavern-i18n/src/zh"
+import { dict as kiloZht } from "../../../tavern-i18n/src/zht"
+import { dict as kiloKo } from "../../../tavern-i18n/src/ko"
+import { dict as kiloDe } from "../../../tavern-i18n/src/de"
+import { dict as kiloEs } from "../../../tavern-i18n/src/es"
+import { dict as kiloFr } from "../../../tavern-i18n/src/fr"
+import { dict as kiloDa } from "../../../tavern-i18n/src/da"
+import { dict as kiloJa } from "../../../tavern-i18n/src/ja"
+import { dict as kiloPl } from "../../../tavern-i18n/src/pl"
+import { dict as kiloRu } from "../../../tavern-i18n/src/ru"
+import { dict as kiloAr } from "../../../tavern-i18n/src/ar"
+import { dict as kiloNo } from "../../../tavern-i18n/src/no"
+import { dict as kiloBr } from "../../../tavern-i18n/src/br"
+import { dict as kiloTh } from "../../../tavern-i18n/src/th"
+import { dict as kiloBs } from "../../../tavern-i18n/src/bs"
+import { dict as kiloTr } from "../../../tavern-i18n/src/tr"
+import { dict as kiloNl } from "../../../tavern-i18n/src/nl"
+import { dict as kiloUk } from "../../../tavern-i18n/src/uk"
+import { dict as kiloIt } from "../../../tavern-i18n/src/it"
 
 // Layer 4: agent manager (locale alignment already tested in agent-manager-i18n-split.test.ts)
 import { dict as amEn } from "../../webview-ui/agent-manager/i18n/en"
@@ -490,12 +490,12 @@ describe("i18n locale completeness — every English key exists in all locales",
     expect(missing).toEqual([])
   })
 
-  it("kilo-i18n: every English key has a translation in all locales", () => {
+  it("tavern-i18n: every English key has a translation in all locales", () => {
     const missing = findMissingLocaleKeys(kiloEn, kiloLocales)
     if (missing.length > 0) {
       expect(
         missing,
-        `Found ${missing.length} missing kilo-i18n translation(s):\n${formatLocaleReport(missing)}`,
+        `Found ${missing.length} missing tavern-i18n translation(s):\n${formatLocaleReport(missing)}`,
       ).toEqual([])
     }
     expect(missing).toEqual([])

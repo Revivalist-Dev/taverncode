@@ -1,5 +1,5 @@
 /**
- * Kilo Gateway Profile Dialog
+ * Tavern Gateway Profile Dialog
  *
  * Displays user profile information with a clickable usage details link.
  */
@@ -9,7 +9,7 @@ import { useTheme } from "@tui/context/theme"
 import { useDialog } from "@tui/ui/dialog"
 import { Link } from "@tui/ui/link"
 import { TextAttributes } from "@opentui/core"
-import type { KilocodeProfile, KilocodeBalance } from "@kilocode/kilo-gateway"
+import type { KilocodeProfile, KilocodeBalance } from "@taverncode/tavern-gateway"
 
 interface DialogKiloProfileProps {
   profile: KilocodeProfile
@@ -42,14 +42,14 @@ export function DialogKiloProfile(props: DialogKiloProfileProps) {
 
   // Generate usage URL based on organization context
   const usageUrl = props.currentOrgId
-    ? `https://app.kilo.ai/organizations/${props.currentOrgId}/usage-details`
-    : "https://app.kilo.ai/usage"
+    ? `https://app.tavern.ai/organizations/${props.currentOrgId}/usage-details`
+    : "https://app.tavern.ai/usage"
 
   return (
     <box paddingLeft={2} paddingRight={2} gap={1}>
       <box flexDirection="row" justifyContent="space-between">
         <text attributes={TextAttributes.BOLD} fg={theme.text}>
-          Kilo Gateway Profile
+          Tavern Gateway Profile
         </text>
         <text fg={theme.textMuted}>esc</text>
       </box>

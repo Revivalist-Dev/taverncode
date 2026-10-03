@@ -4,6 +4,6 @@
 
 ## Remaining Work
 
-- Dropdown to choose between org or personal account, passing the selection via `kilo serve` to the backend when using the Kilo gateway
+- Dropdown to choose between org or personal account, passing the selection via `tavern serve` to the backend when using the Tavern gateway
 - Organization feature flags (restrict features based on org plan/tier)
 - MDM policy enforcement (managed device policies, enterprise admin controls, restriction enforcement)

@@ -16,8 +16,8 @@ function xml(command: { env?: Record<string, string> } | undefined) {
 
 describe("OS attention notifications", () => {
   const notice = {
-    message: "Kilo task completed.",
-    workspace: "kilo-vscode",
+    message: "Tavern task completed.",
+    workspace: "tavern-vscode",
     session: "Add notifications",
   }
 
@@ -27,7 +27,7 @@ describe("OS attention notifications", () => {
     expect(command?.cmd).toBe("powershell.exe")
     expect(command?.args.slice(0, 3)).toEqual(["-NoProfile", "-NonInteractive", "-EncodedCommand"])
     expect(command?.env?.KILO_TOAST_APPID).toBe(APPID)
-    expect(xml(command)).toContain("Workspace: kilo-vscode")
+    expect(xml(command)).toContain("Workspace: tavern-vscode")
     expect(xml(command)).toContain("Session: Add notifications")
   })
 
@@ -36,7 +36,7 @@ describe("OS attention notifications", () => {
     const text = script(command)
 
     // The script must be a fixed program: no notice content and no identity in it.
-    expect(text).not.toContain("kilo-vscode")
+    expect(text).not.toContain("tavern-vscode")
     expect(text).not.toContain("Add notifications")
     expect(text).not.toContain(APPID)
     expect(text).toContain("$env:KILO_TOAST_XML")
@@ -48,7 +48,7 @@ describe("OS attention notifications", () => {
     // as string delimiters. If the payload were interpolated into the script,
     // this title would close the literal and run the trailing command.
     const attack = "\u2019; Start-Process calc.exe; '"
-    const command = notificationCommand({ message: "Kilo task completed.", session: attack }, "win32", APPID)
+    const command = notificationCommand({ message: "Tavern task completed.", session: attack }, "win32", APPID)
     const text = script(command)
 
     expect(text).not.toContain("Start-Process")
@@ -65,7 +65,7 @@ describe("OS attention notifications", () => {
 
   it("builds an escaped macOS osascript command", () => {
     const command = notificationCommand(
-      { message: 'Kilo said "done"', workspace: "repo", session: "path\\name" },
+      { message: 'Tavern said "done"', workspace: "repo", session: "path\\name" },
       "darwin",
     )
 
@@ -73,7 +73,7 @@ describe("OS attention notifications", () => {
       cmd: "osascript",
       args: [
         "-e",
-        'display notification "Kilo said \\"done\\" Workspace: repo Session: path\\\\name" with title "Kilo Code"',
+        'display notification "Tavern said \\"done\\" Workspace: repo Session: path\\\\name" with title "Tavern Code"',
       ],
     })
   })
@@ -82,10 +82,10 @@ describe("OS attention notifications", () => {
     expect(notificationCommand(notice, "linux")).toEqual({
       cmd: "notify-send",
       args: [
-        "--app-name=Kilo Code",
+        "--app-name=Tavern Code",
         "--urgency=normal",
-        "Kilo Code",
-        "Kilo task completed.\nWorkspace: kilo-vscode\nSession: Add notifications",
+        "Tavern Code",
+        "Tavern task completed.\nWorkspace: tavern-vscode\nSession: Add notifications",
       ],
     })
   })
@@ -94,11 +94,11 @@ describe("OS attention notifications", () => {
     // libnotify parses the body as markup: a raw `<` or `&` from a workspace or
     // session name can make the daemon reject the notification outright.
     const command = notificationCommand(
-      { message: "Kilo task completed.", workspace: "foo & bar", session: "<b>fix</b>" },
+      { message: "Tavern task completed.", workspace: "foo & bar", session: "<b>fix</b>" },
       "linux",
     )
 
-    expect(command?.args.at(-1)).toBe("Kilo task completed.\nWorkspace: foo &amp; bar\nSession: &lt;b&gt;fix&lt;/b&gt;")
+    expect(command?.args.at(-1)).toBe("Tavern task completed.\nWorkspace: foo &amp; bar\nSession: &lt;b&gt;fix&lt;/b&gt;")
     // Quotes and apostrophes are not markup, so they stay readable.
     expect(notificationCommand({ message: `it's "done"` }, "linux")?.args.at(-1)).toBe(`it's "done"`)
   })
@@ -110,7 +110,7 @@ describe("OS attention notifications", () => {
 
 describe("readAppID", () => {
   async function withProduct(content: string | undefined) {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-appid-"))
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-appid-"))
     if (content !== undefined) await fs.writeFile(path.join(dir, "product.json"), content, "utf8")
     const result = await readAppID(dir)
     await fs.rm(dir, { recursive: true, force: true })

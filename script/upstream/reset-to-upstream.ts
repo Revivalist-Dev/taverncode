@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Reset one file to the last merged upstream version after applying Kilo merge
+ * Reset one file to the last merged upstream version after applying Tavern merge
  * branding transforms.
  *
  * Usage:

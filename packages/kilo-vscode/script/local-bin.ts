@@ -19,28 +19,28 @@ const forceRebuild = process.argv.includes("--force")
 const compiledOnly = process.argv.includes("--compiled")
 
 /**
- * Ensures the VS Code extension has a CLI binary at `packages/kilo-vscode/bin/kilo`.
+ * Ensures the VS Code extension has a CLI binary at `packages/tavern-vscode/bin/tavern`.
  *
  * Strategy:
- * 1) If `bin/kilo` already exists -> ok.
+ * 1) If `bin/tavern` already exists -> ok.
  * 2) Else try to locate a prebuilt binary produced by `packages/opencode` build.
  * 3) Else try to build it via `bun run build --single` in `packages/opencode`.
- * 4) Copy the resulting binary into `packages/kilo-vscode/bin/kilo` and chmod +x.
+ * 4) Copy the resulting binary into `packages/tavern-vscode/bin/tavern` and chmod +x.
  *
- * This script is intended to be run from `packages/kilo-vscode` as part of build/package.
+ * This script is intended to be run from `packages/tavern-vscode` as part of build/package.
  */
 
 const kiloVscodeDir = join(import.meta.dir, "..")
 const packagesDir = join(kiloVscodeDir, "..")
 const repoDir = join(packagesDir, "..")
 const opencodeDir = join(packagesDir, "opencode")
-const sandboxDir = join(packagesDir, "kilo-sandbox")
+const sandboxDir = join(packagesDir, "tavern-sandbox")
 const rootFile = join(repoDir, "package.json")
 
 const targetBinDir = join(kiloVscodeDir, "bin")
-const binName = process.platform === "win32" ? "kilo.exe" : "kilo"
+const binName = process.platform === "win32" ? "tavern.exe" : "tavern"
 const targetBinPath = join(targetBinDir, binName)
-const versionFile = join(kiloVscodeDir, "node_modules", ".kilo-cli-version")
+const versionFile = join(kiloVscodeDir, "node_modules", ".tavern-cli-version")
 
 function log(msg: string) {
   console.log(`[local-bin] ${msg}`)
@@ -87,7 +87,7 @@ async function cliInputs() {
   }
 
   // The CLI build embeds the console even though it is not a package dependency.
-  for (const dir of [opencodeDir, join(packagesDir, "kilo-console")]) {
+  for (const dir of [opencodeDir, join(packagesDir, "tavern-console")]) {
     const pkg: Package = await Bun.file(join(dir, "package.json")).json()
     if (!pkg.name) throw new Error(`Workspace package at ${dir} has no name`)
     visit(pkg.name)
@@ -98,10 +98,10 @@ async function cliInputs() {
     "bun.lock",
     "patches",
     ...[...dirs].sort(),
-    "packages/kilo-vscode/script/bwrap-helper.ts",
-    "packages/kilo-vscode/script/ffmpeg-helper.ts",
-    "packages/kilo-vscode/script/local-bin.ts",
-    "packages/kilo-vscode/src/services/cli-backend/cli-resources.ts",
+    "packages/tavern-vscode/script/bwrap-helper.ts",
+    "packages/tavern-vscode/script/ffmpeg-helper.ts",
+    "packages/tavern-vscode/script/local-bin.ts",
+    "packages/tavern-vscode/src/services/cli-backend/cli-resources.ts",
   ]
 }
 
@@ -198,7 +198,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
 
   // Prefer the binary matching the current platform (e.g. cli-darwin-arm64)
   const tag = platformTag()
-  const preferred = join(distDir, `@kilocode`, tag, "bin", binName)
+  const preferred = join(distDir, `@taverncode`, tag, "bin", binName)
   try {
     statSync(preferred)
     if (!hasTreeSitterResources(preferred) || !hasKiloSandboxWorker(preferred)) return null
@@ -209,7 +209,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
 
   if (compiledOnly) return null
 
-  // Fallback: find any dist/**/bin/kilo or kilo.exe
+  // Fallback: find any dist/**/bin/tavern or tavern.exe
   const queue = [distDir]
   while (queue.length) {
     const dir = queue.pop()
@@ -228,7 +228,7 @@ async function findKiloBinaryInOpencodeDist(): Promise<string | null> {
         queue.push(p)
         continue
       }
-      if (e.isFile() && (e.name === "kilo" || e.name === "kilo.exe") && basename(dirname(p)) === "bin") {
+      if (e.isFile() && (e.name === "tavern" || e.name === "tavern.exe") && basename(dirname(p)) === "bin") {
         if (!hasTreeSitterResources(p) || !hasKiloSandboxWorker(p)) continue
         return p
       }
@@ -265,7 +265,7 @@ async function ensureBuiltBinary(): Promise<string> {
   const built = await findKiloBinaryInOpencodeDist()
   if (!built) {
     throw new Error(
-      `CLI build completed but no binary was found in ${join(opencodeDir, "dist")} (expected dist/**/bin/kilo).`,
+      `CLI build completed but no binary was found in ${join(opencodeDir, "dist")} (expected dist/**/bin/tavern).`,
     )
   }
   return built
@@ -273,12 +273,12 @@ async function ensureBuiltBinary(): Promise<string> {
 
 async function bundleKiloSandboxWorker() {
   const result = await Bun.build({
-    entrypoints: [join(sandboxDir, "src", "kilo-sandbox-mutation-worker.ts")],
+    entrypoints: [join(sandboxDir, "src", "tavern-sandbox-mutation-worker.ts")],
     target: "bun",
     format: "esm",
     minify: true,
   })
-  if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Kilo sandbox mutation worker")
+  if (!result.success || result.outputs.length !== 1) throw new Error("Could not bundle Tavern sandbox mutation worker")
   await Bun.write(kiloSandboxWorkerForBinary(targetBinPath), result.outputs[0])
 }
 

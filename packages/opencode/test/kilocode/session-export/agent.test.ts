@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { SessionExport } from "@/kilocode/session-export"
+import { SessionExport } from "@/taverncode/session-export"
 
 test("agent info export omits prompt options and permissions", () => {
   const info = SessionExport.agentInfo({
@@ -11,7 +11,7 @@ test("agent info export omits prompt options and permissions", () => {
     prompt: "custom proprietary prompt",
     options: { apiKey: "secret" },
     permission: { bash: "allow" },
-    model: { providerID: "kilo", modelID: "free" },
+    model: { providerID: "tavern", modelID: "free" },
     variant: "fast",
   } as never)
 
@@ -21,7 +21,7 @@ test("agent info export omits prompt options and permissions", () => {
     description: "writes code",
     mode: "primary",
     native: true,
-    model: { providerID: "kilo", modelID: "free" },
+    model: { providerID: "tavern", modelID: "free" },
     variant: "fast",
   })
 })

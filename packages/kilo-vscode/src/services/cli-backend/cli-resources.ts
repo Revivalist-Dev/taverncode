@@ -5,11 +5,11 @@ import * as path from "path"
 
 const dir = "tree-sitter"
 const runtime = "tree-sitter.wasm"
-const kiloSandboxWorker = "kilo-sandbox-mutation-worker.js"
+const kiloSandboxWorker = "tavern-sandbox-mutation-worker.js"
 const bwrap = "bwrap"
 const bwrapLicense = path.join("licenses", "bubblewrap")
 const bwrapLicenseFiles = ["NOTICE", "COPYING", "MUSL-COPYRIGHT", "build.ts"]
-const sandboxNetworkFiles = ["kilo-sandbox-network-relay.js", "kilo-sandbox-seccomp"]
+const sandboxNetworkFiles = ["tavern-sandbox-network-relay.js", "tavern-sandbox-seccomp"]
 const sandboxRuntimeLicense = path.join("licenses", "sandbox-runtime")
 
 function paths(file: string) {
@@ -70,7 +70,7 @@ export async function copySandboxResources(source: string, target: string): Prom
     if (!fs.existsSync(input)) continue
     const output = path.join(to, file)
     await fs.promises.copyFile(input, output)
-    if (file === "kilo-sandbox-seccomp") await fs.promises.chmod(output, 0o755)
+    if (file === "tavern-sandbox-seccomp") await fs.promises.chmod(output, 0o755)
   }
   const runtimeLicense = path.join(from, sandboxRuntimeLicense)
   if (fs.existsSync(runtimeLicense)) {
@@ -90,13 +90,13 @@ export async function copySandboxResources(source: string, target: string): Prom
 export async function copyKiloSandboxWorker(source: string, target: string): Promise<void> {
   const from = kiloSandboxWorkerForBinary(source)
   const to = kiloSandboxWorkerForBinary(target)
-  if (!fs.existsSync(from)) throw new Error(`Kilo sandbox mutation worker not found at ${from}`)
+  if (!fs.existsSync(from)) throw new Error(`Tavern sandbox mutation worker not found at ${from}`)
   await fs.promises.copyFile(from, to)
 }
 
 function cacheRoot() {
   const root = process.env.XDG_CACHE_HOME ?? path.join(os.homedir(), ".cache")
-  return path.join(root, "kilo-vscode", "bwrap")
+  return path.join(root, "tavern-vscode", "bwrap")
 }
 
 function bwrapLicenseDir(bin: string) {

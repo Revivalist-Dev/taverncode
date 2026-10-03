@@ -1,15 +1,15 @@
-// kilocode_change start
-import { plain } from "../kilocode/cli/logo"
+// taverncode_change start
+import { plain } from "../taverncode/cli/logo"
 
 export const logo = {
   left: ["", "", ""],
   right: plain(),
 }
-// kilocode_change end
+// taverncode_change end
 
 export const go = {
-  left: ["", "", "", ""], // kilocode_change
-  right: ["", "", "", ""], // kilocode_change
+  left: ["", "", "", ""], // taverncode_change
+  right: ["", "", "", ""], // taverncode_change
 }
 
 export const marks = "_^~,"

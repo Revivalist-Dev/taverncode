@@ -1,14 +1,14 @@
 /**
  * QuestionDock component
  * Displays question requests from the AI assistant inline above the prompt input.
- * Uses kilo-ui's DockPrompt component for proper surface styling.
+ * Uses tavern-ui's DockPrompt component for proper surface styling.
  */
 
 import { For, Show, createMemo, createEffect } from "solid-js"
 import type { Component } from "solid-js"
 import { createStore } from "solid-js/store"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { useSession } from "../../context/session"
 import { useLanguage } from "../../context/language"
 import type { QuestionRequest } from "../../types/messages"

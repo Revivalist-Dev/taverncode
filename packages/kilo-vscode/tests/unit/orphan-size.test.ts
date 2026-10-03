@@ -11,7 +11,7 @@ afterEach(async () => {
 })
 
 async function tempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-orphan-size-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-orphan-size-"))
   tempDirs.push(dir)
   return dir
 }
@@ -41,7 +41,7 @@ describe("orphan-size sizes", () => {
   })
 
   it("omits a path that fails outright rather than throwing", async () => {
-    const missing = path.join(os.tmpdir(), "kilo-orphan-size-does-not-exist")
+    const missing = path.join(os.tmpdir(), "tavern-orphan-size-does-not-exist")
 
     const result = await sizes([missing])
 

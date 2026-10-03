@@ -68,8 +68,8 @@ async function requestTicket(
     method: "POST",
     headers: {
       authorization: authorization(),
-      "x-kilo-directory": dir,
-      ...(options?.ticketHeader === false ? {} : { "x-kilo-ticket": "1" }),
+      "x-tavern-directory": dir,
+      ...(options?.ticketHeader === false ? {} : { "x-tavern-ticket": "1" }),
       ...(options?.origin ? { origin: options.origin } : {}),
     },
   })
@@ -88,13 +88,13 @@ async function createCat(listener: Awaited<ReturnType<typeof startListener>>, di
     method: "POST",
     headers: {
       authorization: authorization(),
-      "x-kilo-directory": dir,
+      "x-tavern-directory": dir,
       "content-type": "application/json",
     },
     body: JSON.stringify({ command: "/bin/cat", title: "listen-smoke" }),
   })
   expect(response.status).toBe(200)
-  return (await response.json()) as { id: string; pid: number } // kilocode_change
+  return (await response.json()) as { id: string; pid: number } // taverncode_change
 }
 
 async function openSocket(url: URL) {
@@ -173,7 +173,7 @@ describe("HttpApi Server.listen", () => {
     let stopped = false
     try {
       const response = await fetch(new URL(PtyPaths.shells, listener.url), {
-        headers: { authorization: authorization(), "x-kilo-directory": tmp.path },
+        headers: { authorization: authorization(), "x-tavern-directory": tmp.path },
       })
       expect(response.status).toBe(200)
       expect(await response.json()).toEqual(
@@ -200,9 +200,9 @@ describe("HttpApi Server.listen", () => {
       stopped = true
       await withTimeout(closed, 5_000, "timed out waiting for websocket close")
       expect(ws.readyState).toBe(WebSocket.CLOSED)
-      // kilocode_change start - true server shutdown must terminate retained PTY processes.
+      // taverncode_change start - true server shutdown must terminate retained PTY processes.
       expect(() => process.kill(info.pid, 0)).toThrow()
-      // kilocode_change end
+      // taverncode_change end
 
       const restarted = await startListener()
       try {
@@ -296,7 +296,7 @@ describe("HttpApi Server.listen", () => {
       return true
     }) as typeof process.stderr.write
     try {
-      // kilocode_change start - use an authenticated local route instead of proxy-dependent status
+      // taverncode_change start - use an authenticated local route instead of proxy-dependent status
       Flag.KILO_SERVER_PASSWORD = auth.password
       Flag.KILO_SERVER_USERNAME = auth.username
       process.env.KILO_SERVER_PASSWORD = auth.password
@@ -304,7 +304,7 @@ describe("HttpApi Server.listen", () => {
       const response = await Server.Default().app.request("/doc", {
         headers: { authorization: authorization() },
       })
-      // kilocode_change end
+      // taverncode_change end
       expect(response.status).toBe(200)
     } finally {
       process.stderr.write = original
@@ -346,7 +346,7 @@ describe("HttpApi Server.listen", () => {
     try {
       listener = await startListener()
       const response = await fetch(new URL("/config", listener.url), {
-        headers: { authorization: authorization(), "x-kilo-directory": tmp.path },
+        headers: { authorization: authorization(), "x-tavern-directory": tmp.path },
       })
       expect(response.status).toBe(200)
       await withTimeout(
@@ -403,7 +403,7 @@ describe("HttpApi Server.listen", () => {
       // and cannot find a PTY registered in a project directory.
       const ambiguous = await fetch(new URL(PtyPaths.connectToken.replace(":ptyID", info.id), listener.url), {
         method: "POST",
-        headers: { authorization: authorization(), "x-kilo-ticket": "1" },
+        headers: { authorization: authorization(), "x-tavern-ticket": "1" },
       })
       expect(ambiguous.status).toBe(404)
 
@@ -414,7 +414,7 @@ describe("HttpApi Server.listen", () => {
         ),
         {
           method: "POST",
-          headers: { authorization: authorization(), "x-kilo-ticket": "1" },
+          headers: { authorization: authorization(), "x-tavern-ticket": "1" },
         },
       )
       expect(directoryScoped.status).toBe(200)

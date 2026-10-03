@@ -1,7 +1,7 @@
 import { Component, createSignal, onCleanup } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { useLanguage } from "../../context/language"
 import { useVSCode } from "../../context/vscode"
 import { useConfig } from "../../context/config"
@@ -56,7 +56,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "kilo-settings.json"
+    a.download = "tavern-settings.json"
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -166,7 +166,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
   } as const
 
   const headingStyle = {
-    "font-size": "var(--kilo-font-size-13)",
+    "font-size": "var(--tavern-font-size-13)",
     "font-weight": "600",
     "margin-bottom": "12px",
     "margin-top": "0",
@@ -174,13 +174,13 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
   } as const
 
   const labelStyle = {
-    "font-size": "var(--kilo-font-size-12)",
+    "font-size": "var(--tavern-font-size-12)",
     color: "var(--vscode-descriptionForeground)",
     width: "100px",
   } as const
 
   const valueStyle = {
-    "font-size": "var(--kilo-font-size-12)",
+    "font-size": "var(--tavern-font-size-12)",
     color: "var(--vscode-foreground)",
     "font-family": "var(--vscode-editor-font-family, monospace)",
   } as const
@@ -201,7 +201,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.community")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
@@ -212,26 +212,26 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
             GitHub
           </span>
           ,{" "}
-          <span style={linkStyle} onClick={() => open("https://reddit.com/r/kilocode")}>
+          <span style={linkStyle} onClick={() => open("https://reddit.com/r/taverncode")}>
             Reddit
           </span>
           , {language.t("settings.aboutKiloCode.feedback.or")}{" "}
-          <span style={linkStyle} onClick={() => open("https://kilo.ai/discord")}>
+          <span style={linkStyle} onClick={() => open("https://tavern.ai/discord")}>
             Discord
           </span>
           .
         </p>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: 0,
             "line-height": "1.5",
           }}
         >
           {language.t("settings.aboutKiloCode.support.prefix")}{" "}
-          <span style={linkStyle} onClick={() => open("https://kilo.ai/support")}>
-            kilo.ai/support
+          <span style={linkStyle} onClick={() => open("https://tavern.ai/support")}>
+            tavern.ai/support
           </span>
           .
         </p>
@@ -242,7 +242,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.telemetry.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
@@ -277,7 +277,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
                 display: "inline-block",
               }}
             />
-            <span style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-foreground)" }}>
+            <span style={{ "font-size": "var(--tavern-font-size-12)", color: "var(--vscode-foreground)" }}>
               {getStatusText()}
             </span>
           </div>
@@ -295,7 +295,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.settingsTransfer.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
@@ -319,7 +319,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.rooImport.button")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",
@@ -337,7 +337,7 @@ const AboutKiloCodeTab: Component<AboutKiloCodeTabProps> = (props) => {
         <h4 style={headingStyle}>{language.t("settings.aboutKiloCode.resetSettings.title")}</h4>
         <p
           style={{
-            "font-size": "var(--kilo-font-size-12)",
+            "font-size": "var(--tavern-font-size-12)",
             color: "var(--vscode-descriptionForeground)",
             margin: "0 0 12px 0",
             "line-height": "1.5",

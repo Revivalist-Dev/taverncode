@@ -1,5 +1,5 @@
 import { describe, it, expect, spyOn } from "bun:test"
-import type { SessionStatus } from "@kilocode/sdk/v2/client"
+import type { SessionStatus } from "@taverncode/sdk/v2/client"
 import * as vscode from "vscode"
 import type { PartUpdate } from "../../src/shared/stream-messages"
 import type { AbortRequest } from "../../webview-ui/src/types/messages/webview-messages"
@@ -183,7 +183,7 @@ function createClient(options?: {
         return { data: {} }
       },
     },
-    kilo: {
+    tavern: {
       notifications: async () => ({ data: [] }),
       profile: async () => ({ data: {} }),
     },
@@ -753,10 +753,10 @@ describe("KiloProvider sandbox toggle", () => {
     const client = createClient()
     const { internal } = makeProvider(client)
 
-    await internal.fetchAndSendSandboxDefault("/repo/.kilo/worktrees/wt-1")
+    await internal.fetchAndSendSandboxDefault("/repo/.tavern/worktrees/wt-1")
 
-    expect(client.configReads).toEqual([{ directory: "/repo/.kilo/worktrees/wt-1" }])
-    expect(client.sandboxSupport).toEqual([{ directory: "/repo/.kilo/worktrees/wt-1" }])
+    expect(client.configReads).toEqual([{ directory: "/repo/.tavern/worktrees/wt-1" }])
+    expect(client.sandboxSupport).toEqual([{ directory: "/repo/.tavern/worktrees/wt-1" }])
   })
 
   it("waits for a blank toggle before creating the first prompt session", async () => {
@@ -773,7 +773,7 @@ describe("KiloProvider sandbox toggle", () => {
     support.resolve({ data: { available: true } })
     await Promise.all([toggle, send])
     expect(client.created).toEqual([
-      expect.objectContaining({ metadata: { "kilocode.sandbox": { enabled: true, version: 0 } } }),
+      expect.objectContaining({ metadata: { "taverncode.sandbox": { enabled: true, version: 0 } } }),
     ])
     expect(client.prompted).toHaveLength(1)
   })
@@ -825,7 +825,7 @@ describe("KiloProvider sandbox toggle", () => {
     expect(client.created).toEqual([
       expect.objectContaining({
         directory: "/repo",
-        metadata: { "kilocode.sandbox": { enabled: true, version: 0 } },
+        metadata: { "taverncode.sandbox": { enabled: true, version: 0 } },
       }),
     ])
     expect(client.sandboxed).toHaveLength(0)

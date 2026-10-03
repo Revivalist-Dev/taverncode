@@ -1,8 +1,8 @@
 import { Effect, Schema } from "effect"
 import path from "path"
 import * as Tool from "@/tool/tool"
-import { KiloIndexing } from "@/kilocode/indexing"
-import { Instance } from "@/kilocode/instance"
+import { KiloIndexing } from "@/taverncode/indexing"
+import { Instance } from "@/taverncode/instance"
 import { empty, normalizePath, scope } from "./semantic-search-output"
 
 import DESCRIPTION from "./semantic-search.txt"

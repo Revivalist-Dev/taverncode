@@ -1,18 +1,18 @@
 ---
 title: "Auto-Approving Actions"
-description: "Configure automatic approval settings for Kilo Code operations"
+description: "Configure automatic approval settings for Tavern Code operations"
 ---
 
 # Auto-Approving Actions
 
 {% callout type="danger" %}
-**Security Warning:** Auto-approve settings bypass confirmation prompts, giving Kilo Code direct access to your system. This can result in data loss, file corruption, or worse. Command line access is particularly dangerous, as it can potentially execute harmful operations that could damage your system or compromise security. Only enable auto-approval for actions you fully trust.
+**Security Warning:** Auto-approve settings bypass confirmation prompts, giving Tavern Code direct access to your system. This can result in data loss, file corruption, or worse. Command line access is particularly dangerous, as it can potentially execute harmful operations that could damage your system or compromise security. Only enable auto-approval for actions you fully trust.
 {% /callout %}
 
-Auto-approve settings speed up your workflow by eliminating repetitive confirmation prompts, but they significantly increase security risks. The VS Code extension, JetBrains plugin, and CLI share the same permission model; choose the tab that matches how you configure Kilo Code. In the JetBrains plugin, the same rules are configured under **Settings → Tools → Kilo Code → Auto-Approve**.
+Auto-approve settings speed up your workflow by eliminating repetitive confirmation prompts, but they significantly increase security risks. The VS Code extension, JetBrains plugin, and CLI share the same permission model; choose the tab that matches how you configure Tavern Code. In the JetBrains plugin, the same rules are configured under **Settings → Tools → Tavern Code → Auto-Approve**.
 
 {% callout type="note" %}
-**Editing project config while a session is running:** Kilo caches project-level `kilo.jsonc` / `kilo.json` (in `.kilo/`) when it first loads a workspace, and does not re-read it on every prompt. If you add, change, or remove a project permission rule while the backend is already running, reload the VS Code window (or start a fresh CLI session) for the change to take effect. Until then, Kilo keeps using the previously loaded rules — so an auto-approved call may still cite a project rule you just edited. Global config (`~/.config/kilo/`) is reloaded automatically.
+**Editing project config while a session is running:** Tavern caches project-level `tavern.jsonc` / `tavern.json` (in `.tavern/`) when it first loads a workspace, and does not re-read it on every prompt. If you add, change, or remove a project permission rule while the backend is already running, reload the VS Code window (or start a fresh CLI session) for the change to take effect. Until then, Tavern keeps using the previously loaded rules — so an auto-approved call may still cite a project rule you just edited. Global config (`~/.config/tavern/`) is reloaded automatically.
 {% /callout %}
 
 {% tabs %}
@@ -22,7 +22,7 @@ Auto-approve settings speed up your workflow by eliminating repetitive confirmat
 
 The extension uses a granular, per-tool permission system. You can configure permissions through the **Settings → Auto Approve** tab, which provides a UI with per-tool **Allow / Ask / Deny** dropdowns.
 
-The UI reads and writes to the same `kilo.jsonc` config files used by the CLI, so changes made in either place are reflected in both.
+The UI reads and writes to the same `tavern.jsonc` config files used by the CLI, so changes made in either place are reflected in both.
 
 ## Permission Levels
 
@@ -31,7 +31,7 @@ Each tool permission can be set to one of three values:
 | Value | Behavior |
 |---|---|
 | `"allow"` | The tool runs automatically without prompting |
-| `"ask"` | Kilo pauses and asks for approval before running the tool |
+| `"ask"` | Tavern pauses and asks for approval before running the tool |
 | `"deny"` | The tool is blocked entirely |
 
 When no rule matches a permission check, the default action is `ask`.
@@ -59,7 +59,7 @@ The Auto Approve tab lists the following tool-specific permissions. Some tools a
 
 ## Runtime Permission Requests
 
-When a tool is set to `"ask"`, Kilo pauses and displays a permission prompt:
+When a tool is set to `"ask"`, Tavern pauses and displays a permission prompt:
 
 | Option | Behavior |
 |---|---|
@@ -69,7 +69,7 @@ When a tool is set to `"ask"`, Kilo pauses and displays a permission prompt:
 
 In the feedback field, describe what the agent should change before it retries. Press `Enter` to post the rejection, `Shift+Enter` to add a newline, or `Escape` to cancel.
 
-Use the shield button in the prompt controls to toggle runtime auto-approve for permission prompts without opening Settings. When enabled, the shield is highlighted and pending permission prompts are approved automatically. The runtime state stays synced across the sidebar, open Kilo tabs, and Agent Manager session views.
+Use the shield button in the prompt controls to toggle runtime auto-approve for permission prompts without opening Settings. When enabled, the shield is highlighted and pending permission prompts are approved automatically. The runtime state stays synced across the sidebar, open Tavern tabs, and Agent Manager session views.
 
 Expand **Manage Auto-Approve Rules** to add commands or patterns to your allowed or denied lists. These rules are then appended to the bottom of the approval rules in settings and the config file.
 
@@ -79,7 +79,7 @@ For the `agent_manager` tool, runtime approvals use the requested capability as 
 
 MCP tools use the same `allow` / `ask` / `deny` permission system as built-in tools. Each MCP tool's permission key is its namespaced name: `{server}_{tool}` (e.g. `github_create_pull_request`). You can use glob patterns like `github_*` for broad rules.
 
-For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-kilo-code#auto-approve-tools).
+For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-tavern-code#auto-approve-tools).
 
 ## Defaults
 
@@ -94,7 +94,7 @@ Most tools default to `"*": "allow"` for a smooth out-of-the-box experience. Not
 
 ## Overview
 
-The CLI uses a granular, per-tool permission system configured in `kilo.jsonc`. Instead of broad categories like "read" or "write," each tool has its own permission level with glob-pattern rules for fine-grained control.
+The CLI uses a granular, per-tool permission system configured in `tavern.jsonc`. Instead of broad categories like "read" or "write," each tool has its own permission level with glob-pattern rules for fine-grained control.
 
 ## Permission Levels
 
@@ -103,14 +103,14 @@ Each tool permission can be set to one of three values:
 | Value | Behavior |
 |---|---|
 | `"allow"` | The tool runs automatically without prompting |
-| `"ask"` | Kilo pauses and asks for approval before running the tool |
+| `"ask"` | Tavern pauses and asks for approval before running the tool |
 | `"deny"` | The tool is blocked entirely |
 
 When no rule matches a permission check, the default action is `ask`.
 
 ## Available Tool Permissions
 
-Permissions are configured under the `permission` key in `kilo.jsonc`. The following tool-specific permission levels are available:
+Permissions are configured under the `permission` key in `tavern.jsonc`. The following tool-specific permission levels are available:
 
 | Permission | Controls |
 |---|---|
@@ -242,7 +242,7 @@ In this example, the `code` agent can run `git` commands automatically and asks 
 
 ## Markdown Agent Files
 
-If you define agents in Markdown files, the `permission` frontmatter uses the same `allow` / `ask` / `deny` values and glob patterns as `kilo.jsonc`:
+If you define agents in Markdown files, the `permission` frontmatter uses the same `allow` / `ask` / `deny` values and glob patterns as `tavern.jsonc`:
 
 ```markdown
 ---
@@ -262,7 +262,7 @@ This is the same permission shape described in [Agent Permissions](/docs/customi
 
 ## Runtime Permission Requests
 
-When a tool is set to `"ask"`, Kilo pauses and displays a permission prompt. You have three options:
+When a tool is set to `"ask"`, Tavern pauses and displays a permission prompt. You have three options:
 
 | Option | Behavior |
 |---|---|
@@ -284,7 +284,7 @@ Most tools default to `"*": "allow"` for a smooth out-of-the-box experience. Not
 
 MCP tools use the same `allow` / `ask` / `deny` permission system as built-in tools. Each MCP tool's permission key is its namespaced name: `{server}_{tool}` (e.g. `github_create_pull_request`). You can use glob patterns like `github_*` for broad rules.
 
-For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-kilo-code#auto-approve-tools).
+For full details and examples, see [MCP Tool Permissions](/docs/automate/mcp/using-in-tavern-code#auto-approve-tools).
 
 ## Full Configuration Example
 

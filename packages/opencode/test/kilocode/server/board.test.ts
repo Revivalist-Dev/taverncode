@@ -3,7 +3,7 @@ import { ConfigProvider, Effect, Layer, Schema } from "effect"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { Database } from "@opencode-ai/core/database/database"
 import { sql } from "drizzle-orm"
-import { BoardStore } from "@/kilocode/board/store"
+import { BoardStore } from "@/taverncode/board/store"
 import { Session } from "@/session/session"
 import { SessionStatus } from "@/session/status"
 import { BackgroundJob } from "@/background/job"
@@ -38,11 +38,11 @@ afterEach(async () => {
 describe("shared board HTTP routes", () => {
   test("routes only the declared board paths through their owning session", () => {
     for (const suffix of ["board", "board/reset", "drain"]) {
-      const path = `/kilocode/session/ses_owner/${suffix}`
+      const path = `/taverncode/session/ses_owner/${suffix}`
       expect(String(getWorkspaceRouteSessionID(new URL(path, "http://localhost")))).toBe("ses_owner")
       expect(isLocalWorkspaceRoute("GET", path)).toBe(false)
     }
-    expect(getWorkspaceRouteSessionID(new URL("http://localhost/kilocode/session/ses_owner/board/other"))).toBeNull()
+    expect(getWorkspaceRouteSessionID(new URL("http://localhost/taverncode/session/ses_owner/board/other"))).toBeNull()
   })
 
   it.instance(
@@ -54,7 +54,7 @@ describe("shared board HTTP routes", () => {
         const { db } = yield* Database.Service
         const root = yield* sessions.create({ title: "Unused board" })
         const child = yield* sessions.create({ parentID: root.id, title: "Unused child" })
-        const response = yield* requestInDirectory(`/kilocode/session/${child.id}/board?limit=1`, instance.directory)
+        const response = yield* requestInDirectory(`/taverncode/session/${child.id}/board?limit=1`, instance.directory)
         const body = yield* response.json
         expect(response.status, JSON.stringify(body)).toBe(200)
         expect(body).toEqual({
@@ -68,9 +68,9 @@ describe("shared board HTTP routes", () => {
         ).toBeUndefined()
         expect(yield* sessions.messages({ sessionID: root.id })).toEqual([])
         expect(yield* sessions.messages({ sessionID: child.id })).toEqual([])
-        const invalid = yield* requestInDirectory(`/kilocode/session/${root.id}/board?limit=51`, instance.directory)
+        const invalid = yield* requestInDirectory(`/taverncode/session/${root.id}/board?limit=51`, instance.directory)
         expect(invalid.status).toBe(400)
-        const missing = yield* requestInDirectory("/kilocode/session/ses_missing_board/board", instance.directory)
+        const missing = yield* requestInDirectory("/taverncode/session/ses_missing_board/board", instance.directory)
         expect(missing.status).toBe(404)
       }),
     { git: true, config },
@@ -109,7 +109,7 @@ describe("shared board HTTP routes", () => {
           run: Effect.never,
         })
         yield* status.set(child.id, { type: "busy" })
-        const path = `/kilocode/session/${root.id}/board`
+        const path = `/taverncode/session/${root.id}/board`
         const response = yield* requestInDirectory(path, other)
         const body = yield* response.json
         expect(response.status, JSON.stringify(body)).toBe(200)
@@ -123,7 +123,7 @@ describe("shared board HTTP routes", () => {
           body: "Second",
         })
         const send = (id: string, revision: number) =>
-          requestInDirectory(`/kilocode/session/${id}/board/reset`, instance.directory, {
+          requestInDirectory(`/taverncode/session/${id}/board/reset`, instance.directory, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ revision }),
@@ -151,7 +151,7 @@ describe("shared board HTTP routes", () => {
         expect((yield* status.get(child.id)).type).toBe("busy")
         expect(yield* sessions.messages({ sessionID: root.id })).toEqual([])
         expect(yield* sessions.messages({ sessionID: child.id })).toEqual([])
-        const untouched = yield* requestInDirectory(`/kilocode/session/${foreign.id}/board`, instance.directory)
+        const untouched = yield* requestInDirectory(`/taverncode/session/${foreign.id}/board`, instance.directory)
         expect(decode(yield* untouched.json).messages.map((message) => message.body)).toEqual(["Other board remains"])
         yield* jobs.cancel(child.id)
         yield* status.set(child.id, { type: "idle" })

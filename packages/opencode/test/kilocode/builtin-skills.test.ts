@@ -4,8 +4,8 @@ import { Effect, Layer } from "effect"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import path from "path"
 import { Skill } from "../../src/skill"
-import * as KiloSkill from "../../src/kilocode/skill-remove"
-import { BUILTIN_SKILLS } from "../../src/kilocode/skills/builtin"
+import * as KiloSkill from "../../src/taverncode/skill-remove"
+import { BUILTIN_SKILLS } from "../../src/taverncode/skills/builtin"
 import { TestInstance } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 
@@ -33,21 +33,21 @@ it.instance(
   () =>
     Effect.gen(function* () {
       const skill = yield* Skill.Service
-      const item = yield* skill.get("kilo-config")
+      const item = yield* skill.get("tavern-config")
       expect(item).toBeDefined()
-      expect(item!.name).toBe("kilo-config")
+      expect(item!.name).toBe("tavern-config")
       expect(item!.location).toBe(Skill.BUILTIN_LOCATION)
-      expect(item!.content).toContain("kilo")
+      expect(item!.content).toContain("tavern")
     }),
   { git: true },
 )
 
 it.instance(
-  "kilo-config is protected from removal",
+  "tavern-config is protected from removal",
   () =>
     Effect.gen(function* () {
       const skill = yield* Skill.Service
-      const item = yield* skill.get("kilo-config")
+      const item = yield* skill.get("tavern-config")
       expect(item).toBeDefined()
       expect(KiloSkill.builtin(item!.location)).toBe(true)
     }),
@@ -59,16 +59,16 @@ it.instance(
   () =>
     Effect.gen(function* () {
       const instance = yield* TestInstance
-      const dir = path.join(instance.directory, ".kilo", "skill", "kilo-config")
+      const dir = path.join(instance.directory, ".tavern", "skill", "tavern-config")
       yield* Effect.promise(() =>
         Bun.write(
           path.join(dir, "SKILL.md"),
           `---
-name: kilo-config
-description: User override of kilo-config.
+name: tavern-config
+description: User override of tavern-config.
 ---
 
-# Custom kilo-config
+# Custom tavern-config
 
 User-provided content.
 `,
@@ -76,11 +76,11 @@ User-provided content.
       )
 
       const skill = yield* Skill.Service
-      const item = yield* skill.get("kilo-config")
+      const item = yield* skill.get("tavern-config")
       expect(item).toBeDefined()
-      expect(item!.description).toBe("User override of kilo-config.")
+      expect(item!.description).toBe("User override of tavern-config.")
       expect(item!.location).not.toBe(Skill.BUILTIN_LOCATION)
-      expect(item!.location).toContain(path.join("skill", "kilo-config", "SKILL.md"))
+      expect(item!.location).toContain(path.join("skill", "tavern-config", "SKILL.md"))
     }),
   { git: true },
 )

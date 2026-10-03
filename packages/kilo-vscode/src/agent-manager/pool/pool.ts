@@ -6,11 +6,11 @@
  * Slots are warmed in the per-user pool home (see `home.ts`), never in the
  * project, and tagged with pooled metadata. A claim turns a slot into a named
  * branch with a cheap ref update (exact match) or a bounded checkout (small
- * delta), then moves it to `.kilo/worktrees/<branch>`. A claimed slot is never
+ * delta), then moves it to `.tavern/worktrees/<branch>`. A claimed slot is never
  * left in the pool home: when the move fails, the slot and its branch are
  * removed and the caller falls back to a normal `git worktree add`.
  *
- * The pool also removes slots that older versions left in `.kilo/worktrees/`,
+ * The pool also removes slots that older versions left in `.tavern/worktrees/`,
  * and runs the machine-wide sweep (see `sweep.ts`) once per process. This
  * module is vscode-free so it can be tested with a real temporary repository.
  */
@@ -26,7 +26,7 @@ import { sweep } from "./sweep"
 
 /** Maximum commits between a slot base and the requested base for a delta claim. */
 const MAX_DELTA = 50
-/** Spotlight marker that `.kilo/worktrees/` can hold without any worktree in it. */
+/** Spotlight marker that `.tavern/worktrees/` can hold without any worktree in it. */
 const MARKER = ".metadata_never_index"
 
 export interface PoolStart {
@@ -39,7 +39,7 @@ export interface PoolDeps {
   root: string
   /** Per-user pool home shared by every repository. Without it, no slots are pre-warmed. */
   home?: string
-  /** The project's `.kilo/worktrees/`. Claimed slots move here, and older versions left slots here. */
+  /** The project's `.tavern/worktrees/`. Claimed slots move here, and older versions left slots here. */
   local: string
   /** Folder name in {@link local} for a branch. */
   folder: (branch: string) => string
@@ -70,7 +70,7 @@ export class WorktreePool {
   private readonly deps: PoolDeps
   /** This repository's slot directory in the pool home. */
   private readonly shared: string | undefined
-  /** Every directory that can hold slots of this repository: the pool home and older `.kilo/worktrees/`. */
+  /** Every directory that can hold slots of this repository: the pool home and older `.tavern/worktrees/`. */
   private readonly dirs: string[]
   /** Resolved directory for new slots, see {@link dir}. */
   private place: Promise<string | undefined> | undefined
@@ -124,7 +124,7 @@ export class WorktreePool {
   }
 
   /**
-   * Claim a ready slot for a new branch and move it to `.kilo/worktrees/`.
+   * Claim a ready slot for a new branch and move it to `.tavern/worktrees/`.
    * Runs while the caller already holds the git lock. Returns the worktree on
    * success, or undefined to fall back to a normal `git worktree add`. A
    * replacement slot is warmed after {@link PoolDeps.rewarm}.
@@ -166,7 +166,7 @@ export class WorktreePool {
   }
 
   /**
-   * Move a claimed slot to `.kilo/worktrees/<branch>`, so the folder matches
+   * Move a claimed slot to `.tavern/worktrees/<branch>`, so the folder matches
    * the branch as it does without the pool. A slot in the pool home must never
    * become a session worktree, so a failed move removes it and its new branch.
    */
@@ -200,7 +200,7 @@ export class WorktreePool {
 
   /**
    * Adopt leftover pooled slots from a previous run and discard broken ones.
-   * Never creates `.kilo/worktrees/`, and removes it when older versions left
+   * Never creates `.tavern/worktrees/`, and removes it when older versions left
    * only their slots there.
    */
   async reconcile(): Promise<void> {
@@ -240,7 +240,7 @@ export class WorktreePool {
   }
 
   /**
-   * Remove a `.kilo/worktrees/` that holds no worktree, for example after the
+   * Remove a `.tavern/worktrees/` that holds no worktree, for example after the
    * slot of an older version was removed, so the project is clean again.
    * The git lock covers this extension host only, so only the marker file is
    * deleted and the directories are removed with `rmdir`, which fails as soon
@@ -266,7 +266,7 @@ export class WorktreePool {
       .catch((err) => this.deps.log(`worktree pool: remove ${marker}: ${err}`))
     if (!(await remove(dir))) return
     this.deps.log(`worktree pool: removed empty ${dir}`)
-    // `.kilo/` usually holds project config, so only an empty one is removed.
+    // `.tavern/` usually holds project config, so only an empty one is removed.
     await remove(path.dirname(dir))
   }
 
@@ -282,7 +282,7 @@ export class WorktreePool {
     if (missing <= 0) return
 
     // A claim can reuse the slot name for the branch and its folder in
-    // `.kilo/worktrees/`, so avoid names that are taken in any slot directory.
+    // `.tavern/worktrees/`, so avoid names that are taken in any slot directory.
     const names = (await Promise.all(this.dirs.map(subdirs))).flat()
     for (let i = 0; i < missing; i++) {
       const slot = await this.build(point, oid, dir, names)
@@ -401,7 +401,7 @@ export class WorktreePool {
 
   /**
    * Adopt slots in the directory for new slots. Slots in other directories,
-   * for example `.kilo/worktrees/` slots from an older version, are removed.
+   * for example `.tavern/worktrees/` slots from an older version, are removed.
    */
   private async adopt(): Promise<void> {
     const active = this.size() > 0 ? await this.dir() : undefined
@@ -413,7 +413,7 @@ export class WorktreePool {
     const known = new Set(this.slots.map((slot) => normalizePath(slot.path)))
     const entries = await fs.promises.readdir(dir, { withFileTypes: true })
     for (const entry of entries) {
-      if (!entry.isDirectory() || entry.name.startsWith(".kilo-delete-")) continue
+      if (!entry.isDirectory() || entry.name.startsWith(".tavern-delete-")) continue
       const slotPath = path.join(dir, entry.name)
       if (known.has(normalizePath(slotPath))) continue
       const meta = await this.readMeta(slotPath)

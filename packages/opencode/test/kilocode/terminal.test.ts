@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from "bun:test"
-import { kitty, sequences } from "../../src/kilocode/cli/cmd/tui/util/terminal"
+import { kitty, sequences } from "../../src/taverncode/cli/cmd/tui/util/terminal"
 
 const keys = ["TERM_PROGRAM", "MSYSTEM", "KILO_DISABLE_KITTY_KEYBOARD", "KILO_ENABLE_KITTY_KEYBOARD"] as const
 type Key = (typeof keys)[number]

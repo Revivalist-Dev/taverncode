@@ -3,8 +3,8 @@ import * as Log from "@opencode-ai/core/util/log"
 import { useProject } from "@tui/context/project"
 import { useSDK } from "@tui/context/sdk"
 import { useToast } from "@tui/ui/toast"
-import { Event as IndexingStatusEvent, Warning as IndexingWarningEvent } from "@/kilocode/indexing-event"
-import { indexingErrorMessage, indexingWarningKey, type IndexingWarning } from "@/kilocode/indexing-warning"
+import { Event as IndexingStatusEvent, Warning as IndexingWarningEvent } from "@/taverncode/indexing-event"
+import { indexingErrorMessage, indexingWarningKey, type IndexingWarning } from "@/taverncode/indexing-warning"
 
 const log = Log.create({ service: "indexing-warning" })
 

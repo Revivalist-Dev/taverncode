@@ -15,7 +15,7 @@ const WORKTREE: WorktreeReference = {
   id: "wt-other",
   name: "other-worktree",
   branch: "other-branch",
-  path: "/repo/.kilo/worktrees/other",
+  path: "/repo/.tavern/worktrees/other",
   base: "main",
   sessions: [{ id: "ses_chat", title: "Fix auth bug" }],
   disabled: false,
@@ -164,7 +164,7 @@ describe("useWorktreeMention", () => {
       ...WORKTREE,
       id: "wt-stale",
       name: "stale",
-      path: "/repo/.kilo/worktrees/stale",
+      path: "/repo/.tavern/worktrees/stale",
       disabled: true,
     }
     const { mention, dispose } = harness([WORKTREE, stale])

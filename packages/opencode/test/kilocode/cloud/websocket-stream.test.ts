@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { streamAgentEvents } from "@/kilocode/cloud/websocket-stream"
+import { streamAgentEvents } from "@/taverncode/cloud/websocket-stream"
 
 function mockWebSocket(
   events: ReadonlyArray<

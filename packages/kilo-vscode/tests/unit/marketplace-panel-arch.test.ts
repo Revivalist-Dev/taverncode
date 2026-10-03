@@ -3,9 +3,9 @@ import fs from "node:fs"
 import path from "node:path"
 
 const root = path.resolve(import.meta.dir, "../..")
-const kilo = fs.readFileSync(path.join(root, "src/KiloProvider.ts"), "utf-8")
+const tavern = fs.readFileSync(path.join(root, "src/KiloProvider.ts"), "utf-8")
 const panel = fs.readFileSync(path.join(root, "src/MarketplacePanelProvider.ts"), "utf-8")
-const remove = fs.readFileSync(path.join(root, "src/kilo-provider/remove-config-item.ts"), "utf-8")
+const remove = fs.readFileSync(path.join(root, "src/tavern-provider/remove-config-item.ts"), "utf-8")
 
 describe("standalone Marketplace architecture", () => {
   it("keeps Marketplace webview cases out of KiloProvider", () => {
@@ -15,7 +15,7 @@ describe("standalone Marketplace architecture", () => {
       "removeInstalledMarketplaceItem",
       "dismissAgentMigrationBanner",
     ]) {
-      expect(kilo).not.toContain(`case \"${type}\"`)
+      expect(tavern).not.toContain(`case \"${type}\"`)
       expect(panel).toContain(`case \"${type}\"`)
     }
   })
@@ -26,10 +26,10 @@ describe("standalone Marketplace architecture", () => {
   })
 
   it("keeps sidebar removal behind a narrow adapter", () => {
-    expect(kilo).toContain("removeMcp(this.removeConfigItemCtx, name)")
+    expect(tavern).toContain("removeMcp(this.removeConfigItemCtx, name)")
     expect(remove).toContain("removeMarketplaceItemFromAllScopes")
-    expect(kilo).not.toContain("marketplaceRemove")
-    expect(kilo).not.toContain("createMarketplaceRemover")
+    expect(tavern).not.toContain("marketplaceRemove")
+    expect(tavern).not.toContain("createMarketplaceRemover")
     expect(remove).not.toContain("MarketplaceInstaller")
     expect(remove).not.toContain("MarketplacePaths")
     expect(remove).not.toContain("new MarketplaceService()")

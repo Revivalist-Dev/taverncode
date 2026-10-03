@@ -1,6 +1,6 @@
 import { Agent } from "@/agent/agent"
 import { Config } from "@/config/config"
-import { KilocodeModelState } from "@/kilocode/config/model-state"
+import { KilocodeModelState } from "@/taverncode/config/model-state"
 import { Context, Effect, Layer, Schema } from "effect"
 import { CloudAuth } from "./auth"
 import { CloudCatalog } from "./catalog"
@@ -15,7 +15,7 @@ export namespace CloudDefaults {
     readonly get: () => Effect.Effect<ModelStateInfo>
   }
 
-  export class ModelState extends Context.Service<ModelState, ModelStateInterface>()("@kilocode/CloudModelState") {}
+  export class ModelState extends Context.Service<ModelState, ModelStateInterface>()("@taverncode/CloudModelState") {}
 
   export const modelStateLayer = Layer.succeed(
     ModelState,
@@ -83,7 +83,7 @@ export namespace CloudDefaults {
   }
 
   function normalize(value: string) {
-    return value.startsWith("kilo/") ? value.slice("kilo/".length) : value
+    return value.startsWith("tavern/") ? value.slice("tavern/".length) : value
   }
 
   export const resolve = Effect.fn("CloudDefaults.resolve")(function* (input: Input = {}) {
@@ -131,7 +131,7 @@ export namespace CloudDefaults {
     return yield* Effect.fail(
       new ResolutionError({
         kind: "model",
-        message: "The Kilo model catalog has no available default model",
+        message: "The Tavern model catalog has no available default model",
       }),
     )
   })

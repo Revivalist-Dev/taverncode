@@ -1,8 +1,8 @@
 /**
- * Contract tests for Kilo-specific fields on QuestionOption / QuestionInfo.
+ * Contract tests for Tavern-specific fields on QuestionOption / QuestionInfo.
  *
  * packages/opencode/src/question/index.ts is a shared upstream file.
- * Two Kilo additions to the Option schema have been silently dropped by
+ * Two Tavern additions to the Option schema have been silently dropped by
  * upstream merges more than once:
  *
  *   1. labelKey / descriptionKey  — lost during the opencode v1.3.x
@@ -27,7 +27,7 @@ import { Info, Option, Prompt } from "../../src/question"
 
 const SOURCE = path.resolve(import.meta.dir, "../../../schema/src/v1/question.ts")
 
-describe("QuestionOption schema — Kilo-specific field contract", () => {
+describe("QuestionOption schema — Tavern-specific field contract", () => {
   test("question defaults survive tool and wire schemas and omit undefined", () => {
     const raw = {
       question: "Choose a format",
@@ -65,18 +65,18 @@ describe("QuestionOption schema — Kilo-specific field contract", () => {
     expect(decoded.descriptionKey).toBe("plan.followup.answer.continue.description")
   })
 
-  // Static source checks — guard the kilocode_change markers so a conflict
+  // Static source checks — guard the taverncode_change markers so a conflict
   // resolution that drops the fields is caught immediately.
-  test("source declares mode as an optional field inside a kilocode_change block", () => {
+  test("source declares mode as an optional field inside a taverncode_change block", () => {
     const src = fs.readFileSync(SOURCE, "utf-8")
-    expect(src).toMatch(/kilocode_change start[^\n]*localization and mode selection hints/)
+    expect(src).toMatch(/taverncode_change start[^\n]*localization and mode selection hints/)
     expect(src).toMatch(/mode:\s*Schema\.optional\(Schema\.String\)/)
-    expect(src).toMatch(/kilocode_change end/)
+    expect(src).toMatch(/taverncode_change end/)
   })
 
-  test("source declares labelKey and descriptionKey inside a kilocode_change block", () => {
+  test("source declares labelKey and descriptionKey inside a taverncode_change block", () => {
     const src = fs.readFileSync(SOURCE, "utf-8")
-    expect(src).toMatch(/kilocode_change start[^\n]*localization and mode selection hints/)
+    expect(src).toMatch(/taverncode_change start[^\n]*localization and mode selection hints/)
     expect(src).toMatch(/labelKey:\s*Schema\.optional\(Schema\.String\)/)
     expect(src).toMatch(/descriptionKey:\s*Schema\.optional\(Schema\.String\)/)
   })

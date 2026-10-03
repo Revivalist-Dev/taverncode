@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { isSafeSegment, isSafeRelativePath } from "@/kilocode/skill/discovery-validate"
+import { isSafeSegment, isSafeRelativePath } from "@/taverncode/skill/discovery-validate"
 
 describe("isSafeSegment", () => {
   test("accepts a plain skill name", () => {

@@ -16,7 +16,7 @@ import { Database } from "@opencode-ai/core/database/database"
 type Update = <T extends MessageV2.Part>(part: T) => Effect.Effect<T>
 type UpdateMessage = <T extends MessageV2.Info>(msg: T) => Effect.Effect<T>
 
-const log = Log.create({ service: "kilocode.compaction.chunks" })
+const log = Log.create({ service: "taverncode.compaction.chunks" })
 const TOOL_OUTPUT_MAX_CHARS = 2_000
 const TRANSCRIPT_MAX_CHARS = 16_000
 const RATIO = 0.6

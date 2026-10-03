@@ -1,4 +1,4 @@
-import type { Part as SDKPart, ToolPart } from "@kilocode/sdk/v2"
+import type { Part as SDKPart, ToolPart } from "@taverncode/sdk/v2"
 
 const EDIT_TOOLS = new Set(["edit", "write", "apply_patch"])
 const TERMINAL_TOOLS = new Set(["bash", "background_process"])

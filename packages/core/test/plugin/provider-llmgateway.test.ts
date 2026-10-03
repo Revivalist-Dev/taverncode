@@ -46,9 +46,9 @@ describe("LLMGatewayPlugin", () => {
       yield* addPlugin()
       expect((yield* catalog.provider.get(ProviderV2.ID.make("llmgateway")))?.request.headers).toEqual({
         Existing: "value",
-        "HTTP-Referer": "https://kilo.ai/",
-        "X-Title": "Kilo Code", // kilocode_change
-        "X-Source": "kilo", // kilocode_change
+        "HTTP-Referer": "https://tavern.ai/",
+        "X-Title": "Tavern Code", // taverncode_change
+        "X-Source": "tavern", // taverncode_change
       })
       expect((yield* catalog.provider.get(ProviderV2.ID.openrouter))?.request.headers).toEqual({})
     }),

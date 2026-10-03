@@ -39,14 +39,14 @@ function request(server: Server, input: string) {
   return Effect.promise(() => server.handler(new Request(new URL(input, "http://localhost")), HttpApiApp.context))
 }
 
-describe("Kilo Console worktree listing", () => {
+describe("Tavern Console worktree listing", () => {
   run(
     "lists worktrees created by Agent Manager",
     () =>
       Effect.gen(function* () {
         const test = yield* TestInstance
         const server = yield* serve()
-        const directory = path.join(test.directory, ".kilo", "worktrees", "console-list")
+        const directory = path.join(test.directory, ".tavern", "worktrees", "console-list")
         yield* Effect.promise(() =>
           $`git worktree add --quiet -b console-list ${directory} HEAD`.cwd(test.directory).quiet(),
         )

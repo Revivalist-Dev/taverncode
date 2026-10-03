@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
-// Shared "import a parsed transcript into a Kilo session" logic.
+// Shared "import a parsed transcript into a Tavern session" logic.
 //
 // SessionResume (./index.ts) is a pure parser/mapper with no Effect or Session
 // dependencies. This module adds the Effect-based orchestration that both the
 // `/resume-claude` / `/resume-codex` slash commands (src/session/prompt.ts) and
-// the migrate HTTP endpoints (src/kilocode/server/httpapi/.../migrate) use to map
+// the migrate HTTP endpoints (src/taverncode/server/httpapi/.../migrate) use to map
 // a parsed transcript and write the resulting messages/parts through
 // Session.Service. Keeping the write path here means every client (VS Code, CLI,
 // TUI) can trigger a Claude Code / Codex import through the CLI server without
@@ -51,7 +51,7 @@ export namespace SessionResumeImport {
   const fail = (message: string) => Effect.fail(new NamedError.Unknown({ message }))
 
   /**
-   * Map a parsed transcript and write it into an existing empty Kilo session.
+   * Map a parsed transcript and write it into an existing empty Tavern session.
    *
    * Shared by the slash-command handler and the HTTP endpoint. The caller is
    * responsible for resolving the agent + model and for rejecting nonempty
@@ -121,7 +121,7 @@ export namespace SessionResumeImport {
   })
 
   export type Input = {
-    /** Target Kilo session. Must be empty (no existing messages). */
+    /** Target Tavern session. Must be empty (no existing messages). */
     sessionID: string
     /** Raw JSONL transcript content (Claude Code or Codex). */
     content: string
@@ -186,7 +186,7 @@ export namespace SessionResumeImport {
       : fail("The transcript contains no user messages. Nothing was imported.")
 
   /**
-   * Import a raw JSONL transcript into an existing empty Kilo session.
+   * Import a raw JSONL transcript into an existing empty Tavern session.
    *
    * Building block for `migrate`, and the entry point for callers that already
    * hold the transcript bytes. Fails with NamedError.Unknown for any
@@ -207,7 +207,7 @@ export namespace SessionResumeImport {
     // interleave the transcript with unrelated messages.
     const existing = yield* sessions.messages({ sessionID }).pipe(Effect.orDie)
     if (existing.length > 0) {
-      return yield* fail("Start a new Kilo session, then run the import again.")
+      return yield* fail("Start a new Tavern session, then run the import again.")
     }
 
     const target = yield* resolve(input)
@@ -245,12 +245,12 @@ export namespace SessionResumeImport {
   // import decides to skip (`SessionImportService.session` returns
   // `skipped: true` for a source it has already stored, with `force` to
   // override) — but keyed off an explicit marker rather than a hashed row ID,
-  // since Kilo session IDs must stay time-sortable.
+  // since Tavern session IDs must stay time-sortable.
 
   /** Key under `session.metadata` holding the migration marker. */
   const KEY = "migrate"
 
-  /** Provenance recorded on a Kilo session created by a migration. */
+  /** Provenance recorded on a Tavern session created by a migration. */
   export type Marker = {
     /** Source harness the transcript came from. */
     format: SessionResume.Format
@@ -276,7 +276,7 @@ export namespace SessionResumeImport {
   }
 
   /**
-   * Map of already-migrated source identity to the Kilo session holding it.
+   * Map of already-migrated source identity to the Tavern session holding it.
    *
    * Queried straight off the table rather than through `Session.list`, which
    * pages to the 100 most recently updated sessions — older markers would fall
@@ -333,7 +333,7 @@ export namespace SessionResumeImport {
     /** Source model reference (`providerID/modelID`), if the transcript records one. */
     model?: { providerID: string; modelID: string }
     /**
-     * Kilo session this transcript was already migrated into. Present means a
+     * Tavern session this transcript was already migrated into. Present means a
      * migration would skip it, so clients can mark it as done in a picker.
      */
     sessionID?: string
@@ -480,7 +480,7 @@ export namespace SessionResumeImport {
     id: string
     /** Source transcript format. */
     format: SessionResume.Format
-    /** Kilo session holding the transcript. Absent only when the migration failed. */
+    /** Tavern session holding the transcript. Absent only when the migration failed. */
     sessionID?: string
     /** Final assistant message written, when this call performed the migration. */
     messageID?: string
@@ -565,7 +565,7 @@ export namespace SessionResumeImport {
   })
 
   /**
-   * Discover and migrate external sessions into Kilo, skipping ones already done.
+   * Discover and migrate external sessions into Tavern, skipping ones already done.
    *
    * Re-discovers server-side on every call so clients never move transcript
    * bytes, and is a no-op once every discovered source has been migrated, which

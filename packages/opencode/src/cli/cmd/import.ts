@@ -1,4 +1,4 @@
-import type { Session as SDKSession, Message, Part } from "@kilocode/sdk/v2"
+import type { Session as SDKSession, Message, Part } from "@taverncode/sdk/v2"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
 import { Session } from "@/session/session"
 import { CliError, effectCmd } from "../effect-cmd"
@@ -9,10 +9,10 @@ import { EOL } from "os"
 import path from "path"
 import { FSUtil } from "@opencode-ai/core/fs-util"
 import { Effect, Schema } from "effect"
-import * as Log from "@opencode-ai/core/util/log" // kilocode_change
+import * as Log from "@opencode-ai/core/util/log" // taverncode_change
 import type { InstanceContext } from "@/project/instance-context"
 
-const log = Log.create({ service: "import" }) // kilocode_change
+const log = Log.create({ service: "import" }) // taverncode_change
 
 const decodeMessageInfo = Schema.decodeUnknownSync(SessionV1.Info)
 const decodePart = Schema.decodeUnknownSync(SessionV1.Part)
@@ -25,13 +25,13 @@ export type ShareData =
   | { type: "session_diff"; data: unknown }
   | { type: "model"; data: unknown }
 
-// kilocode_change start
-/** Extract share token from a Kilo share URL like https://app.kilo.ai/s/<jwt> */
+// taverncode_change start
+/** Extract share token from a Tavern share URL like https://app.tavern.ai/s/<jwt> */
 export function parseShareUrl(url: string): string | null {
-  const match = url.match(/^https?:\/\/app\.kilo\.ai\/s\/([A-Za-z0-9_.-]+)$/)
+  const match = url.match(/^https?:\/\/app\.tavern\.ai\/s\/([A-Za-z0-9_.-]+)$/)
   return match ? match[1] : null
 }
-// kilocode_change end
+// taverncode_change end
 
 export function shouldAttachShareAuthHeaders(shareUrl: string, accountBaseUrl: string): boolean {
   try {
@@ -92,14 +92,14 @@ export function transformShareData(shareData: ShareData[]): {
   }
 }
 
-// kilocode_change start
+// taverncode_change start
 export function ingestBootstrapWarning(sessionId: string, error: unknown) {
   const details = error instanceof Error ? error.message : String(error)
   return `Warning: imported session ${sessionId} locally, but ingest bootstrap failed: ${details}`
 }
 
 async function ingestBootstrap(sessionId: string) {
-  const { KiloSessions } = await import("../../kilo-sessions/kilo-sessions")
+  const { KiloSessions } = await import("../../tavern-sessions/tavern-sessions")
   return KiloSessions.bootstrap(sessionId)
 }
 
@@ -128,7 +128,7 @@ export async function bootstrapImportedSessionIngest(
       warn(ingestBootstrapWarning(sessionId, error))
     })
 }
-// kilocode_change end
+// taverncode_change end
 
 type ExportData = { info: SDKSession; messages: Array<{ info: Message; parts: Part[] }> }
 
@@ -157,10 +157,10 @@ const runImport = Effect.fn("Cli.import.body")(function* (file: string, ctx: Ins
   const isUrl = file.startsWith("http://") || file.startsWith("https://")
 
   if (isUrl) {
-    // kilocode_change start - Migrate to upstream ShareNext architecture #10281
+    // taverncode_change start - Migrate to upstream ShareNext architecture #10281
     const slug = parseShareUrl(file)
     if (!slug) {
-      process.stdout.write(`Invalid URL format. Expected: https://app.kilo.ai/s/<id>`)
+      process.stdout.write(`Invalid URL format. Expected: https://app.tavern.ai/s/<id>`)
       process.stdout.write(EOL)
       return
     }
@@ -192,7 +192,7 @@ const runImport = Effect.fn("Cli.import.body")(function* (file: string, ctx: Ins
     }
 
     exportData = data
-    // kilocode_change end
+    // taverncode_change end
   } else {
     exportData = (yield* fs
       .readJson(file)
@@ -254,9 +254,9 @@ const runImport = Effect.fn("Cli.import.body")(function* (file: string, ctx: Ins
     }
   }
 
-  // kilocode_change start
+  // taverncode_change start
   yield* Effect.promise(() => bootstrapImportedSessionIngest(exportData!.info.id))
-  // kilocode_change end
+  // taverncode_change end
 
   process.stdout.write(`Imported session: ${exportData.info.id}`)
   process.stdout.write(EOL)

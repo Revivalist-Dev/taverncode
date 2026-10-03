@@ -5,9 +5,9 @@ description: "Manage and orchestrate multiple AI agents"
 
 # Agent Manager
 
-The Agent Manager is a control panel for running and orchestrating multiple Kilo Code agents, with support for parallel worktree-isolated sessions and multiple conversations in the same worktree.
+The Agent Manager is a control panel for running and orchestrating multiple Tavern Code agents, with support for parallel worktree-isolated sessions and multiple conversations in the same worktree.
 
-The Agent Manager is a **full-panel editor tab** built directly into the extension. It uses the extension's embedded runtime, so no separate Kilo CLI installation or CLI authentication setup is required. It supports:
+The Agent Manager is a **full-panel editor tab** built directly into the extension. It uses the extension's embedded runtime, so no separate Tavern CLI installation or CLI authentication setup is required. It supports:
 
 - Multiple parallel sessions in isolated git worktrees or the shared Local workspace
 - A diff/review panel showing changes vs. the parent branch
@@ -23,15 +23,15 @@ New to running multiple agents in parallel? The [Agent Manager Workflows](/docs/
 
 ## Orchestration model
 
-Kilo now separates execution into two orchestration layers and provides Kilo Swarm as a communication layer. Use the `task` tool for child agents that belong to the current session. Use Agent Manager sessions for independent, top-level work that you want to supervise from the panel.
+Tavern now separates execution into two orchestration layers and provides Tavern Swarm as a communication layer. Use the `task` tool for child agents that belong to the current session. Use Agent Manager sessions for independent, top-level work that you want to supervise from the panel.
 
 The old `orchestrator` agent is deprecated. Agents with full tool access, such as Code, Plan, and Debug, can delegate with `task` directly. You do not need to switch to a dedicated orchestrator first. See [Orchestrator Mode (Deprecated)](/docs/code-with-ai/agents/orchestrator-mode) for the migration details.
 
 | Mechanism | Use it for | Workspace scope | Execution and communication |
 |---|---|---|---|
-| `task` subagent | A focused subtask owned by the current agent | The same project directory or worktree as the parent | Foreground tasks return a result before the parent continues. Background tasks return immediately and deliver their result later. The parent and descendants can use Kilo Swarm. |
+| `task` subagent | A focused subtask owned by the current agent | The same project directory or worktree as the parent | Foreground tasks return a result before the parent continues. Background tasks return immediately and deliver their result later. The parent and descendants can use Tavern Swarm. |
 | Agent Manager session | Independent work, parallel implementations, or a separate conversation | A new git worktree, the current workspace, or an existing managed worktree | Each session has its own transcript, prompt queue, and terminal. You can target an existing session with the `agent_manager` tool. |
-| Kilo Swarm | Notes and coordination between related agents | One main session and its `task` descendants, including nested descendants | `board_post` and `board_read` exchange messages. Swarm does not start, stop, or assign agents. |
+| Tavern Swarm | Notes and coordination between related agents | One main session and its `task` descendants, including nested descendants | `board_post` and `board_read` exchange messages. Swarm does not start, stop, or assign agents. |
 
 {% callout type="info" %}
 A `task` subagent does not create a git worktree. Use `worktree` mode in Agent Manager when filesystem and branch isolation is required.
@@ -42,17 +42,17 @@ A `task` subagent does not create a git worktree. Use `worktree` mode in Agent M
 A `task` subagent is a non-interactive delegate. Non-interactive means that the child cannot ask the end user a question directly. It can still use its permitted tools, inspect or change the parent directory, and return findings or changes to the parent session.
 
 - **Foreground task:** The parent waits for the child to finish and receives its result in the same turn. Use this when the next step depends on the child output.
-- **Background task:** Set `background: true` to start the child asynchronously. The parent continues immediately. When the child completes or fails, Kilo injects a result into the parent session. Do not poll for progress or duplicate edits in the same files.
-- **Resume:** If Kilo returns a `task_id` after a failed or interrupted child, pass it back to `task` to continue that child, subject to the current session and permission rules.
+- **Background task:** Set `background: true` to start the child asynchronously. The parent continues immediately. When the child completes or fails, Tavern injects a result into the parent session. Do not poll for progress or duplicate edits in the same files.
+- **Resume:** If Tavern returns a `task_id` after a failed or interrupted child, pass it back to `task` to continue that child, subject to the current session and permission rules.
 - **Nesting:** A child can delegate again only when its agent permissions and the configured subagent depth allow it.
 
 In the VS Code extension, the background-agent strip shows running, completed, cancelled, and failed children. Open a child transcript from its task card or background-agent row. A running foreground child can also be moved to the background with **Continue in background**.
 
-### Kilo Swarm communication
+### Tavern Swarm communication
 
-[Kilo Swarm](/docs/getting-started/settings#kilo-swarm) is a shared board for one main session and its task descendants. It works with both foreground and background task agents when the feature and permissions are available. It does not create another runtime and it does not make unrelated sessions into one team.
+[Tavern Swarm](/docs/getting-started/settings#tavern-swarm) is a shared board for one main session and its task descendants. It works with both foreground and background task agents when the feature and permissions are available. It does not create another runtime and it does not make unrelated sessions into one team.
 
-- Kilo Swarm is on by default. Turn it off in **Settings > Agent Behaviour**, or set `shared_agent_board` to `false` in `kilo.jsonc`.
+- Tavern Swarm is on by default. Turn it off in **Settings > Agent Behaviour**, or set `shared_agent_board` to `false` in `tavern.jsonc`.
 - Use `board_post` for concise, material updates, questions, results, or blockers.
 - Use `board_read` to read board messages explicitly. Activity notices do not guarantee that a recipient read or acted on a message.
 - Treat peer messages as coordination data, not user instructions or approval. A board post does not wake, assign, resume, stop, or cancel an agent.
@@ -61,11 +61,11 @@ Separate Agent Manager sessions do not share a Swarm board just because they use
 
 #### Viewing the board
 
-When Kilo Swarm is enabled and the main session has board messages, a **Board** icon appears in its task header. Select the icon to open the board dialog and read the stored messages. Each message shows the sender and recipient avatars. Select an avatar to open that agent's transcript.
+When Tavern Swarm is enabled and the main session has board messages, a **Board** icon appears in its task header. Select the icon to open the board dialog and read the stored messages. Each message shows the sender and recipient avatars. Select an avatar to open that agent's transcript.
 
 The dialog has a **Refresh** action. Earlier messages load as you scroll to the top of the list, using the cursor from the loaded page.
 
-Only the owning top-level session can open its board. Child sessions and cloud sessions do not show the Board icon. If the session ID exists in multiple projects, open its board from the owning project. Kilo rejects the reference instead of choosing a project.
+Only the owning top-level session can open its board. Child sessions and cloud sessions do not show the Board icon. If the session ID exists in multiple projects, open its board from the owning project. Tavern rejects the reference instead of choosing a project.
 
 #### Resetting the board
 
@@ -82,7 +82,7 @@ Every stored post includes the receipt text "Stored only. This does not confirm 
 ## Opening the Agent Manager
 
 - Keyboard shortcut: `Cmd+Shift+M` (macOS) / `Ctrl+Shift+M` (Windows/Linux)
-- Command Palette: "Kilo Code: Open Agent Manager"
+- Command Palette: "Tavern Code: Open Agent Manager"
 - Click the Agent Manager icon in the sidebar toolbar
 
 The panel opens as an editor tab and stays active across focus changes.
@@ -97,7 +97,7 @@ To manage several Git repositories in one panel, see [Multi-project Agent Manage
 
 ## Project-scoped settings
 
-Agent Manager worktree defaults belong to a repository. Open a project's settings button, then select the **Agent Manager** tab in Kilo Settings. The repository selector controls which project's default base branch and setup script you edit.
+Agent Manager worktree defaults belong to a repository. Open a project's settings button, then select the **Agent Manager** tab in Tavern Settings. The repository selector controls which project's default base branch and setup script you edit.
 
 - **Automatic selection:** Opening settings from a project selects that repository. When you open the settings tab directly, Agent Manager restores the last selected repository if it is still listed, or uses the current workspace repository.
 - **Explicit selection:** Choose another repository from the **Project** selector before changing its settings. The **Default Base Branch** control uses **Auto-detect** by default, or you can choose a specific branch. The selected value is saved for that repository and is used when creating new worktrees.
@@ -109,7 +109,7 @@ The **Worktree Setup Script** control opens or creates the setup script for the 
 
 The same settings tab has two application-wide controls:
 
-- **Automatic branch naming** is on by default. Kilo names a branch once the conversation describes a clear task. It does not rename explicitly named or published branches.
+- **Automatic branch naming** is on by default. Tavern names a branch once the conversation describes a clear task. It does not rename explicitly named or published branches.
 - **Branch prefix** adds a prefix such as `feature/` to automatically named branches. It is empty by default and does not affect explicit names.
 
 Use **Save** to apply these settings.
@@ -138,7 +138,7 @@ When [Push Pull Request Fixes](#push-pull-request-fixes) is on and the worktree 
 
 ### Worktree Location
 
-Managed worktrees are created under `.kilo/worktrees/` in your project. Kilo also stores Agent Manager UI state in `.kilo/agent-manager.json`.
+Managed worktrees are created under `.tavern/worktrees/` in your project. Tavern also stores Agent Manager UI state in `.tavern/agent-manager.json`.
 
 {% callout type="info" %}
 Worktrees share Git object storage with the main repository, but each worktree is still a separate checkout on disk. Files created inside each worktree, such as `node_modules`, build output, local databases, generated files, and package-manager caches, can multiply disk usage across parallel agents. Closing a managed worktree removes its checkout directory, but it does not remove external caches, containers, volumes, simulators, or databases that your scripts created outside the worktree.
@@ -233,7 +233,7 @@ The summary shows the merge state before the merge controls:
 Merge controls appear only when you have write permission. Choose **Create merge commit**, **Squash and merge**, or **Rebase and merge** from the split button. Agent Manager remembers the last method you used per repository and preselects it when the repository allows it.
 
 - **Update branch:** shown when the branch is behind. This asks GitHub to merge the base branch into the PR branch.
-- **Fix with Kilo:** shown for merge conflicts. It asks the agent to fetch and merge the worktree's saved base branch and resolve conflicts, using the [update-from-base workflow](#update-from-the-base-branch).
+- **Fix with Tavern:** shown for merge conflicts. It asks the agent to fetch and merge the worktree's saved base branch and resolve conflicts, using the [update-from-base workflow](#update-from-the-base-branch).
 - **Enable auto-merge:** available when the repository allows auto-merge. GitHub merges the pull request when its requirements are met. Use **Disable auto-merge** to cancel it.
 - **Merge pull request:** when the branch is clean, the primary button merges immediately after a confirmation that names the selected method.
 
@@ -255,16 +255,16 @@ For review threads and comments:
 - **Resolve** or **Unresolve** a thread.
 - **Edit** or **Delete** your own comments and replies. You need the matching GitHub permission.
 - **React** with the GitHub reaction set. Click a reaction pill to toggle it, or use the reaction picker.
-- **Fix with Kilo** sends a thread to the current agent as review context. **Fix N with Kilo** sends the unresolved threads together, up to the panel limit. With an active Agent Manager terminal, the label becomes **Send to terminal** or **Send N unresolved to terminal** and the threads go to that terminal instead.
+- **Fix with Tavern** sends a thread to the current agent as review context. **Fix N with Tavern** sends the unresolved threads together, up to the panel limit. With an active Agent Manager terminal, the label becomes **Send to terminal** or **Send N unresolved to terminal** and the threads go to that terminal instead.
 - **Copy** copies the formatted thread. **Show in diff**, **Open file**, and **Open on GitHub** jump to the comment location.
 
 Outdated threads show an **Outdated** label. Unresolved threads appear first, and resolved threads move into the **Resolved** group and are collapsed by default.
 
-Sending a thread gives it to Kilo as review context, and it does not post anything to GitHub. Use the reply form to post to GitHub.
+Sending a thread gives it to Tavern as review context, and it does not post anything to GitHub. Use the reply form to post to GitHub.
 
 #### Checks
 
-When checks fail or are cancelled, the Checks section offers **Fix with Kilo**, which sends a failure summary and log commands to the current agent. With an active Agent Manager terminal, the label becomes **Send failures to terminal**. Sending this context does not post a GitHub comment; the [push-fixes setting](#push-pull-request-fixes) controls whether the agent is also asked to commit and push its fix.
+When checks fail or are cancelled, the Checks section offers **Fix with Tavern**, which sends a failure summary and log commands to the current agent. With an active Agent Manager terminal, the label becomes **Send failures to terminal**. Sending this context does not post a GitHub comment; the [push-fixes setting](#push-pull-request-fixes) controls whether the agent is also asked to commit and push its fix.
 
 #### Conversation
 
@@ -276,7 +276,7 @@ The conversation lists the pull request description and history in one timeline:
 - **Lifecycle events:** merged, closed, reopened, and force-push, with the actor
 - **Show earlier activity** when GitHub has timeline items before the loaded window. It opens the pull request on GitHub.
 
-Use a comment card's **Fix with Kilo** action to hand it to the agent. **Dismiss** hides a comment from the next send, and **Restore** brings it back. **Fix N with Kilo** or **Send N to terminal** sends the actionable comments together.
+Use a comment card's **Fix with Tavern** action to hand it to the agent. **Dismiss** hides a comment from the next send, and **Restore** brings it back. **Fix N with Tavern** or **Send N to terminal** sends the actionable comments together.
 
 Batch sends skip bot comments, dismissed comments, and comments already sent. Use **Add comment** to post a new discussion comment to GitHub, or **Copy comment** to copy an existing one as Markdown.
 
@@ -288,7 +288,7 @@ The Reviewers section shows each requested or completed reviewer with an avatar 
 
 **Push Pull Request Fixes** controls whether fix prompts ask the agent to commit and push so the pull request updates. The default is on.
 
-- Set it in **Settings > Agent Behaviour > Push Pull Request Fixes** (`kilo-code.new.agentManager.pushFixes`).
+- Set it in **Settings > Agent Behaviour > Push Pull Request Fixes** (`tavern-code.new.agentManager.pushFixes`).
 - Toggle the same setting from the PR panel header with the **Push Pull Request Fixes** button.
 - When it is on, fix prompts for PR review comments and CI failures include: "When the changes pass local checks, commit them and push to this branch so the pull request updates. Do not force-push."
 - Update from base follows the same setting: when the worktree has a pull request, the agent is asked to push after a clean merge and successful checks.
@@ -299,10 +299,10 @@ Turn the setting off to keep fixes local for manual commit and push. Local draft
 ### Creating a New Worktree Session
 
 1. Click **New Worktree** or press `Cmd+N` (macOS) / `Ctrl+N` (Windows/Linux) to open the new worktree dialog
-2. Enter a branch name (or let Kilo generate one)
+2. Enter a branch name (or let Tavern generate one)
 3. Type your first message, then create the worktree
 
-Kilo creates the worktree from the selected project's configured default base branch. In a multi-project workspace, the selected project determines this setting. An explicit base branch selected in the dialog takes precedence. If no default is configured, Kilo falls back to automatic detection of the repository's remote default branch. The agent works in isolation, so your main branch is unaffected.
+Tavern creates the worktree from the selected project's configured default base branch. In a multi-project workspace, the selected project determines this setting. An explicit base branch selected in the dialog takes precedence. If no default is configured, Tavern falls back to automatic detection of the repository's remote default branch. The agent works in isolation, so your main branch is unaffected.
 
 Explicit branch names preserve slashes and case, such as `feature/MyTask`. The checkout directory can have a different name.
 
@@ -327,7 +327,7 @@ You can run up to 4 parallel implementations of the same prompt across separate 
 
 1. Click the multi-version button and enter a prompt
 2. Optionally assign different models to each version
-3. Kilo creates one worktree + session per version and runs them in parallel
+3. Tavern creates one worktree + session per version and runs them in parallel
 
 ### Importing Existing Work
 
@@ -348,7 +348,7 @@ Imported work stays associated with its branch or worktree and can be continued 
 - When a worktree is selected, open session history to use the **Worktree** source, which is selected by default and lists only sessions assigned to that worktree. Opening a worktree session returns to its owning worktree.
 - Continue a cloud session locally from Agent Manager using the same extension sign-in and provider settings
 
-File mentions, clickable file links, review-comment file links, file-link validation, and native VS Code opening resolve against the referenced session's directory or worktree. If a session ID is present in multiple projects, Kilo rejects the unqualified reference rather than choosing an arbitrary project.
+File mentions, clickable file links, review-comment file links, file-link validation, and native VS Code opening resolve against the referenced session's directory or worktree. If a session ID is present in multiple projects, Tavern rejects the unqualified reference rather than choosing an arbitrary project.
 
 When a session delegates work to a subagent, open the child transcript from its task card or background-agent row. Agent Manager displays it in the read-only **Subagents** inspector. The inspector supports multiple child-session tabs and keeps them scoped to the selected project and parent session. For the difference between Agent Manager inspector tabs and the separate subagent editor tabs used by the sidebar, see [Inspecting delegated sessions in VS Code](/docs/customize/custom-subagents#inspecting-delegated-sessions-in-vs-code).
 
@@ -360,7 +360,7 @@ Renaming a worktree changes only the label shown in Agent Manager. It does not r
 
 ## Starting and orchestrating sessions from chat
 
-Kilo can start Agent Manager sessions from chat with the `agent_manager` tool. It is available by default only in the VS Code extension because Agent Manager is an extension feature.
+Tavern can start Agent Manager sessions from chat with the `agent_manager` tool. It is available by default only in the VS Code extension because Agent Manager is an extension feature.
 
 The tool supports two modes:
 
@@ -421,9 +421,9 @@ Use `Cmd+T` / `Ctrl+T` in the panel, or `mode: "local"` with a selected `worktre
 
 - **Sessions in one worktree:** Use targeted `agent_manager` prompts for conversation. They also see the same files, commits, and branch, so coordinate before making overlapping edits.
 - **Sessions in different worktrees:** Use targeted prompts plus commits, diffs, or pull requests to pass changes between isolated checkouts. Files are not shared automatically.
-- **Task descendants:** A `task` child belongs to the session that launched it. Its Kilo Swarm board is scoped to that session tree, not to every Agent Manager session in the project.
+- **Task descendants:** A `task` child belongs to the session that launched it. Its Tavern Swarm board is scoped to that session tree, not to every Agent Manager session in the project.
 
-Messages sent by another agent show **Sent by Kilo from another session**. Select the source link to open that session. If it is closed, the message shows **Session not open** instead.
+Messages sent by another agent show **Sent by Tavern from another session**. Select the source link to open that session. If it is closed, the message shows **Session not open** instead.
 
 ## Sections
 
@@ -495,7 +495,7 @@ Files marked `linguist-generated` in the repository's `.gitattributes` start col
 
 Add comments in the diff panel or in the rendered view of a Markdown document. Click **Send all to chat** to send the collected comments to chat. If an Agent Manager terminal is active, the comments are sent to that terminal instead. Press `Cmd+Enter` (macOS) or `Ctrl+Enter` (Windows/Linux) to use the same action from the review panel.
 
-When the selected worktree has a checked-out pull request, a new inline comment can also be posted to the pull request. The comment form offers **Save** to keep the comment in the local collection, **Send to Kilo** to give it to the agent, and **Send to GitHub #N** to post it as a PR review comment. The primary button is a split button that remembers the last destination you used; open its arrow to switch between **Send to Kilo** and **Send to GitHub #N**. `Cmd+Enter` / `Ctrl+Enter` saves locally, and plain `Enter` sends to Kilo while the Kilo destination is selected, so the keyboard never posts to GitHub.
+When the selected worktree has a checked-out pull request, a new inline comment can also be posted to the pull request. The comment form offers **Save** to keep the comment in the local collection, **Send to Tavern** to give it to the agent, and **Send to GitHub #N** to post it as a PR review comment. The primary button is a split button that remembers the last destination you used; open its arrow to switch between **Send to Tavern** and **Send to GitHub #N**. `Cmd+Enter` / `Ctrl+Enter` saves locally, and plain `Enter` sends to Tavern while the Tavern destination is selected, so the keyboard never posts to GitHub.
 
 With a publishable pull request, the send-all control shows **Send all to chat (N)** and **Send N to GitHub #N** as separate actions. The GitHub action posts only the local comments that map to a line in the pull request. Only the chat action has the keyboard shortcut, so `Cmd+Enter` / `Ctrl+Enter` never posts to GitHub.
 
@@ -537,7 +537,7 @@ The project and worktree context owns document tabs, loaded content, and comment
 
 Enable **Browser Automation** in **Settings > Experimental** to show the Browser panel. It is off by default. Open the panel with the **Browser** button and enter your local application's URL. Each session has its own browser, with developer tools and console diagnostics beside the preview.
 
-Use **Select element** to attach an element reference to your next message. It includes enough page context for Kilo to identify the element, plus a source file and line when the page provides a verifiable location. Add your instruction before sending it.
+Use **Select element** to attach an element reference to your next message. It includes enough page context for Tavern to identify the element, plus a source file and line when the page provides a verifiable location. Add your instruction before sending it.
 
 The agent can open the application with `browser_open`. Its automation browser accepts only HTTP URLs on `localhost` or `127.0.0.1` and blocks other origins, including external assets and APIs on separate ports. Serve the resources the agent needs from the same loopback origin. These restrictions apply to the automation browser, not the independent visible preview iframe.
 
@@ -547,7 +547,7 @@ Google Chrome must be installed for the default runtime. To use an already-insta
 
 Each session has a dedicated terminal rooted in the session's worktree directory. Press `Cmd+/` (macOS) / `Ctrl+/` (Windows/Linux) to focus the terminal for the active session. If the embedded terminal is already visible but the prompt has focus, the same shortcut focuses the terminal without hiding it. Press it again while the terminal has focus to hide the panel.
 
-When you use `@terminal` in an Agent Manager prompt, Kilo captures the focused terminal for the selected session or worktree. This includes embedded **Run** and **Setup** tabs. Terminal context is limited to 500 lines or 50,000 characters; longer output is truncated.
+When you use `@terminal` in an Agent Manager prompt, Tavern captures the focused terminal for the selected session or worktree. This includes embedded **Run** and **Setup** tabs. Terminal context is limited to 500 lines or 50,000 characters; longer output is truncated.
 
 ### Choosing the Terminal Destination
 
@@ -556,7 +556,7 @@ The toolbar's terminal button is a split button: click it to open a terminal, or
 - **Agent Manager panel** (default) - opens an embedded terminal in the side panel that also hosts the diff view
 - **VS Code terminal** - opens or focuses the VS Code integrated terminal at the bottom of the window
 
-The dropdown choice is remembered per panel and becomes the default for new panels. You can also set the default directly with the `kilo-code.new.agentManager.terminalButtonDestination` setting (`vscode` or `agentManager`). The `Cmd+/` (macOS) / `Ctrl+/` (Windows/Linux) shortcut follows the same destination.
+The dropdown choice is remembered per panel and becomes the default for new panels. You can also set the default directly with the `tavern-code.new.agentManager.terminalButtonDestination` setting (`vscode` or `agentManager`). The `Cmd+/` (macOS) / `Ctrl+/` (Windows/Linux) shortcut follows the same destination.
 
 With the **Agent Manager panel** destination, the terminal works like the diff panel: press `Cmd+/` to reveal and focus it, press it while the panel is visible but another control has focus to move focus into the terminal, and press it again from the terminal to hide it. Hiding never stops the terminal — scrollback and running processes continue in the background, and focus returns to the chat input. A terminal stops only when you click its close button or type `exit` in the shell.
 
@@ -584,14 +584,14 @@ A common workflow is letting the agent work, then switching to the terminal to r
 
 Setup scripts let you prepare each new worktree before the agent starts, for example by installing dependencies, linking local config, copying non-standard env files, or creating per-worktree databases.
 
-Create a script file in `.kilo/` using the appropriate filename for your platform:
+Create a script file in `.tavern/` using the appropriate filename for your platform:
 
 | Platform | Filename (checked in order) |
 |---|---|
-| macOS / Linux | `.kilo/setup-script`, `.kilo/setup-script.sh` |
-| Windows | `.kilo/setup-script.ps1`, `.kilo/setup-script.cmd`, `.kilo/setup-script.bat` |
+| macOS / Linux | `.tavern/setup-script`, `.tavern/setup-script.sh` |
+| Windows | `.tavern/setup-script.ps1`, `.tavern/setup-script.cmd`, `.tavern/setup-script.bat` |
 
-Kilo runs the script automatically whenever a new worktree is created. It uses `sh` for POSIX scripts, PowerShell for `.ps1`, and `cmd.exe` for `.cmd` / `.bat`, so executable permissions are not required.
+Tavern runs the script automatically whenever a new worktree is created. It uses `sh` for POSIX scripts, PowerShell for `.ps1`, and `cmd.exe` for `.cmd` / `.bat`, so executable permissions are not required.
 
 Where the script runs follows the terminal destination dropdown in the Agent Manager toolbar. **Agent Manager panel** shows live output in a named `Setup` tab in the side terminal panel. After success, the panel returns to its previous state unless you interacted with it; the retained tab remains available for review. Failures keep the panel open. **VS Code terminal** runs setup as a task in the integrated terminal. The script keeps the existing five-minute timeout; when it expires, the setup process tree is terminated and the failed tab retains its partial output.
 
@@ -611,7 +611,7 @@ set -e
 cd "$WORKTREE_PATH"
 npm install
 
-# Copy a nested env file that Kilo does not auto-copy.
+# Copy a nested env file that Tavern does not auto-copy.
 if [ -f "$REPO_PATH/apps/web/.env.local" ] && [ ! -f "$WORKTREE_PATH/apps/web/.env.local" ]; then
   cp "$REPO_PATH/apps/web/.env.local" "$WORKTREE_PATH/apps/web/.env.local"
 fi
@@ -621,7 +621,7 @@ If the setup script fails, Agent Manager shows the failure (a failed `Setup` tab
 
 ### Environment File Copying
 
-Before the setup script runs, Kilo automatically copies root-level `.env` files from the main repo into the new worktree.
+Before the setup script runs, Tavern automatically copies root-level `.env` files from the main repo into the new worktree.
 
 Copied automatically:
 
@@ -633,9 +633,9 @@ Not copied automatically:
 - Nested env files, such as `apps/web/.env.local`
 - Non-dotenv files, such as `.envrc`, `.environment`, or `.env-cmdrc`
 - Directories named `.env` or `.env.local`
-- Files that already exist in the worktree, because Kilo never overwrites them
+- Files that already exist in the worktree, because Tavern never overwrites them
 
-Use `.kilo/setup-script` for anything outside the automatic copy rules, including nested env files, ignored local config, local certificates, local database files, generated config directories, or tool-specific files required to run the project.
+Use `.tavern/setup-script` for anything outside the automatic copy rules, including nested env files, ignored local config, local certificates, local database files, generated config directories, or tool-specific files required to run the project.
 
 ## Run Script
 
@@ -643,14 +643,14 @@ The run button lets you start your project (dev server, build, tests, etc.) dire
 
 ### Setting up a run script
 
-Create a script file in `.kilo/` using the appropriate filename for your platform:
+Create a script file in `.tavern/` using the appropriate filename for your platform:
 
 | Platform | Filename (checked in order) |
 |---|---|
-| macOS / Linux | `.kilo/run-script`, `.kilo/run-script.sh` |
-| Windows | `.kilo/run-script.ps1`, `.kilo/run-script.cmd`, `.kilo/run-script.bat` |
+| macOS / Linux | `.tavern/run-script`, `.tavern/run-script.sh` |
+| Windows | `.tavern/run-script.ps1`, `.tavern/run-script.cmd`, `.tavern/run-script.bat` |
 
-For example, on macOS / Linux create `.kilo/run-script`:
+For example, on macOS / Linux create `.tavern/run-script`:
 
 ```sh
 #!/bin/sh
@@ -701,13 +701,13 @@ The terminal destination dropdown in the Agent Manager toolbar also controls whe
 
 ## Keep Awake
 
-Use the coffee-cup button in the project list header, or **Kilo Code: Toggle Keep Awake** in the Command Palette, to prevent system sleep while agents work. It starts off in each window and requires a trusted local workspace. See [Keep Awake](/docs/getting-started/settings/keep-awake) for platform limits, reset behavior, and device-policy considerations.
+Use the coffee-cup button in the project list header, or **Tavern Code: Toggle Keep Awake** in the Command Palette, to prevent system sleep while agents work. It starts off in each window and requires a trusted local workspace. See [Keep Awake](/docs/getting-started/settings/keep-awake) for platform limits, reset behavior, and device-policy considerations.
 
 ## Session State and Persistence
 
-Agent Manager state is persisted in `.kilo/agent-manager.json`. It stores worktrees, sections, session tabs, ordering, collapsed state, diff preferences, and cached PR metadata. Git branches and worktree directories remain on disk separately.
+Agent Manager state is persisted in `.tavern/agent-manager.json`. It stores worktrees, sections, session tabs, ordering, collapsed state, diff preferences, and cached PR metadata. Git branches and worktree directories remain on disk separately.
 
-Closing a managed worktree removes it from Agent Manager, deletes its `.kilo/worktrees/` directory, and deletes the local branch. Closing an imported external worktree removes the Agent Manager entry but leaves the external directory and branch untouched.
+Closing a managed worktree removes it from Agent Manager, deletes its `.tavern/worktrees/` directory, and deletes the local branch. Closing an imported external worktree removes the Agent Manager entry but leaves the external directory and branch untouched.
 
 ## Keyboard Shortcuts (Agent Manager Panel)
 
@@ -734,7 +734,7 @@ Closing a managed worktree removes it from Agent Manager, deletes its `.kilo/wor
 
 - **"Please open a folder…" error** — the Agent Manager requires a VS Code workspace folder
 - **Worktree creation fails** — ensure Git is installed and the workspace is a valid git repository. Open the main repository (where `.git` is a directory), not an existing worktree checkout.
-- **A configured base branch is missing** — Kilo clears the stale project setting and uses automatic remote-default detection for the new worktree. Select the project and configure a new default if needed.
+- **A configured base branch is missing** — Tavern clears the stale project setting and uses automatic remote-default detection for the new worktree. Select the project and configure a new default if needed.
 - **Provider or authentication errors** — open extension Settings and verify your sign-in, provider, model, or BYOK configuration. Agent Manager uses the same settings as the sidebar.
 - **Session history missing cloud sessions** — sign in through the extension and confirm the repository remote matches the sessions you expect to see.
 - **PR badges, the review panel, or PR import missing:** install the GitHub CLI (`gh`) and authenticate it for the repository. Run `gh auth status` to check the current login. GitHub PR features do not work until `gh` is available and authenticated.

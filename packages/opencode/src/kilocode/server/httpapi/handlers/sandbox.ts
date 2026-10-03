@@ -1,13 +1,13 @@
 import { Effect } from "effect"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
-import * as SandboxActivation from "@/kilocode/sandbox/activation"
-import * as SandboxPolicy from "@/kilocode/sandbox/policy"
+import * as SandboxActivation from "@/taverncode/sandbox/activation"
+import * as SandboxPolicy from "@/taverncode/sandbox/policy"
 import { Session } from "@/session/session"
 import type { SessionID } from "@/session/schema"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import * as SessionError from "@/server/routes/instance/httpapi/handlers/session-errors"
-import { BackgroundProcess } from "@/kilocode/background-process"
-import { Service as Notebook } from "@/kilocode/notebook/service"
+import { BackgroundProcess } from "@/taverncode/background-process"
+import { Service as Notebook } from "@/taverncode/notebook/service"
 import { InvalidRequestError } from "@/server/routes/instance/httpapi/errors"
 
 export const sandboxHandlers = HttpApiBuilder.group(InstanceHttpApi, "sandbox", (handlers) =>

@@ -25,8 +25,8 @@ import { useProvider } from "./provider"
 import { useConfig } from "./config"
 import { useLanguage } from "./language"
 import { createCostAlertHandler } from "./cost-alert"
-import { showToast } from "@kilocode/kilo-ui/toast"
-import { touch } from "@kilocode/kilo-ui/tool-motion"
+import { showToast } from "@taverncode/tavern-ui/toast"
+import { touch } from "@taverncode/tavern-ui/tool-motion"
 import type {
   SessionInfo,
   SessionModelUsage,
@@ -99,7 +99,7 @@ import type { BrowserFeedbackData } from "../../../src/shared/browser-feedback"
 import { activeUserMessageID, removeQueuedMessage, visibleMessages as filterVisibleMessages } from "./session-queue"
 import { clearSessionDraftDiscarded, deleteDraftsForSession } from "../utils/draft-store"
 import { createAbortState } from "./abort-state"
-import { goalControl } from "../../../src/kilo-provider/command-completion"
+import { goalControl } from "../../../src/tavern-provider/command-completion"
 import { continuation } from "./session-continuation"
 import { clearIfOn, createCloudPrune } from "./session-cloud-prune"
 import { isSameSessionTree } from "./model-usage"
@@ -614,11 +614,11 @@ export const SessionProvider: ParentComponent = (props) => {
     if (!pending || agents().length === 0 || (pending.modelID && catalog() <= pending.after)) return
     setPendingKiloModel(null)
     if (pending.modelID && !provider.providers()[KILO_PROVIDER_ID]?.models[pending.modelID]) {
-      console.warn("[Kilo New] Ignoring unavailable Kilo catalog model:", pending.modelID)
+      console.warn("[Tavern New] Ignoring unavailable Tavern catalog model:", pending.modelID)
       return
     }
     if (pending.agent && !agentNames().has(pending.agent)) {
-      console.warn("[Kilo New] Ignoring unavailable Kilo agent:", pending.agent)
+      console.warn("[Tavern New] Ignoring unavailable Tavern agent:", pending.agent)
       return
     }
     if (pending.agent) selectAgent(pending.agent)
@@ -1077,7 +1077,7 @@ export const SessionProvider: ParentComponent = (props) => {
           title: language.t("session.cloud.import.failed") ?? "Failed to import cloud session",
           description: message.error,
         })
-        console.error("[Kilo New] Cloud session import failed:", message.error)
+        console.error("[Tavern New] Cloud session import failed:", message.error)
         break
       }
 
@@ -1473,7 +1473,7 @@ export const SessionProvider: ParentComponent = (props) => {
     const effectiveMessageID = messageID || part.messageID
 
     if (!effectiveMessageID) {
-      console.warn("[Kilo New] Part updated without messageID:", part.id, part.type)
+      console.warn("[Tavern New] Part updated without messageID:", part.id, part.type)
       return
     }
 
@@ -2209,7 +2209,7 @@ export const SessionProvider: ParentComponent = (props) => {
     injectedTitle?: string,
   ): boolean {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot send message: not connected")
+      console.warn("[Tavern New] Cannot send message: not connected")
       return false
     }
 
@@ -2289,7 +2289,7 @@ export const SessionProvider: ParentComponent = (props) => {
     projectId?: string,
   ): boolean {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot send command: not connected")
+      console.warn("[Tavern New] Cannot send command: not connected")
       return false
     }
 
@@ -2413,7 +2413,7 @@ export const SessionProvider: ParentComponent = (props) => {
     const sessionID = currentSessionID()
     const scope = sessionID ?? draftSessionID()
     if (!scope) {
-      console.warn("[Kilo New] Cannot abort: no current or pending session")
+      console.warn("[Tavern New] Cannot abort: no current or pending session")
       return
     }
     const messageID = [...pendingSubmissions].reverse().find(([, sid]) => sid === scope)?.[0]
@@ -2430,13 +2430,13 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function compact() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot compact: not connected")
+      console.warn("[Tavern New] Cannot compact: not connected")
       return
     }
 
     const sessionID = currentSessionID()
     if (!sessionID) {
-      console.warn("[Kilo New] Cannot compact: no current session")
+      console.warn("[Tavern New] Cannot compact: no current session")
       return
     }
 
@@ -2558,7 +2558,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function createSession() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot create session: not connected")
+      console.warn("[Tavern New] Cannot create session: not connected")
       return
     }
 
@@ -2581,7 +2581,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function loadSessions() {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot load sessions: not connected")
+      console.warn("[Tavern New] Cannot load sessions: not connected")
       return
     }
     vscode.postMessage({ type: "loadSessions" })
@@ -2610,7 +2610,7 @@ export const SessionProvider: ParentComponent = (props) => {
   function selectSession(id: string, options: { focus?: boolean; scrollToBottom?: boolean } = {}) {
     // Cloud preview sessions use a separate keyed path (selectCloudSession).
     if (id.startsWith("cloud:")) {
-      console.warn("[Kilo New] Cannot select cloud preview session via selectSession")
+      console.warn("[Tavern New] Cannot select cloud preview session via selectSession")
       return
     }
     // Always reassign: a later plain selection must clear a request that
@@ -2681,7 +2681,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function selectCloudSession(cloudSessionId: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot select cloud session: not connected")
+      console.warn("[Tavern New] Cannot select cloud session: not connected")
       return
     }
     const key = `cloud:${cloudSessionId}`
@@ -2696,7 +2696,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function deleteSession(id: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot delete session: not connected")
+      console.warn("[Tavern New] Cannot delete session: not connected")
       return
     }
     // Optimistically remove from the list so the UI updates immediately
@@ -2718,7 +2718,7 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function renameSession(id: string, title: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot rename session: not connected")
+      console.warn("[Tavern New] Cannot rename session: not connected")
       return
     }
     vscode.postMessage({ type: "renameSession", sessionID: id, title })
@@ -2726,11 +2726,11 @@ export const SessionProvider: ParentComponent = (props) => {
 
   function exportSessionTranscript(id: string) {
     if (!server.isConnected()) {
-      console.warn("[Kilo New] Cannot export session transcript: not connected")
+      console.warn("[Tavern New] Cannot export session transcript: not connected")
       return
     }
     if (id.startsWith("cloud:")) {
-      console.warn("[Kilo New] Cannot export cloud session transcript")
+      console.warn("[Tavern New] Cannot export cloud session transcript")
       return
     }
     vscode.postMessage({ type: "exportSessionTranscript", sessionID: id })

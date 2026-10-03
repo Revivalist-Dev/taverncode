@@ -1,11 +1,11 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { afterAll, afterEach, beforeEach, describe, expect, mock, spyOn, test } from "bun:test"
 import { EOL } from "node:os"
 import { Effect } from "effect"
 
 // Restore these spies after the suite so other files use real PR-link helpers.
-const realPrLink = await import("@/kilo-sessions/pr-link")
-const realPoller = await import("@/kilo-sessions/pr-link-poller")
+const realPrLink = await import("@/tavern-sessions/pr-link")
+const realPoller = await import("@/tavern-sessions/pr-link-poller")
 
 type Record = {
   link: { platform: string; prUrl: string; prNumber: number }

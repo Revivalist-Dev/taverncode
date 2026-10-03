@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import path from "path"
-import { Daemon } from "../../src/kilocode/daemon/daemon"
-import { DaemonClient } from "../../src/kilocode/daemon/client"
+import { Daemon } from "../../src/taverncode/daemon/daemon"
+import { DaemonClient } from "../../src/taverncode/daemon/client"
 import { tmpdir } from "../fixture/fixture"
 
 const original = {
@@ -41,7 +41,7 @@ function opts(root: string): Daemon.Options {
     hostname: "127.0.0.1",
     port: 0,
     mdns: false,
-    mdnsDomain: "kilo.local",
+    mdnsDomain: "tavern.local",
     cors: [],
     command: [process.execPath, "--conditions=browser", path.join(process.cwd(), "src/index.ts")],
     env: dirs(root),
@@ -115,35 +115,35 @@ describe("daemon manager", () => {
 
   test("does not forward bundled bun entrypoints to the daemon child", () => {
     const proc = {
-      argv: ["/tmp/kilo", "/$bunfs/root/src/index.js", "daemon", "start"],
-      execArgv: ["--user-agent=kilo/test", "--use-system-ca", "--"],
-      execPath: "/tmp/kilo",
+      argv: ["/tmp/tavern", "/$bunfs/root/src/index.js", "daemon", "start"],
+      execArgv: ["--user-agent=tavern/test", "--use-system-ca", "--"],
+      execPath: "/tmp/tavern",
     }
-    expect(Daemon.command(undefined, proc)).toStrictEqual(["/tmp/kilo"])
+    expect(Daemon.command(undefined, proc)).toStrictEqual(["/tmp/tavern"])
     expect(
       Daemon.command(undefined, {
         ...proc,
-        argv: ["C:/tmp/kilo.exe", "B:/~BUN/root/src/index.js", "daemon", "start"],
-        execPath: "C:/tmp/kilo.exe",
+        argv: ["C:/tmp/tavern.exe", "B:/~BUN/root/src/index.js", "daemon", "start"],
+        execPath: "C:/tmp/tavern.exe",
       }),
-    ).toStrictEqual(["C:/tmp/kilo.exe"])
+    ).toStrictEqual(["C:/tmp/tavern.exe"])
     expect(
       Daemon.command(undefined, {
         ...proc,
-        argv: ["C:/tmp/kilo.exe", "b:\\~BUN\\root\\src\\index.js", "daemon", "start"],
-        execPath: "C:/tmp/kilo.exe",
+        argv: ["C:/tmp/tavern.exe", "b:\\~BUN\\root\\src\\index.js", "daemon", "start"],
+        execPath: "C:/tmp/tavern.exe",
       }),
-    ).toStrictEqual(["C:/tmp/kilo.exe"])
+    ).toStrictEqual(["C:/tmp/tavern.exe"])
   })
 
   test("forwards source entrypoints to the daemon child", () => {
     expect(
       Daemon.command(undefined, {
-        argv: ["/tmp/bun", "/tmp/kilo/src/index.ts", "daemon", "start"],
+        argv: ["/tmp/bun", "/tmp/tavern/src/index.ts", "daemon", "start"],
         execArgv: ["--conditions=browser"],
         execPath: "/tmp/bun",
       }),
-    ).toStrictEqual(["/tmp/bun", "--conditions=browser", "/tmp/kilo/src/index.ts"])
+    ).toStrictEqual(["/tmp/bun", "--conditions=browser", "/tmp/tavern/src/index.ts"])
   })
 
   test("does not reuse legacy fixed-password daemons", () => {
@@ -151,7 +151,7 @@ describe("daemon manager", () => {
       hostname: "127.0.0.1",
       port: 4097,
       mdns: false,
-      mdnsDomain: "kilo.local",
+      mdnsDomain: "tavern.local",
       cors: [],
     }
     const state: Daemon.State = {
@@ -159,9 +159,9 @@ describe("daemon manager", () => {
       hostname: input.hostname,
       port: input.port,
       url: "http://127.0.0.1:4097",
-      username: "kilo",
-      password: "kilo",
-      token: Buffer.from("kilo:kilo").toString("base64"),
+      username: "tavern",
+      password: "tavern",
+      token: Buffer.from("tavern:tavern").toString("base64"),
       version: "test",
       startedAt: new Date(0).toISOString(),
       log: "/tmp/daemon.log",
@@ -194,8 +194,8 @@ describe("daemon manager", () => {
     expect(started.running).toBe(true)
     expect(started.state?.pid).toBeGreaterThan(0)
     expect(started.state?.token).toBeTruthy()
-    expect(started.state?.password).not.toBe("kilo")
-    expect(started.state?.token).not.toBe(Buffer.from("kilo:kilo").toString("base64"))
+    expect(started.state?.password).not.toBe("tavern")
+    expect(started.state?.token).not.toBe(Buffer.from("tavern:tavern").toString("base64"))
     expect(started.state?.port).toBeGreaterThan(0)
 
     const blocked = await fetch(`${started.state!.url}/config?directory=${encodeURIComponent(tmp.path)}`)
@@ -254,7 +254,7 @@ describe("daemon manager", () => {
       await Daemon.start(input)
       const ready = path.join(tmp.path, "foreground-ready")
       const release = path.join(tmp.path, "foreground-release")
-      const source = path.join(process.cwd(), "src/kilocode/daemon/daemon.ts")
+      const source = path.join(process.cwd(), "src/taverncode/daemon/daemon.ts")
       const script = `
         import { Daemon } from ${JSON.stringify(source)}
         await Daemon.foreground(async () => {
@@ -307,7 +307,7 @@ describe("daemon manager", () => {
     ])
 
     expect(code).toBe(0)
-    expect(stdout).toContain("kilo daemon stopped")
+    expect(stdout).toContain("tavern daemon stopped")
     expect(stderr).not.toContain("Could not open browser automatically")
     expect((await Daemon.status()).running).toBe(false)
   }, 45_000)
@@ -318,7 +318,7 @@ describe("daemon manager", () => {
       await using tmp = await tmpdir()
       const env = dirs(tmp.path)
       const proc = cli(["daemon", "-f", "--port", "0"], env)
-      const stdout = capture(proc.stdout, "Press Ctrl+C to stop the Kilo daemon.")
+      const stdout = capture(proc.stdout, "Press Ctrl+C to stop the Tavern daemon.")
       const stderr = new Response(proc.stderr).text()
 
       try {
@@ -338,7 +338,7 @@ describe("daemon manager", () => {
         proc.kill("SIGINT")
         expect(await deadline(proc.exited, 10_000)).toBe(0)
         expect((await Daemon.status()).running).toBe(false)
-        expect(await stdout.text).toContain("kilo daemon started")
+        expect(await stdout.text).toContain("tavern daemon started")
         await stderr
       } finally {
         if (proc.exitCode === null) proc.kill("SIGKILL")

@@ -1,5 +1,5 @@
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
 import { Match, Switch, type Component, type JSX } from "solid-js"
 import { running, type Activity } from "../../utils/session-activity"
 

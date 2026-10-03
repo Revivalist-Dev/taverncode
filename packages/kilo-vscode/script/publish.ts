@@ -3,7 +3,7 @@ import { $ } from "bun"
 import { join } from "node:path"
 import { existsSync } from "node:fs"
 import { Script } from "@opencode-ai/script"
-import { Manifest, Policy } from "../../../script/kilocode/sbom/index"
+import { Manifest, Policy } from "../../../script/taverncode/sbom/index"
 import { CHECKSUMS } from "./sbom"
 
 const prerelease = process.env.KILO_PRE_RELEASE === "true"
@@ -31,7 +31,7 @@ const targets = [
 
 const vsixFiles: string[] = []
 for (const target of targets) {
-  const vsixPath = join(outDir, `kilo-vscode-${target}.vsix`)
+  const vsixPath = join(outDir, `tavern-vscode-${target}.vsix`)
   if (!existsSync(vsixPath)) {
     throw new Error(`VSIX file not found: ${vsixPath}`)
   }
@@ -42,13 +42,13 @@ console.log(`\nFound ${vsixFiles.length} VSIX files`)
 
 // CRA evidence is checked before the first irreversible Marketplace upload, not
 // after. Marketplace and Open VSX still receive only the VSIX; the sidecars are
-// published to the GitHub release, which is Kilo's SBOM record.
+// published to the GitHub release, which is Tavern's SBOM record.
 const evidence = await verifyEvidence()
 
 const flag = prerelease ? ["--pre-release"] : []
 
 for (const target of targets) {
-  const vsixPath = join(outDir, `kilo-vscode-${target}.vsix`)
+  const vsixPath = join(outDir, `tavern-vscode-${target}.vsix`)
   console.log(`\n🚀 Publishing ${target} to VS Code Marketplace${prerelease ? " (pre-release)" : ""}...`)
   await retry(() => $`vsce publish ${flag} --skip-duplicate --packagePath ${vsixPath}`, {
     attempts: 3,

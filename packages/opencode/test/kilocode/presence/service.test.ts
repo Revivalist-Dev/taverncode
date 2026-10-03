@@ -4,9 +4,9 @@ import { Auth } from "@/auth"
 
 const attachedCalls: string[][] = []
 
-const realSessions = await import("@/kilo-sessions/kilo-sessions")
+const realSessions = await import("@/tavern-sessions/tavern-sessions")
 const realSetAttached = realSessions.KiloSessions.setAttachedSessions
-mock.module("@/kilo-sessions/kilo-sessions", () => ({
+mock.module("@/tavern-sessions/tavern-sessions", () => ({
   ...realSessions,
   KiloSessions: {
     ...realSessions.KiloSessions,
@@ -17,7 +17,7 @@ mock.module("@/kilo-sessions/kilo-sessions", () => ({
   },
 }))
 
-const { KiloViewers } = await import("@/kilocode/presence/service")
+const { KiloViewers } = await import("@/taverncode/presence/service")
 
 const authLayer = Layer.succeed(
   Auth.Service,

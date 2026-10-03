@@ -1,6 +1,6 @@
 import { Provider } from "@/provider/provider"
 import { LLM } from "@/session/llm"
-import { KiloLLM } from "@/kilocode/session/llm"
+import { KiloLLM } from "@/taverncode/session/llm"
 import { Agent } from "@/agent/agent"
 import { AppRuntime } from "@/effect/app-runtime"
 import { Effect } from "effect"

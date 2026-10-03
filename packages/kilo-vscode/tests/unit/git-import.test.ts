@@ -19,7 +19,7 @@ describe("parsePRUrl", () => {
   it("parses a standard GitHub PR URL", () => {
     expect(parsePRUrl("https://github.com/Kilo-Org/kilocode/pull/6164")).toEqual({
       owner: "Kilo-Org",
-      repo: "kilocode",
+      repo: "taverncode",
       number: 6164,
     })
   })
@@ -466,7 +466,7 @@ describe("classifyWorktreeError", () => {
   it("separates a broken worktree from a non-repo folder", () => {
     expect(
       classifyWorktreeError("fatal: not a git repository: /repo/.git/worktrees/hidden-sparrow", {
-        cwd: "/repo/.kilo/worktrees/hidden-sparrow",
+        cwd: "/repo/.tavern/worktrees/hidden-sparrow",
         exists: () => true,
       }),
     ).toBe("worktree_unregistered")

@@ -4,9 +4,9 @@ import { Database } from "@opencode-ai/core/database/database"
 import { MessageV2 } from "@/session/message-v2"
 import { Session } from "@/session/session"
 import type { SessionID } from "@/session/schema"
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order"
-import { KiloSessionPrompt } from "@/kilocode/session/prompt"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
+import { KiloSessionMessageOrder } from "@/taverncode/session/message-order"
+import { KiloSessionPrompt } from "@/taverncode/session/prompt"
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
 
 /** Max title-generation attempts per session before the placeholder stays. */
 const MAX_ATTEMPTS = 4
@@ -158,7 +158,7 @@ export namespace KiloSessionTitle {
    * Run the deferred title step at normal turn end. Skips the history load when
    * the session already has a title or is a child session, gates on the context
    * rule, then forks the shared title generator in the service scope so it
-   * outlives the turn. All Kilo-specific orchestration lives here so the shared
+   * outlives the turn. All Tavern-specific orchestration lives here so the shared
    * prompt loop only makes a single call.
    */
   export function deferred(input: {

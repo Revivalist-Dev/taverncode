@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, spyOn, test } from "bun:test"
 import { ConfigProvider, Layer } from "effect"
 import { HttpRouter } from "effect/unstable/http"
-import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@kilocode/kilo-gateway"
+import { HEADER_FEATURE, HEADER_ORGANIZATIONID } from "@taverncode/tavern-gateway"
 import * as Log from "@opencode-ai/core/util/log"
-import { KiloGatewayPaths } from "../../../src/kilocode/server/httpapi/groups/kilo-gateway"
+import { KiloGatewayPaths } from "../../../src/taverncode/server/httpapi/groups/tavern-gateway"
 import * as HttpApiServer from "../../../src/server/routes/instance/httpapi/server"
 import { resetDatabase } from "../../fixture/db"
 import { disposeAllInstances, tmpdir } from "../../fixture/fixture"
@@ -16,7 +16,7 @@ const env = {
 }
 
 const edit = {
-  provider: "kilo",
+  provider: "tavern",
   model: "inception/mercury-next-edit",
   currentFilePath: "src/index.ts",
   currentFileContent: "export const value = 1\n",
@@ -30,7 +30,7 @@ const edit = {
 
 function app() {
   const handler = HttpRouter.toWebHandler(
-    // kilocode_change - keep the filewatcher-disable flag visible (see httpapi-instance-route-auth.test.ts)
+    // taverncode_change - keep the filewatcher-disable flag visible (see httpapi-instance-route-auth.test.ts)
     HttpApiServer.routes.pipe(
       Layer.provide(
         ConfigProvider.layer(
@@ -57,7 +57,7 @@ async function send(body: Record<string, unknown> = edit, signal?: AbortSignal) 
   await using tmp = await tmpdir({ git: true, config: { formatter: false, lsp: false } })
   return app().request(KiloGatewayPaths.edit, {
     method: "POST",
-    headers: { "content-type": "application/json", "x-kilo-directory": tmp.path },
+    headers: { "content-type": "application/json", "x-tavern-directory": tmp.path },
     body: JSON.stringify(body),
     signal,
   })
@@ -80,7 +80,7 @@ function completion(input: RequestInfo | URL) {
 
 function authenticate() {
   process.env.KILO_AUTH_CONTENT = JSON.stringify({
-    kilo: {
+    tavern: {
       type: "oauth",
       refresh: "refresh-token",
       access: "gateway-token",
@@ -103,8 +103,8 @@ afterEach(async () => {
   await resetDatabase()
 })
 
-describe("HttpApi Kilo next edit", () => {
-  test("requires Kilo Gateway authentication for the Kilo-backed model", async () => {
+describe("HttpApi Tavern next edit", () => {
+  test("requires Tavern Gateway authentication for the Tavern-backed model", async () => {
     process.env.KILO_AUTH_CONTENT = "{}"
     expect((await send()).status).toBe(401)
   })
@@ -114,7 +114,7 @@ describe("HttpApi Kilo next edit", () => {
     expect((await send({ ...edit, model: "mistralai/codestral-2508" })).status).toBe(400)
   })
 
-  test("proxies Kilo-backed edits with gateway auth and autocomplete headers", async () => {
+  test("proxies Tavern-backed edits with gateway auth and autocomplete headers", async () => {
     authenticate()
     const calls: Array<{ input: RequestInfo | URL; init?: RequestInit }> = []
     const mock = stub(async (input, init) => {

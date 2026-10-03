@@ -46,25 +46,25 @@ export function matchLegacyKiloOpenApi(input: Record<string, unknown>) {
   )
   if (rules) rules.schema = { const: "project", default: "project", type: "string" }
 
-  const limit = spec.paths?.["/kilocode/session/{sessionID}/board"]?.get?.parameters?.find(
+  const limit = spec.paths?.["/taverncode/session/{sessionID}/board"]?.get?.parameters?.find(
     (param) => param.in === "query" && param.name === "limit",
   )
   if (limit) limit.schema = { type: "integer", minimum: 1, maximum: 50 }
 
-  const body = spec.paths?.["/kilo/organization"]?.post?.requestBody?.content?.["application/json"]?.schema
+  const body = spec.paths?.["/tavern/organization"]?.post?.requestBody?.content?.["application/json"]?.schema
   const ref = body?.$ref?.replace("#/components/schemas/", "")
   const props = ref ? spec.components?.schemas?.[ref]?.properties : body?.properties
   if (props?.organizationId) props.organizationId = nullable(props.organizationId)
 
   const json = (path: string) => spec.paths?.[path]?.get?.responses?.["200"]?.content?.["application/json"]
-  const profile = json("/kilo/profile")?.schema?.properties
+  const profile = json("/tavern/profile")?.schema?.properties
   const pass = profile?.kiloPass?.properties
   if (pass?.nextBillingAt) pass.nextBillingAt = nullable(pass.nextBillingAt)
   if (profile?.balance) profile.balance = nullable(profile.balance)
   if (profile?.kiloPass) profile.kiloPass = nullable(profile.kiloPass)
   if (profile?.currentOrgId) profile.currentOrgId = nullable(profile.currentOrgId)
 
-  const sessions = json("/kilo/cloud-sessions")?.schema?.properties
+  const sessions = json("/tavern/cloud-sessions")?.schema?.properties
   const session = sessions?.cliSessions?.items?.properties
   if (session?.title) session.title = nullable(session.title)
   if (sessions?.nextCursor) sessions.nextCursor = nullable(sessions.nextCursor)
@@ -86,7 +86,7 @@ export function matchLegacyKiloOpenApi(input: Record<string, unknown>) {
   const fields = name ? spec.components?.schemas?.[name]?.properties : update?.properties
   if (fields?.sessionID) fields.sessionID = nullable(fields.sessionID)
 
-  const fim = spec.paths?.["/kilo/fim"]?.post?.responses
+  const fim = spec.paths?.["/tavern/fim"]?.post?.responses
   if (!fim) return
   fim["200"] = {
     description: "Streaming FIM completion response",
@@ -137,10 +137,10 @@ function rebrand(value: unknown): void {
       continue
     }
     ;(value as Record<string, unknown>)[key] = item
-      .replaceAll("OpenCode", "Kilo")
-      .replaceAll("opencode.local", "kilo.local")
-      .replaceAll("opencode serve", "kilo serve")
-      .replaceAll("https://opencode.ai/", "https://kilo.ai/")
+      .replaceAll("OpenCode", "Tavern")
+      .replaceAll("opencode.local", "tavern.local")
+      .replaceAll("opencode serve", "tavern serve")
+      .replaceAll("https://opencode.ai/", "https://tavern.ai/")
   }
 }
 

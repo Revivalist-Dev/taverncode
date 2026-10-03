@@ -28,16 +28,16 @@ export interface Entry {
   virtual?: boolean
 }
 
-const SCHEMA = "https://app.kilo.ai/config.json"
+const SCHEMA = "https://app.tavern.ai/config.json"
 
-const MODERN = ["kilo.jsonc", "kilo.json"]
+const MODERN = ["tavern.jsonc", "tavern.json"]
 const LEGACY = ["opencode.jsonc", "opencode.json"]
 const FILES = [...MODERN, ...LEGACY]
-const GLOBAL = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json", "config.json"]
-const HOME = [".kilo", ".kilocode", ".opencode"]
+const GLOBAL = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json", "config.json"]
+const HOME = [".tavern", ".taverncode", ".opencode"]
 const SOURCES: Record<string, Source> = {
-  ".kilo": "sourceHomeKilo",
-  ".kilocode": "sourceHomeKilocode",
+  ".tavern": "sourceHomeKilo",
+  ".taverncode": "sourceHomeKilocode",
   ".opencode": "sourceHomeOpencode",
 }
 
@@ -49,7 +49,7 @@ function row(file: string, source: Source, loaded = true, recommended = false): 
     source,
     exists: existsSync(file),
     loaded: loaded && existsSync(file),
-    legacy: name.startsWith("opencode") || name === "config.json" || file.includes(`${path.sep}.kilocode${path.sep}`),
+    legacy: name.startsWith("opencode") || name === "config.json" || file.includes(`${path.sep}.taverncode${path.sep}`),
     recommended,
   }
 }
@@ -60,7 +60,7 @@ function ensure(list: Entry[], file: string, source: Source) {
 }
 
 export function globalFiles() {
-  const root = path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "kilo")
+  const root = path.join(process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config"), "tavern")
   const base = GLOBAL.map((file) => row(path.join(root, file), "sourceXdg")).filter((item) => item.exists)
   const dirs = HOME.flatMap((dir) => {
     const base = path.join(os.homedir(), dir)
@@ -72,7 +72,7 @@ export function globalFiles() {
   const dir = extra
     ? ensure(
         FILES.map((file) => row(path.join(extra, file), "sourceEnvDir")).filter((item) => item.exists),
-        path.join(extra, "kilo.jsonc"),
+        path.join(extra, "tavern.jsonc"),
         "sourceEnvDir",
       )
     : []
@@ -88,24 +88,24 @@ export function globalFiles() {
       ]
     : []
 
-  return ensure([...base, ...dirs, ...env, ...dir, ...virtual], path.join(root, "kilo.jsonc"), "sourceXdg")
+  return ensure([...base, ...dirs, ...env, ...dir, ...virtual], path.join(root, "tavern.jsonc"), "sourceXdg")
 }
 
 export function localFiles(root: string) {
   const enabled = !process.env.KILO_DISABLE_PROJECT_CONFIG
-  const dirs = [path.join(root, ".kilo"), root, path.join(root, ".kilocode"), path.join(root, ".opencode")]
+  const dirs = [path.join(root, ".tavern"), root, path.join(root, ".taverncode"), path.join(root, ".opencode")]
   const list = dirs.flatMap((dir) => FILES.map((file) => row(path.join(dir, file), localSource(root, dir), enabled)))
   return ensure(
     list.filter((item) => item.exists),
-    path.join(root, ".kilo", "kilo.jsonc"),
+    path.join(root, ".tavern", "tavern.jsonc"),
     "sourceProjectKilo",
   ).map((item) => (enabled ? item : { ...item, loaded: false }))
 }
 
 function localSource(root: string, dir: string) {
   if (dir === root) return "sourceProjectRoot"
-  if (dir.endsWith(`${path.sep}.kilo`)) return "sourceProjectKilo"
-  if (dir.endsWith(`${path.sep}.kilocode`)) return "sourceProjectKilocode"
+  if (dir.endsWith(`${path.sep}.tavern`)) return "sourceProjectKilo"
+  if (dir.endsWith(`${path.sep}.taverncode`)) return "sourceProjectKilocode"
   return "sourceProjectOpencode"
 }
 

@@ -2,7 +2,7 @@ import path from "path"
 import { MemoryToken } from "./token"
 import { MemorySchema } from "../schema"
 
-/** Byte-budget capping, freshness fingerprinting, and the index envelope (the ```kilo-memory-v1 block). */
+/** Byte-budget capping, freshness fingerprinting, and the index envelope (the ```tavern-memory-v1 block). */
 export namespace MemoryBudget {
   export type Result = {
     text: string
@@ -28,7 +28,7 @@ export namespace MemoryBudget {
   function wrap(input: { root: string; limits: MemorySchema.Limits; lines: string[] }) {
     if (input.lines.length === 0) return ""
     return [
-      "```kilo-memory-v1 context_not_instruction",
+      "```tavern-memory-v1 context_not_instruction",
       "scope: project",
       `root: ${rootName(input.root)}`,
       fingerprint(input.limits),
@@ -53,7 +53,7 @@ export namespace MemoryBudget {
 
     const lines = all.split("\n")
     const close = lines.findIndex((line, idx) => idx > 0 && line.trim() === "```")
-    if (lines[0]?.startsWith("```kilo-memory-v1") && close > 0) {
+    if (lines[0]?.startsWith("```tavern-memory-v1") && close > 0) {
       const foot = `${lines[close]}\n`
       // This branch always truncates, so reserve room for a note telling the model how to list the
       // rest — but never at tiny budgets where the note would displace actual memory.
@@ -102,7 +102,7 @@ export namespace MemoryBudget {
   }
 
   export function stale(input: string) {
-    return !input.trimStart().startsWith("```kilo-memory-v1")
+    return !input.trimStart().startsWith("```tavern-memory-v1")
   }
 
   export function result(input: { root: string; limits: MemorySchema.Limits; lines: string[]; max: number }) {

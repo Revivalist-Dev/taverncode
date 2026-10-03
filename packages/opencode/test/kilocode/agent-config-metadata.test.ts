@@ -2,7 +2,7 @@ import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"
 import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import { Agent } from "../../src/agent/agent"
-import { processConfigItem } from "../../src/kilocode/agent"
+import { processConfigItem } from "../../src/taverncode/agent"
 import { testEffect } from "../lib/effect"
 
 const it = testEffect(AppNodeBuilder.build(Agent.node))

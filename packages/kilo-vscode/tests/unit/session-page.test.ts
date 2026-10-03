@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { fetchSessionPage, mergeSessions, SESSION_PAGE_LIMIT } from "../../src/kilo-provider/session-page"
+import { fetchSessionPage, mergeSessions, SESSION_PAGE_LIMIT } from "../../src/tavern-provider/session-page"
 
 type Item = { id: string; time: { updated: number } }
 

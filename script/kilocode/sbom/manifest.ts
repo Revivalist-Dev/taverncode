@@ -1,7 +1,7 @@
 /**
  * Release evidence manifest.
  *
- * GitHub Releases is Kilo's chosen long-term SBOM record, so the release itself
+ * GitHub Releases is Tavern's chosen long-term SBOM record, so the release itself
  * has to state what evidence is supposed to exist. Counting "some SBOMs were
  * uploaded" is not enough: the manifest pins the exact artifact set, its
  * digests, and its sidecars, which is what turns a missing or stale sidecar into
@@ -131,7 +131,7 @@ export async function verify(input: { manifest: Manifest; dir: string }): Promis
     }
 
     const declared = (bom.metadata?.properties ?? []).find(
-      (item: { name?: string }) => item?.name === "kilocode:subject:sha256",
+      (item: { name?: string }) => item?.name === "taverncode:subject:sha256",
     )?.value
     if (declared !== entry.sha256) {
       issues.push(`${entry.sbom}: declares digest ${declared} but ${entry.artifact} is ${entry.sha256}`)
@@ -140,7 +140,7 @@ export async function verify(input: { manifest: Manifest; dir: string }): Promis
     }
 
     const subject = (bom.metadata?.properties ?? []).find(
-      (item: { name?: string }) => item?.name === "kilocode:subject:name",
+      (item: { name?: string }) => item?.name === "taverncode:subject:name",
     )?.value
     if (subject !== entry.artifact) {
       issues.push(`${entry.sbom}: declares subject ${subject} but is recorded for ${entry.artifact}`)

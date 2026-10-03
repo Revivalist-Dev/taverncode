@@ -8,7 +8,7 @@
  */
 
 import type { Meta, StoryObj } from "storybook-solidjs-vite"
-import type { AssistantMessage } from "@kilocode/sdk/v2"
+import type { AssistantMessage } from "@taverncode/sdk/v2"
 import { batch, createEffect, createSignal, onCleanup, onMount } from "solid-js"
 import { StoryProviders, defaultMockData, mockSessionValue } from "./StoryProviders"
 import { ChatView } from "../components/chat/ChatView"
@@ -276,7 +276,7 @@ function reviewMessage(comments: ReviewCommentEntry[]) {
       messageID: message.id,
       type: "text",
       text: `${prefix}\n\nPlease address these review comments.`,
-      metadata: { kilo: { review: { version: 1, comments } } },
+      metadata: { tavern: { review: { version: 1, comments } } },
     },
   ]
   return <VscodeUserMessage message={message} parts={parts} />
@@ -350,9 +350,9 @@ export const UserMessageMixedReviewComments: Story = {
             selectedText: "const draft = drafts.get(session)",
           },
           {
-            id: "pr-kilo",
+            id: "pr-tavern",
             origin: "pr",
-            author: "kilo-code-bot",
+            author: "tavern-code-bot",
             file: "src/review.ts",
             line: 12,
             side: "additions",
@@ -431,8 +431,8 @@ export const UserMessageBrowserFeedback: Story = {
 }
 
 /**
- * Builds the user message a prompt Kilo composed produces. `title` marks the
- * part through `metadata.kilo.injected`; without a title the body itself is
+ * Builds the user message a prompt Tavern composed produces. `title` marks the
+ * part through `metadata.tavern.injected`; without a title the body itself is
  * inspected, which is how the pull request fix instruction is recognised.
  */
 function injectedMessage(text: string, title?: string) {
@@ -466,7 +466,7 @@ function InjectedStory(props: { text: string; title?: string }) {
 }
 
 const REVIEW_TEMPLATE_BODY = [
-  "You are Kilo Code, an expert code reviewer focused on high-confidence security, performance, business logic, deploy safety, duplication, and dead-code findings.",
+  "You are Tavern Code, an expert code reviewer focused on high-confidence security, performance, business logic, deploy safety, duplication, and dead-code findings.",
   "",
   "During the initial review phase, your role is advisory: provide clear, actionable feedback but DO NOT modify any files.",
   "",
@@ -698,7 +698,7 @@ const spacingParts = {
       state: {
         status: "completed",
         input: { command: "pwd", description: "Print current directory" },
-        output: "/Users/marius/Documents/git/kilocode/.kilo/worktrees/zest-kettledrum",
+        output: "/Users/marius/Documents/git/taverncode/.tavern/worktrees/zest-kettledrum",
         title: "pwd",
         metadata: {},
         time: { start: toolNow - 7000, end: toolNow - 6500 },
@@ -1252,7 +1252,7 @@ const headerMessages: Message[] = [
     createdAt: new Date(headerNow - 10000).toISOString(),
     time: { created: headerNow - 10000 },
     modelID: "anthropic/claude-sonnet-4-6",
-    providerID: "kilo",
+    providerID: "tavern",
     mode: "default",
     agent: "code",
     path: { cwd: "/project", root: "/project" },
@@ -1516,7 +1516,7 @@ const usageData = {
     tokens: { input: 25_908_400, output: 52_710, reasoning: 4_220, cache: { read: 10_514_000, write: 80_900 } },
   },
   models: [
-    { providerID: "kilo", modelID: "qwen/qwen3.7-plus-20260602", steps: 3, cost: 0.067214, tokens: usageTokens },
+    { providerID: "tavern", modelID: "qwen/qwen3.7-plus-20260602", steps: 3, cost: 0.067214, tokens: usageTokens },
     {
       providerID: "minimax",
       modelID: "minimax-m3",
@@ -1527,9 +1527,9 @@ const usageData = {
   ],
 } satisfies SessionModelUsage
 const usageProviders = {
-  kilo: {
-    id: "kilo",
-    name: "Kilo Gateway",
+  tavern: {
+    id: "tavern",
+    name: "Tavern Gateway",
     models: {
       "qwen/qwen3.7-plus": { id: "qwen/qwen3.7-plus", name: "Qwen: Qwen3.7 Plus (20% off)" },
     },
@@ -1542,9 +1542,9 @@ const usageProviders = {
 }
 const usageProvider = {
   providers: () => usageProviders,
-  connected: () => ["kilo", "minimax"],
+  connected: () => ["tavern", "minimax"],
   defaults: () => ({}),
-  defaultSelection: () => ({ providerID: "kilo", modelID: "qwen/qwen3.7-plus" }),
+  defaultSelection: () => ({ providerID: "tavern", modelID: "qwen/qwen3.7-plus" }),
   models: () => [],
   findModel: () => undefined,
   authMethods: () => ({}),
@@ -1591,9 +1591,9 @@ export const TaskUsageExpanded200: Story = {
 
 const MOCK_NOTIFICATION = {
   id: "notif-1",
-  title: "Try BYOK for Kilo Gateway",
-  message: "Bring your own API key for even more flexibility with Kilo Gateway models.",
-  action: { actionText: "Learn more", actionURL: "https://kilo.ai/docs" },
+  title: "Try BYOK for Tavern Gateway",
+  message: "Bring your own API key for even more flexibility with Tavern Gateway models.",
+  action: { actionText: "Learn more", actionURL: "https://tavern.ai/docs" },
 }
 
 /** Mock server context with profile data so AccountSwitcher is visible */
@@ -1606,9 +1606,9 @@ const mockServer = {
   isConnected: () => true,
   profileData: () => ({
     profile: {
-      email: "dev@kilo.dev",
+      email: "dev@tavern.dev",
       name: "Dev User",
-      organizations: [{ id: "org-1", name: "Kilo Org", role: "member" }],
+      organizations: [{ id: "org-1", name: "Tavern Org", role: "member" }],
     },
     balance: { balance: 5.0 },
     currentOrgId: "org-1",

@@ -1,6 +1,6 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import { describe, expect, test } from "bun:test"
-import { normalizeUrls } from "../../../src/kilocode/util/url"
+import { normalizeUrls } from "../../../src/taverncode/util/url"
 
 describe("normalizeUrls", () => {
   describe("homograph / IDN conversion", () => {
@@ -107,7 +107,7 @@ describe("normalizeUrls", () => {
     })
 
     test("leaves a plain-ASCII command entirely unchanged", () => {
-      const input = "curl -sSf https://kilo.ai/update.sh | bash"
+      const input = "curl -sSf https://tavern.ai/update.sh | bash"
       expect(normalizeUrls(input)).toBe(input)
     })
   })

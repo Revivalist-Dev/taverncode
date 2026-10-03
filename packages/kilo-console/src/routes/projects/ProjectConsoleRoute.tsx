@@ -12,14 +12,14 @@ import {
   Show,
   Suspense,
 } from "solid-js"
-import { Badge } from "@kilocode/kilo-web-ui/badge"
-import { Button } from "@kilocode/kilo-web-ui/button"
-import { Card } from "@kilocode/kilo-web-ui/card"
-import { Icon } from "@kilocode/kilo-web-ui/icon"
-import { ResizeHandle } from "@kilocode/kilo-web-ui/resize-handle"
-import { Spinner } from "@kilocode/kilo-web-ui/spinner"
-import { FileComponentProvider } from "@kilocode/kilo-web-ui/context/file"
-import type { SessionReviewDiffStyle } from "@kilocode/kilo-web-ui/session-review"
+import { Badge } from "@taverncode/tavern-web-ui/badge"
+import { Button } from "@taverncode/tavern-web-ui/button"
+import { Card } from "@taverncode/tavern-web-ui/card"
+import { Icon } from "@taverncode/tavern-web-ui/icon"
+import { ResizeHandle } from "@taverncode/tavern-web-ui/resize-handle"
+import { Spinner } from "@taverncode/tavern-web-ui/spinner"
+import { FileComponentProvider } from "@taverncode/tavern-web-ui/context/file"
+import type { SessionReviewDiffStyle } from "@taverncode/tavern-web-ui/session-review"
 import { ConfirmDialog } from "../../components/ConfirmDialog"
 import { LoadingScreen } from "../../components/LoadingScreen"
 import { PromptDialog } from "../../components/PromptDialog"
@@ -65,9 +65,9 @@ const GhosttyTerminal = lazy(() =>
   import("./terminal/GhosttyTerminal").then((mod) => ({ default: mod.GhosttyTerminal })),
 )
 const SessionReview = lazy(() =>
-  import("@kilocode/kilo-web-ui/session-review").then((mod) => ({ default: mod.SessionReview })),
+  import("@taverncode/tavern-web-ui/session-review").then((mod) => ({ default: mod.SessionReview })),
 )
-const File = lazy(() => import("@kilocode/kilo-web-ui/file").then((mod) => ({ default: mod.File })))
+const File = lazy(() => import("@taverncode/tavern-web-ui/file").then((mod) => ({ default: mod.File })))
 
 const ui = new Set(["3017", "3018"])
 
@@ -169,8 +169,8 @@ export function ProjectConsoleRoute() {
   const search = createMemo(() => new URLSearchParams(loc.search))
   const fallback = () => base(search())
   const [url, setUrl] = createSignal(fallback())
-  const [selected, setSelected] = createSignal(window.localStorage.getItem(`kilo.console.${params.project}.dir`) ?? "")
-  const [active, setActive] = createSignal(window.localStorage.getItem(`kilo.console.${params.project}.pty`) ?? "")
+  const [selected, setSelected] = createSignal(window.localStorage.getItem(`tavern.console.${params.project}.dir`) ?? "")
+  const [active, setActive] = createSignal(window.localStorage.getItem(`tavern.console.${params.project}.pty`) ?? "")
   const [local, setLocal] = createSignal<ProjectTerminalItem[]>([])
   const [openFiles, setOpenFiles] = createSignal<string[]>([])
   const [details, setDetails] = createSignal<Record<string, ProjectDiffItem>>({})
@@ -287,7 +287,7 @@ export function ProjectConsoleRoute() {
   }
 
   function labelKey(dir: string) {
-    return `kilo.console.${project()}.worktree.${encodeURIComponent(dir)}.label`
+    return `tavern.console.${project()}.worktree.${encodeURIComponent(dir)}.label`
   }
 
   function displayLabel(item: Context) {
@@ -356,12 +356,12 @@ export function ProjectConsoleRoute() {
   }
 
   function remember(dir: string, pty?: string) {
-    window.localStorage.setItem(`kilo.console.${project()}.dir`, dir)
+    window.localStorage.setItem(`tavern.console.${project()}.dir`, dir)
     if (pty) {
-      window.localStorage.setItem(`kilo.console.${project()}.pty`, pty)
+      window.localStorage.setItem(`tavern.console.${project()}.pty`, pty)
       return
     }
-    window.localStorage.removeItem(`kilo.console.${project()}.pty`)
+    window.localStorage.removeItem(`tavern.console.${project()}.pty`)
   }
 
   function select(item: Context) {
@@ -467,7 +467,7 @@ export function ProjectConsoleRoute() {
     run("Creating worktree", async () => {
       const next = await createProjectWorktree(input, name)
       setSelected(next.directory)
-      window.localStorage.setItem(`kilo.console.${project()}.dir`, next.directory)
+      window.localStorage.setItem(`tavern.console.${project()}.dir`, next.directory)
     })
   }
 
@@ -475,7 +475,7 @@ export function ProjectConsoleRoute() {
     const base = query()
     if (!base || !item) return
     const input = { url: base.url, dir: item.dir, scope: "project" as const }
-    const label = `Kilo ${terminalsFor(item.dir).length + 1}`
+    const label = `Tavern ${terminalsFor(item.dir).length + 1}`
     setSaving("Creating session")
     setFailure(undefined)
     void createProjectPty(input, item.dir, label)
@@ -495,7 +495,7 @@ export function ProjectConsoleRoute() {
     setLocal((rows) => rows.filter((row) => row.id !== id))
     if (active() === id) {
       setActive("")
-      window.localStorage.removeItem(`kilo.console.${project()}.pty`)
+      window.localStorage.removeItem(`tavern.console.${project()}.pty`)
     }
   }
 
@@ -983,7 +983,7 @@ export function ProjectConsoleRoute() {
         <Show when={!terminal() && !snap.loading && !snap.error && !failure()}>
           <div class="project-terminal-empty">
             <strong>No terminal session selected</strong>
-            <span>Use + next to a worktree to start Kilo CLI.</span>
+            <span>Use + next to a worktree to start Tavern CLI.</span>
           </div>
         </Show>
       </main>

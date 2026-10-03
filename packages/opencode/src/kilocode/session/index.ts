@@ -2,7 +2,7 @@ import { prepareForkedPart as _prepareForkedPart, remapChildren as _remapChildre
 import z from "zod"
 import { Cause, Effect, Schema } from "effect"
 import { Bus } from "@/bus"
-import { Instance, type InstanceContext } from "@/kilocode/instance"
+import { Instance, type InstanceContext } from "@/taverncode/instance"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceRef } from "@/effect/instance-ref"
 import { InstanceState } from "@/effect/instance-state"
@@ -17,14 +17,14 @@ import { SessionTable } from "@opencode-ai/core/session/sql"
 import * as Log from "@opencode-ai/core/util/log"
 import type { ProviderMetadata, Usage } from "@opencode-ai/llm"
 import type { Provider } from "@/provider/provider"
-import { ENV_FEATURE } from "@kilocode/kilo-gateway"
+import { ENV_FEATURE } from "@taverncode/tavern-gateway"
 import { existsSync } from "fs"
 import path from "path"
 import { iife } from "@/util/iife"
 import { KiloSessionEvent, type KiloSessionCloseReason } from "./event"
 
 export namespace KiloSession {
-  const log = Log.create({ service: "session.kilo" })
+  const log = Log.create({ service: "session.tavern" })
 
   // ---------------------------------------------------------------------------
   // Events
@@ -177,7 +177,7 @@ export namespace KiloSession {
   }
 
   // ---------------------------------------------------------------------------
-  // Provider-reported cost (Kilo / OpenRouter / Vercel AI Gateway)
+  // Provider-reported cost (Tavern / OpenRouter / Vercel AI Gateway)
   // ---------------------------------------------------------------------------
 
   /**
@@ -185,14 +185,14 @@ export namespace KiloSession {
    *
    * Supports the following internal transports:
    *   1. OpenRouter chat completions  -> `metadata.openrouter.usage.cost`
-   *                                      (`costDetails.upstreamInferenceCost` for Kilo
+   *                                      (`costDetails.upstreamInferenceCost` for Tavern
    *                                      and for BYOK-routed requests)
    *   2. Anthropic Messages or OpenAI Responses via OpenRouter
    *                                   -> `usage.providerMetadata.aiSdk.cost_details`
    *   3. Anthropic Messages or OpenAI Responses via Vercel AI Gateway
    *                                   -> `metadata.gateway.marketCost`
    *
-   * Kilo does not charge end users a per-request fee, so for the Kilo provider the
+   * Tavern does not charge end users a per-request fee, so for the Tavern provider the
    * top-level `cost` field (the gateway/marketplace fee) would understate the user's
    * actual upstream spend. Always prefer the upstream/market cost when present.
    *
@@ -213,7 +213,7 @@ export namespace KiloSession {
     provider?: Provider.Info
     providerID: string
   }): number | undefined {
-    const isKilo = (input.provider?.id ?? input.providerID) === "kilo"
+    const isKilo = (input.provider?.id ?? input.providerID) === "tavern"
 
     const num = (value: unknown): number | undefined => {
       if (value === undefined || value === null) return undefined
@@ -228,7 +228,7 @@ export namespace KiloSession {
     if (orUsage) {
       const upstream = num(orUsage.costDetails?.upstreamInferenceCost)
       const regular = num(orUsage.cost)
-      // Kilo doesn't charge a fee on top of the upstream inference cost, so for Kilo
+      // Tavern doesn't charge a fee on top of the upstream inference cost, so for Tavern
       // prefer the upstream cost (the user's true spend). For the OpenRouter provider
       // itself, the regular `cost` field is what the user is billed — except when the
       // request routes through a BYOK provider key: then OpenRouter bills the account
@@ -241,16 +241,16 @@ export namespace KiloSession {
       if (regular !== undefined) return regular
     }
 
-    // 2. Anthropic Messages or OpenAI Responses via OpenRouter. The Kilo Gateway wrapper
+    // 2. Anthropic Messages or OpenAI Responses via OpenRouter. The Tavern Gateway wrapper
     //    restores the verbatim usage payload under the AI SDK's raw usage escape hatch.
-    //    Kilo doesn't charge end users a per-request fee, so only upstream cost is relevant.
+    //    Tavern doesn't charge end users a per-request fee, so only upstream cost is relevant.
     const usage = input.usage?.providerMetadata
     const aiSdk = usage?.["aiSdk"]?.["cost_details"] as { upstream_inference_cost?: number } | undefined
     const upstream = num(aiSdk?.upstream_inference_cost)
     if (upstream !== undefined) return upstream
 
     // 3. Anthropic Messages or OpenAI Responses via Vercel AI Gateway. `cost` is the
-    //    gateway fee that Kilo would pass through, but Kilo doesn't charge end users a
+    //    gateway fee that Tavern would pass through, but Tavern doesn't charge end users a
     //    per-request fee, so always use `marketCost` (the upstream provider's price).
     //    Values are emitted as strings on the wire.
     const gateway = input.metadata?.["gateway"] as { marketCost?: string | number } | undefined
@@ -266,20 +266,20 @@ export namespace KiloSession {
 
   export function shareSession(id: SessionID) {
     return EffectBridge.fromPromise(async () => {
-      const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+      const { KiloSessions } = await import("@/tavern-sessions/tavern-sessions")
       return KiloSessions.share(id)
     }).pipe(Effect.catchCause((cause) => Effect.fail(Cause.squash(cause))))
   }
 
   export function unshareSession(id: SessionID) {
     return EffectBridge.fromPromise(async () => {
-      const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+      const { KiloSessions } = await import("@/tavern-sessions/tavern-sessions")
       await KiloSessions.unshare(id)
     }).pipe(Effect.catchCause((cause) => Effect.fail(Cause.squash(cause))))
   }
 
   export async function removeSession(id: string): Promise<void> {
-    const { KiloSessions } = await import("@/kilo-sessions/kilo-sessions")
+    const { KiloSessions } = await import("@/tavern-sessions/tavern-sessions")
     await KiloSessions.remove(id).catch(() => {})
   }
 
@@ -302,8 +302,8 @@ export namespace KiloSession {
       yield* Effect.tryPromise(async () => {
         const [app, wake, goal] = await Promise.all([
           import("@/effect/app-runtime"),
-          import("@/kilocode/wakeup"),
-          import("@/kilocode/session/goal/link"),
+          import("@/taverncode/wakeup"),
+          import("@/taverncode/session/goal/link"),
         ])
         // Drop the per-session goal link state (the arm closure that retains this
         // process's service graph, the wait record, and any queued fire) before
@@ -443,7 +443,7 @@ export namespace KiloSession {
           if (!Filesystem.contains(root, dir) || nested(root, dir)) continue
           const rel = path.relative(root, dir)
           const parts = rel.split(path.sep)
-          if ((parts[0] === ".kilo" || parts[0] === ".kilocode") && parts[1] === "worktrees" && parts[2]) {
+          if ((parts[0] === ".tavern" || parts[0] === ".taverncode") && parts[1] === "worktrees" && parts[2]) {
             return path.join(root, parts[0], parts[1], parts[2])
           }
           return root

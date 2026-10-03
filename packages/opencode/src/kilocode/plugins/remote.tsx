@@ -1,5 +1,5 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
-import { RemoteIndicator } from "@/kilocode/remote-tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@taverncode/plugin/tui"
+import { RemoteIndicator } from "@/taverncode/remote-tui"
 
 const id = "internal:remote"
 
@@ -9,7 +9,7 @@ function View(props: { api: TuiPluginApi }) {
       <RemoteIndicator
         sdk={{ client: props.api.client }}
         theme={props.api.theme.current}
-        kilo={true}
+        tavern={true}
         event={props.api.event}
       />
     </box>

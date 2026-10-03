@@ -1,13 +1,13 @@
 export const dict = {
-  "kilocode:attention.done": "Kilo ukończył zadanie.",
-  "kilocode:attention.question": "Kilo potrzebuje twojej odpowiedzi.",
-  "kilocode:attention.permission": "Kilo potrzebuje uprawnienia.",
-  "kilocode:attention.error": "Kilo zatrzymał zadanie z powodu błędu.",
-  "kilocode:attention.show": "Pokaż",
-  "kilocode:attention.workspace": "Obszar roboczy",
-  "kilocode:attention.session": "Sesja",
-  "kilocode:attention.test": "To jest powiadomienie testowe z Kilo Code.",
-  "kilocode:attention.unsupported": "Powiadomienia systemu operacyjnego nie są obsługiwane na tej platformie.",
-  "kilocode:attention.identity":
+  "taverncode:attention.done": "Tavern ukończył zadanie.",
+  "taverncode:attention.question": "Tavern potrzebuje twojej odpowiedzi.",
+  "taverncode:attention.permission": "Tavern potrzebuje uprawnienia.",
+  "taverncode:attention.error": "Tavern zatrzymał zadanie z powodu błędu.",
+  "taverncode:attention.show": "Pokaż",
+  "taverncode:attention.workspace": "Obszar roboczy",
+  "taverncode:attention.session": "Sesja",
+  "taverncode:attention.test": "To jest powiadomienie testowe z Tavern Code.",
+  "taverncode:attention.unsupported": "Powiadomienia systemu operacyjnego nie są obsługiwane na tej platformie.",
+  "taverncode:attention.identity":
     "Nie udało się ustalić tożsamości powiadomień tego edytora, więc powiadomienia natywne są niedostępne. Powiadomienia VS Code nadal działają.",
 }

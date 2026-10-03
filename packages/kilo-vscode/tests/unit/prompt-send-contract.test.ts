@@ -7,7 +7,7 @@
  * permission counts, never question counts — guarantees that a pending question
  * cannot re-block the prompt input.
  *
- * Protects against accidental removal during Kilo development.
+ * Protects against accidental removal during Tavern development.
  */
 
 import { describe, it, expect } from "bun:test"
@@ -23,7 +23,7 @@ const AGENT_MANAGER_FILE = path.join(ROOT, "webview-ui/agent-manager/AgentManage
 const PROMPT_UTILS_FILE = path.join(ROOT, "webview-ui/src/components/chat/prompt-input-utils.ts")
 const PROMPT_FILE = path.join(ROOT, "webview-ui/src/components/chat/PromptInput.tsx")
 const KILOPROVIDER_FILE = path.join(ROOT, "src/KiloProvider.ts")
-const CLOUD_SESSION_FILE = path.join(ROOT, "src/kilo-provider/handlers/cloud-session.ts")
+const CLOUD_SESSION_FILE = path.join(ROOT, "src/tavern-provider/handlers/cloud-session.ts")
 const CONNECTION_SERVICE_FILE = path.join(ROOT, "src/services/cli-backend/connection-service.ts")
 
 function readFile(filePath: string): string {

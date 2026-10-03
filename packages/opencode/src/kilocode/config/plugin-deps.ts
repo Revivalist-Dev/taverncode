@@ -12,7 +12,7 @@ export function installLocalPluginDependency(npm: Npm.Interface, dir: string, ve
     .install(dir, {
       add: [
         {
-          name: "@kilocode/plugin",
+          name: "@taverncode/plugin",
           version: local ? undefined : version,
         },
       ],

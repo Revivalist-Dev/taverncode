@@ -1,6 +1,6 @@
 import { test, expect, describe } from "bun:test"
 import { Provider } from "../../../src/provider/provider"
-import { formatTable, formatMarkdown, handle, isTextModel, outputLimit } from "../../../src/kilocode/cli/cmd/roll-call"
+import { formatTable, formatMarkdown, handle, isTextModel, outputLimit } from "../../../src/taverncode/cli/cmd/roll-call"
 
 const base = {
   input: { text: false, audio: false, image: false, video: false, pdf: false },
@@ -20,8 +20,8 @@ function caps(opts: { input?: Partial<typeof base.input>; output?: Partial<typeo
 describe("formatTable", () => {
   test("formats simple table correctly", () => {
     const rows = [
-      ["kilo/test-model", "YES", "Hello!", "1000ms"],
-      ["kilo/another-model", "NO", "(Error)", "500ms"],
+      ["tavern/test-model", "YES", "Hello!", "1000ms"],
+      ["tavern/another-model", "NO", "(Error)", "500ms"],
     ]
     const result = formatTable(rows, 120)
 

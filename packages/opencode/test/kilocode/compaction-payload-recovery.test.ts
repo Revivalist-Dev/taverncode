@@ -9,8 +9,8 @@ import { LLMEvent, type LLMEvent as Event } from "@opencode-ai/llm"
 import { Bus } from "../../src/bus"
 import { Config } from "../../src/config/config"
 import { RuntimeFlags } from "../../src/effect/runtime-flags"
-import { KiloCompactionPayloadRecovery } from "../../src/kilocode/session/compaction-payload-recovery"
-import { KiloSessionCompaction } from "../../src/kilocode/session/compaction"
+import { KiloCompactionPayloadRecovery } from "../../src/taverncode/session/compaction-payload-recovery"
+import { KiloSessionCompaction } from "../../src/taverncode/session/compaction"
 import { provideTestInstance } from "../fixture/fixture"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -180,7 +180,7 @@ afterEach(() => {
 })
 
 describe("KiloCompactionPayloadRecovery", () => {
-  test("detects Kilo gateway payload-size errors", () => {
+  test("detects Tavern gateway payload-size errors", () => {
     const error = new MessageV2.ContextOverflowError({
       message: "Request Entity Too Large",
       responseBody: "Request Entity Too Large\n\nFUNCTION_PAYLOAD_TOO_LARGE",
@@ -271,7 +271,7 @@ describe("KiloCompactionPayloadRecovery", () => {
         return Stream.fail(
           new APICallError({
             message: "Request Entity Too Large",
-            url: "https://api.kilo.ai/api/openrouter/responses",
+            url: "https://api.tavern.ai/api/openrouter/responses",
             requestBodyValues: {},
             statusCode: 413,
             responseHeaders: { "content-type": "text/plain" },

@@ -1,9 +1,9 @@
 import { Component, Show, createSignal, createMemo, createEffect, onMount } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Card } from "@kilocode/kilo-ui/card"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Card } from "@taverncode/tavern-ui/card"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 import DeviceAuthCard from "./DeviceAuthCard"
@@ -100,7 +100,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
   }
 
   const handleDashboard = () => {
-    vscode.postMessage({ type: "openExternal", url: "https://app.kilo.ai/profile" })
+    vscode.postMessage({ type: "openExternal", url: "https://app.tavern.ai/profile" })
   }
 
   const openExternal = (url: string) => {
@@ -108,11 +108,11 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
   }
 
   const handleTopUp = () => {
-    vscode.postMessage({ type: "openExternal", url: "https://app.kilo.ai/credits" })
+    vscode.postMessage({ type: "openExternal", url: "https://app.tavern.ai/credits" })
   }
 
   const handleGetPass = () => {
-    vscode.postMessage({ type: "openExternal", url: "https://kilo.ai/pricing/kilo-pass" })
+    vscode.postMessage({ type: "openExternal", url: "https://tavern.ai/pricing/tavern-pass" })
   }
 
   const handleCancelLogin = () => {
@@ -147,7 +147,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
           gap: "8px",
         }}
       >
-        <h2 style={{ "font-size": "var(--kilo-font-size-16)", "font-weight": "600", margin: 0 }}>
+        <h2 style={{ "font-size": "var(--tavern-font-size-16)", "font-weight": "600", margin: 0 }}>
           {language.t("profile.title")}
         </h2>
       </div>
@@ -175,7 +175,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
                   <>
                     <p
                       style={{
-                        "font-size": "var(--kilo-font-size-13)",
+                        "font-size": "var(--tavern-font-size-13)",
                         color: "var(--vscode-descriptionForeground)",
                         margin: "0 0 8px 0",
                       }}
@@ -207,7 +207,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
               <Card>
                 <p
                   style={{
-                    "font-size": "var(--kilo-font-size-14)",
+                    "font-size": "var(--tavern-font-size-14)",
                     "font-weight": "600",
                     color: "var(--vscode-foreground)",
                     margin: "0 0 4px 0",
@@ -217,7 +217,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
                 </p>
                 <p
                   style={{
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--tavern-font-size-12)",
                     color: "var(--vscode-descriptionForeground)",
                     margin: 0,
                   }}
@@ -231,7 +231,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
                 <Card>
                   <p
                     style={{
-                      "font-size": "var(--kilo-font-size-11)",
+                      "font-size": "var(--tavern-font-size-11)",
                       "text-transform": "uppercase",
                       "letter-spacing": "0.5px",
                       color: "var(--vscode-descriptionForeground)",
@@ -262,7 +262,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
                       <div>
                         <p
                           style={{
-                            "font-size": "var(--kilo-font-size-11)",
+                            "font-size": "var(--tavern-font-size-11)",
                             "text-transform": "uppercase",
                             "letter-spacing": "0.5px",
                             color: "var(--vscode-descriptionForeground)",
@@ -273,7 +273,7 @@ const ProfileView: Component<ProfileViewProps> = (props) => {
                         </p>
                         <p
                           style={{
-                            "font-size": "var(--kilo-font-size-18)",
+                            "font-size": "var(--tavern-font-size-18)",
                             "font-weight": "600",
                             color: "var(--vscode-foreground)",
                             margin: 0,

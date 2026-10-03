@@ -7,10 +7,10 @@
 // that choice onto the child session. The typed text is also marked so the
 // server can tell a human steer apart from the parent's own task-tool prompt and
 // notify the parent over the shared agent board.
-import type { Session } from "@kilocode/sdk/v2"
+import type { Session } from "@taverncode/sdk/v2"
 import { running } from "../util/session"
 
-// Must match `KIND` in packages/opencode/src/kilocode/session/steering.ts.
+// Must match `KIND` in packages/opencode/src/taverncode/session/steering.ts.
 export const KIND = "subagent_steer"
 
 type Target = Pick<Session, "parentID" | "agent" | "model"> | undefined

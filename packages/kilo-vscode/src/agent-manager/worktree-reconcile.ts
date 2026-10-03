@@ -1,6 +1,6 @@
 /**
  * Reconciles the three views of a worktree that drift apart over time: the row in
- * `.kilo/agent-manager.json`, the entry in `git worktree list`, and the directory on disk.
+ * `.tavern/agent-manager.json`, the entry in `git worktree list`, and the directory on disk.
  *
  * Drift is normal — users delete worktrees by hand, `git worktree prune` runs elsewhere, branches
  * get deleted after a merge. What is not acceptable is polling paths that cannot answer, reporting
@@ -37,10 +37,10 @@ export type WorktreeHealthEntry = {
   sessions: number
 }
 
-/** A directory under `.kilo/worktrees/` that no state row and no git entry claims. */
+/** A directory under `.tavern/worktrees/` that no state row and no git entry claims. */
 export type OrphanDirectory = {
   path: string
-  /** `broken` still has a `.git` file; `leftover` is a bare directory, e.g. only `.kilo-dev/`. */
+  /** `broken` still has a `.git` file; `leftover` is a bare directory, e.g. only `.tavern-dev/`. */
   kind: "broken" | "leftover"
   /** Apparent size in bytes, filled in asynchronously by orphans/sizing.ts. Absent until it lands. */
   bytes?: number
@@ -71,7 +71,7 @@ export type WorktreeHealthReport = {
 export interface ReconcileDeps {
   /** Repository root; relative state paths resolve against it. */
   root: string
-  /** Absolute `.kilo/worktrees` directory that {@link ReconcileDeps.dirs} lists. */
+  /** Absolute `.tavern/worktrees` directory that {@link ReconcileDeps.dirs} lists. */
   dir: string
   /** State rows to classify. */
   rows: () => { id: string; path: string; branch: string }[]
@@ -79,7 +79,7 @@ export interface ReconcileDeps {
   sessions: (id: string) => number
   /** Normalized paths git currently tracks, or undefined when the listing failed. */
   registered: () => Promise<Set<string> | undefined>
-  /** Directory names directly under `.kilo/worktrees/`, excluding temp dirs. */
+  /** Directory names directly under `.tavern/worktrees/`, excluding temp dirs. */
   dirs: () => Promise<string[]>
   exists: (target: string) => Promise<boolean>
   branchExists: (branch: string) => Promise<boolean>
@@ -105,7 +105,7 @@ function degraded(rows: { id: string; path: string; branch: string }[], sessions
 }
 
 /**
- * Classify every tracked worktree and every directory under `.kilo/worktrees/`, prune stale git
+ * Classify every tracked worktree and every directory under `.tavern/worktrees/`, prune stale git
  * metadata once when something is actually stale, and drop only the state rows that cannot lose
  * anything. Returns the report the UI and the diagnostics command both render.
  */
@@ -155,7 +155,7 @@ export async function reconcileWorktrees(deps: ReconcileDeps): Promise<WorktreeH
   }
 
   // The registration snapshot is older than the directory listing by every await above, and
-  // `.kilo/worktrees/` is written by more than this reconcile: the worktree pool creates and removes
+  // `.tavern/worktrees/` is written by more than this reconcile: the worktree pool creates and removes
   // slot checkouts on a timer, and a create can land mid-pass. A directory that git registered in
   // the meantime is not an orphan, so candidates are checked against a fresh listing rather than
   // reported from a stale one — otherwise a slot the pool just built is offered for deletion, and
@@ -171,7 +171,7 @@ export async function reconcileWorktrees(deps: ReconcileDeps): Promise<WorktreeH
   }
 
   if (orphans.length > 0) {
-    deps.log(`worktree health: ${orphans.length} orphaned directory(ies) under .kilo/worktrees (not removed)`)
+    deps.log(`worktree health: ${orphans.length} orphaned directory(ies) under .tavern/worktrees (not removed)`)
   }
   return { entries, orphans, dropped, pruned: stale, degraded: false }
 }

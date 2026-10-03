@@ -1,15 +1,15 @@
 ---
 title: "Migrating from Cursor/Windsurf"
-description: "Guide for migrating to Kilo Code from other AI coding tools"
+description: "Guide for migrating to Tavern Code from other AI coding tools"
 ---
 
 # Migrating from Cursor or Windsurf
 
-Quickly migrate your custom rules from Cursor or Windsurf to Kilo Code. The process typically takes just a few minutes per project.
+Quickly migrate your custom rules from Cursor or Windsurf to Tavern Code. The process typically takes just a few minutes per project.
 
 {% callout type="info" title="Two Workflow Approaches"%}
 
-Kilo Code supports **two complementary workflows**—choose the one that fits your style, or use both:
+Tavern Code supports **two complementary workflows**—choose the one that fits your style, or use both:
 
 1. **Autocomplete (Ghost)**: Tab-to-accept inline suggestions as you type, similar to Cursor and Windsurf. Enable via Settings → Ghost.
 2. **Chat-driven**: Describe what you want in the chat panel and the AI generates complete implementations.
@@ -18,9 +18,9 @@ Many developers combine both approaches: autocomplete for quick completions whil
 
 {% /callout %}
 
-## Why Kilo Code's Rules System?
+## Why Tavern Code's Rules System?
 
-Kilo Code simplifies AI configuration while adding powerful new capabilities:
+Tavern Code simplifies AI configuration while adding powerful new capabilities:
 
 - **Simple format**: Plain Markdown files—no YAML frontmatter or GUI configuration required
 - **Mode-specific rules**: Different rules for different workflows (Code, Debug, Ask, custom modes)
@@ -36,15 +36,15 @@ Choose your current tool:
 
 ## Migrating from Cursor
 
-### What's Different in Kilo Code
+### What's Different in Tavern Code
 
-| Cursor | Kilo Code | Key Difference |
+| Cursor | Tavern Code | Key Difference |
 |---|---|---|
-| `.cursor/rules/*.mdc` with YAML frontmatter | `.kilo/rules/*.md` plain Markdown | No YAML metadata required |
+| `.cursor/rules/*.mdc` with YAML frontmatter | `.tavern/rules/*.md` plain Markdown | No YAML metadata required |
 | `alwaysApply: true/false` metadata | File location determines scope | Scope controlled by directory structure |
 | `globs: ["*.ts"]` for file patterns | Mode-specific directories or custom modes | File patterns handled via custom modes |
 | `description` for AI activation | Clear file names and organization | Relies on explicit file organization |
-| Global rules in UI settings | `~/.kilo/rules/*.md` files | Global rules stored as files in home folder |
+| Global rules in UI settings | `~/.tavern/rules/*.md` files | Global rules stored as files in home folder |
 
 ### Migration Steps
 
@@ -55,10 +55,10 @@ ls -la .cursor/rules/        # Project rules
 ls -la .cursorrules          # Legacy file (if present)
 ```
 
-**2. Create Kilo Code directory:**
+**2. Create Tavern Code directory:**
 
 ```bash
-mkdir -p .kilo/rules
+mkdir -p .tavern/rules
 ```
 
 **3. Convert `.mdc` files to `.md`:**
@@ -79,7 +79,7 @@ alwaysApply: false
 - Prefer functional components in React
 ```
 
-**Kilo Code format:**
+**Tavern Code format:**
 
 ```markdown
 # TypeScript Standards
@@ -94,7 +94,7 @@ alwaysApply: false
 # Copy all files
 for file in .cursor/rules/*.mdc; do
   basename="${file##*/}"
-  cp "$file" ".kilo/rules/${basename%.mdc}.md"
+  cp "$file" ".tavern/rules/${basename%.mdc}.md"
 done
 
 # Then manually edit each file to remove YAML frontmatter (the --- section at the top)
@@ -104,17 +104,17 @@ done
 
 - Open `Cursor Settings → General → Rules for AI`
 - Copy the text content
-- Save to `~/.kilo/rules/cursor-global.md`
+- Save to `~/.tavern/rules/cursor-global.md`
 
 **6. Handle legacy `.cursorrules`:**
 
 ```bash
-cp .cursorrules .kilo/rules/legacy-rules.md
+cp .cursorrules .tavern/rules/legacy-rules.md
 ```
 
 ### Converting Cursor's `globs` Patterns
 
-Cursor's `globs` field specifies which files a rule applies to. Kilo Code handles this through **mode-specific directories** instead.
+Cursor's `globs` field specifies which files a rule applies to. Tavern Code handles this through **mode-specific directories** instead.
 
 **Cursor approach:**
 
@@ -125,17 +125,17 @@ globs: ["*.ts", "*.tsx"]
 Rules for TypeScript files...
 ```
 
-**Kilo Code approach (Option 1 - Mode-specific directory):**
+**Tavern Code approach (Option 1 - Mode-specific directory):**
 
 ```bash
-mkdir -p .kilo/rules-code
+mkdir -p .tavern/rules-code
 # Save TypeScript-specific rules here
 ```
 
-**Kilo Code approach (Option 2 - Custom mode):**
+**Tavern Code approach (Option 2 - Custom mode):**
 
 ```yaml
-# .kilocodemodes (at project root)
+# .taverncodemodes (at project root)
 - slug: typescript
   name: TypeScript
   roleDefinition: You work on TypeScript files
@@ -145,29 +145,29 @@ mkdir -p .kilo/rules-code
     - ask
 ```
 
-Then place rules in `.kilo/rules-typescript/`
+Then place rules in `.tavern/rules-typescript/`
 
 ### Flattening Nested Cursor Rules
 
-Cursor supports nested `.cursor/rules/` directories. Kilo Code uses flat structure with descriptive names:
+Cursor supports nested `.cursor/rules/` directories. Tavern Code uses flat structure with descriptive names:
 
 ```bash
 # Cursor: .cursor/rules/backend/server/api-rules.mdc
-# Kilo Code: .kilo/rules/backend-server-api-rules.md
+# Tavern Code: .tavern/rules/backend-server-api-rules.md
 ```
 
 ## Migrating from Windsurf
 
-### What's Different in Kilo Code
+### What's Different in Tavern Code
 
-| Windsurf | Kilo Code | Key Difference |
+| Windsurf | Tavern Code | Key Difference |
 |---|---|---|
-| `.windsurf/rules/*.md` | `.kilo/rules/*.md` | Same Markdown format |
+| `.windsurf/rules/*.md` | `.tavern/rules/*.md` | Same Markdown format |
 | GUI configuration for activation modes | File location determines scope | Scope controlled by directory structure |
-| "Always On" mode (GUI) | Place in `.kilo/rules/` | Rules stored as files, not GUI settings |
+| "Always On" mode (GUI) | Place in `.tavern/rules/` | Rules stored as files, not GUI settings |
 | "Glob" mode (GUI) | Mode-specific directories | File patterns handled via mode directories |
 | 12,000 character limit per rule | No hard limit | No character limit on rule files |
-| Global rules in `~/.codeium/windsurf/memories/global_rules.md` | `~/.kilo/rules/*.md` | Global rules in home folder, multiple files |
+| Global rules in `~/.codeium/windsurf/memories/global_rules.md` | `~/.tavern/rules/*.md` | Global rules in home folder, multiple files |
 
 ### Migration Steps
 
@@ -178,28 +178,28 @@ ls -la .windsurf/rules/      # Project rules
 ls -la .windsurfrules        # Legacy file (if present)
 ```
 
-**2. Create Kilo Code directory:**
+**2. Create Tavern Code directory:**
 
 ```bash
-mkdir -p .kilo/rules
+mkdir -p .tavern/rules
 ```
 
 **3. Copy files directly** (already Markdown):
 
 ```bash
-cp .windsurf/rules/*.md .kilo/rules/
+cp .windsurf/rules/*.md .tavern/rules/
 ```
 
 **4. Migrate global rules:**
 
 ```bash
-cp ~/.codeium/windsurf/memories/global_rules.md ~/.kilo/rules/global-rules.md
+cp ~/.codeium/windsurf/memories/global_rules.md ~/.tavern/rules/global-rules.md
 ```
 
 **5. Handle legacy `.windsurfrules`:**
 
 ```bash
-cp .windsurfrules .kilo/rules/legacy-rules.md
+cp .windsurfrules .tavern/rules/legacy-rules.md
 ```
 
 **6. Split large rules if needed:**
@@ -211,18 +211,18 @@ If you had rules approaching the 12,000 character limit, split them:
 # .windsurf/rules/all-conventions.md (11,500 chars)
 
 # Split into focused files:
-# .kilo/rules/api-conventions.md
-# .kilo/rules/testing-standards.md
-# .kilo/rules/code-style.md
+# .tavern/rules/api-conventions.md
+# .tavern/rules/testing-standards.md
+# .tavern/rules/code-style.md
 ```
 
 ### Converting Windsurf's Activation Modes
 
-Windsurf configures activation through the GUI. In Kilo Code, file organization replaces GUI configuration:
+Windsurf configures activation through the GUI. In Tavern Code, file organization replaces GUI configuration:
 
-| Windsurf GUI Mode | Kilo Code Equivalent |
+| Windsurf GUI Mode | Tavern Code Equivalent |
 |---|---|
-| **Always On** | Place in `.kilo/rules/` (default) |
+| **Always On** | Place in `.tavern/rules/` (default) |
 | **Glob** (file patterns) | Mode-specific directory or custom mode |
 | **Model Decision** | Clear file names by concern (e.g., `testing-guidelines.md`) |
 | **Manual** | Organize with descriptive names |
@@ -232,7 +232,7 @@ Windsurf configures activation through the GUI. In Kilo Code, file organization 
 If you had a rule in Windsurf with Glob mode set to `*.test.ts`, create a custom test mode:
 
 ```yaml
-# .kilocodemodes (at project root)
+# .taverncodemodes (at project root)
 - slug: test
   name: Testing
   roleDefinition: You write and maintain tests
@@ -242,35 +242,35 @@ If you had a rule in Windsurf with Glob mode set to `*.test.ts`, create a custom
     - ask
 ```
 
-Then place the rule in `.kilo/rules-test/`
+Then place the rule in `.tavern/rules-test/`
 
 ## AGENTS.md Support
 
-All three tools support the `AGENTS.md` standard. If you have one, it works in Kilo Code automatically:
+All three tools support the `AGENTS.md` standard. If you have one, it works in Tavern Code automatically:
 
 ```bash
 # Verify it exists
 ls -la AGENTS.md
 
-# That's it - Kilo Code loads it automatically (enabled by default)
+# That's it - Tavern Code loads it automatically (enabled by default)
 ```
 
-**Important:** Use uppercase `AGENTS.md` (not `agents.md`). Kilo Code also accepts `AGENT.md` (singular) as a fallback.
+**Important:** Use uppercase `AGENTS.md` (not `agents.md`). Tavern Code also accepts `AGENT.md` (singular) as a fallback.
 
-**Note:** Both `AGENTS.md` and `AGENT.md` are write-protected files in Kilo Code and require user approval to modify.
+**Note:** Both `AGENTS.md` and `AGENT.md` are write-protected files in Tavern Code and require user approval to modify.
 
 ## Understanding Mode-Specific Rules
 
-This is Kilo Code's unique feature that replaces both Cursor's `globs` and Windsurf's activation modes.
+This is Tavern Code's unique feature that replaces both Cursor's `globs` and Windsurf's activation modes.
 
 ### Directory Structure
 
 ```bash
-.kilo/rules/              # Apply to ALL modes
-.kilo/rules-code/         # Only in Code mode
-.kilo/rules-debug/        # Only in Debug mode
-.kilo/rules-ask/          # Only in Ask mode
-.kilo/rules-{custom}/     # Only in your custom mode
+.tavern/rules/              # Apply to ALL modes
+.tavern/rules-code/         # Only in Code mode
+.tavern/rules-debug/        # Only in Debug mode
+.tavern/rules-ask/          # Only in Ask mode
+.tavern/rules-{custom}/     # Only in your custom mode
 ```
 
 ### Real-World Example
@@ -287,21 +287,21 @@ globs: ["**/*.test.ts", "**/*.spec.ts"]
 - Maintain >80% coverage
 ```
 
-**To Kilo Code:**
+**To Tavern Code:**
 
 ```bash
 # 1. Create test mode directory
-mkdir -p .kilo/rules-test
+mkdir -p .tavern/rules-test
 
 # 2. Save rule as plain Markdown
-cat > .kilo/rules-test/testing-standards.md << 'EOF'
+cat > .tavern/rules-test/testing-standards.md << 'EOF'
 # Testing Rules
 - Write tests for all features
 - Maintain >80% coverage
 EOF
 
 # 3. Define the mode (optional - creates a custom mode)
-# Add to .kilocodemodes:
+# Add to .taverncodemodes:
 # modes:
 #   - slug: test
 #     name: Test Mode
@@ -312,12 +312,12 @@ EOF
 
 After migration:
 
-- [ ] **Verify rules loaded:** Click law icon (⚖️) in Kilo Code panel
-- [ ] **Test rule application:** Ask Kilo Code to perform tasks following your rules
+- [ ] **Verify rules loaded:** Click law icon (⚖️) in Tavern Code panel
+- [ ] **Test rule application:** Ask Tavern Code to perform tasks following your rules
 - [ ] **Organize rules:** Split large files, use clear names
 - [ ] **Set up mode-specific rules:** Create directories for specialized workflows
-- [ ] **Update team docs:** Document new `.kilo/rules/` location
-- [ ] **Commit to version control:** `git add .kilo/`
+- [ ] **Update team docs:** Document new `.tavern/rules/` location
+- [ ] **Commit to version control:** `git add .tavern/`
 - [ ] **Remove old directories:** Delete `.cursor/` or `.windsurf/` folders once verified
 - [ ] **Set up autocomplete:** If you used Cursor/Windsurf autocomplete, enable Ghost (Settings → Ghost) for the same Tab-to-accept experience
 
@@ -328,8 +328,8 @@ After migration:
 **Check file location:**
 
 ```bash
-ls -la .kilo/rules/      # Project rules
-ls -la ~/.kilo/rules/    # Global rules
+ls -la .tavern/rules/      # Project rules
+ls -la ~/.tavern/rules/    # Global rules
 ```
 
 **Verify file format:**
@@ -348,7 +348,7 @@ ls -la ~/.kilo/rules/    # Global rules
 Cursor's `globs`, `alwaysApply`, and `description` don't transfer automatically. Solutions:
 
 - **For file patterns:** Use mode-specific directories or custom modes
-- **For always-on rules:** Place in `.kilo/rules/`
+- **For always-on rules:** Place in `.tavern/rules/`
 - **For context-specific rules:** Use clear file names and organization
 
 ### Windsurf Activation Modes Lost
@@ -356,27 +356,27 @@ Cursor's `globs`, `alwaysApply`, and `description` don't transfer automatically.
 Windsurf's GUI activation modes (Always On/Glob/Model Decision/Manual) aren't stored in files. Solutions:
 
 - **Before migrating:** Document each rule's activation mode
-- **After migrating:** Organize files accordingly in Kilo Code
+- **After migrating:** Organize files accordingly in Tavern Code
 
 ### Nested Rules Flattened
 
-Cursor's nested directories don't map to Kilo Code. Flatten with descriptive names:
+Cursor's nested directories don't map to Tavern Code. Flatten with descriptive names:
 
 ```bash
 # Bad: .cursor/rules/backend/api/rules.mdc
-# Good: .kilo/rules/backend-api-rules.md
+# Good: .tavern/rules/backend-api-rules.md
 ```
 
 ### AGENTS.md Not Loading
 
 - **Verify filename:** Must be `AGENTS.md` or `AGENT.md` (uppercase)
 - **Check location:** Must be at project root
-- **Check setting:** Verify "Use Agent Rules" is enabled in Kilo Code settings (enabled by default)
+- **Check setting:** Verify "Use Agent Rules" is enabled in Tavern Code settings (enabled by default)
 - **Reload:** Restart VS Code if needed
 
 ### Choosing Your Workflow
 
-Kilo Code supports **both autocomplete and chat-driven workflows**. Choose the approach that fits your coding style, or combine them:
+Tavern Code supports **both autocomplete and chat-driven workflows**. Choose the approach that fits your coding style, or combine them:
 
 **Autocomplete (Ghost) — Tab-to-accept inline suggestions:**
 
@@ -407,7 +407,7 @@ There's no "right" workflow—use whatever helps you code faster
 For complex workflows, define custom modes with their own rules and permissions:
 
 ```yaml
-# .kilocodemodes (at project root)
+# .taverncodemodes (at project root)
 - slug: review
   name: Code Review
   roleDefinition: You review code and suggest improvements
@@ -428,18 +428,18 @@ For complex workflows, define custom modes with their own rules and permissions:
 Then create corresponding rule directories:
 
 ```bash
-mkdir -p .kilo/rules-review
-mkdir -p .kilo/rules-docs
+mkdir -p .tavern/rules-review
+mkdir -p .tavern/rules-docs
 ```
 
-**Note:** `.kilocodemodes` can be in YAML (preferred) or JSON format. For global modes, edit the `custom_modes.yaml` file via Settings > Edit Global Modes.
+**Note:** `.taverncodemodes` can be in YAML (preferred) or JSON format. For global modes, edit the `custom_modes.yaml` file via Settings > Edit Global Modes.
 
 ## Next Steps
 
 - [Learn about Custom Rules](/docs/customize/custom-rules)
 - [Explore Custom Modes](/docs/customize/custom-modes)
 - [Set up Custom Instructions](/docs/customize/custom-instructions)
-- [Join our Discord](https://kilo.ai/discord) for migration support
+- [Join our Discord](https://tavern.ai/discord) for migration support
 
 ## Additional Resources
 

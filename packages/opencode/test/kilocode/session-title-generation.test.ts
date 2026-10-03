@@ -4,16 +4,16 @@ import { ProviderTransform } from "@/provider/transform"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { SessionID } from "@/session/schema"
-import { KiloSessionPrompt } from "@/kilocode/session/prompt"
+import { KiloSessionPrompt } from "@/taverncode/session/prompt"
 
 function model(id: string, reasoning = true): Model {
   return {
     id: ModelV2.ID.make(id),
-    providerID: ProviderV2.ID.make("kilo"),
+    providerID: ProviderV2.ID.make("tavern"),
     api: {
       id,
-      url: "https://api.kilo.ai/api/openrouter",
-      npm: "@kilocode/kilo-gateway",
+      url: "https://api.tavern.ai/api/openrouter",
+      npm: "@taverncode/tavern-gateway",
     },
     name: id,
     capabilities: {

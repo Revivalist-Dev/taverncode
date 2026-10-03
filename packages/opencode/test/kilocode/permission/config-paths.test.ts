@@ -1,10 +1,10 @@
-// kilocode_change - new file
+// taverncode_change - new file
 import path from "path"
 import fs from "fs/promises"
 import { describe, expect, test } from "bun:test"
-import { ConfigProtection } from "../../../src/kilocode/permission/config-paths"
+import { ConfigProtection } from "../../../src/taverncode/permission/config-paths"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodePaths } from "../../../src/kilocode/paths"
+import { KilocodePaths } from "../../../src/taverncode/paths"
 import { tmpdir } from "../../fixture/fixture"
 
 describe("ConfigProtection.isRequest", () => {
@@ -48,7 +48,7 @@ describe("ConfigProtection.isRequest", () => {
     const result = ConfigProtection.isRequest({
       permission: "external_directory",
       patterns: [config + "/*"],
-      metadata: { filepath: path.join(config, "kilo.json"), parentDir: config },
+      metadata: { filepath: path.join(config, "tavern.json"), parentDir: config },
     })
     expect(result).toBe(false)
   })
@@ -128,7 +128,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns true for edit targeting relative config path via patterns", () => {
     const result = ConfigProtection.isRequest({
       permission: "edit",
-      patterns: [".kilo/command/foo.md"],
+      patterns: [".tavern/command/foo.md"],
     })
     expect(result).toBe(true)
   })
@@ -136,7 +136,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns false for edit targeting excluded subdir (plans)", () => {
     const result = ConfigProtection.isRequest({
       permission: "edit",
-      patterns: [".kilo/plans/plan.md"],
+      patterns: [".tavern/plans/plan.md"],
     })
     expect(result).toBe(false)
   })
@@ -144,7 +144,7 @@ describe("ConfigProtection.isRequest", () => {
   test("returns false for read permission", () => {
     const result = ConfigProtection.isRequest({
       permission: "read",
-      patterns: [".kilo/config.json"],
+      patterns: [".tavern/config.json"],
     })
     expect(result).toBe(false)
   })
@@ -158,7 +158,7 @@ describe("ConfigProtection.isRequest", () => {
   })
 
   test("returns true for edit targeting root config files", () => {
-    for (const file of ["kilo.json", "kilo.jsonc", "AGENTS.md"]) {
+    for (const file of ["tavern.json", "tavern.jsonc", "AGENTS.md"]) {
       const result = ConfigProtection.isRequest({
         permission: "edit",
         patterns: [file],
@@ -176,7 +176,7 @@ describe("ConfigProtection.isRequest", () => {
   })
 
   test("protects package lock files in project config directories", () => {
-    for (const file of [".kilo/package-lock.json", ".kilocode/package-lock.json"]) {
+    for (const file of [".tavern/package-lock.json", ".taverncode/package-lock.json"]) {
       expect(ConfigProtection.isRequest({ permission: "edit", patterns: [file] })).toBe(true)
     }
   })
@@ -185,9 +185,9 @@ describe("ConfigProtection.isRequest", () => {
     expect(
       ConfigProtection.isRequest({
         permission: "edit",
-        patterns: ["src/app/layout.tsx", ".kilo/package-lock.json", ".kilocode/package-lock.json"],
+        patterns: ["src/app/layout.tsx", ".tavern/package-lock.json", ".taverncode/package-lock.json"],
         metadata: {
-          filepath: "src/app/layout.tsx, .kilo/package-lock.json, .kilocode/package-lock.json",
+          filepath: "src/app/layout.tsx, .tavern/package-lock.json, .taverncode/package-lock.json",
         },
       }),
     ).toBe(true)
@@ -295,7 +295,7 @@ describe("ConfigProtection.isGlobalSkillRequest", () => {
     await using tmp = await tmpdir()
     const prev = process.env.XDG_CONFIG_HOME
     const root = path.join(tmp.path, "profile[")
-    const skill = path.join(root, "kilo", "skills", "unsafe-root")
+    const skill = path.join(root, "tavern", "skills", "unsafe-root")
     process.env.XDG_CONFIG_HOME = root
     await fs.mkdir(skill, { recursive: true })
 

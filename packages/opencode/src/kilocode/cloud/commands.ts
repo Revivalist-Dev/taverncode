@@ -189,8 +189,8 @@ export namespace CloudCommands {
           agent: { mode: defaults.mode, model: defaults.model },
           repository,
           options: {
-            createdOnPlatform: "kilo-cli",
-            ...(defaults.organizationID ? { kilocodeOrganizationId: defaults.organizationID } : {}),
+            createdOnPlatform: "tavern-cli",
+            ...(defaults.organizationID ? { taverncodeOrganizationId: defaults.organizationID } : {}),
           },
         } satisfies AgentStartRequest
         const result = yield* attempt(() => agent.start(request))

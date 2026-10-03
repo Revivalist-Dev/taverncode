@@ -1,14 +1,14 @@
 import path from "path"
 import { existsSync, realpathSync } from "fs"
 import { Global } from "@opencode-ai/core/global"
-import { KilocodePaths } from "@/kilocode/paths"
+import { KilocodePaths } from "@/taverncode/paths"
 
 export namespace ConfigProtection {
   /**
    * Config directory prefixes (relative paths, forward-slash normalized).
-   * Matches .kilo/ and legacy .kilocode/ at any depth within the project.
+   * Matches .tavern/ and legacy .taverncode/ at any depth within the project.
    */
-  const CONFIG_DIRS = [".kilo/", ".kilocode/"]
+  const CONFIG_DIRS = [".tavern/", ".taverncode/"]
 
   /**
    * Subdirectories under CONFIG_DIRS that are NOT config files (e.g. plan files).
@@ -20,7 +20,7 @@ export namespace ConfigProtection {
    * Root-level config files that must be protected.
    * Matched only when the relative path has no directory component.
    */
-  const CONFIG_ROOT_FILES = new Set(["kilo.json", "kilo.jsonc", "opencode.json", "opencode.jsonc", "AGENTS.md"])
+  const CONFIG_ROOT_FILES = new Set(["tavern.json", "tavern.jsonc", "opencode.json", "opencode.jsonc", "AGENTS.md"])
 
   /** Metadata key used to signal the UI to hide the "Allow always" option. */
   export const DISABLE_ALWAYS_KEY = "disableAlways" as const
@@ -42,8 +42,8 @@ export namespace ConfigProtection {
   export function isRelative(pattern: string): boolean {
     const normalized = normalize(pattern)
     for (const dir of CONFIG_DIRS) {
-      const bare = dir.slice(0, -1) // e.g. ".kilo"
-      // Match at root (e.g. ".kilo/foo") or nested (e.g. "packages/sub/.kilo/foo")
+      const bare = dir.slice(0, -1) // e.g. ".tavern"
+      // Match at root (e.g. ".tavern/foo") or nested (e.g. "packages/sub/.tavern/foo")
       if (normalized === bare || normalized.endsWith("/" + bare)) return true
       if (normalized.startsWith(dir)) {
         if (excluded(normalized.slice(dir.length))) continue
@@ -72,7 +72,7 @@ export namespace ConfigProtection {
 
   function configs(): string[] {
     return Array.from(
-      new Set([Global.Path.config, process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, "kilo") : ""]),
+      new Set([Global.Path.config, process.env.XDG_CONFIG_HOME ? path.join(process.env.XDG_CONFIG_HOME, "tavern") : ""]),
     ).filter(Boolean)
   }
 
@@ -116,10 +116,10 @@ export namespace ConfigProtection {
     if (process.platform !== "win32") return false
     return keys(p).some(
       (key) =>
-        key.endsWith("/config/kilo") ||
-        key.includes("/config/kilo/") ||
-        key.endsWith("/.config/kilo") ||
-        key.includes("/.config/kilo/"),
+        key.endsWith("/config/tavern") ||
+        key.includes("/config/tavern/") ||
+        key.endsWith("/.config/tavern") ||
+        key.includes("/.config/tavern/"),
     )
   }
 
@@ -136,13 +136,13 @@ export namespace ConfigProtection {
     if (fallback(filepath)) return true
     const target = physical(filepath)
 
-    // ~/.config/kilo/ (XDG config)
+    // ~/.config/tavern/ (XDG config)
     for (const dir of configs()) {
       const root = physical(dir)
       if (within(filepath, dir) || (target && root && within(target, root))) return true
     }
 
-    // ~/.kilo/ and ~/.kilocode/ (legacy global dirs)
+    // ~/.tavern/ and ~/.taverncode/ (legacy global dirs)
     for (const dir of KilocodePaths.globalDirs()) {
       const root = physical(dir)
       if (within(filepath, dir) || (target && root && within(target, root))) return true

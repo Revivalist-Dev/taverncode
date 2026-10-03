@@ -1,11 +1,11 @@
 ---
 title: "GitHub"
-description: "Using Kilo Code in GitHub issues, pull requests, and review comments"
+description: "Using Tavern Code in GitHub issues, pull requests, and review comments"
 ---
 
-# Kilo for GitHub
+# Tavern for GitHub
 
-**Kilo for GitHub** lets you interact with Kilo directly from your GitHub issues, pull requests, and review comments. Mention the bot and it will:
+**Tavern for GitHub** lets you interact with Tavern directly from your GitHub issues, pull requests, and review comments. Mention the bot and it will:
 
 - Read the surrounding context
 - Access the repository
@@ -20,19 +20,19 @@ description: "Using Kilo Code in GitHub issues, pull requests, and review commen
 When you're reviewing a pull request and want a second opinion on a piece of code:
 
 ```
-@kilocode-bot is this true?
+@taverncode-bot is this true?
 ```
 
 The bot reads the review comment, the surrounding diff, and the relevant code in the repository to give you an informed answer.
 
-{% image src="/docs/img/connect/github/github-review.png" alt="Asking @kilocode-bot a question on a GitHub pull request review comment" width="800" /%}
+{% image src="/docs/img/connect/github/github-review.png" alt="Asking @taverncode-bot a question on a GitHub pull request review comment" width="800" /%}
 
 ### Fix issues directly from GitHub
 
 Tag the bot on any issue and ask it to handle the fix:
 
 ```
-@kilocode-bot please fix
+@taverncode-bot please fix
 ```
 
 The bot will:
@@ -42,28 +42,28 @@ The bot will:
 - Create a branch with the implementation
 - Open a pull request
 
-{% image src="/docs/img/connect/github/github-issue.png" alt="Asking @kilocode-bot to fix a GitHub issue" width="800" /%}
+{% image src="/docs/img/connect/github/github-issue.png" alt="Asking @taverncode-bot to fix a GitHub issue" width="800" /%}
 
 ### Diagnose bug reports
 
 When a bug report comes in and you want to understand what's going on before diving in:
 
 ```
-@kilocode-bot what could be the cause of this issue?
+@taverncode-bot what could be the cause of this issue?
 ```
 
 The bot examines the bug report, searches the codebase for related code paths, and shares its analysis directly in the issue thread.
 
-{% image src="/docs/img/connect/github/github-bug.png" alt="Asking @kilocode-bot to diagnose a bug report on a GitHub issue" width="800" /%}
+{% image src="/docs/img/connect/github/github-bug.png" alt="Asking @taverncode-bot to diagnose a bug report on a GitHub issue" width="800" /%}
 
 ---
 
 ## How It Works
 
-1. **Mention `@kilocode-bot`** on an issue, pull request, or review comment
-2. **Kilo reads the context** — the issue description, PR diff, review thread, and connected repository code
+1. **Mention `@taverncode-bot`** on an issue, pull request, or review comment
+2. **Tavern reads the context** — the issue description, PR diff, review thread, and connected repository code
 3. **A Cloud Agent spins up** to process the request
-4. **Kilo responds** with an answer, analysis, or a pull request containing the implementation
+4. **Tavern responds** with an answer, analysis, or a pull request containing the implementation
 
 For implementation requests, the bot creates a new branch, commits the changes, and opens a PR back to the repository. You'll see the PR linked directly in the thread.
 
@@ -71,19 +71,19 @@ For implementation requests, the bot creates a new branch, commits the changes, 
 
 ## Prerequisites
 
-- A Kilo Code account with available credits
-- Your GitHub integration configured via the Integrations tab at [app.kilo.ai](https://app.kilo.ai)
-- The Kilo Code Bot GitHub App installed on the relevant repositories
+- A Tavern Code account with available credits
+- Your GitHub integration configured via the Integrations tab at [app.tavern.ai](https://app.tavern.ai)
+- The Tavern Code Bot GitHub App installed on the relevant repositories
 
 ---
 
 ## Setup
 
-1. Go to [app.kilo.ai](https://app.kilo.ai) and navigate to the **Integrations** tab
+1. Go to [app.tavern.ai](https://app.tavern.ai) and navigate to the **Integrations** tab
 2. Connect your GitHub account through the **KiloConnect** GitHub App if you haven't already
-3. Install the **Kilo Code Bot** GitHub App on your repositories at [github.com/apps/kilo-code-bot](https://github.com/apps/kilo-code-bot/)
+3. Install the **Tavern Code Bot** GitHub App on your repositories at [github.com/apps/tavern-code-bot](https://github.com/apps/tavern-code-bot/)
 
-Once installed, `@kilocode-bot` is available on any issue or PR in the repositories you've authorized.
+Once installed, `@taverncode-bot` is available on any issue or PR in the repositories you've authorized.
 
 ---
 
@@ -109,7 +109,7 @@ Need to bump a dependency or apply a config change across your org? Mention the 
 
 ## Cost
 
-Kilo Code credits are consumed the same way as any other Kilo interface. Credit usage depends on the model selected and the complexity of the task.
+Tavern Code credits are consumed the same way as any other Tavern interface. Credit usage depends on the model selected and the complexity of the task.
 
 ---
 
@@ -124,10 +124,10 @@ Kilo Code credits are consumed the same way as any other Kilo interface. Credit 
 ## Troubleshooting
 
 **The bot isn't responding to mentions.**
-Make sure the Kilo Code Bot GitHub App is installed on the repository and that you're mentioning `@kilocode-bot` (not `@kilo`).
+Make sure the Tavern Code Bot GitHub App is installed on the repository and that you're mentioning `@taverncode-bot` (not `@tavern`).
 
 **The bot can't access the repository.**
-Verify that both the KiloConnect App and the Kilo Code Bot App are installed and have access to the repository in question.
+Verify that both the KiloConnect App and the Tavern Code Bot App are installed and have access to the repository in question.
 
 **The implementation doesn't match what I expected.**
 Try providing more context in the issue description or comment. The bot works best when the problem and desired outcome are clearly described.

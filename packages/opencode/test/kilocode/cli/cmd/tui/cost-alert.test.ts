@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { parseCostAlert } from "@/kilocode/cli/cmd/tui/cost-alert"
+import { parseCostAlert } from "@/taverncode/cli/cmd/tui/cost-alert"
 
 describe("parseCostAlert", () => {
   test("prompts when no value is provided", () => {

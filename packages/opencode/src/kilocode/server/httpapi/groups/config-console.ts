@@ -1,7 +1,7 @@
 import { Config } from "@/config/config"
 import { ConfigPluginV1 } from "@opencode-ai/core/v1/config/plugin"
-import { KilocodeKeybinds } from "@/kilocode/tui/keybinds"
-import { KiloTitleIcon } from "@/kilocode/cli/cmd/tui/title-icon"
+import { KilocodeKeybinds } from "@/taverncode/tui/keybinds"
+import { KiloTitleIcon } from "@/taverncode/cli/cmd/tui/title-icon"
 import { Authorization } from "@/server/routes/instance/httpapi/middleware/authorization"
 import { InstanceContextMiddleware } from "@/server/routes/instance/httpapi/middleware/instance-context"
 import {
@@ -215,7 +215,7 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           OpenApi.annotations({
             identifier: "config.rules",
             summary: "Get project rules",
-            description: "List project instruction files used by Kilo and return their current contents.",
+            description: "List project instruction files used by Tavern and return their current contents.",
           }),
         ),
         HttpApiEndpoint.put("rulesUpdate", ConfigConsolePaths.rules, {
@@ -247,7 +247,7 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           OpenApi.annotations({
             identifier: "config.modelStateUpdate",
             summary: "Update model state",
-            description: "Patch TUI-compatible model selections shared with Kilo Console.",
+            description: "Patch TUI-compatible model selections shared with Tavern Console.",
           }),
         ),
         HttpApiEndpoint.get("tuiConfigGet", ConfigConsolePaths.tuiConfig, {
@@ -284,15 +284,15 @@ export const ConfigConsoleApi = HttpApi.make("config-console")
           }),
         ),
       )
-      .annotateMerge(OpenApi.annotations({ title: "config-console", description: "Kilo Console config routes." }))
+      .annotateMerge(OpenApi.annotations({ title: "config-console", description: "Tavern Console config routes." }))
       .middleware(InstanceContextMiddleware)
       .middleware(WorkspaceRoutingMiddleware)
       .middleware(Authorization),
   )
   .annotateMerge(
     OpenApi.annotations({
-      title: "kilo HttpApi",
+      title: "tavern HttpApi",
       version: "0.0.1",
-      description: "Kilo HttpApi surface.",
+      description: "Tavern HttpApi surface.",
     }),
   )

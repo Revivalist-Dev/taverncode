@@ -36,7 +36,7 @@ afterEach(async () => {
 })
 
 async function setup() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-clone-"))
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-clone-"))
   folders.push(dir)
   const parent = await fs.realpath(dir)
   const repo = path.join(parent, "checkout")

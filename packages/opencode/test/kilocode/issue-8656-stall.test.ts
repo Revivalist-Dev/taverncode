@@ -17,7 +17,7 @@ import { Server } from "../../src/server/server"
 // before the fix nothing bounded that wait.
 //
 // The simulated socket is injected as the provider's `fetch` through the plugin
-// `config` hook (see ../fixture/stall-plugin.ts), so the SDK, Kilo's fetch
+// `config` hook (see ../fixture/stall-plugin.ts), so the SDK, Tavern's fetch
 // wrapper, SSE parsing, the processor and the agent loop stay production code
 // and nothing global is patched.
 
@@ -28,7 +28,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 function settings(state: string, timeout: number | false) {
   return {
-    $schema: "https://app.kilo.ai/config.json",
+    $schema: "https://app.tavern.ai/config.json",
     model: "mock/mock-model",
     plugin: [[PLUGIN, { state, answer: ANSWER }]],
     provider: {
@@ -65,7 +65,7 @@ type Message = { info: Record<string, any>; parts: Part[] }
 
 function session(dir: string) {
   const app = Server.Default().app
-  const headers = { "Content-Type": "application/json", "x-kilo-directory": dir }
+  const headers = { "Content-Type": "application/json", "x-tavern-directory": dir }
   const query = `directory=${encodeURIComponent(dir)}`
 
   const json = async (route: string, init?: RequestInit, retry = false) => {

@@ -1,4 +1,4 @@
-import { Tag } from "@kilocode/kilo-ui/tag"
+import { Tag } from "@taverncode/tavern-ui/tag"
 import { Component, JSX, Show } from "solid-js"
 
 const SettingsRow: Component<{

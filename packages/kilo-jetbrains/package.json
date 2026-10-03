@@ -1,5 +1,5 @@
 {
-  "name": "@kilocode/kilo-jetbrains",
+  "name": "@taverncode/tavern-jetbrains",
   "private": true,
   "scripts": {
     "build": "bun script/build.ts",
@@ -8,7 +8,7 @@
     "test": "./gradlew test",
     "test:ci": "bun script/test-ci.ts"
   },
-  "version": "7.8.1",
+  "version": "7.8.3",
   "dependencies": {},
   "devDependencies": {},
   "peerDependencies": {}

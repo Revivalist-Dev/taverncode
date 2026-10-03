@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import path from "path"
 import type { Permission } from "../../src/permission"
-import { Instance } from "../../src/kilocode/instance"
+import { Instance } from "../../src/taverncode/instance"
 import { InstanceRuntime } from "../../src/project/instance-runtime"
 import { provideTestInstance } from "../fixture/fixture"
 import { SessionID, MessageID } from "../../src/session/schema"
@@ -37,7 +37,7 @@ const asks = () => {
   return { items, ctx }
 }
 
-describe("kilocode external directory boundaries", () => {
+describe("taverncode external directory boundaries", () => {
   test("asks before accessing outside a repo-root session", async () => {
     await using repo = await tmpdir({ git: true })
     await using outer = await tmpdir()

@@ -1,8 +1,8 @@
 import { For, Show } from "solid-js"
-import { Button } from "@kilocode/kilo-web-ui/button"
-import { Card } from "@kilocode/kilo-web-ui/card"
-import { IconButton } from "@kilocode/kilo-web-ui/icon-button"
-import { StatusTag } from "@kilocode/kilo-web-ui/status-tag"
+import { Button } from "@taverncode/tavern-web-ui/button"
+import { Card } from "@taverncode/tavern-web-ui/card"
+import { IconButton } from "@taverncode/tavern-web-ui/icon-button"
+import { StatusTag } from "@taverncode/tavern-web-ui/status-tag"
 import { ConfirmDialog } from "../../components/ConfirmDialog"
 import { CustomSelect, type SelectOption } from "../../components/CustomSelect"
 import { SearchField } from "../../components/SearchField"
@@ -41,7 +41,7 @@ export function McpRoute() {
               <CountTag>{state.rows().length}</CountTag>
             </span>
           }
-          description="Install, configure, and manage Model Context Protocol servers available to Kilo agents."
+          description="Install, configure, and manage Model Context Protocol servers available to Tavern agents."
           actions={
             <>
               <Button icon="plus" variant="primary" disabled={Boolean(state.ctx.saving())} onClick={state.openMarket}>
@@ -155,7 +155,7 @@ export function McpRoute() {
               <header class="drawer-header">
                 <div>
                   <h2>Install MCP server</h2>
-                  <span>Browse the Kilo Marketplace MCP catalog and install into the current settings scope.</span>
+                  <span>Browse the Tavern Marketplace MCP catalog and install into the current settings scope.</span>
                 </div>
                 <Button variant="ghost" aria-label="Close MCP marketplace overlay" onClick={state.close}>
                   X

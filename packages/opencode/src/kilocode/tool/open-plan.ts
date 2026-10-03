@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect"
 import { InstanceState } from "@/effect/instance-state"
-import { PlanFile } from "@/kilocode/plan-file"
+import { PlanFile } from "@/taverncode/plan-file"
 import { Session } from "@/session/session"
 import * as Tool from "@/tool/tool"
 

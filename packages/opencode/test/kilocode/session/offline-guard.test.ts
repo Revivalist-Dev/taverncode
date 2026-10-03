@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import { Cause, Effect, Exit } from "effect"
-import { KiloSessionProcessor } from "@/kilocode/session/processor"
+import { KiloSessionProcessor } from "@/taverncode/session/processor"
 import { SessionNetwork } from "@/session/network"
 import { SessionRetry } from "@/session/retry"
 import { MessageV2 } from "@/session/message-v2"
@@ -14,7 +14,7 @@ function error(exit: Exit.Exit<unknown, unknown>) {
   return Cause.squash(exit.cause)
 }
 
-describe("kilocode.session.offlineGuard", () => {
+describe("taverncode.session.offlineGuard", () => {
   test("fails a stalled attempt when the connectivity probe fails", async () => {
     const guard = KiloSessionProcessor.offlineGuard({ ...fast, check: () => Promise.resolve(false) })
     const exit = await Effect.runPromiseExit(guard.watch)
@@ -139,7 +139,7 @@ describe("kilocode.session.offlineGuard", () => {
   })
 })
 
-describe("kilocode.session.probeProvider", () => {
+describe("taverncode.session.probeProvider", () => {
   test("a reachable endpoint passes without consulting the fallback", async () => {
     let asked = 0
     const live = Bun.serve({ port: 0, fetch: () => new Response("ok") })
@@ -188,7 +188,7 @@ describe("kilocode.session.probeProvider", () => {
   })
 })
 
-describe("kilocode.session.expandEnv", () => {
+describe("taverncode.session.expandEnv", () => {
   test("${VAR} resolves from the environment and unknown names stay intact", () => {
     process.env.KILO_TEST_EXPAND = "8123"
     try {

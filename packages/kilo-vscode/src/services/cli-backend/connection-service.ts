@@ -1,12 +1,12 @@
 import * as vscode from "vscode"
 import { ServerManager } from "./server-manager"
-import { createKiloClient, type EventSessionTurnClose, type KiloClient } from "@kilocode/sdk/v2/client"
+import { createKiloClient, type EventSessionTurnClose, type KiloClient } from "@taverncode/sdk/v2/client"
 import { SdkSSEAdapter, type SSEPayload } from "./sdk-sse-adapter"
 import type { ServerConfig } from "./types"
 import { createDuplicateEventFilter, resolveEventSessionId as resolveEventSessionIdPure } from "./connection-utils"
 import { SandboxPreference } from "../sandbox-preference"
 import { ExplicitAbortState } from "./explicit-abort"
-import type { PermissionResponseResult } from "../../kilo-provider/handlers/permission-handler"
+import type { PermissionResponseResult } from "../../tavern-provider/handlers/permission-handler"
 
 export type ConnectionState = "connecting" | "connected" | "disconnected" | "error"
 type SSEEventListener = (event: SSEPayload, directory?: string) => void
@@ -41,7 +41,7 @@ async function parallel(items: string[], fn: (item: string) => Promise<void>): P
   if (errors.size === 0) return
   const failures = [...errors].sort((a, b) => a[0] - b[0])
   for (const [index, error] of failures.slice(1)) {
-    console.warn(`[Kilo New] ConnectionService: Additional prompt drain failed for ${items[index]}:`, error)
+    console.warn(`[Tavern New] ConnectionService: Additional prompt drain failed for ${items[index]}:`, error)
   }
   throw failures[0]![1]
 }
@@ -815,7 +815,7 @@ export class KiloConnectionService {
     this.viewedDirty = false
     void this.client.session
       .viewed({ viewer: { id: this.viewerId, active: this.active }, attached: [...attached], visible: [...visible] })
-      .catch((err) => console.warn("[Kilo New] ConnectionService: viewed flush failed:", err))
+      .catch((err) => console.warn("[Tavern New] ConnectionService: viewed flush failed:", err))
       .finally(() => {
         this.viewedSending = false
         if (this.viewedDirty) this.sendViewed()
@@ -900,7 +900,7 @@ export class KiloConnectionService {
       }
       const healthy = await this.checkHealth(baseUrl, password)
       if (!healthy && this.state === "connected") {
-        console.warn("[Kilo New] ConnectionService: ❤️‍🩹 Health check failed — forcing SSE reconnect")
+        console.warn("[Tavern New] ConnectionService: ❤️‍🩹 Health check failed — forcing SSE reconnect")
         this.sseClient?.reconnect()
       }
     }, HEALTH_POLL_INTERVAL_MS)
@@ -921,7 +921,7 @@ export class KiloConnectionService {
       const controller = new AbortController()
       const timer = setTimeout(() => controller.abort(), 3000)
       const res = await fetch(`${baseUrl}/global/health`, {
-        headers: { Authorization: `Basic ${Buffer.from(`kilo:${password}`).toString("base64")}` },
+        headers: { Authorization: `Basic ${Buffer.from(`tavern:${password}`).toString("base64")}` },
         signal: controller.signal,
       })
       clearTimeout(timer)
@@ -951,7 +951,7 @@ export class KiloConnectionService {
 
   private handleServerExit(code: number | null, signal: NodeJS.Signals | null): void {
     const reason = signal ? `signal ${signal}` : `code ${code ?? "unknown"}`
-    console.warn(`[Kilo New] ConnectionService: CLI background process exited with ${reason}`)
+    console.warn(`[Tavern New] ConnectionService: CLI background process exited with ${reason}`)
     this.resetConnection()
     this.setState("error", new Error(`CLI background process exited with ${reason}. Retry to reconnect.`))
   }
@@ -971,7 +971,7 @@ export class KiloConnectionService {
     this.config = config
 
     // Create SDK client with Basic Auth header
-    const authHeader = `Basic ${Buffer.from(`kilo:${server.password}`).toString("base64")}`
+    const authHeader = `Basic ${Buffer.from(`tavern:${server.password}`).toString("base64")}`
     const client = createKiloClient({
       baseUrl: config.baseUrl,
       headers: {

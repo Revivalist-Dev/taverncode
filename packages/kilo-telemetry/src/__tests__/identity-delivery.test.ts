@@ -6,7 +6,7 @@ import path from "node:path"
 
 let dir: string
 beforeEach(async () => {
-  dir = await mkdtemp(path.join(tmpdir(), "kilo-delivery-"))
+  dir = await mkdtemp(path.join(tmpdir(), "tavern-delivery-"))
   await Bun.write(path.join(dir, "telemetry-id"), "test-machine")
   await Bun.write(
     path.join(dir, "telemetry-profile.json"),
@@ -24,7 +24,7 @@ async function run(env: Record<string, string> = {}) {
     env: {
       ...process.env,
       KILO_TELEMETRY_LEVEL: "all",
-      KILO_APP_NAME: "kilo-cli",
+      KILO_APP_NAME: "tavern-cli",
       KILO_APP_VERSION: "",
       KILO_MACHINE_ID: "",
       TEST_DATA: dir,
@@ -54,7 +54,7 @@ test("startup sends one alias and preserves identity across restarts", async () 
   expect(next.at(0)).toMatchObject({
     event: "CLI Start",
     distinct_id: "test@example.com",
-    properties: { $set: { appName: "kilo-cli", appVersion: "2.0.0", kilocodeOrganizationId: "org-new" } },
+    properties: { $set: { appName: "tavern-cli", appVersion: "2.0.0", taverncodeOrganizationId: "org-new" } },
   })
 })
 
@@ -98,7 +98,7 @@ test("login updates person properties on Auth Success without adding an identify
   expect(start?.properties.$set).toBeUndefined()
   const auth = events.find((event) => event.event === "Auth Success")
   expect(auth?.distinct_id).toBe("test@example.com")
-  expect(auth?.properties.$set).toMatchObject({ appVersion: "1.0.0", kilocodeOrganizationId: "org-login" })
+  expect(auth?.properties.$set).toMatchObject({ appVersion: "1.0.0", taverncodeOrganizationId: "org-login" })
   const exit = events.find((event) => event.event === "CLI Exit")
   expect(exit?.distinct_id).toBe("test@example.com")
   expect(exit?.properties.$set).toBeUndefined()

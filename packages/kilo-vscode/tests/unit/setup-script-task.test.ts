@@ -61,7 +61,7 @@ function harness(opts?: {
 
 const config = {
   command: "sh",
-  args: ["/repo/.kilo/setup-script"],
+  args: ["/repo/.tavern/setup-script"],
   cwd: "/repo/worktree",
   env: { WORKTREE_PATH: "/repo/worktree", REPO_PATH: "/repo" },
 }
@@ -77,7 +77,7 @@ describe("createSetupScriptTask", () => {
     expect(ctx.starts[0]?.config).toEqual({
       worktreeId: "wt-1",
       command: "sh",
-      args: ["/repo/.kilo/setup-script"],
+      args: ["/repo/.tavern/setup-script"],
       cwd: "/repo/worktree",
       env: { PATH: "/bin", WORKTREE_PATH: "/repo/worktree", REPO_PATH: "/repo" },
     })
@@ -305,10 +305,10 @@ describe("pickSetupTask", () => {
 
 describe("runWorktreeSetupScript", () => {
   function root(script: boolean): string {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kilo-setup-flow-"))
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "tavern-setup-flow-"))
     if (!script) return dir
-    fs.mkdirSync(path.join(dir, ".kilo"), { recursive: true })
-    fs.writeFileSync(path.join(dir, ".kilo", "setup-script"), "#!/bin/sh\nexit 0\n")
+    fs.mkdirSync(path.join(dir, ".tavern"), { recursive: true })
+    fs.writeFileSync(path.join(dir, ".tavern", "setup-script"), "#!/bin/sh\nexit 0\n")
     return dir
   }
 
@@ -401,12 +401,12 @@ describe("runWorktreeSetupScript", () => {
 
 describe("setupTaskIdentity", () => {
   it("gives each worktree its own VS Code task identity", () => {
-    const a = setupTaskIdentity({ ...config, cwd: "/repo/.kilo/worktrees/a" })
-    const b = setupTaskIdentity({ ...config, cwd: "/repo/.kilo/worktrees/b" })
+    const a = setupTaskIdentity({ ...config, cwd: "/repo/.tavern/worktrees/a" })
+    const b = setupTaskIdentity({ ...config, cwd: "/repo/.tavern/worktrees/b" })
 
     expect(a.definition).not.toEqual(b.definition)
     expect(a.name).not.toBe(b.name)
-    expect(a.definition).toEqual({ type: "kilo-worktree-setup", script: "sh", worktree: "/repo/.kilo/worktrees/a" })
+    expect(a.definition).toEqual({ type: "tavern-worktree-setup", script: "sh", worktree: "/repo/.tavern/worktrees/a" })
     expect(a.name).toBe("Worktree Setup (a)")
   })
 })

@@ -5,7 +5,7 @@ import * as path from "node:path"
 import { isInsideWorktree, readDocument } from "../../src/documents/document-reader"
 
 function workspace() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "kilo-document-"))
+  return fs.mkdtempSync(path.join(os.tmpdir(), "tavern-document-"))
 }
 
 describe("readDocument", () => {

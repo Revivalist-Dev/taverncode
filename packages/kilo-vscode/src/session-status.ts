@@ -1,4 +1,4 @@
-import type { KiloClient, SessionStatus } from "@kilocode/sdk/v2/client"
+import type { KiloClient, SessionStatus } from "@taverncode/sdk/v2/client"
 
 /**
  * The CLI derives `scheduled` for a session asleep on a pending wakeup. It is
@@ -63,7 +63,7 @@ export async function seedSessionStatuses(
       }
     }
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to seed session statuses:", error)
+    console.error("[Tavern New] KiloProvider: Failed to seed session statuses:", error)
   }
 }
 
@@ -86,7 +86,7 @@ export async function seedSessionWakeups(
   await Promise.all(
     dirs.map(async (dir) => {
       try {
-        const result = await client.kilocode.wakeups({ directory: dir }, { throwOnError: true })
+        const result = await client.taverncode.wakeups({ directory: dir }, { throwOnError: true })
         for (const item of result.data ?? []) {
           if (accept && !accept(item.sessionID)) continue
           seen.add(item.sessionID)
@@ -94,7 +94,7 @@ export async function seedSessionWakeups(
         }
       } catch (error) {
         complete = false
-        console.error(`[Kilo New] KiloProvider: Failed to seed session wakeups for ${dir}:`, error)
+        console.error(`[Tavern New] KiloProvider: Failed to seed session wakeups for ${dir}:`, error)
       }
     }),
   )

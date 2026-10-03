@@ -1,7 +1,7 @@
 /** @jsxImportSource solid-js */
 
 import { For, Show, untrack, type Accessor, type Component, type JSX } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import type { LanguageContextValue } from "../src/context/language"
 import type { AgentProjectSnapshot } from "../src/types/messages"
 import { ProjectsFooter } from "./ProjectsFooter"

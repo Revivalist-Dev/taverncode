@@ -3,8 +3,8 @@ import * as Tool from "@/tool/tool"
 import { Session } from "@/session/session"
 import { Provider } from "@/provider/provider"
 import { SessionCompaction } from "@/session/compaction"
-import { KiloSessionOverflow } from "@/kilocode/session/overflow"
-import { KiloSessionMessageOrder } from "@/kilocode/session/message-order"
+import { KiloSessionOverflow } from "@/taverncode/session/overflow"
+import { KiloSessionMessageOrder } from "@/taverncode/session/message-order"
 
 const Parameters = Schema.Struct({})
 

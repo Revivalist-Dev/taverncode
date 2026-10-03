@@ -62,7 +62,7 @@ describe("Cloud tRPC client", () => {
         result([
           {
             ...subscription,
-            routeLabel: "MiniMax via Kilo Gateway",
+            routeLabel: "MiniMax via Tavern Gateway",
             billingPeriodDays: 30,
             currentPeriodStart: "2026-06-01T00:00:00.000Z",
             currentPeriodEnd: "2026-07-01T00:00:00.000Z",
@@ -89,7 +89,7 @@ describe("Cloud tRPC client", () => {
     expect(url.searchParams.has("batch")).toBe(false)
     expect(call[1].method).toBe("GET")
     expect(new Headers(call[1].headers).get("authorization")).toBe("Bearer secret-token")
-    expect(new Headers(call[1].headers).has("x-kilocode-organizationid")).toBe(false)
+    expect(new Headers(call[1].headers).has("x-taverncode-organizationid")).toBe(false)
     expect(call[1].redirect).toBe("error")
     expect(call[1].signal).toBeInstanceOf(AbortSignal)
   })
@@ -136,7 +136,7 @@ describe("Cloud tRPC client", () => {
 
     const error = await fetchCodingPlanSubscriptions("secret-token").catch((value) => value)
     expect(error).toBeInstanceOf(CloudTrpcError)
-    expect(error).toMatchObject({ kind: "procedure", message: "Kilo Cloud data is temporarily unavailable." })
+    expect(error).toMatchObject({ kind: "procedure", message: "Tavern Cloud data is temporarily unavailable." })
     // Include non-enumerable Error surfaces that JSON.stringify would omit.
     const surface = `${error.name} ${error.message} ${error.stack} ${JSON.stringify(error)}`
     expect(surface).not.toContain("raw private error")

@@ -3,7 +3,7 @@ import { Window } from "happy-dom"
 import type { ExtensionMessage, WebviewMessage } from "../../webview-ui/src/types/messages"
 import type { MarketplaceItem, McpMarketplaceItem } from "../../webview-ui/src/types/marketplace"
 
-const window = new Window({ url: "https://kilo.test" })
+const window = new Window({ url: "https://tavern.test" })
 const errors: unknown[] = []
 window.addEventListener("error", (event) => errors.push(event.error))
 Object.defineProperty(window, "origin", { value: window.location.origin })
@@ -34,7 +34,7 @@ Object.assign(globalThis, {
 
 const { render } = await import("solid-js/web")
 const { Show, createSignal, onMount } = await import("solid-js")
-const { DialogProvider, useDialog } = await import("@kilocode/kilo-ui/context/dialog")
+const { DialogProvider, useDialog } = await import("@taverncode/tavern-ui/context/dialog")
 const { VSCodeProvider } = await import("../../webview-ui/src/context/vscode")
 const { ServerProvider } = await import("../../webview-ui/src/context/server")
 const { LanguageProvider } = await import("../../webview-ui/src/context/language")
@@ -138,38 +138,38 @@ try {
   await mount("/workspace")
   assert.equal(document.querySelector('[data-slot="marketplace-companion-skills"]'), null)
   assert.equal(document.querySelector(".marketplace-badge-skills"), null)
-  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, ".kilo/")
+  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, ".tavern/")
   const global = document.querySelector<HTMLInputElement>('input[value="global"]')
   assert.ok(global)
   global.click()
-  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/kilo/")
+  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/tavern/")
   complete({ filePath: "/custom/config/tui.json" })
   assert.match(document.querySelector(".install-modal-result-path")?.textContent ?? "", /\/custom\/config\/tui\.json$/)
   const request = messages.findLast((message) => message.type === "installMarketplaceItem")
   assert.equal(request?.mpInstallOptions?.target, "global")
 
   await mount("/workspace")
-  complete({ filePath: "/workspace/.kilo/tui.jsonc" })
+  complete({ filePath: "/workspace/.tavern/tui.jsonc" })
   assert.match(
     document.querySelector(".install-modal-result-path")?.textContent ?? "",
-    /\/workspace\/\.kilo\/tui\.jsonc$/,
+    /\/workspace\/\.tavern\/tui\.jsonc$/,
   )
 
   await mount("/workspace")
   complete({
-    filePath: "/workspace/.kilo/opencode.jsonc",
-    filePaths: ["/workspace/.kilo/opencode.jsonc", "/workspace/.kilo/tui.jsonc"],
+    filePath: "/workspace/.tavern/opencode.jsonc",
+    filePaths: ["/workspace/.tavern/opencode.jsonc", "/workspace/.tavern/tui.jsonc"],
   })
   assert.deepEqual(
     Array.from(document.querySelectorAll(".install-modal-result-path"), (node) => node.textContent),
-    ["Installed to /workspace/.kilo/opencode.jsonc", "Installed to /workspace/.kilo/tui.jsonc"],
+    ["Installed to /workspace/.tavern/opencode.jsonc", "Installed to /workspace/.tavern/tui.jsonc"],
   )
 
   await mount("")
-  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/kilo/")
+  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/tavern/")
   assert.equal(document.querySelector('input[value="project"]'), null)
   complete({})
-  assert.equal(document.querySelector(".install-modal-result-path")?.textContent, "Installed to ~/.config/kilo/")
+  assert.equal(document.querySelector(".install-modal-result-path")?.textContent, "Installed to ~/.config/tavern/")
 
   await mount("/workspace", mcp)
   const section = document.querySelector('[data-slot="marketplace-companion-skills"]')
@@ -181,21 +181,21 @@ try {
   )
   assert.deepEqual(
     Array.from(section.querySelectorAll("code"), (node) => node.textContent),
-    [".kilo/skills/query-workflow/", ".kilo/skills/data-checks/"],
+    [".tavern/skills/query-workflow/", ".tavern/skills/data-checks/"],
   )
   assert.equal(document.querySelector(".marketplace-badge-skills")?.textContent, "Includes skills")
   for (const skill of mcp.skills) assert.equal(document.body.innerHTML.includes(skill.content), false)
   document.querySelector<HTMLInputElement>('input[value="global"]')!.click()
-  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/kilo/kilo.json")
+  assert.equal(document.querySelector(".install-modal-destination code")?.textContent, "~/.config/tavern/tavern.json")
   assert.deepEqual(
     Array.from(section.querySelectorAll("code"), (node) => node.textContent),
-    ["~/.kilo/skills/query-workflow/", "~/.kilo/skills/data-checks/"],
+    ["~/.tavern/skills/query-workflow/", "~/.tavern/skills/data-checks/"],
   )
   complete({
     filePaths: [
-      "/home/test/.config/kilo/kilo.json",
-      "/home/test/.kilo/skills/query-workflow/SKILL.md",
-      "/home/test/.kilo/skills/data-checks/SKILL.md",
+      "/home/test/.config/tavern/tavern.json",
+      "/home/test/.tavern/skills/query-workflow/SKILL.md",
+      "/home/test/.tavern/skills/data-checks/SKILL.md",
     ],
   })
   const bundled = messages.findLast((message) => message.type === "installMarketplaceItem")
@@ -204,9 +204,9 @@ try {
   assert.deepEqual(
     Array.from(document.querySelectorAll(".install-modal-result-path"), (node) => node.textContent),
     [
-      "Installed to /home/test/.config/kilo/kilo.json",
-      "Installed to /home/test/.kilo/skills/query-workflow/SKILL.md",
-      "Installed to /home/test/.kilo/skills/data-checks/SKILL.md",
+      "Installed to /home/test/.config/tavern/tavern.json",
+      "Installed to /home/test/.tavern/skills/query-workflow/SKILL.md",
+      "Installed to /home/test/.tavern/skills/data-checks/SKILL.md",
     ],
   )
 
@@ -217,7 +217,7 @@ try {
       document.querySelectorAll('[data-slot="marketplace-companion-skills"] code'),
       (node) => node.textContent,
     ),
-    ["~/.kilo/skills/query-workflow/", "~/.kilo/skills/data-checks/"],
+    ["~/.tavern/skills/query-workflow/", "~/.tavern/skills/data-checks/"],
   )
 
   for (const skills of [undefined, []]) {
@@ -225,7 +225,7 @@ try {
     await mount("/workspace", plain)
     assert.equal(document.querySelector('[data-slot="marketplace-companion-skills"]'), null)
     assert.equal(document.querySelector(".marketplace-badge-skills"), null)
-    assert.equal(document.querySelector(".install-modal-destination code")?.textContent, ".kilo/kilo.json")
+    assert.equal(document.querySelector(".install-modal-destination code")?.textContent, ".tavern/tavern.json")
     complete({})
     assert.deepEqual(messages.findLast((message) => message.type === "installMarketplaceItem")?.mpItem, plain)
   }

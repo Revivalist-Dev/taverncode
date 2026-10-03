@@ -24,7 +24,7 @@ describe("canChangeProviderKey", () => {
   it("excludes custom providers and special credential flows", () => {
     expect(canChangeProviderKey(item, { npm: "@ai-sdk/openai-compatible" }, undefined)).toBe(false)
     for (const id of [
-      "kilo",
+      "tavern",
       "anaconda-desktop",
       "atomic-chat",
       "lmstudio",
@@ -61,19 +61,19 @@ describe("canChangeProviderKey", () => {
 })
 
 describe("visibleConnectedIds", () => {
-  it("hides Kilo from the connected list when auth is missing", () => {
-    const ids = visibleConnectedIds(["kilo", "openrouter"], { openrouter: "api" })
+  it("hides Tavern from the connected list when auth is missing", () => {
+    const ids = visibleConnectedIds(["tavern", "openrouter"], { openrouter: "api" })
 
     expect(ids).toEqual(["openrouter"])
   })
 
-  it("keeps Kilo in the connected list when auth exists", () => {
-    const ids = visibleConnectedIds(["kilo", "openrouter"], { kilo: "oauth", openrouter: "api" })
+  it("keeps Tavern in the connected list when auth exists", () => {
+    const ids = visibleConnectedIds(["tavern", "openrouter"], { tavern: "oauth", openrouter: "api" })
 
-    expect(ids).toEqual(["kilo", "openrouter"])
+    expect(ids).toEqual(["tavern", "openrouter"])
   })
 
-  it("leaves non-Kilo providers untouched", () => {
+  it("leaves non-Tavern providers untouched", () => {
     const ids = visibleConnectedIds(["anthropic"], {})
 
     expect(ids).toEqual(["anthropic"])
@@ -81,10 +81,10 @@ describe("visibleConnectedIds", () => {
 })
 
 describe("disabledProviderOptions", () => {
-  it("includes Kilo and excludes already disabled providers", () => {
+  it("includes Tavern and excludes already disabled providers", () => {
     const options = disabledProviderOptions(
       {
-        kilo: { id: "kilo", name: "Kilo Gateway", env: [], models: {} },
+        tavern: { id: "tavern", name: "Tavern Gateway", env: [], models: {} },
         openai: { id: "openai", name: "OpenAI", env: [], models: {} },
         anthropic: { id: "anthropic", name: "Anthropic", env: [], models: {} },
       },
@@ -93,7 +93,7 @@ describe("disabledProviderOptions", () => {
 
     expect(options).toEqual([
       { value: "anthropic", label: "Anthropic" },
-      { value: "kilo", label: "Kilo Gateway" },
+      { value: "tavern", label: "Tavern Gateway" },
     ])
   })
 
@@ -114,20 +114,20 @@ describe("disabledProviderOptions", () => {
 })
 
 describe("providersWithKiloFallback", () => {
-  it("adds Kilo when backend providers omit it", () => {
+  it("adds Tavern when backend providers omit it", () => {
     const providers = providersWithKiloFallback({
       anthropic: { id: "anthropic", name: "Anthropic", env: [], models: {} },
     })
 
-    expect(providers.kilo?.name).toBe("Kilo Gateway")
+    expect(providers.tavern?.name).toBe("Tavern Gateway")
     expect(providers.anthropic?.name).toBe("Anthropic")
   })
 
-  it("keeps the backend Kilo provider when present", () => {
+  it("keeps the backend Tavern provider when present", () => {
     const providers = providersWithKiloFallback({
-      kilo: { id: "kilo", name: "Custom Kilo Name", env: [], models: {} },
+      tavern: { id: "tavern", name: "Custom Tavern Name", env: [], models: {} },
     })
 
-    expect(providers.kilo?.name).toBe("Custom Kilo Name")
+    expect(providers.tavern?.name).toBe("Custom Tavern Name")
   })
 })

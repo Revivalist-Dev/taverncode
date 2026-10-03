@@ -8,7 +8,7 @@
 import * as fs from "fs"
 import * as path from "path"
 import { randomUUID } from "crypto"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { validateModelSelections } from "../provider-actions"
 
 type PostMessage = (msg: unknown) => void
@@ -79,12 +79,12 @@ function write(
       await fs.promises.rename(temp, target)
     } finally {
       await fs.promises.rm(temp, { force: true }).catch((err) => {
-        console.error("[Kilo New] Failed to remove temporary model preferences:", err)
+        console.error("[Tavern New] Failed to remove temporary model preferences:", err)
       })
     }
   })
   queue = op.catch((err) => {
-    console.error("[Kilo New] Failed to persist model selections:", err)
+    console.error("[Tavern New] Failed to persist model selections:", err)
   })
   return op
 }

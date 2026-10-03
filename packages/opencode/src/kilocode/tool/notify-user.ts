@@ -1,5 +1,5 @@
 import { Tool } from "@/tool/tool"
-import { KiloSessions } from "@/kilo-sessions/kilo-sessions"
+import { KiloSessions } from "@/tavern-sessions/tavern-sessions"
 import { Effect, Schema } from "effect"
 import DESCRIPTION from "./notify-user.txt"
 
@@ -12,11 +12,11 @@ const Params = Schema.Struct({
 type Meta = { notificationId: string; ok: boolean; reason?: string }
 
 const FAILURE_TEXT =
-  "Push notifications are unavailable: this session is not connected to Kilo cloud. " +
-  "Sign in with `kilo auth login` and ensure the session is sharing before retrying."
+  "Push notifications are unavailable: this session is not connected to Tavern cloud. " +
+  "Sign in with `tavern auth login` and ensure the session is sharing before retrying."
 
 const SUCCESS_TEXT =
-  "Notification sent to the user's Kilo app. Delivery may be suppressed by the user's " +
+  "Notification sent to the user's Tavern app. Delivery may be suppressed by the user's " +
   "Agent notifications preference, an active rate limit, or because the user is currently " +
   "viewing this session; the tool receives no delivery feedback."
 

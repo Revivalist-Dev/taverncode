@@ -37,7 +37,7 @@ export interface ICodeIndexManager {
 export type IndexingState = "Standby" | "Indexing" | "Indexed" | "Error"
 
 export type EmbedderProvider =
-  | "kilo"
+  | "tavern"
   | "openai"
   | "ollama"
   | "openai-compatible"

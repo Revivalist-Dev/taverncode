@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { EventServiceClient } from "@/kilocode/event-service/client"
+import { EventServiceClient } from "@/taverncode/event-service/client"
 
 const OriginalWebSocket = globalThis.WebSocket
 const OriginalFetch = globalThis.fetch

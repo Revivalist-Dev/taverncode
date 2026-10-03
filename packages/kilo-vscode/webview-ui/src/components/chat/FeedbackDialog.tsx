@@ -1,24 +1,24 @@
 import { Component, JSX } from "solid-js"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
 import { useVSCode } from "../../context/vscode"
 import { useLanguage } from "../../context/language"
 
 const GITHUB_ISSUES_URL = "https://github.com/Kilo-Org/kilocode/issues/new/choose"
-const DISCORD_URL = "https://kilo.ai/discord"
-const SUPPORT_URL = "https://kilo.ai/support"
+const DISCORD_URL = "https://tavern.ai/discord"
+const SUPPORT_URL = "https://tavern.ai/support"
 
 const KiloLogo = (): JSX.Element => {
   const iconsBaseUri = (window as { ICONS_BASE_URI?: string }).ICONS_BASE_URI || ""
   const isLight =
     document.body.classList.contains("vscode-light") || document.body.classList.contains("vscode-high-contrast-light")
-  const iconFile = isLight ? "kilo-light.svg" : "kilo-dark.svg"
+  const iconFile = isLight ? "tavern-light.svg" : "tavern-dark.svg"
 
   return (
     <div class="feedback-dialog-logo">
-      <img src={`${iconsBaseUri}/${iconFile}`} alt="Kilo Code" />
+      <img src={`${iconsBaseUri}/${iconFile}`} alt="Tavern Code" />
     </div>
   )
 }

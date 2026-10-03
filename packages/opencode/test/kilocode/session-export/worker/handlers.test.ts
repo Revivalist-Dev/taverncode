@@ -2,17 +2,17 @@ import { describe, test, expect, beforeEach, afterEach } from "bun:test"
 import { mkdtempSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { Storage } from "@/kilocode/session-export/worker/storage"
-import { Chunker } from "@/kilocode/session-export/worker/chunks"
-import { Scrubber } from "@/kilocode/session-export/worker/scrub"
-import { handleEvent } from "@/kilocode/session-export/worker/handlers"
+import { Storage } from "@/taverncode/session-export/worker/storage"
+import { Chunker } from "@/taverncode/session-export/worker/chunks"
+import { Scrubber } from "@/taverncode/session-export/worker/scrub"
+import { handleEvent } from "@/taverncode/session-export/worker/handlers"
 import type {
   CompactionCaptured,
   LlmRequestCompleted,
   LlmRequestStarted,
   WorkspaceBaselineCompleted,
   WorkspaceDeltaCaptured,
-} from "@/kilocode/session-export/events"
+} from "@/taverncode/session-export/events"
 
 describe("handlers", () => {
   let dir: string
@@ -398,7 +398,7 @@ function started(id: string, input: Partial<LlmRequestStarted["input"]>): LlmReq
     userMessageId: "u1",
     agent: "claude",
     modeId: "build",
-    model: { providerId: "kilo", modelId: "free-1", isFree: true },
+    model: { providerId: "tavern", modelId: "free-1", isFree: true },
     input: { system: [], messages: [], tools: {}, permissions: [], params: {}, ...input },
     time: { created: 0 },
   }

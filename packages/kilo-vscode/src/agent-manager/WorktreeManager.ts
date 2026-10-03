@@ -1,9 +1,9 @@
 /**
  * WorktreeManager - Manages git worktrees for agent sessions.
  *
- * Ported from kilocode/src/core/kilocode/agent-manager/WorktreeManager.ts.
+ * Ported from taverncode/src/core/taverncode/agent-manager/WorktreeManager.ts.
  * Handles creation, discovery, and cleanup of worktrees stored in
- * {projectRoot}/.kilo/worktrees/
+ * {projectRoot}/.tavern/worktrees/
  */
 
 import * as path from "path"
@@ -35,7 +35,7 @@ import { pathKey } from "./project/paths"
 import { MISSING_GIT } from "./git-errors"
 import { Semaphore } from "./semaphore"
 
-const TEMP_PREFIX = ".kilo-delete-"
+const TEMP_PREFIX = ".tavern-delete-"
 const RM_OPTS: fs.RmOptions = { recursive: true, force: true, maxRetries: 3, retryDelay: 200 }
 const NO_COMMITS_MESSAGE = "This repository has no commits yet. Create an initial commit before using worktrees."
 
@@ -53,9 +53,9 @@ function directory(branch: string): string {
   return `${slug}-${hash}`
 }
 
-/** Why a directory under `.kilo/worktrees/` could not be used as a worktree. */
+/** Why a directory under `.tavern/worktrees/` could not be used as a worktree. */
 export type WorktreeProbeReason =
-  /** No `.git` file — a directory that outlived its worktree, e.g. holding only `.kilo-dev/`. */
+  /** No `.git` file — a directory that outlived its worktree, e.g. holding only `.tavern-dev/`. */
   | "leftover"
   /** Has a `.git` file but git does not track the path. */
   | "unregistered"
@@ -126,7 +126,7 @@ import { KILO_DIR, LEGACY_DIR, migrateAgentManagerData, resolveGitDir } from "./
 
 const SESSION_ID_FILE = "session-id"
 const METADATA_FILE = "metadata.json"
-const GIT_METADATA_FILE = "kilo-agent-manager-metadata.json"
+const GIT_METADATA_FILE = "tavern-agent-manager-metadata.json"
 
 export class WorktreeManager {
   private readonly root: string
@@ -180,7 +180,7 @@ export class WorktreeManager {
     })
   }
 
-  /** Run once before first read/write to migrate Agent Manager data from .kilocode → .kilo. */
+  /** Run once before first read/write to migrate Agent Manager data from .taverncode → .tavern. */
   private async ensureMigrated(): Promise<void> {
     if (this.migrated) return
     this.migrated = true
@@ -213,7 +213,7 @@ export class WorktreeManager {
     return this.root
   }
 
-  /** Absolute `.kilo/worktrees` directory this manager owns. */
+  /** Absolute `.tavern/worktrees` directory this manager owns. */
   get worktreesDir(): string {
     return this.dir
   }
@@ -279,7 +279,7 @@ export class WorktreeManager {
     this.pool.warm(base)
   }
 
-  /** Adopt leftover pooled slots at startup and discard broken ones. Never creates `.kilo/worktrees/`. */
+  /** Adopt leftover pooled slots at startup and discard broken ones. Never creates `.tavern/worktrees/`. */
   async reconcilePool(): Promise<void> {
     await this.ensureMigrated()
     return this.pool.reconcile()
@@ -328,7 +328,7 @@ export class WorktreeManager {
     return { resolvedRemote }
   }
 
-  /** Claim a pooled slot for a new branch. The pool moves it into `.kilo/worktrees/` and warms a replacement. */
+  /** Claim a pooled slot for a new branch. The pool moves it into `.tavern/worktrees/` and warms a replacement. */
   private async tryClaimPool(
     branch: string,
     oid: string,
@@ -681,7 +681,7 @@ export class WorktreeManager {
   }
 
   /**
-   * Directory names directly under `.kilo/worktrees/`, excluding in-flight deletions.
+   * Directory names directly under `.tavern/worktrees/`, excluding in-flight deletions.
    *
    * Sorted: `readdir` order is filesystem-dependent (ext4 does not return alphabetical order the way
    * APFS/HFS+ tend to), and an orphan list that reorders itself between reconciles for no reason a
@@ -722,11 +722,11 @@ export class WorktreeManager {
   }
 
   /**
-   * Delete a directory under `.kilo/worktrees/` that git no longer tracks.
+   * Delete a directory under `.tavern/worktrees/` that git no longer tracks.
    *
    * Only ever called for a user-confirmed cleanup of an orphaned directory: there is no worktree
    * left to remove, so this stages the same rename-then-background-reap `detachWorktree` uses
-   * instead of a blocking `fs.rm` — a large `.kilo-dev`/`node_modules` tree cannot freeze the caller.
+   * instead of a blocking `fs.rm` — a large `.tavern-dev`/`node_modules` tree cannot freeze the caller.
    * Guards are identical to the ones `removeWorktree` relies on for a real worktree: a managed-path
    * check, then a fail-closed `git worktree list` re-check immediately before the rename, because the
    * worktree pool creates and removes slot checkouts on a timer and a stale webview orphan list must
@@ -752,7 +752,7 @@ export class WorktreeManager {
    * Background reap for a staged orphan directory, with one reappearance retry.
    *
    * A dev backend or the worktree pool can recreate a directory moments after it was renamed away
-   * (e.g. `.kilo-dev` from a running JetBrains dev instance). One retry self-heals that race without
+   * (e.g. `.tavern-dev` from a running JetBrains dev instance). One retry self-heals that race without
    * looping forever: anything that survives the retry simply reappears in the next reconcile.
    */
   private async reapOrphan(original: string, temp: string): Promise<void> {
@@ -890,7 +890,7 @@ export class WorktreeManager {
     }
   }
 
-  /** Remove orphaned .kilo-delete-* temp dirs left by interrupted deletions. */
+  /** Remove orphaned .tavern-delete-* temp dirs left by interrupted deletions. */
   cleanupOrphanedTempDirs(): void {
     if (!fs.existsSync(this.dir)) return
     fs.promises
@@ -914,7 +914,7 @@ export class WorktreeManager {
   }
 
   /**
-   * Probe every directory under `.kilo/worktrees/`, keeping the reason a directory was skipped.
+   * Probe every directory under `.tavern/worktrees/`, keeping the reason a directory was skipped.
    *
    * Bounded on purpose: this used to fan out one `git rev-parse` per directory in a single
    * `Promise.all`, so a repository with dozens of leftover directories opened dozens of git
@@ -947,7 +947,7 @@ export class WorktreeManager {
     const current = await this.readCurrentMetadata(worktreePath)
     if (current) return current
 
-    // Check .kilo/ first, then legacy .kilocode/
+    // Check .tavern/ first, then legacy .taverncode/
     for (const dirName of [KILO_DIR, LEGACY_DIR]) {
       const result = await this.readMetadataFrom(worktreePath, dirName)
       if (result) return result
@@ -1044,20 +1044,20 @@ export class WorktreeManager {
   async ensureGitExclude(): Promise<void> {
     const target = await this.excludeTarget()
     const items = [
-      [".kilo/worktrees/", "Kilo Code agent worktrees"],
-      [".kilo/agent-manager.json", "Kilo Agent Manager state"],
-      [".kilo/setup-script", "Kilo Code worktree setup script"],
-      [".kilo/setup-script.sh", "Kilo Code worktree setup script"],
-      [".kilo/setup-script.ps1", "Kilo Code worktree setup script"],
-      [".kilo/setup-script.cmd", "Kilo Code worktree setup script"],
-      [".kilo/setup-script.bat", "Kilo Code worktree setup script"],
-      [".kilocode/worktrees/", "Kilo Code legacy agent worktrees"],
-      [".kilocode/agent-manager.json", "Kilo Agent Manager legacy state"],
-      [".kilocode/setup-script", "Kilo Code legacy worktree setup script"],
-      [".kilocode/setup-script.sh", "Kilo Code legacy worktree setup script"],
-      [".kilocode/setup-script.ps1", "Kilo Code legacy worktree setup script"],
-      [".kilocode/setup-script.cmd", "Kilo Code legacy worktree setup script"],
-      [".kilocode/setup-script.bat", "Kilo Code legacy worktree setup script"],
+      [".tavern/worktrees/", "Tavern Code agent worktrees"],
+      [".tavern/agent-manager.json", "Tavern Agent Manager state"],
+      [".tavern/setup-script", "Tavern Code worktree setup script"],
+      [".tavern/setup-script.sh", "Tavern Code worktree setup script"],
+      [".tavern/setup-script.ps1", "Tavern Code worktree setup script"],
+      [".tavern/setup-script.cmd", "Tavern Code worktree setup script"],
+      [".tavern/setup-script.bat", "Tavern Code worktree setup script"],
+      [".taverncode/worktrees/", "Tavern Code legacy agent worktrees"],
+      [".taverncode/agent-manager.json", "Tavern Agent Manager legacy state"],
+      [".taverncode/setup-script", "Tavern Code legacy worktree setup script"],
+      [".taverncode/setup-script.sh", "Tavern Code legacy worktree setup script"],
+      [".taverncode/setup-script.ps1", "Tavern Code legacy worktree setup script"],
+      [".taverncode/setup-script.cmd", "Tavern Code legacy worktree setup script"],
+      [".taverncode/setup-script.bat", "Tavern Code legacy worktree setup script"],
     ] as const
 
     for (const [entry, comment] of items) {
@@ -1073,7 +1073,7 @@ export class WorktreeManager {
    * is a subdirectory of a repository. `--show-prefix` is already relative and
    * uses forward slashes, so it avoids symlink mismatches such as macOS
    * `/var` versus `/private/var`. The anchored ignore patterns then point at
-   * the real `.kilo` directory instead of the repository root.
+   * the real `.tavern` directory instead of the repository root.
    *
    * `--git-path` is used without `--path-format=absolute`, because older Git
    * echoes unsupported rev-parse flags to stdout with exit code 0, which would
@@ -1294,7 +1294,7 @@ export class WorktreeManager {
     if (cached && Date.now() - cached < WorktreeManager.FETCH_CACHE_TTL) return
 
     // Only opt into simple-git's allowUnsafeSshCommand when the SSH command
-    // is the fixed value Kilo injects — never for an inherited one, which
+    // is the fixed value Tavern injects — never for an inherited one, which
     // could be attacker-controlled.
     const env = nonInteractiveEnv()
     await this.client(this.root, isKiloOwnedSshCommand(env))

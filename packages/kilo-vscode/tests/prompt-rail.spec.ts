@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 
 async function open(page: Page, side: "left" | "right" = "left", width = 420) {
   await page.setViewportSize({ width, height: 720 })

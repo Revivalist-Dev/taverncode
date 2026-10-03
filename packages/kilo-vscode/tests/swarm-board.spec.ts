@@ -61,7 +61,7 @@ async function setup(page: Page, initial = board) {
     })
   })
   await page.goto(
-    "/iframe.html?id=chat--board-closed&viewMode=story&manual=1&globals=colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern",
+    "/iframe.html?id=chat--board-closed&viewMode=story&manual=1&globals=colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern",
   )
   const toggle = page.getByRole("button", { name: "Board", exact: true })
   const current = async (count: number) => {
@@ -182,7 +182,7 @@ for (const width of [420, 200]) {
   test(`keeps the main board tool renderer consistent at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 720 })
     await page.goto(
-      "/iframe.html?id=composite-webview--agent-messages&viewMode=story&globals=colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern",
+      "/iframe.html?id=composite-webview--agent-messages&viewMode=story&globals=colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern",
     )
     const messages = page.locator('[data-component="board-messages"] [data-slot="board-message"]')
     await expect(messages).toHaveCount(4)

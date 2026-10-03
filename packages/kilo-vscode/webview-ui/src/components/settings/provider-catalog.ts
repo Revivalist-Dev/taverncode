@@ -33,7 +33,7 @@ export function providerIcon(provider: Provider | string): IconName {
   const providerID = typeof provider === "string" ? provider : provider.id
   const icon = typeof provider === "string" ? undefined : validIcon(provider.metadata?.icon)
   if (icon) return icon
-  if (providerID === KILO_PROVIDER_ID) return validIcon("kilo") ?? "synthetic"
+  if (providerID === KILO_PROVIDER_ID) return validIcon("tavern") ?? "synthetic"
   const fallback = validIcon(providerID)
   if (fallback) return fallback
   return "synthetic"
@@ -45,7 +45,7 @@ export function kiloFallbackProvider(): Provider {
 
 export function providerNoteKey(provider: Provider | string) {
   if (typeof provider !== "string" && provider.metadata?.noteKey) return provider.metadata.noteKey
-  if (provider === KILO_PROVIDER_ID) return "settings.providers.note.kilo"
+  if (provider === KILO_PROVIDER_ID) return "settings.providers.note.tavern"
   return undefined
 }
 

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import { LLMAISDK } from "@/session/llm/ai-sdk"
-import { KiloResponseMetadata } from "@/kilocode/session/response-metadata"
+import { KiloResponseMetadata } from "@/taverncode/session/response-metadata"
 
 describe("session response metadata", () => {
   test("carries x-vercel-id from an AI SDK response", async () => {
@@ -45,6 +45,6 @@ describe("session response metadata", () => {
   test("rejects unsafe or oversized Vercel IDs", () => {
     expect(KiloResponseMetadata.write(undefined, { "x-vercel-id": "fra1::<script>" })).toBeUndefined()
     expect(KiloResponseMetadata.write(undefined, { "x-vercel-id": "x".repeat(201) })).toBeUndefined()
-    expect(KiloResponseMetadata.read({ kilo: { vercelID: "fra1::abc\nsecret" } })).toBeUndefined()
+    expect(KiloResponseMetadata.read({ tavern: { vercelID: "fra1::abc\nsecret" } })).toBeUndefined()
   })
 })

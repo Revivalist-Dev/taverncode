@@ -1,4 +1,4 @@
-import { isPublicAddress } from "@kilocode/sandbox/destination"
+import { isPublicAddress } from "@taverncode/sandbox/destination"
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto"
 import { lookup } from "node:dns/promises"
 import { once } from "node:events"
@@ -25,7 +25,7 @@ interface Options {
 const LIMIT = 16 * 1024
 
 // Marks a 502 response that the proxy creates because no connection to the local application was possible.
-export const UNREACHABLE = "x-kilo-browser-unreachable"
+export const UNREACHABLE = "x-tavern-browser-unreachable"
 
 class Unreachable extends Error {}
 
@@ -265,7 +265,7 @@ export class BrowserProxy {
       username: randomBytes(16).toString("hex"),
       password: randomBytes(32).toString("base64url"),
       origin,
-      realm: `kilo-browser-${randomBytes(16).toString("hex")}`,
+      realm: `tavern-browser-${randomBytes(16).toString("hex")}`,
     })
     server.on("connection", (socket) => this.track(socket))
     server.on("request", (request, response) => void this.forward(request, response))

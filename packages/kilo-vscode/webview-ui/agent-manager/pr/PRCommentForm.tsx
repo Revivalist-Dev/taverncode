@@ -1,12 +1,12 @@
 import { For, Show, createMemo, createSignal } from "solid-js"
 import { createStore } from "solid-js/store"
-import { Button } from "@kilocode/kilo-ui/button"
-import { DropdownMenu } from "@kilocode/kilo-ui/dropdown-menu"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { TextField } from "@kilocode/kilo-ui/text-field"
+import { Button } from "@taverncode/tavern-ui/button"
+import { DropdownMenu } from "@taverncode/tavern-ui/dropdown-menu"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { TextField } from "@taverncode/tavern-ui/text-field"
 import { useLanguage } from "../../src/context/language"
 import { useVSCode } from "../../src/context/vscode"
 import { PRCommentMarkdown } from "./PRCommentMarkdown"
@@ -452,7 +452,7 @@ export function PRCommentForm(props: Props) {
                   if (event.isComposing || event.keyCode === 229) return
                   if (props.action === "diff") {
                     if (event.key !== "Enter" || event.shiftKey) return
-                    // Cmd/Ctrl+Enter saves the comment. Plain Enter sends it to Kilo,
+                    // Cmd/Ctrl+Enter saves the comment. Plain Enter sends it to Tavern,
                     // and GitHub is never published from the keyboard.
                     if (event.ctrlKey || event.metaKey) {
                       event.preventDefault()
@@ -511,7 +511,7 @@ export function PRCommentForm(props: Props) {
                   when={github()}
                   fallback={
                     <Button
-                      data-action="send-kilo"
+                      data-action="send-tavern"
                       variant="primary"
                       size="small"
                       disabled={!ready()}

@@ -12,7 +12,7 @@ let env: NodeJS.ProcessEnv
 let git: GitOps
 
 beforeEach(async () => {
-  dir = await fs.mkdtemp(path.join(os.tmpdir(), "kilo-prepare-test-"))
+  dir = await fs.mkdtemp(path.join(os.tmpdir(), "tavern-prepare-test-"))
   env = { ...process.env }
   for (const key of Object.keys(process.env)) {
     if (key.startsWith("GIT_") || key === "EMAIL") delete process.env[key]

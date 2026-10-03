@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { AttachedState } from "../../../src/kilo-sessions/attached-state"
+import { AttachedState } from "../../../src/tavern-sessions/attached-state"
 
 const nolog = { warn: () => {} }
 

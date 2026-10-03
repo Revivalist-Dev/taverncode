@@ -13,12 +13,12 @@ import { Bus } from "@/bus"
 import { Config } from "@/config/config"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { EventV2Bridge } from "@/event-v2-bridge"
-import { BackgroundProcess } from "@/kilocode/background-process"
-import { Notebook } from "@/kilocode/notebook/service"
-import * as SandboxActivation from "@/kilocode/sandbox/activation"
-import * as SandboxInheritance from "@/kilocode/sandbox/inheritance"
-import * as SandboxPolicy from "@/kilocode/sandbox/policy"
-import { SandboxStore } from "@/kilocode/sandbox/store"
+import { BackgroundProcess } from "@/taverncode/background-process"
+import { Notebook } from "@/taverncode/notebook/service"
+import * as SandboxActivation from "@/taverncode/sandbox/activation"
+import * as SandboxInheritance from "@/taverncode/sandbox/inheritance"
+import * as SandboxPolicy from "@/taverncode/sandbox/policy"
+import { SandboxStore } from "@/taverncode/sandbox/store"
 import type { SessionID } from "@/session/schema"
 import { Session } from "@/session/session"
 import { SessionStatus } from "@/session/status"
@@ -38,7 +38,7 @@ const it = testEffect(
       Layer.provide(AppNodeBuilder.build(BackgroundJob.node)),
       Layer.provide(AppNodeBuilder.build(Database.node)),
       Layer.provide(AppNodeBuilder.build(EventV2Bridge.node)),
-      Layer.provide(AppNodeBuilder.build(SessionV2.node, [[SessionExecution.node, SessionExecution.noopLayer]])), // kilocode_change
+      Layer.provide(AppNodeBuilder.build(SessionV2.node, [[SessionExecution.node, SessionExecution.noopLayer]])), // taverncode_change
     ),
     AppNodeBuilder.build(BackgroundJob.node),
     Bus.layer,
@@ -168,13 +168,13 @@ describe("sandbox session cleanup", () => {
     }),
   )
 
-  it.live("creates honor the kilocode.sandbox metadata over the config default", () =>
+  it.live("creates honor the taverncode.sandbox metadata over the config default", () =>
     Effect.gen(function* () {
       const sessions = yield* Session.Service
       // Config default is disabled; the create-time toggle asks for enabled.
       const dir = yield* tmpdirScoped({ git: true, config: { sandbox: { enabled: false } } })
       const session = yield* provideInstance(dir)(
-        sessions.create({ title: "sandbox-explicit", metadata: { "kilocode.sandbox": { enabled: true, version: 0 } } }),
+        sessions.create({ title: "sandbox-explicit", metadata: { "taverncode.sandbox": { enabled: true, version: 0 } } }),
       )
       const status = yield* provideInstance(dir)(SandboxPolicy.status(session.id))
       if (!status.available) return

@@ -294,7 +294,7 @@ module.exports = [
     permanent: true,
   },
   {
-    source: "/docs/contributing/cline-to-kilo-migration",
+    source: "/docs/contributing/cline-to-tavern-migration",
     destination: "/docs/contributing",
     basePath: false,
     permanent: true,
@@ -689,7 +689,7 @@ module.exports = [
   },
 
   // ============================================
-  // COLLABORATE - Kilo for Teams
+  // COLLABORATE - Tavern for Teams
   // ============================================
   {
     source: "/docs/plans/about",
@@ -835,7 +835,7 @@ module.exports = [
   },
 
   // ============================================
-  // AUTOMATE - Extending Kilo
+  // AUTOMATE - Extending Tavern
   // ============================================
   {
     source: "/docs/advanced-usage/local-models",
@@ -860,8 +860,8 @@ module.exports = [
     permanent: true,
   },
   {
-    source: "/docs/features/mcp/using-mcp-in-kilo-code",
-    destination: "/docs/automate/mcp/using-in-kilo-code",
+    source: "/docs/features/mcp/using-mcp-in-tavern-code",
+    destination: "/docs/automate/mcp/using-in-tavern-code",
     basePath: false,
     permanent: true,
   },
@@ -939,7 +939,7 @@ module.exports = [
   },
   {
     source: "/docs/contributing/architecture/auto-model-tiers",
-    destination: "/docs/contributing/architecture/cloud-platform#kilo-gateway",
+    destination: "/docs/contributing/architecture/cloud-platform#tavern-gateway",
     basePath: false,
     permanent: true,
   },
@@ -957,7 +957,7 @@ module.exports = [
   },
   {
     source: "/docs/contributing/architecture/track-repo-url",
-    destination: "/docs/contributing/architecture/cloud-platform#kilo-gateway",
+    destination: "/docs/contributing/architecture/cloud-platform#tavern-gateway",
     basePath: false,
     permanent: true,
   },
@@ -1051,13 +1051,13 @@ module.exports = [
   },
   {
     source: "/docs/advanced-usage/free-and-budget-models",
-    destination: "/docs/getting-started/using-kilo-for-free",
+    destination: "/docs/getting-started/using-tavern-for-free",
     basePath: false,
     permanent: true,
   },
   {
     source: "/docs/code-with-ai/agents/free-and-budget-models",
-    destination: "/docs/getting-started/using-kilo-for-free",
+    destination: "/docs/getting-started/using-tavern-for-free",
     basePath: false,
     permanent: true,
   },
@@ -1251,7 +1251,7 @@ module.exports = [
   },
   {
     source: "/auto-top-ups",
-    destination: "https://kilo.ai/features/auto-top-ups",
+    destination: "https://tavern.ai/features/auto-top-ups",
     basePath: false,
     permanent: true,
   },

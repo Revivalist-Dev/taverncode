@@ -125,7 +125,7 @@ describe("CodeIndexServiceFactory", () => {
         "openai",
         "openrouter",
         "openai-compatible",
-        "kilo",
+        "tavern",
         "gemini",
         "mistral",
         "vercel-ai-gateway",
@@ -319,11 +319,11 @@ describe("CodeIndexServiceFactory", () => {
     expect(store.vectorSize).toBe(1024)
   })
 
-  test("creates Kilo embedder with Cloud-provided model", async () => {
+  test("creates Tavern embedder with Cloud-provided model", async () => {
     const factory = createFactory({
-      embedderProvider: "kilo",
+      embedderProvider: "tavern",
       openAiKey: undefined,
-      kiloApiKey: "kilo-token",
+      kiloApiKey: "tavern-token",
       kiloOrganizationId: "org_123",
       modelId: "mistralai/mistral-embed-2312",
       modelDimension: 1024,
@@ -337,7 +337,7 @@ describe("CodeIndexServiceFactory", () => {
     const embedder = factory.createEmbedder()
     await embedder.createEmbeddings(["hello"])
 
-    expect(embedder.embedderInfo).toEqual({ name: "kilo" })
+    expect(embedder.embedderInfo).toEqual({ name: "tavern" })
     expect(mockEmbeddingsCreate).toHaveBeenCalledWith({
       input: ["hello"],
       model: "mistralai/mistral-embed-2312",

@@ -5,9 +5,9 @@
  */
 
 import { Component, createEffect, createSignal, onCleanup } from "solid-js"
-import { deferredHighlight } from "@kilocode/kilo-ui/context/marked"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { deferredHighlight } from "@taverncode/tavern-ui/context/marked"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useLanguage } from "../../context/language"
 
 export const PermissionCommand: Component<{ command: string; plain?: boolean }> = (props) => {

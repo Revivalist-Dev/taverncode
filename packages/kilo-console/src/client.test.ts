@@ -23,7 +23,7 @@ function setup() {
 test("config writes include the selected directory", async () => {
   const calls = setup()
   const client = await import("./client")
-  const query = { url: "http://kilo:secret@127.0.0.1:4097", dir: "/tmp/project", scope: "project" as const }
+  const query = { url: "http://tavern:secret@127.0.0.1:4097", dir: "/tmp/project", scope: "project" as const }
 
   await client.saveConfig(query, { permission: { edit: { "*": "allow" } } })
   await client.unsetConfig(query, [["permission", "edit"]])
@@ -54,7 +54,7 @@ test("config writes include the selected directory", async () => {
 test("viewed snapshots post the presence payload against the selected directory", async () => {
   const calls = setup()
   const client = await import("./client")
-  const query = { url: "http://kilo:secret@127.0.0.1:4097", dir: "/tmp/project" }
+  const query = { url: "http://tavern:secret@127.0.0.1:4097", dir: "/tmp/project" }
   const viewer = { id: "11111111-1111-4111-8111-111111111111", active: false }
 
   await client.viewProjectSessions(query, viewer, ["ses_selected", "ses_terminal"], [])

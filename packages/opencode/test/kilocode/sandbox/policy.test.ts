@@ -2,16 +2,16 @@ import fs from "node:fs/promises"
 import path from "node:path"
 import { describe, expect, test } from "bun:test"
 import { Global } from "@opencode-ai/core/global"
-import { assertWrite, run as runSandbox } from "@kilocode/sandbox"
+import { assertWrite, run as runSandbox } from "@taverncode/sandbox"
 import { Effect, Exit } from "effect"
-import { profile } from "@/kilocode/sandbox/policy"
-import { SandboxPreference } from "@/kilocode/sandbox/preference"
-import { SandboxStore } from "@/kilocode/sandbox/store"
+import { profile } from "@/taverncode/sandbox/policy"
+import { SandboxPreference } from "@/taverncode/sandbox/preference"
+import { SandboxStore } from "@/taverncode/sandbox/store"
 import type { InstanceContext } from "@/project/instance-context"
 import { ProjectV2 } from "@opencode-ai/core/project"
 import { tmpdir } from "../../fixture/fixture"
 
-const kilo = [
+const tavern = [
   Global.Path.data,
   Global.Path.cache,
   Global.Path.config,
@@ -41,8 +41,8 @@ function fixture() {
       const separate = path.join(root, "separate")
       const separateLocal = path.join(separate, "packages", "app")
       const store = path.join(root, "separate-git")
-      const a = path.join(main, ".kilo", "worktrees", "a")
-      const b = path.join(main, ".kilo", "worktrees", "b")
+      const a = path.join(main, ".tavern", "worktrees", "a")
+      const b = path.join(main, ".tavern", "worktrees", "b")
       const external = path.join(root, "imported")
       const approved = path.join(root, "approved")
       await Promise.all([
@@ -88,7 +88,7 @@ function roots(ctx: InstanceContext) {
 }
 
 function expected(...directories: string[]) {
-  return new Set([...directories, ...kilo])
+  return new Set([...directories, ...tavern])
 }
 
 const posix = process.platform === "win32" ? test.skip : test
@@ -185,7 +185,7 @@ describe("sandbox policy", () => {
     expect(Exit.isFailure(right.other)).toBe(true)
   })
 
-  test("keeps Kilo state writable without exposing sandbox policy state", async () => {
+  test("keeps Tavern state writable without exposing sandbox policy state", async () => {
     await using tmp = await fixture()
     const dirs = tmp.extra
     const ctx = context(dirs.a, dirs.a, dirs)

@@ -19,7 +19,7 @@ function tree(id: string, values: Partial<WorktreeState> = {}): WorktreeState {
   return {
     id,
     branch: `feature/${id}`,
-    path: `/repo/.kilo/worktrees/${id}`,
+    path: `/repo/.tavern/worktrees/${id}`,
     parentBranch: "main",
     createdAt: "2026-08-01T00:00:00.000Z",
     ...values,
@@ -31,7 +31,7 @@ function reference(values: Partial<WorktreeReference> = {}): WorktreeReference {
     id: "wt-reference",
     name: "Authentication",
     branch: "feature/auth",
-    path: "/repo/.kilo/worktrees/reference",
+    path: "/repo/.tavern/worktrees/reference",
     base: "main",
     sessions: [{ id: "ses_auth", title: "Fix login" }],
     disabled: false,
@@ -77,7 +77,7 @@ describe("Agent Manager worktree references", () => {
       tree("drop", {
         label: "Feature",
         branch: "feature/drop",
-        path: "/repo/.kilo/worktrees/drop",
+        path: "/repo/.tavern/worktrees/drop",
         parentBranch: "develop",
       }),
       "Feature",
@@ -89,7 +89,7 @@ describe("Agent Manager worktree references", () => {
       id: "drop",
       name: "Feature",
       branch: "feature/drop",
-      path: "/repo/.kilo/worktrees/drop",
+      path: "/repo/.tavern/worktrees/drop",
       base: "develop",
       sessions: [{ id: "ses_drop", title: "Fix login" }],
       disabled: true,
@@ -130,7 +130,7 @@ describe("Agent Manager worktree references", () => {
     const refs = worktreeReferences(state, [], "current")
     expect(refs).toHaveLength(4)
     const scope = harness(() => refs)
-    expect(scope.mention.worktreeCandidates().map((item) => item.path)).toEqual(["/repo/.kilo/worktrees/other"])
+    expect(scope.mention.worktreeCandidates().map((item) => item.path)).toEqual(["/repo/.tavern/worktrees/other"])
     scope.dispose()
   })
 
@@ -214,7 +214,7 @@ describe("Agent Manager worktree references", () => {
   })
 
   it("attaches only metadata and preserves exact Unicode and spaced paths", () => {
-    const ref = reference({ name: 'Fix "登录"\nnow', path: "/repo/.kilo/worktrees/登录 100%" })
+    const ref = reference({ name: 'Fix "登录"\nnow', path: "/repo/.tavern/worktrees/登录 100%" })
     const text = `Compare with @${ref.path} and report differences.`
     const files = buildWorktreeAttachments(text, [ref])
     expect(files).toHaveLength(1)
@@ -254,7 +254,7 @@ describe("Agent Manager worktree references", () => {
   })
 
   it("does not auto-read worktree directories inside the local workspace", () => {
-    const ref = reference({ path: "/repo/.kilo/worktrees/reference branch" })
+    const ref = reference({ path: "/repo/.tavern/worktrees/reference branch" })
     const scope = harness(() => [ref])
     scope.mention.onInput("@", 1)
     reply(scope, ["src/a.ts"])
@@ -269,7 +269,7 @@ describe("Agent Manager worktree references", () => {
   })
 
   it("does not attach a truncated path when worktree data arrives after draft restoration", () => {
-    const ref = reference({ path: "/repo/.kilo/worktrees/reference branch" })
+    const ref = reference({ path: "/repo/.tavern/worktrees/reference branch" })
     const state = { refs: [] as WorktreeReference[] }
     const scope = harness(() => state.refs)
     scope.mention.onInput("@", 1)

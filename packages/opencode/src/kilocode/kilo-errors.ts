@@ -11,15 +11,15 @@ export type KiloErrorCode = (typeof KILO_ERROR_CODES)[keyof typeof KILO_ERROR_CO
 const KILO_ERROR_CODE_VALUES = Object.values(KILO_ERROR_CODES) as string[]
 
 /**
- * Check if an error is a Kilo-specific error (has a known Kilo error code in responseBody).
- * Currently all Kilo errors are non-retryable, but this may change in the future.
+ * Check if an error is a Tavern-specific error (has a known Tavern error code in responseBody).
+ * Currently all Tavern errors are non-retryable, but this may change in the future.
  */
 export function isKiloError(error: ReturnType<NamedError["toObject"]>): boolean {
   return parseKiloErrorCode(error) !== undefined
 }
 
 /**
- * Get a user-friendly title for a Kilo error code.
+ * Get a user-friendly title for a Tavern error code.
  */
 export function kiloErrorTitle(code: KiloErrorCode): string {
   switch (code) {
@@ -31,7 +31,7 @@ export function kiloErrorTitle(code: KiloErrorCode): string {
 }
 
 /**
- * Get a user-friendly description for a Kilo error code.
+ * Get a user-friendly description for a Tavern error code.
  */
 export function kiloErrorDescription(code: KiloErrorCode): string {
   switch (code) {
@@ -43,7 +43,7 @@ export function kiloErrorDescription(code: KiloErrorCode): string {
 }
 
 /**
- * Show a warning toast with the appropriate Kilo error title/description.
+ * Show a warning toast with the appropriate Tavern error title/description.
  * Caller should check isKiloError() first.
  */
 export function showKiloErrorToast(
@@ -61,7 +61,7 @@ export function showKiloErrorToast(
 }
 
 /**
- * Extract the specific Kilo error code from an APIError's responseBody.
+ * Extract the specific Tavern error code from an APIError's responseBody.
  * Returns the code string if found, undefined otherwise.
  *
  * Note: We check error.name === "APIError" directly instead of using

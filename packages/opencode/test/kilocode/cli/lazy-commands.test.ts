@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import yargs from "yargs"
-import { hasLazyCommandSelection, lazy } from "../../../src/kilocode/cli/lazy-commands"
+import { hasLazyCommandSelection, lazy } from "../../../src/taverncode/cli/lazy-commands"
 
 describe("lazy CLI command", () => {
   test("loads once after command selection", async () => {

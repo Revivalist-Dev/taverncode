@@ -1,10 +1,10 @@
 /**
  * Architecture test: webview font-size token usage.
  *
- * Kilo's VS Code webviews use the `kilo-code.new.fontSize` setting, not
- * VS Code editor font-size or raw pixel declarations. This keeps the Kilo UI
+ * Tavern's VS Code webviews use the `tavern-code.new.fontSize` setting, not
+ * VS Code editor font-size or raw pixel declarations. This keeps the Tavern UI
  * independently scalable across sidebar, settings, Agent Manager,
- * diff viewers, code blocks, and shared kilo-ui controls.
+ * diff viewers, code blocks, and shared tavern-ui controls.
  */
 
 import { describe, expect, it } from "bun:test"
@@ -20,7 +20,7 @@ const TARGETS = [
   path.join(ROOT, "webview-ui/marketplace"),
   path.join(ROOT, "webview-ui/diff-viewer"),
   path.join(ROOT, "webview-ui/diff-virtual"),
-  path.join(REPO, "packages/kilo-ui/src/components"),
+  path.join(REPO, "packages/tavern-ui/src/components"),
 ]
 
 const WATCHED_PROVIDERS = [
@@ -94,25 +94,25 @@ describe("webview font-size architecture", () => {
 
     expect(
       violations,
-      `Use the Kilo webview font-size tokens instead of raw pixels or VS Code editor font-size variables.\n` +
-        `Preferred tokens: var(--font-size-base), var(--font-size-small), or var(--kilo-font-size-N).\n\n` +
+      `Use the Tavern webview font-size tokens instead of raw pixels or VS Code editor font-size variables.\n` +
+        `Preferred tokens: var(--font-size-base), var(--font-size-small), or var(--tavern-font-size-N).\n\n` +
         violations.map((v) => `  - ${v}`).join("\n"),
     ).toEqual([])
   })
 
   it("scales answered questions with the tool output font", () => {
-    const css = fs.readFileSync(path.join(REPO, "packages/kilo-ui/src/components/message-part.css"), "utf-8")
+    const css = fs.readFileSync(path.join(REPO, "packages/tavern-ui/src/components/message-part.css"), "utf-8")
     const block = css.slice(css.indexOf('[data-component="question-answers"]'))
     expect(block.slice(0, block.indexOf('[data-slot="question-answer-item"]'))).toContain(
-      "font-size: var(--kilo-font-size-12)",
+      "font-size: var(--tavern-font-size-12)",
     )
     expect(block.match(/\[data-slot="question-answer-item"\]\s*\{([^}]+)\}/)?.[1]).toContain("font-size: inherit")
   })
 
   it("uses scalable line heights in polished tool previews", () => {
     const files = [
-      path.join(REPO, "packages/kilo-ui/src/components/basic-tool.css"),
-      path.join(REPO, "packages/kilo-ui/src/components/message-part.css"),
+      path.join(REPO, "packages/tavern-ui/src/components/basic-tool.css"),
+      path.join(REPO, "packages/tavern-ui/src/components/message-part.css"),
     ]
     const violations = files.flatMap((file) => {
       const src = stripComments(fs.readFileSync(file, "utf-8"))
@@ -128,12 +128,12 @@ describe("webview font-size architecture", () => {
   it("injects and live-broadcasts the webview font-size setting to all webview providers", () => {
     const util = fs.readFileSync(path.join(ROOT, "src/utils.ts"), "utf-8")
     expect(util, "buildWebviewHtml must seed webview font tokens before app code runs").toContain("getWebviewFontSize")
-    expect(util, "buildWebviewHtml must define scaled Kilo font tokens").toContain("--kilo-font-size-")
+    expect(util, "buildWebviewHtml must define scaled Tavern font tokens").toContain("--tavern-font-size-")
 
     const missing = WATCHED_PROVIDERS.filter((file) => !fs.readFileSync(file, "utf-8").includes("watchFontSizeConfig"))
     expect(
       missing.map(rel),
-      `Webview providers that stay open must broadcast fontSizeChanged when kilo-code.new.fontSize changes.\n` +
+      `Webview providers that stay open must broadcast fontSizeChanged when tavern-code.new.fontSize changes.\n` +
         missing.map((file) => `  - ${rel(file)}`).join("\n"),
     ).toEqual([])
   })

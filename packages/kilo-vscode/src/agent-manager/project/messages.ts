@@ -60,7 +60,7 @@ export interface ProjectMessageDeps {
   post: (message: AgentManagerOutMessage) => void
   /** Show a user-facing error. */
   error: (message: string) => void
-  /** Open the Kilo Settings editor, optionally on a tab and project. */
+  /** Open the Tavern Settings editor, optionally on a tab and project. */
   openSettings: (tab?: string, projectId?: string) => void
   /** Ensure a context's repository state is ready (no-op once initialized). */
   ready: (ctx: ProjectContext, options?: { warm?: boolean }) => Promise<ProjectInitResult>
@@ -232,7 +232,7 @@ function rememberTarget(projectId: string, target: SidebarTarget, deps: ProjectM
 
 function disabled(deps: ProjectMessageDeps): boolean {
   if (deps.enabled()) return false
-  deps.error("Multi-project Agent Manager is disabled. Enable it in Kilo Settings > Experimental to add projects.")
+  deps.error("Multi-project Agent Manager is disabled. Enable it in Tavern Settings > Experimental to add projects.")
   return true
 }
 

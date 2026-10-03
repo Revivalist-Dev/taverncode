@@ -4,15 +4,15 @@ import { Effect, Layer, Schema, Stream } from "effect"
 import * as Log from "@opencode-ai/core/util/log"
 import { Agent } from "../../src/agent/agent"
 import { Bus } from "../../src/bus"
-import { KiloIndexing } from "../../src/kilocode/indexing"
-import { KilocodeBootstrap } from "../../src/kilocode/bootstrap"
-import { Wakeup } from "../../src/kilocode/wakeup"
-import { KilocodeWatcher } from "../../src/kilocode/watcher"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryService } from "@kilocode/kilo-memory/effect/service"
+import { KiloIndexing } from "../../src/taverncode/indexing"
+import { KilocodeBootstrap } from "../../src/taverncode/bootstrap"
+import { Wakeup } from "../../src/taverncode/wakeup"
+import { KilocodeWatcher } from "../../src/taverncode/watcher"
+import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryService } from "@taverncode/tavern-memory/effect/service"
 import { InstanceState } from "../../src/effect/instance-state"
-import { KiloToolRegistry } from "../../src/kilocode/tool/registry"
+import { KiloToolRegistry } from "../../src/taverncode/tool/registry"
 import { Provider } from "../../src/provider/provider"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
@@ -35,8 +35,8 @@ afterEach(async () => {
   await disposeAllInstances()
 })
 
-describe("kilocode tool registry indexing", () => {
-  const logger = Log.create({ service: "kilocode-tool-registry" })
+describe("taverncode tool registry indexing", () => {
+  const logger = Log.create({ service: "taverncode-tool-registry" })
 
   it.live("omits semantic_search without waiting for slow indexing startup", () =>
     provideTmpdirInstance(
@@ -363,7 +363,7 @@ describe("kilocode tool registry indexing", () => {
     ),
   )
 
-  test("conditionally includes Kilo registry extras", () => {
+  test("conditionally includes Tavern registry extras", () => {
     const prev = process.env["KILO_CLIENT"]
     const def = (id: string): Tool.Def => ({
       id,
@@ -530,7 +530,7 @@ describe("kilocode tool registry indexing", () => {
   test("logs indexing bootstrap failures without blocking session bootstrap", async () => {
     const platform = process.env["KILO_PLATFORM"]
     process.env["KILO_PLATFORM"] = "cli"
-    const logger = Log.create({ service: "kilocode-bootstrap" })
+    const logger = Log.create({ service: "taverncode-bootstrap" })
     const err = new Error("indexing init failed")
     const calls: string[] = []
     const sessions = Layer.succeed(

@@ -1,14 +1,14 @@
 import { createMemo, createSignal, For, onCleanup, Show } from "solid-js"
 import type { Component } from "solid-js"
-import { CodeComponentProvider } from "@kilocode/kilo-ui/context/code"
-import { DiffComponentProvider } from "@kilocode/kilo-ui/context/diff"
-import { FileComponentProvider } from "@kilocode/kilo-ui/context/file"
-import { MarkedProvider } from "@kilocode/kilo-ui/context/marked"
-import { Code } from "@kilocode/kilo-ui/code"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { File } from "@kilocode/kilo-ui/file"
-import { ThemeProvider } from "@kilocode/kilo-ui/theme"
-import { RadioGroup } from "@kilocode/kilo-ui/radio-group"
+import { CodeComponentProvider } from "@taverncode/tavern-ui/context/code"
+import { DiffComponentProvider } from "@taverncode/tavern-ui/context/diff"
+import { FileComponentProvider } from "@taverncode/tavern-ui/context/file"
+import { MarkedProvider } from "@taverncode/tavern-ui/context/marked"
+import { Code } from "@taverncode/tavern-ui/code"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { File } from "@taverncode/tavern-ui/file"
+import { ThemeProvider } from "@taverncode/tavern-ui/theme"
+import { RadioGroup } from "@taverncode/tavern-ui/radio-group"
 import { LanguageProvider, useLanguage } from "../src/context/language"
 import { ServerProvider, useServer } from "../src/context/server"
 import { getVSCodeAPI, VSCodeProvider } from "../src/context/vscode"
@@ -107,7 +107,7 @@ const DiffVirtualShell: Component = () => {
 
 export const DiffVirtualApp: Component = () => {
   return (
-    <ThemeProvider defaultTheme="kilo-vscode">
+    <ThemeProvider defaultTheme="tavern-vscode">
       <VSCodeProvider>
         <ServerProvider>
           <DiffVirtualShell />

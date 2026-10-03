@@ -1,7 +1,7 @@
 import { For, Show, createSignal, type Component } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Button } from "@taverncode/tavern-ui/button"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { browserFeedbackData, type BrowserReference } from "../../../../src/shared/browser-feedback"
 import { useLanguage } from "../../context/language"
 

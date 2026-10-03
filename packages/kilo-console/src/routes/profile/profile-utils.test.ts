@@ -2,15 +2,15 @@ import { expect, test } from "bun:test"
 import { authError, credits, initials, money, page, parseDeviceCode, safeReturn, usage } from "./profile-utils"
 
 test("parses device auth codes from instructions", () => {
-  expect(parseDeviceCode("Open https://app.kilo.ai/device-auth and enter code: ABCD-2345")).toBe("ABCD-2345")
+  expect(parseDeviceCode("Open https://app.tavern.ai/device-auth and enter code: ABCD-2345")).toBe("ABCD-2345")
   expect(parseDeviceCode("Use ABCD-2345 to continue")).toBe("ABCD-2345")
   expect(parseDeviceCode(undefined)).toBeUndefined()
 })
 
-test("detects Kilo auth failures", () => {
-  expect(authError(new Error("Kilo profile: Unauthorized"))).toBe(true)
+test("detects Tavern auth failures", () => {
+  expect(authError(new Error("Tavern profile: Unauthorized"))).toBe(true)
   expect(authError({ status: 401 })).toBe(true)
-  expect(authError(new Error("Kilo profile: temporary network failure"))).toBe(false)
+  expect(authError(new Error("Tavern profile: temporary network failure"))).toBe(false)
 })
 
 test("formats account display helpers", () => {
@@ -24,21 +24,21 @@ test("keeps login returns internal", () => {
   expect(safeReturn("/profile?server=http%3A%2F%2F127.0.0.1%3A4097")).toBe(
     "/profile?server=http%3A%2F%2F127.0.0.1%3A4097",
   )
-  expect(safeReturn("https://app.kilo.ai/profile")).toBe("/profile")
-  expect(safeReturn("//app.kilo.ai/profile")).toBe("/profile")
+  expect(safeReturn("https://app.tavern.ai/profile")).toBe("/profile")
+  expect(safeReturn("//app.tavern.ai/profile")).toBe("/profile")
 })
 
 test("builds local links while preserving server", () => {
   const params = new URLSearchParams({ server: "http://127.0.0.1:4097", ignored: "1" })
-  expect(page(params, "/kilo/login", { return: "/profile" })).toBe(
-    "/kilo/login?server=http%3A%2F%2F127.0.0.1%3A4097&return=%2Fprofile",
+  expect(page(params, "/tavern/login", { return: "/profile" })).toBe(
+    "/tavern/login?server=http%3A%2F%2F127.0.0.1%3A4097&return=%2Fprofile",
   )
 })
 
 test("builds account-aware cloud links", () => {
   const id = "9d4b144c-0a2b-477b-973d-24fa02bebf13"
-  expect(usage(null)).toBe("https://app.kilo.ai/usage")
-  expect(usage(id)).toBe(`https://app.kilo.ai/organizations/${id}/usage-details`)
-  expect(credits(undefined)).toBe("https://app.kilo.ai/profile")
-  expect(credits(id)).toBe(`https://app.kilo.ai/organizations/${id}`)
+  expect(usage(null)).toBe("https://app.tavern.ai/usage")
+  expect(usage(id)).toBe(`https://app.tavern.ai/organizations/${id}/usage-details`)
+  expect(credits(undefined)).toBe("https://app.tavern.ai/profile")
+  expect(credits(id)).toBe(`https://app.tavern.ai/organizations/${id}`)
 })

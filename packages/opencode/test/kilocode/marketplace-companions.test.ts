@@ -5,10 +5,10 @@ import { Cause, Effect, Exit, Fiber } from "effect"
 import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"
 import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { parse } from "jsonc-parser"
-import * as Companions from "../../src/kilocode/marketplace/companions"
-import * as Paths from "../../src/kilocode/marketplace/paths"
-import { findEscapedPaths, install, remove } from "../../src/kilocode/marketplace/installer"
-import { OWNER, stageSkill } from "../../src/kilocode/marketplace/skill-archive"
+import * as Companions from "../../src/taverncode/marketplace/companions"
+import * as Paths from "../../src/taverncode/marketplace/paths"
+import { findEscapedPaths, install, remove } from "../../src/taverncode/marketplace/installer"
+import { OWNER, stageSkill } from "../../src/taverncode/marketplace/skill-archive"
 import { Process } from "../../src/util/process"
 import { tmpdirScoped } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
@@ -49,7 +49,7 @@ describe("marketplace MCP companions", () => {
     Effect.gen(function* () {
       const tmp = yield* tmpdirScoped()
       const ctx = input(tmp)
-      const file = path.join(tmp, ".kilo", "kilo.jsonc")
+      const file = path.join(tmp, ".tavern", "tavern.jsonc")
       yield* Effect.promise(() =>
         Bun.write(file, '// user comment\n{"model":"kept","mcp":{"other":{"enabled":false}}}'),
       )
@@ -57,7 +57,7 @@ describe("marketplace MCP companions", () => {
       const files = yield* Companions.install(ctx, "server", [skill], entry)
       const receipt = yield* Effect.promise(() => Companions.read("project", tmp, "server"))
       expect(receipt?.skills).toEqual(["guide"])
-      expect(files).toEqual([file, path.join(tmp, ".kilo", "skills", "guide", "SKILL.md")])
+      expect(files).toEqual([file, path.join(tmp, ".tavern", "skills", "guide", "SKILL.md")])
       const text = yield* Effect.promise(() => Bun.file(file).text())
       expect(text).toContain("// user comment")
       expect(parse(text)).toEqual({ model: "kept", mcp: { other: { enabled: false }, server: entry } })
@@ -81,13 +81,13 @@ describe("marketplace MCP companions", () => {
     Effect.gen(function* () {
       const tmp = yield* tmpdirScoped()
       const dir = path.join(tmp, "nested")
-      const file = path.join(tmp, ".kilo", "kilo.jsonc")
+      const file = path.join(tmp, ".tavern", "tavern.jsonc")
       yield* Effect.promise(() => fs.mkdir(dir))
       yield* Effect.promise(() => Bun.write(file, '{"model":"keep"}'))
       const ctx = { ...input(dir), worktree: tmp }
       const skill = yield* Effect.promise(() => archive())
       const files = yield* Companions.install(ctx, "server", [skill], entry)
-      expect(files).toEqual([file, path.join(dir, ".kilo", "skills", "guide", "SKILL.md")])
+      expect(files).toEqual([file, path.join(dir, ".tavern", "skills", "guide", "SKILL.md")])
       // The receipt is anchored to the config root, so the bundle stays removable
       // from either the install directory or the directory that owns the config.
       const fromRoot = yield* Effect.promise(() => Companions.read("project", tmp, "server"))
@@ -98,7 +98,7 @@ describe("marketplace MCP companions", () => {
       yield* Companions.remove({ scope: "project", directory: tmp, worktree: tmp }, fromRoot!)
       expect(parse(yield* Effect.promise(() => Bun.file(file).text())).model).toBe("keep")
       expect(parse(yield* Effect.promise(() => Bun.file(file).text())).mcp?.server).toBeUndefined()
-      expect(yield* Effect.promise(() => exists(path.join(dir, ".kilo", "skills", "guide")))).toBe(false)
+      expect(yield* Effect.promise(() => exists(path.join(dir, ".tavern", "skills", "guide")))).toBe(false)
       expect(yield* Effect.promise(() => Companions.read("project", tmp, "server"))).toBeUndefined()
     }),
   )
@@ -107,10 +107,10 @@ describe("marketplace MCP companions", () => {
     Effect.gen(function* () {
       const tmp = yield* tmpdirScoped()
       const dir = path.join(tmp, "nested")
-      const ancestor = path.join(tmp, "kilo.json")
-      const target = path.join(tmp, ".kilo", "kilo.jsonc")
+      const ancestor = path.join(tmp, "tavern.json")
+      const target = path.join(tmp, ".tavern", "tavern.jsonc")
       yield* Effect.promise(() => fs.mkdir(dir))
-      yield* Effect.promise(() => fs.mkdir(path.join(tmp, ".kilo")))
+      yield* Effect.promise(() => fs.mkdir(path.join(tmp, ".tavern")))
       // The selected install target is a distinct layer from the root config.
       yield* Effect.promise(() => Bun.write(target, '{"model":"keep"}'))
       // A root-level config already defines the same MCP id in a different layer.
@@ -128,7 +128,7 @@ describe("marketplace MCP companions", () => {
         url: "https://existing.example",
       })
       expect(parse(yield* Effect.promise(() => Bun.file(target).text())).mcp?.server).toBeUndefined()
-      expect(yield* Effect.promise(() => exists(path.join(dir, ".kilo", "skills", "guide")))).toBe(false)
+      expect(yield* Effect.promise(() => exists(path.join(dir, ".tavern", "skills", "guide")))).toBe(false)
     }),
   )
 
@@ -157,7 +157,7 @@ describe("marketplace MCP companions", () => {
         const skills = ids.map((id) => ({ id, content: "not downloaded" }))
         const out = yield* Companions.install(input(tmp), "server", skills, entry).pipe(Effect.exit)
         expect(Exit.isFailure(out)).toBe(true)
-        expect(yield* Effect.promise(() => exists(path.join(tmp, ".kilo")))).toBe(false)
+        expect(yield* Effect.promise(() => exists(path.join(tmp, ".tavern")))).toBe(false)
       }),
     )
   }
@@ -259,7 +259,7 @@ describe("marketplace MCP companions", () => {
       Effect.gen(function* () {
         const tmp = yield* tmpdirScoped()
         const ctx = input(tmp)
-        const file = path.join(tmp, ".kilo", "kilo.jsonc")
+        const file = path.join(tmp, ".tavern", "tavern.jsonc")
         const original = '// keep exactly\n{"model":"kept"}\n'
         yield* Effect.promise(() => Bun.write(file, original))
         const skills = yield* Effect.promise(() => Promise.all([archive("first"), archive("second")]))
@@ -306,7 +306,7 @@ describe("marketplace MCP companions", () => {
       const skill = yield* Effect.promise(() => archive())
       yield* Companions.install(ctx, "server", [skill], entry)
       const receipt = (yield* Effect.promise(() => Companions.read("project", tmp, "server")))!
-      const trash = path.join(tmp, ".kilo", "marketplace", "staging", receipt.token, "guide")
+      const trash = path.join(tmp, ".tavern", "marketplace", "staging", receipt.token, "guide")
       const original = fs.rm
       const probe = spyOn(fs, "rm").mockImplementation(async (file, opts) => {
         if (file === trash && (await exists(file))) {
@@ -338,7 +338,7 @@ describe("marketplace MCP companions", () => {
     Effect.gen(function* () {
       const tmp = yield* tmpdirScoped()
       const ctx = input(tmp)
-      const file = path.join(tmp, ".kilo", "kilo.jsonc")
+      const file = path.join(tmp, ".tavern", "tavern.jsonc")
       const skill = yield* Effect.promise(() => archive())
       const rename = fs.rename
       const probe = spyOn(fs, "rename").mockImplementation(async (from, to) => {
@@ -375,14 +375,14 @@ describe("marketplace MCP companions", () => {
     Effect.gen(function* () {
       const tmp = yield* tmpdirScoped()
       const outside = yield* tmpdirScoped()
-      yield* Effect.promise(() => fs.symlink(outside, path.join(tmp, ".kilo")))
+      yield* Effect.promise(() => fs.symlink(outside, path.join(tmp, ".tavern")))
       const skill = yield* Effect.promise(() => archive())
       expect(Exit.isFailure(yield* Companions.install(input(tmp), "server", [skill], entry).pipe(Effect.exit))).toBe(
         true,
       )
       expect(yield* Effect.promise(() => fs.readdir(outside))).toEqual([])
       // Unlink the link itself. `rm` on a symlink errors on Windows.
-      yield* Effect.promise(() => fs.unlink(path.join(tmp, ".kilo")))
+      yield* Effect.promise(() => fs.unlink(path.join(tmp, ".tavern")))
       yield* Companions.install(input(tmp), "server", [skill], entry)
       const receipt = (yield* Effect.promise(() => Companions.read("project", tmp, "server")))!
       const receipts = yield* Effect.promise(() => Paths.mcpsDir("project", tmp))

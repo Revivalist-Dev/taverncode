@@ -1,6 +1,6 @@
 import { expect } from "bun:test"
 import { Effect, Layer, Ref } from "effect"
-import { invalidateAfterProviderAuthChange } from "../../../src/kilocode/server/provider-auth-lifecycle"
+import { invalidateAfterProviderAuthChange } from "../../../src/taverncode/server/provider-auth-lifecycle"
 import { InstanceStore } from "../../../src/project/instance-store"
 import { ModelCache } from "../../../src/provider/model-cache"
 import { testEffect } from "../../lib/effect"
@@ -22,8 +22,8 @@ it.effect("clears provider models before disposing instances after auth changes"
   Effect.gen(function* () {
     const events = yield* Ref.make<string[]>([])
 
-    yield* invalidateAfterProviderAuthChange("kilo").pipe(Effect.provide(layer(events)))
+    yield* invalidateAfterProviderAuthChange("tavern").pipe(Effect.provide(layer(events)))
 
-    expect(yield* Ref.get(events)).toEqual(["clear:kilo", "dispose"])
+    expect(yield* Ref.get(events)).toEqual(["clear:tavern", "dispose"])
   }),
 )

@@ -32,7 +32,7 @@ describe("worktree recovery", () => {
     fs.writeFileSync(path.join(root, "README.md"), "init")
     git(["git", "-C", root, "add", "."])
     git(["git", "-C", root, "commit", "-m", "initial"])
-    target = path.join(root, ".kilo", "worktrees", "feature")
+    target = path.join(root, ".tavern", "worktrees", "feature")
     fs.mkdirSync(path.dirname(target), { recursive: true })
     git(["git", "-C", root, "worktree", "add", "-b", "feature", target])
 
@@ -105,9 +105,9 @@ describe("worktree recovery", () => {
   })
 
   it("only deletes directories the last reconcile classified as orphans", async () => {
-    const orphan = path.join(root, ".kilo", "worktrees", "leftover")
+    const orphan = path.join(root, ".tavern", "worktrees", "leftover")
     fs.mkdirSync(orphan, { recursive: true })
-    const unknown = path.join(root, ".kilo", "worktrees", "unlisted")
+    const unknown = path.join(root, ".tavern", "worktrees", "unlisted")
     fs.mkdirSync(unknown, { recursive: true })
     ctx.report = {
       entries: [],
@@ -161,7 +161,7 @@ describe("worktree recovery", () => {
   })
 
   it("re-validates against a fresh reconcile, not the possibly-stale ctx.report", async () => {
-    const orphan = path.join(root, ".kilo", "worktrees", "leftover")
+    const orphan = path.join(root, ".tavern", "worktrees", "leftover")
     fs.mkdirSync(orphan, { recursive: true })
     // ctx.report (built before the dialog was shown) still lists it, but the fresh reconcile the
     // host returns from inside cleanOrphans no longer does — e.g. the pool just claimed it.
@@ -184,8 +184,8 @@ describe("worktree recovery", () => {
   })
 
   it("cancels the size pass when a delete starts, then measures only what survived", async () => {
-    const doomed = path.join(root, ".kilo", "worktrees", "doomed")
-    const survivor = path.join(root, ".kilo", "worktrees", "survivor")
+    const doomed = path.join(root, ".tavern", "worktrees", "doomed")
+    const survivor = path.join(root, ".tavern", "worktrees", "survivor")
     fs.mkdirSync(doomed, { recursive: true })
     fs.mkdirSync(survivor, { recursive: true })
     fs.writeFileSync(path.join(doomed, "f.txt"), "x".repeat(100))
@@ -230,7 +230,7 @@ describe("worktree recovery", () => {
   })
 
   it("stages the directory (rename) instead of a blocking recursive delete", async () => {
-    const orphan = path.join(root, ".kilo", "worktrees", "leftover")
+    const orphan = path.join(root, ".tavern", "worktrees", "leftover")
     fs.mkdirSync(path.join(orphan, "nested"), { recursive: true })
     ctx.report = {
       entries: [],
@@ -243,10 +243,10 @@ describe("worktree recovery", () => {
     await cleanOrphans(ctx, host, [orphan])
 
     expect(fs.existsSync(orphan)).toBe(false)
-    // Nothing named .kilo-delete-* should survive once the background reap this awaits internally
+    // Nothing named .tavern-delete-* should survive once the background reap this awaits internally
     // (via detachOrphanDirectory's `done`) has had a chance to run.
     await ctx.worktreeManager().settle()
-    const leftovers = fs.readdirSync(path.dirname(orphan)).filter((name) => name.startsWith(".kilo-delete-"))
+    const leftovers = fs.readdirSync(path.dirname(orphan)).filter((name) => name.startsWith(".tavern-delete-"))
     expect(leftovers).toEqual([])
   })
 })

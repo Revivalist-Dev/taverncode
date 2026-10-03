@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { indexingErrorMessage, indexingWarningKey, parseQdrantWarning } from "../../src/kilocode/indexing-warning"
+import { indexingErrorMessage, indexingWarningKey, parseQdrantWarning } from "../../src/taverncode/indexing-warning"
 
 describe("parseQdrantWarning", () => {
   test("classifies incompatible Qdrant versions", () => {

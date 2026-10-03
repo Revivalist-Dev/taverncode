@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { displayCommand, skillShellPrompt } from "@/kilocode/skills/display"
+import { displayCommand, skillShellPrompt } from "@/taverncode/skills/display"
 
 describe("displayCommand", () => {
   it("escapes control characters so a command cannot repaint the prompt", () => {

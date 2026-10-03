@@ -30,7 +30,7 @@ import {
   Todo,
   QuestionAnswer,
   QuestionInfo,
-} from "@kilocode/sdk/v2"
+} from "@taverncode/sdk/v2"
 import { useData } from "../context"
 import { useBoardNavigation } from "../context/board-navigation"
 import { checkFile } from "../file-link-validator"
@@ -2657,7 +2657,7 @@ let bashHighlighter: ReturnType<typeof getSharedHighlighter> | undefined
 
 const loadBashHighlighter = () => {
   // Drop a rejected promise so a later chunk can retry instead of caching the failure.
-  bashHighlighter ??= getSharedHighlighter({ themes: ["Kilo"], langs: [] }).catch((err) => {
+  bashHighlighter ??= getSharedHighlighter({ themes: ["Tavern"], langs: [] }).catch((err) => {
     bashHighlighter = undefined
     throw err
   })
@@ -2670,7 +2670,7 @@ async function highlightBashFragment(text: string): Promise<string | undefined> 
     if (!highlighter.getLoadedLanguages().includes(BASH_OUTPUT_LANG)) {
       await highlighter.loadLanguage(BASH_OUTPUT_LANG)
     }
-    const html = highlighter.codeToHtml(text, { lang: BASH_OUTPUT_LANG, theme: "Kilo", tabindex: false })
+    const html = highlighter.codeToHtml(text, { lang: BASH_OUTPUT_LANG, theme: "Tavern", tabindex: false })
     const probe = document.createElement("div")
     probe.innerHTML = html
     return probe.querySelector("code")?.innerHTML

@@ -1,7 +1,7 @@
 import { describe, expect, it, spyOn } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import * as vscode from "vscode"
-import { KiloProviderMemory } from "../../src/kilo-provider/memory"
+import { KiloProviderMemory } from "../../src/tavern-provider/memory"
 
 function subject(client: KiloClient | undefined) {
   const posts: unknown[] = []
@@ -16,7 +16,7 @@ function subject(client: KiloClient | undefined) {
 
 function status(root: string) {
   return {
-    root: `${root}/.kilo/memory`,
+    root: `${root}/.tavern/memory`,
     state: {
       enabled: true,
       scope: "project",
@@ -33,7 +33,7 @@ function status(root: string) {
 
 function show(root: string) {
   return {
-    root: `${root}/.kilo/memory`,
+    root: `${root}/.tavern/memory`,
     state: status(root).state,
     sources: { project: "", environment: "", corrections: "" },
     index: "",
@@ -69,13 +69,13 @@ describe("KiloProviderMemory", () => {
 
       expect(picker).toHaveBeenCalledTimes(1)
       expect(picker.mock.calls[0]?.[0]).toContainEqual(
-        expect.objectContaining({ label: "Storage", detail: "/repo/.kilo/memory" }),
+        expect.objectContaining({ label: "Storage", detail: "/repo/.tavern/memory" }),
       )
       expect(picker.mock.calls[0]?.[0]).toContainEqual(
         expect.objectContaining({ label: "Stored memory fact :: with context" }),
       )
       expect(notice).toHaveBeenCalledWith(
-        "This project doesn't have any memory yet. It will start showing after you use Kilo.",
+        "This project doesn't have any memory yet. It will start showing after you use Tavern.",
       )
     } finally {
       picker.mockRestore()
@@ -118,7 +118,7 @@ describe("KiloProviderMemory", () => {
     try {
       await item.memory.run({ operation: "inspect", sessionID: "ses_inspect" })
 
-      expect(reveal).toHaveBeenCalledWith("revealFileInOS", expect.objectContaining({ fsPath: "/repo/.kilo/memory" }))
+      expect(reveal).toHaveBeenCalledWith("revealFileInOS", expect.objectContaining({ fsPath: "/repo/.tavern/memory" }))
       expect(item.posts).toContainEqual(
         expect.objectContaining({ type: "memoryOperationResult", operation: "inspect", ok: true }),
       )
@@ -202,7 +202,7 @@ describe("KiloProviderMemory", () => {
     expect(posts[1]).toMatchObject({
       type: "memoryLoaded",
       sessionID: "ses_8",
-      status: { root: "/repo/ses_8/.kilo/memory" },
+      status: { root: "/repo/ses_8/.tavern/memory" },
     })
   })
 
@@ -270,11 +270,11 @@ describe("KiloProviderMemory", () => {
       memory: {
         configure: async (input: unknown) => {
           calls.push(["configure", input])
-          return { data: { root: "/repo/.kilo/memory", state: state.state } }
+          return { data: { root: "/repo/.tavern/memory", state: state.state } }
         },
         purge: async (input: unknown) => {
           calls.push(["purge", input])
-          return { data: { root: "/repo/.kilo/memory", purged: true } }
+          return { data: { root: "/repo/.tavern/memory", purged: true } }
         },
         status: async () => ({ data: state }),
         show: async () => ({ data: view }),

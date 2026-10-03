@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import { describe, expect, test } from "bun:test"
-import { resolveState } from "@opencode-ai/core/kilocode/global"
+import { resolveState } from "@opencode-ai/core/taverncode/global"
 import { tmpdir } from "../fixture/tmpdir"
 
 const skip = process.platform === "win32" || process.getuid?.() === 0
@@ -58,7 +58,7 @@ describe("global state directory", () => {
   test.skipIf(skip)("falls back when the preferred directory cannot be created", async () => {
     await using tmp = await tmpdir()
     const parent = path.join(tmp.path, "preferred")
-    const preferred = path.join(parent, "kilo")
+    const preferred = path.join(parent, "tavern")
     const fallback = path.join(tmp.path, "data", "state")
     await fs.mkdir(parent)
     await fs.chmod(parent, 0o500)

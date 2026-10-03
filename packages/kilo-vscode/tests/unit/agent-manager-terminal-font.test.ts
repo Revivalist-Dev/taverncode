@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { createRoot } from "solid-js"
 import { affectsTerminalFont, resolveTerminalFont } from "../../src/agent-manager/terminal-font"
 import { TerminalRouter } from "../../src/agent-manager/terminal-routing"

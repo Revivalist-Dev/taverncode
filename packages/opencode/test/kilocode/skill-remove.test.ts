@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import path from "node:path"
 import { Global } from "@opencode-ai/core/global"
-import { target } from "../../src/kilocode/skill-remove"
+import { target } from "../../src/taverncode/skill-remove"
 
 const info = (location: string) => ({
   name: "synthetic",

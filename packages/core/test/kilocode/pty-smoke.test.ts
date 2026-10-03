@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import { PtySmoke } from "../../src/kilocode/pty/smoke"
+import { PtySmoke } from "../../src/taverncode/pty/smoke"
 
 // A fake shell that drops all input it reads during startup, like pwsh under ConPTY.
 const shell = `

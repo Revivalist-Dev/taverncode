@@ -2,10 +2,10 @@ import { Effect } from "effect"
 import { mkdir, rm } from "fs/promises"
 import path from "path"
 import { parse as parseJsonc } from "jsonc-parser"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import { MemoryPaths } from "@kilocode/kilo-memory/effect/paths"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import { MemoryPaths } from "@taverncode/tavern-memory/effect/paths"
 import { Database } from "@opencode-ai/core/database/database"
-import { BoardStore } from "../../../src/kilocode/board/store"
+import { BoardStore } from "../../../src/taverncode/board/store"
 import { array, check, isRecord, object, stable } from "../../server/httpapi-exercise/assertions"
 import { request } from "../../server/httpapi-exercise/backend"
 import { http, route } from "../../server/httpapi-exercise/dsl"
@@ -29,15 +29,15 @@ function file(ctx: ScenarioContext, name: string, content: string) {
 
 const skill = async (dir: string) => {
   await Bun.write(
-    path.join(dir, ".kilo/skill/httpapi-remove/SKILL.md"),
+    path.join(dir, ".tavern/skill/httpapi-remove/SKILL.md"),
     "---\nname: httpapi-remove\ndescription: HTTP API removal fixture.\n---\n# HTTP API remove\n",
   )
-  await Bun.write(path.join(dir, ".kilo/skill/httpapi-remove/KEEP.txt"), "synthetic sentinel\n")
+  await Bun.write(path.join(dir, ".tavern/skill/httpapi-remove/KEEP.txt"), "synthetic sentinel\n")
 }
 
 const agent = async (dir: string) => {
   await Bun.write(
-    path.join(dir, ".kilo/agent/httpapi-remove.md"),
+    path.join(dir, ".tavern/agent/httpapi-remove.md"),
     "---\ndescription: HTTP API remove\n---\nRemove me.\n",
   )
 }
@@ -47,16 +47,16 @@ const MARKETPLACE_MCP_ID = "httpapi-marketplace"
 // Seed a project config that already contains the marketplace MCP so the remove scenario
 // exercises the real deletion path instead of the missing-entry short circuit.
 const marketplaceMcp = async (dir: string) => {
-  await mkdir(path.join(dir, ".kilo"), { recursive: true })
+  await mkdir(path.join(dir, ".tavern"), { recursive: true })
   await Bun.write(
-    path.join(dir, ".kilo", "kilo.jsonc"),
+    path.join(dir, ".tavern", "tavern.jsonc"),
     JSON.stringify({ mcp: { [MARKETPLACE_MCP_ID]: { type: "local", command: ["npx", "server"] } } }, null, 2),
   )
 }
 
 async function projectMcp(dir: string, id: string) {
-  for (const name of ["kilo.jsonc", "kilo.json"]) {
-    const file = Bun.file(path.join(dir, ".kilo", name))
+  for (const name of ["tavern.jsonc", "tavern.json"]) {
+    const file = Bun.file(path.join(dir, ".tavern", name))
     if (await file.exists()) return !!(parseJsonc(await file.text())?.mcp ?? {})[id]
   }
   const root = Bun.file(path.join(dir, "opencode.json"))
@@ -65,9 +65,9 @@ async function projectMcp(dir: string, id: string) {
 }
 
 const duplicates = async (dir: string) => {
-  for (const name of ["kilo.jsonc", "opencode.jsonc"]) {
+  for (const name of ["tavern.jsonc", "opencode.jsonc"]) {
     await Bun.write(
-      path.join(dir, ".kilo", name),
+      path.join(dir, ".tavern", name),
       JSON.stringify({
         default_agent: "httpapi-duplicate",
         agent: {
@@ -81,7 +81,7 @@ const duplicates = async (dir: string) => {
 
 const command = async (dir: string) => {
   await Bun.write(
-    path.join(dir, ".kilo/command/httpapi-remove.md"),
+    path.join(dir, ".tavern/command/httpapi-remove.md"),
     "---\ndescription: HTTP API command remove\nmodel: anthropic/claude-sonnet-4-6\nvariant: high\n---\nRun command.\n",
   )
 }
@@ -123,7 +123,7 @@ function board(ctx: ScenarioContext) {
 }
 
 const edit = {
-  provider: "kilo",
+  provider: "tavern",
   model: "inception/mercury-next-edit",
   currentFilePath: "src/index.ts",
   currentFileContent: "export const value = 1\n",
@@ -426,48 +426,48 @@ export const kiloScenarios: Scenario[] = [
       object(body.state)
       check(body.state.enabled === false, "disable should turn memory off")
     }),
-  http.protected.get("/kilo/profile", "kilo.profile").probe({ path: "/path" }).status(401),
-  http.protected.get("/kilo/auth-status", "kilo.authStatus").json(200, (body) => {
+  http.protected.get("/tavern/profile", "tavern.profile").probe({ path: "/path" }).status(401),
+  http.protected.get("/tavern/auth-status", "tavern.authStatus").json(200, (body) => {
     object(body)
-    check(body.authenticated === false, "Kilo auth status should report signed out")
-    check(body.type === undefined, "Kilo auth status should not expose a credential type while signed out")
+    check(body.authenticated === false, "Tavern auth status should report signed out")
+    check(body.type === undefined, "Tavern auth status should not expose a credential type while signed out")
   }),
-  http.protected.get("/kilo/modes", "kilo.modes").json(200, (body) => {
+  http.protected.get("/tavern/modes", "tavern.modes").json(200, (body) => {
     object(body)
     array(body.modes)
   }),
   http.protected
-    .post("/kilo/fim", "kilo.fim")
-    .at((ctx) => ({ path: "/kilo/fim", headers: ctx.headers(), body: { prefix: "const value = ", suffix: "\n" } }))
+    .post("/tavern/fim", "tavern.fim")
+    .at((ctx) => ({ path: "/tavern/fim", headers: ctx.headers(), body: { prefix: "const value = ", suffix: "\n" } }))
     .status(401),
   http.protected
-    .post("/kilo/edit", "kilo.edit")
-    .at((ctx) => ({ path: "/kilo/edit", headers: ctx.headers(), body: edit }))
+    .post("/tavern/edit", "tavern.edit")
+    .at((ctx) => ({ path: "/tavern/edit", headers: ctx.headers(), body: edit }))
     .status(401),
   http.protected
-    .post("/kilo/audio/transcriptions", "kilo.audio.transcriptions")
+    .post("/tavern/audio/transcriptions", "tavern.audio.transcriptions")
     .at((ctx) => ({
-      path: "/kilo/audio/transcriptions",
+      path: "/tavern/audio/transcriptions",
       headers: ctx.headers(),
       body: { model: "whisper-1", input_audio: { data: "", format: "wav" } },
     }))
     .status(401),
-  http.protected.get("/kilo/notifications", "kilo.notifications").json(200, array),
-  http.protected.get("/kilo/models/images", "kilo.models.images").probe({ path: "/path" }).status(401),
-  http.protected.get("/kilo/models/transcriptions", "kilo.models.transcriptions").probe({ path: "/path" }).status(401),
+  http.protected.get("/tavern/notifications", "tavern.notifications").json(200, array),
+  http.protected.get("/tavern/models/images", "tavern.models.images").probe({ path: "/path" }).status(401),
+  http.protected.get("/tavern/models/transcriptions", "tavern.models.transcriptions").probe({ path: "/path" }).status(401),
   http.protected
-    .post("/kilo/organization", "kilo.organization.set")
-    .at((ctx) => ({ path: "/kilo/organization", headers: ctx.headers(), body: { organizationId: null } }))
+    .post("/tavern/organization", "tavern.organization.set")
+    .at((ctx) => ({ path: "/tavern/organization", headers: ctx.headers(), body: { organizationId: null } }))
     .status(401),
-  http.protected.get("/kilo/cloud-sessions", "kilo.cloudSessions").probe({ path: "/path" }).status(401),
+  http.protected.get("/tavern/cloud-sessions", "tavern.cloudSessions").probe({ path: "/path" }).status(401),
   http.protected
-    .get("/kilo/cloud/session/{id}", "kilo.cloud.session.get")
+    .get("/tavern/cloud/session/{id}", "tavern.cloud.session.get")
     .probe({ path: "/path" })
-    .at((ctx) => ({ path: route("/kilo/cloud/session/{id}", { id: "httpapi-missing" }), headers: ctx.headers() }))
+    .at((ctx) => ({ path: route("/tavern/cloud/session/{id}", { id: "httpapi-missing" }), headers: ctx.headers() }))
     .status(401),
   http.protected
-    .post("/kilo/cloud/session/import", "kilo.cloud.session.import")
-    .at((ctx) => ({ path: "/kilo/cloud/session/import", headers: ctx.headers(), body: { sessionId: "missing" } }))
+    .post("/tavern/cloud/session/import", "tavern.cloud.session.import")
+    .at((ctx) => ({ path: "/tavern/cloud/session/import", headers: ctx.headers(), body: { sessionId: "missing" } }))
     .status(401),
   http.protected.get("/network", "network.list").json(200, array),
   http.protected
@@ -573,38 +573,38 @@ export const kiloScenarios: Scenario[] = [
     .at((ctx) => ({ path: "/enhance-prompt", headers: ctx.headers(), body: { text: "" } }))
     .status(400),
   http.protected
-    .post("/kilocode/session/{sessionID}/resume", "kilocode.resumeSession")
+    .post("/taverncode/session/{sessionID}/resume", "taverncode.resumeSession")
     .seeded((ctx) => ctx.session({ title: "Empty resume" }))
     .at((ctx) => ({
-      path: route("/kilocode/session/{sessionID}/resume", { sessionID: ctx.state.id }),
+      path: route("/taverncode/session/{sessionID}/resume", { sessionID: ctx.state.id }),
       headers: ctx.headers(),
       body: { messageID: "msg_httpapi_missing" },
     }))
     .status(400),
   http.protected
-    .post("/kilocode/session/{sessionID}/drain", "kilocode.drainSession")
+    .post("/taverncode/session/{sessionID}/drain", "taverncode.drainSession")
     .seeded((ctx) => ctx.session({ title: "Empty drain" }))
     .at((ctx) => ({
-      path: route("/kilocode/session/{sessionID}/drain", { sessionID: ctx.state.id }),
+      path: route("/taverncode/session/{sessionID}/drain", { sessionID: ctx.state.id }),
       headers: ctx.headers(),
       body: { token: "httpapi-drain" },
     }))
     .json(200, (body) => check(body === true, "an empty session should drain")),
   http.protected
-    .post("/kilocode/session/{sessionID}/drain", "kilocode.drainSession.invalid")
+    .post("/taverncode/session/{sessionID}/drain", "taverncode.drainSession.invalid")
     .seeded((ctx) => ctx.session({ title: "Invalid drain token" }))
     .at((ctx) => ({
-      path: route("/kilocode/session/{sessionID}/drain", { sessionID: ctx.state.id }),
+      path: route("/taverncode/session/{sessionID}/drain", { sessionID: ctx.state.id }),
       headers: ctx.headers(),
       body: { token: "" },
     }))
     .status(400),
   http.protected
-    .get("/kilocode/session/{sessionID}/board", "kilocode.sessionBoard")
-    .probe({ path: "/kilocode/session/ses_httpapi_missing/board" })
+    .get("/taverncode/session/{sessionID}/board", "taverncode.sessionBoard")
+    .probe({ path: "/taverncode/session/ses_httpapi_missing/board" })
     .seeded(board)
     .at((ctx) => ({
-      path: `${route("/kilocode/session/{sessionID}/board", { sessionID: ctx.state.child.id })}?limit=1`,
+      path: `${route("/taverncode/session/{sessionID}/board", { sessionID: ctx.state.child.id })}?limit=1`,
       headers: ctx.headers(),
     }))
     .jsonEffect(200, (body, ctx) =>
@@ -621,7 +621,7 @@ export const kiloScenarios: Scenario[] = [
           "child board should return the owner, newest post, and pagination cursor",
         )
         const older = yield* request("GET", {
-          path: `${route("/kilocode/session/{sessionID}/board", { sessionID: ctx.state.root.id })}?before=${ctx.state.last.id}&limit=1`,
+          path: `${route("/taverncode/session/{sessionID}/board", { sessionID: ctx.state.root.id })}?before=${ctx.state.last.id}&limit=1`,
           headers: ctx.headers(),
         })
         check(older.status === 200, "older board page should succeed")
@@ -642,13 +642,13 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/session/{sessionID}/board/reset", "kilocode.resetSessionBoard")
-    .probe({ path: "/kilocode/session/ses_httpapi_missing/board/reset", body: { revision: 0 } })
+    .post("/taverncode/session/{sessionID}/board/reset", "taverncode.resetSessionBoard")
+    .probe({ path: "/taverncode/session/ses_httpapi_missing/board/reset", body: { revision: 0 } })
     .mutating()
     .seeded((ctx) =>
       Effect.gen(function* () {
         const state = yield* board(ctx)
-        const path = route("/kilocode/session/{sessionID}/board", { sessionID: state.root.id })
+        const path = route("/taverncode/session/{sessionID}/board", { sessionID: state.root.id })
         const stale = yield* request("POST", {
           path: `${path}/reset`,
           headers: ctx.headers(),
@@ -667,7 +667,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     )
     .at((ctx) => ({
-      path: route("/kilocode/session/{sessionID}/board/reset", { sessionID: ctx.state.root.id }),
+      path: route("/taverncode/session/{sessionID}/board/reset", { sessionID: ctx.state.root.id }),
       headers: ctx.headers(),
       body: { revision: ctx.state.revision },
     }))
@@ -684,7 +684,7 @@ export const kiloScenarios: Scenario[] = [
           "reset should return an empty board without rewinding its revision",
         )
         const current = yield* request("GET", {
-          path: route("/kilocode/session/{sessionID}/board", { sessionID: ctx.state.child.id }),
+          path: route("/taverncode/session/{sessionID}/board", { sessionID: ctx.state.child.id }),
           headers: ctx.headers(),
         })
         check(current.status === 200 && stable(current.body) === stable(body), "reset should persist for child viewers")
@@ -699,7 +699,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .get("/session/{sessionID}/model-usage", "kilocode.sessionModelUsage")
+    .get("/session/{sessionID}/model-usage", "taverncode.sessionModelUsage")
     .seeded((ctx) => ctx.session({ title: "Model usage" }))
     .at((ctx) => ({
       path: route("/session/{sessionID}/model-usage", { sessionID: ctx.state.id }),
@@ -712,9 +712,9 @@ export const kiloScenarios: Scenario[] = [
       check(body.models.length === 0, "a new session should have no model usage")
     }),
   http.protected
-    .get("/kilocode/background-jobs", "kilocode.backgroundJobs")
+    .get("/taverncode/background-jobs", "taverncode.backgroundJobs")
     .at((ctx) => ({
-      path: "/kilocode/background-jobs?sessionID=ses_httpapi_missing",
+      path: "/taverncode/background-jobs?sessionID=ses_httpapi_missing",
       headers: ctx.headers(),
     }))
     .json(200, (body) => {
@@ -726,9 +726,9 @@ export const kiloScenarios: Scenario[] = [
       }
     }),
   http.protected
-    .get("/kilocode/wakeups", "kilocode.wakeups")
+    .get("/taverncode/wakeups", "taverncode.wakeups")
     .at((ctx) => ({
-      path: "/kilocode/wakeups",
+      path: "/taverncode/wakeups",
       headers: ctx.headers(),
     }))
     .json(200, (body) => {
@@ -740,9 +740,9 @@ export const kiloScenarios: Scenario[] = [
       }
     }),
   http.protected
-    .get("/kilocode/retention", "kilocode.retention.status")
+    .get("/taverncode/retention", "taverncode.retention.status")
     .at((ctx) => ({
-      path: "/kilocode/retention",
+      path: "/taverncode/retention",
       headers: ctx.headers(),
     }))
     .json(200, (body) => {
@@ -763,10 +763,10 @@ export const kiloScenarios: Scenario[] = [
       }
     }),
   http.protected
-    .post("/kilocode/retention/run", "kilocode.retention.run")
+    .post("/taverncode/retention/run", "taverncode.retention.run")
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/retention/run",
+      path: "/taverncode/retention/run",
       headers: ctx.headers(),
       body: { force: true },
     }))
@@ -782,10 +782,10 @@ export const kiloScenarios: Scenario[] = [
       }
     }),
   http.protected
-    .post("/kilocode/retention/cancel", "kilocode.retention.cancel")
+    .post("/taverncode/retention/cancel", "taverncode.retention.cancel")
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/retention/cancel",
+      path: "/taverncode/retention/cancel",
       headers: ctx.headers(),
     }))
     .json(200, (body) => {
@@ -793,21 +793,21 @@ export const kiloScenarios: Scenario[] = [
       check(typeof body.requested === "boolean", "retention cancel should report whether a pass was running")
     }),
   http.protected
-    .post("/kilocode/background-jobs/{jobID}/cancel", "kilocode.backgroundJob.cancel")
+    .post("/taverncode/background-jobs/{jobID}/cancel", "taverncode.backgroundJob.cancel")
     .at((ctx) => ({
-      path: route("/kilocode/background-jobs/{jobID}/cancel", { jobID: "job_httpapi_missing" }),
+      path: route("/taverncode/background-jobs/{jobID}/cancel", { jobID: "job_httpapi_missing" }),
       headers: ctx.headers(),
     }))
     .status(404),
   http.protected
-    .post("/kilocode/background-jobs/{jobID}/promote", "kilocode.backgroundJob.promote")
+    .post("/taverncode/background-jobs/{jobID}/promote", "taverncode.backgroundJob.promote")
     .at((ctx) => ({
-      path: route("/kilocode/background-jobs/{jobID}/promote", { jobID: "job_httpapi_missing" }),
+      path: route("/taverncode/background-jobs/{jobID}/promote", { jobID: "job_httpapi_missing" }),
       headers: ctx.headers(),
     }))
     .status(404),
   http.protected
-    .post("/kilocode/heap/snapshot", "kilocode.heap.snapshot")
+    .post("/taverncode/heap/snapshot", "taverncode.heap.snapshot")
     .mutating()
     .jsonEffect(200, (body) =>
       Effect.gen(function* () {
@@ -816,11 +816,11 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/snapshot/prepare", "kilocode.snapshot.prepare")
+    .post("/taverncode/snapshot/prepare", "taverncode.snapshot.prepare")
     .mutating()
     .inProject({ git: true })
     .at((ctx) => ({
-      path: `/kilocode/snapshot/prepare?directory=${encodeURIComponent(directory(ctx))}`,
+      path: `/taverncode/snapshot/prepare?directory=${encodeURIComponent(directory(ctx))}`,
       headers: ctx.headers(),
     }))
     .json(200, (body) => {
@@ -829,35 +829,35 @@ export const kiloScenarios: Scenario[] = [
       check(typeof body.durationMs === "number", "snapshot preparation should report its duration")
     }),
   http.protected
-    .post("/kilocode/snapshot/remove", "kilocode.removeSnapshot")
+    .post("/taverncode/snapshot/remove", "taverncode.removeSnapshot")
     .mutating()
     .inProject({ git: true })
     .seeded((ctx) =>
       Effect.gen(function* () {
-        const worktree = path.join(directory(ctx), ".kilo", "worktrees", "api-snapshot-remove")
+        const worktree = path.join(directory(ctx), ".tavern", "worktrees", "api-snapshot-remove")
         yield* Effect.promise(() => mkdir(worktree, { recursive: true }))
         yield* Effect.promise(() => rm(worktree, { recursive: true, force: true }))
         return worktree
       }),
     )
     .at((ctx) => ({
-      path: `/kilocode/snapshot/remove?directory=${encodeURIComponent(directory(ctx))}`,
+      path: `/taverncode/snapshot/remove?directory=${encodeURIComponent(directory(ctx))}`,
       headers: ctx.headers(),
       body: { worktree: ctx.state },
     }))
     .status(401),
   http.protected
-    .post("/kilocode/worktree/teardown", "kilocode.teardownWorktree")
+    .post("/taverncode/worktree/teardown", "taverncode.teardownWorktree")
     .mutating()
     .inProject({ git: true })
     .at((ctx) => ({
-      path: `/kilocode/worktree/teardown?directory=${encodeURIComponent(directory(ctx))}`,
+      path: `/taverncode/worktree/teardown?directory=${encodeURIComponent(directory(ctx))}`,
       headers: ctx.headers(),
-      body: { worktree: path.join(directory(ctx), ".kilo", "worktrees", "api-worktree-teardown") },
+      body: { worktree: path.join(directory(ctx), ".tavern", "worktrees", "api-worktree-teardown") },
     }))
     .status(401),
   http.protected
-    .get("/kilocode/command/files", "kilocode.commandFiles")
+    .get("/taverncode/command/files", "taverncode.commandFiles")
     .inProject({ git: true, init: command })
     .json(200, (body, ctx) => {
       array(body)
@@ -865,7 +865,7 @@ export const kiloScenarios: Scenario[] = [
       object(item)
       check(item.description === "HTTP API command remove", "command file should include description")
       check(
-        item.location === path.join(directory(ctx), ".kilo/command/httpapi-remove.md"),
+        item.location === path.join(directory(ctx), ".tavern/command/httpapi-remove.md"),
         "command file should include location",
       )
       check(item.editable === true, "command file should be editable")
@@ -878,77 +878,77 @@ export const kiloScenarios: Scenario[] = [
       )
     }),
   http.protected
-    .post("/kilocode/command/remove", "kilocode.removeCommand")
+    .post("/taverncode/command/remove", "taverncode.removeCommand")
     .inProject({ git: true, init: command })
     .mutating()
     .preserveDatabase()
     .at((ctx) => ({
-      path: "/kilocode/command/remove",
+      path: "/taverncode/command/remove",
       headers: ctx.headers(),
-      body: { location: path.join(directory(ctx), ".kilo/command/httpapi-remove.md") },
+      body: { location: path.join(directory(ctx), ".tavern/command/httpapi-remove.md") },
     }))
     .jsonEffect(200, (body, ctx) =>
       Effect.gen(function* () {
         check(body === true, "command removal should return true")
-        const location = path.join(directory(ctx), ".kilo/command/httpapi-remove.md")
+        const location = path.join(directory(ctx), ".tavern/command/httpapi-remove.md")
         check(!(yield* Effect.promise(() => Bun.file(location).exists())), "removed command should not remain on disk")
       }),
     ),
   http.protected
-    .post("/kilocode/skill/remove", "kilocode.removeSkill")
+    .post("/taverncode/skill/remove", "taverncode.removeSkill")
     .inProject({ git: true, init: skill })
     .mutating()
     .preserveDatabase()
     .at((ctx) => ({
-      path: "/kilocode/skill/remove",
+      path: "/taverncode/skill/remove",
       headers: ctx.headers(),
-      body: { location: path.join(directory(ctx), ".kilo/skill/httpapi-remove/SKILL.md") },
+      body: { location: path.join(directory(ctx), ".tavern/skill/httpapi-remove/SKILL.md") },
     }))
     .jsonEffect(200, (body, ctx) =>
       Effect.gen(function* () {
         check(body === true, "skill removal should return true")
-        const location = path.join(directory(ctx), ".kilo/skill/httpapi-remove/SKILL.md")
-        const sentinel = path.join(directory(ctx), ".kilo/skill/httpapi-remove/KEEP.txt")
+        const location = path.join(directory(ctx), ".tavern/skill/httpapi-remove/SKILL.md")
+        const sentinel = path.join(directory(ctx), ".tavern/skill/httpapi-remove/KEEP.txt")
         check(!(yield* Effect.promise(() => Bun.file(location).exists())), "removed skill should not remain on disk")
         check(yield* Effect.promise(() => Bun.file(sentinel).exists()), "skill removal should preserve sibling files")
       }),
     ),
   http.protected
-    .post("/kilocode/agent/remove", "kilocode.removeAgent")
+    .post("/taverncode/agent/remove", "taverncode.removeAgent")
     .inProject({ git: true, init: agent })
     .mutating()
-    .at((ctx) => ({ path: "/kilocode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-remove" } }))
+    .at((ctx) => ({ path: "/taverncode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-remove" } }))
     .jsonEffect(200, (body, ctx) =>
       Effect.gen(function* () {
         check(body === true, "agent removal should return true")
-        const location = path.join(directory(ctx), ".kilo/agent/httpapi-remove.md")
+        const location = path.join(directory(ctx), ".tavern/agent/httpapi-remove.md")
         check(!(yield* Effect.promise(() => Bun.file(location).exists())), "removed agent should not remain on disk")
       }),
     ),
   http.protected
-    .get("/kilocode/provider-usage", "kilocode.providerUsage.get")
+    .get("/taverncode/provider-usage", "taverncode.providerUsage.get")
     .inProject({ git: true })
     .json(200, (body) => {
       object(body)
       array(body.items)
     }),
   http.protected
-    .post("/kilocode/provider-usage/refresh", "kilocode.providerUsage.refresh")
+    .post("/taverncode/provider-usage/refresh", "taverncode.providerUsage.refresh")
     .inProject({ git: true })
     .json(200, (body) => {
       object(body)
       array(body.items)
     }),
   http.protected
-    .post("/kilocode/agent/remove", "kilocode.removeAgent.duplicates")
+    .post("/taverncode/agent/remove", "taverncode.removeAgent.duplicates")
     .inProject({ git: true, init: duplicates })
     .mutating()
-    .at((ctx) => ({ path: "/kilocode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-duplicate" } }))
+    .at((ctx) => ({ path: "/taverncode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-duplicate" } }))
     .jsonEffect(200, (body, ctx) =>
       Effect.gen(function* () {
         check(body === true, "duplicate agent removal should return true")
-        for (const name of ["kilo.jsonc", "opencode.jsonc"]) {
-          const cfg = yield* Effect.promise(() => Bun.file(path.join(directory(ctx), ".kilo", name)).json())
+        for (const name of ["tavern.jsonc", "opencode.jsonc"]) {
+          const cfg = yield* Effect.promise(() => Bun.file(path.join(directory(ctx), ".tavern", name)).json())
           check(!cfg.agent["httpapi-duplicate"], `removed agent should not remain in ${name}`)
           check(cfg.agent.keep.description === "Keep this agent", `unrelated agent should remain in ${name}`)
           check(cfg.default_agent === undefined, `removed default agent should not remain in ${name}`)
@@ -956,24 +956,24 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/agent/remove", "kilocode.removeAgent")
-    .at((ctx) => ({ path: "/kilocode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-missing" } }))
+    .post("/taverncode/agent/remove", "taverncode.removeAgent")
+    .at((ctx) => ({ path: "/taverncode/agent/remove", headers: ctx.headers(), body: { name: "httpapi-missing" } }))
     .json(400, (body) => {
       object(body)
       check(body.message === "agent not found", "agent removal should preserve the backend error message")
     }),
-  http.protected.get("/kilocode/marketplace", "kilocode.marketplace.list").json(200, (body) => {
+  http.protected.get("/taverncode/marketplace", "taverncode.marketplace.list").json(200, (body) => {
     object(body)
     // The catalog fetch degrades to an empty list on failure, so only the shape is asserted.
     array(body.items)
     object(body.installed)
   }),
   http.protected
-    .post("/kilocode/marketplace/install", "kilocode.marketplace.install")
+    .post("/taverncode/marketplace/install", "taverncode.marketplace.install")
     .inProject({ git: true })
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/marketplace/install",
+      path: "/taverncode/marketplace/install",
       headers: ctx.headers(),
       body: {
         target: "project",
@@ -997,11 +997,11 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/marketplace/remove", "kilocode.marketplace.remove")
+    .post("/taverncode/marketplace/remove", "taverncode.marketplace.remove")
     .inProject({ git: true, init: marketplaceMcp })
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/marketplace/remove",
+      path: "/taverncode/marketplace/remove",
       headers: ctx.headers(),
       body: { scope: "project", item: { id: MARKETPLACE_MCP_ID, type: "mcp" } },
     }))
@@ -1014,10 +1014,10 @@ export const kiloScenarios: Scenario[] = [
       }),
     ),
   http.protected
-    .post("/kilocode/session-import/project", "kilocode.sessionImport.project")
+    .post("/taverncode/session-import/project", "taverncode.sessionImport.project")
     .mutating()
     .at((ctx) => ({
-      path: "/kilocode/session-import/project",
+      path: "/taverncode/session-import/project",
       headers: ctx.headers(),
       body: {
         id: "prj_httpapi_import",
@@ -1032,11 +1032,11 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && typeof body.id === "string", "project import should return the resolved project")
     }),
   http.protected
-    .post("/kilocode/session-import/session", "kilocode.sessionImport.session")
+    .post("/taverncode/session-import/session", "taverncode.sessionImport.session")
     .mutating()
     .seeded((ctx) => ctx.project())
     .at((ctx) => ({
-      path: "/kilocode/session-import/session",
+      path: "/taverncode/session-import/session",
       headers: ctx.headers(),
       body: {
         id: "ses_httpapi_import",
@@ -1054,11 +1054,11 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && body.id === "ses_httpapi_import", "session import should return imported ID")
     }),
   http.protected
-    .post("/kilocode/session-import/message", "kilocode.sessionImport.message")
+    .post("/taverncode/session-import/message", "taverncode.sessionImport.message")
     .mutating()
     .seeded((ctx) => ctx.session({ title: "Import message" }))
     .at((ctx) => ({
-      path: "/kilocode/session-import/message",
+      path: "/taverncode/session-import/message",
       headers: ctx.headers(),
       body: {
         id: "msg_httpapi_import",
@@ -1077,7 +1077,7 @@ export const kiloScenarios: Scenario[] = [
       check(body.ok === true && body.id === "msg_httpapi_import", "message import should return imported ID")
     }),
   http.protected
-    .post("/kilocode/session-import/part", "kilocode.sessionImport.part")
+    .post("/taverncode/session-import/part", "taverncode.sessionImport.part")
     .mutating()
     .seeded((ctx) =>
       Effect.gen(function* () {
@@ -1087,7 +1087,7 @@ export const kiloScenarios: Scenario[] = [
       }),
     )
     .at((ctx) => ({
-      path: "/kilocode/session-import/part",
+      path: "/taverncode/session-import/part",
       headers: ctx.headers(),
       body: {
         id: "prt_httpapi_import",
@@ -1104,13 +1104,13 @@ export const kiloScenarios: Scenario[] = [
   // The exerciser runs against a throwaway project directory with no Claude Code
   // or Codex transcripts on the host, so migration correctly finds nothing to do.
   // That is the no-op contract; the import itself is covered by
-  // test/kilocode/session-resume-integration.test.ts, which can redirect the
+  // test/taverncode/session-resume-integration.test.ts, which can redirect the
   // harness discovery roots.
   http.protected
-    .post("/kilocode/migrate/sessions", "kilocode.migrate.sessions")
+    .post("/taverncode/migrate/sessions", "taverncode.migrate.sessions")
     .withLlm()
     .mutating()
-    .at((ctx) => ({ path: "/kilocode/migrate/sessions", headers: ctx.headers(), body: {} }))
+    .at((ctx) => ({ path: "/taverncode/migrate/sessions", headers: ctx.headers(), body: {} }))
     .json(200, (body) => {
       object(body)
       array(body.sessions)
@@ -1120,10 +1120,10 @@ export const kiloScenarios: Scenario[] = [
       array(body.dropped)
     }),
   http.protected
-    .post("/kilocode/migrate/sessions", "kilocode.migrate.sessions.missing")
+    .post("/taverncode/migrate/sessions", "taverncode.migrate.sessions.missing")
     .withLlm()
     .at((ctx) => ({
-      path: "/kilocode/migrate/sessions",
+      path: "/taverncode/migrate/sessions",
       headers: ctx.headers(),
       body: { ids: ["11111111-1111-4111-8111-111111111111"] },
     }))
@@ -1135,8 +1135,8 @@ export const kiloScenarios: Scenario[] = [
       )
     }),
   http.protected
-    .post("/kilocode/migrate/sessions/discover", "kilocode.migrate.discover")
-    .at((ctx) => ({ path: "/kilocode/migrate/sessions/discover", headers: ctx.headers(), body: {} }))
+    .post("/taverncode/migrate/sessions/discover", "taverncode.migrate.discover")
+    .at((ctx) => ({ path: "/taverncode/migrate/sessions/discover", headers: ctx.headers(), body: {} }))
     .json(200, (body) => {
       object(body)
       array(body.sessions)

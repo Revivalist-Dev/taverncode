@@ -1,5 +1,5 @@
 import { describe, expect, test, mock } from "bun:test"
-import { importCloudSession, reportCloudImportError } from "../../src/kilocode/cloud-session"
+import { importCloudSession, reportCloudImportError } from "../../src/taverncode/cloud-session"
 
 const errorMock = mock()
 mock.module("@/cli/ui", () => ({ UI: { error: errorMock } }))
@@ -7,7 +7,7 @@ mock.module("@/cli/ui", () => ({ UI: { error: errorMock } }))
 type ImportResult = { data?: unknown; error?: unknown }
 
 const client = (imp: (params: { sessionId: string }) => Promise<ImportResult>) =>
-  ({ kilo: { cloud: { session: { import: imp } } } }) as Parameters<typeof importCloudSession>[0]
+  ({ tavern: { cloud: { session: { import: imp } } } }) as Parameters<typeof importCloudSession>[0]
 
 describe("importCloudSession", () => {
   test("returns local id on success", async () => {

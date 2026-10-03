@@ -82,7 +82,7 @@ export namespace KilocodeConfigInjector {
 
   /**
    * Merge permission configs, preserving order and handling duplicates.
-   * Incoming rules take precedence (kilocode patterns override).
+   * Incoming rules take precedence (taverncode patterns override).
    */
   function mergePermissions(
     existing: ConfigPermission.Info | undefined,

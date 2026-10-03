@@ -72,13 +72,13 @@ Object.assign(globalThis, {
 
 const { render } = await import("solid-js/web")
 const { post } = await import("../../webview-ui/src/utils/webview-message")
-const { MarkedProvider } = await import("@kilocode/kilo-ui/context/marked")
+const { MarkedProvider } = await import("@taverncode/tavern-ui/context/marked")
 const { VSCodeProvider } = await import("../../webview-ui/src/context/vscode")
 const { useVSCode } = await import("../../webview-ui/src/context/vscode")
 const { LanguageProvider } = await import("../../webview-ui/src/context/language")
 const { ConfigProvider } = await import("../../webview-ui/src/context/config")
 const { PRComments } = await import("../../webview-ui/agent-manager/pr/PRComments")
-const { Diff } = await import("@kilocode/kilo-ui/diff")
+const { Diff } = await import("@taverncode/tavern-ui/diff")
 const { Show, createRoot, createSignal } = await import("solid-js")
 const { WorktreeItem } = await import("../../webview-ui/agent-manager/WorktreeItem")
 const { createPRNavigation, PRPanelHost } = await import("../../webview-ui/agent-manager/pr/PRPanelHost")
@@ -122,11 +122,11 @@ const [comments, setComments] = createSignal({
     {
       id: "PRRC_open",
       threadId: "PRRT_open",
-      author: "kilo-code-bot",
+      author: "tavern-code-bot",
       canEdit: true,
       canDelete: true,
       body: "comment body survives Pierre rendering",
-      file: "packages/kilo-ui/src/components/file.tsx",
+      file: "packages/tavern-ui/src/components/file.tsx",
       line: 14,
       url: "https://github.com/example/repo/pull/42#discussion_r1",
       resolved: false,
@@ -156,7 +156,7 @@ const [comments, setComments] = createSignal({
       threadId: "PRRT_done",
       author: "reviewer",
       body: "settled discussion\n\nsecond paragraph only shows when expanded",
-      file: "packages/kilo-ui/src/components/other.tsx",
+      file: "packages/tavern-ui/src/components/other.tsx",
       line: 3,
       resolved: true,
       outdated: false,
@@ -362,7 +362,7 @@ assert.equal(resolvedRow!.getAttribute("aria-expanded"), "true")
 assert.equal(resolvedRow!.querySelector(".am-pr-comment-preview"), null)
 assert.match(root.textContent ?? "", /second paragraph only shows when expanded/)
 const card = resolvedRow!.parentElement!
-assert.equal(card.querySelector(".am-pr-diff-file")!.textContent, "packages/kilo-ui/src/components/other.tsx:3")
+assert.equal(card.querySelector(".am-pr-diff-file")!.textContent, "packages/tavern-ui/src/components/other.tsx:3")
 const actions = [...card.querySelectorAll('[data-component="button"]')]
 const unresolve = actions.find((node) => /Unresolve/.test(node.textContent ?? ""))
 assert.ok(unresolve, "unresolve button is rendered")
@@ -624,7 +624,7 @@ const retained = input().value
 
 // Send to agent hands the thread over as a structured review comment.
 const send = [...root.querySelectorAll('[data-component="button"]')].find((node) =>
-  /Fix with Kilo/.test(node.textContent ?? ""),
+  /Fix with Tavern/.test(node.textContent ?? ""),
 )
 assert.ok(send, "send button is rendered")
 ;(send as HTMLButtonElement).click()
@@ -1077,7 +1077,7 @@ setBadge({
         threadId: "feedback",
         author: "reviewer",
         body: "Fix this",
-        file: "packages/kilo-vscode/webview-ui/src/components/chat/ChatView.tsx",
+        file: "packages/tavern-vscode/webview-ui/src/components/chat/ChatView.tsx",
         line: 417,
         side: "additions",
         resolved: false,
@@ -1098,7 +1098,7 @@ setBadge({
     },
     {
       id: "convo2",
-      author: "kilo-code-bot",
+      author: "tavern-code-bot",
       body: "Bot review summary",
       isBot: true,
       createdAt: Date.now() - 120_000,
@@ -1122,7 +1122,7 @@ assert.match(second.textContent ?? "", /Conversation/)
 assert.match(second.textContent ?? "", /lead-reviewer/)
 assert.match(second.textContent ?? "", /Consider simplifying the signature serializer/)
 assert.match(second.textContent ?? "", /Approved/)
-assert.match(second.textContent ?? "", /kilo-code-bot/)
+assert.match(second.textContent ?? "", /tavern-code-bot/)
 assert.match(second.textContent ?? "", /bot/)
 assert.equal(second.querySelector('[data-thread-id="convo1"] [data-action="edit"]'), null)
 const own = second.querySelector('[data-thread-id="own-issue"] [data-action="edit"]')!
@@ -1341,7 +1341,7 @@ const remount = render(
 )
 await window.happyDOM.waitUntilComplete()
 assert.ok(successGroup()?.querySelector(".am-pr-check-group-items"))
-assert.equal(fix()?.textContent?.trim(), "Fix with Kilo")
+assert.equal(fix()?.textContent?.trim(), "Fix with Tavern")
 assert.equal(fix()?.querySelector('[data-component="icon"]'), null)
 const before = sent.length
 fix()!.click()
@@ -1355,7 +1355,7 @@ assert.equal(feedback.comments[0]?.origin, "ci")
 // Draft removal and session changes are outside PRChecks. Unchanged checks
 // must remain sendable without remounting or waiting for another CI run.
 assert.equal(fix()?.disabled, false)
-assert.equal(fix()?.textContent?.trim(), "Fix with Kilo")
+assert.equal(fix()?.textContent?.trim(), "Fix with Tavern")
 fix()!.click()
 assert.equal(sent.length, before + 2)
 assert.deepEqual(sent.at(-1), feedback)
@@ -1373,7 +1373,7 @@ setPrState((prev) => ({ ...prev, checks: summarize([{ name: "Tests", status: "su
 assert.equal(fix(), null)
 remount()
 
-// PR summary: Fix with Kilo and jump-to-section per row, without scrolling.
+// PR summary: Fix with Tavern and jump-to-section per row, without scrolling.
 const terminalSent: unknown[] = []
 window.addEventListener("message", (ev: MessageEvent) => {
   if (ev.data?.type === "appendReviewCommentsToTerminal") terminalSent.push(ev.data)
@@ -1427,7 +1427,7 @@ const [summaryPR, setSummaryPR] = createSignal<PRStatus>({
   },
   conversation: [
     { id: "IC_human", author: "marius", body: "please also update docs", createdAt: Date.now(), isBot: false },
-    { id: "IC_bot", author: "kilo-bot", body: "automated", createdAt: Date.now(), isBot: true },
+    { id: "IC_bot", author: "tavern-bot", body: "automated", createdAt: Date.now(), isBot: true },
     { id: "IC_dismissed", author: "reviewer", body: "nit", createdAt: Date.now(), isBot: false },
   ],
 })
@@ -1482,10 +1482,10 @@ assert.equal(fourth.querySelectorAll(".am-pr-summary-row").length, 4)
 // The review row has no target and no actions.
 assert.equal(fourth.querySelectorAll(".am-pr-summary-row:not([data-target]) button").length, 0)
 assert.match(row("checks")?.textContent ?? "", /1\/2 checks passed/)
-assert.equal(rowFix("checks")?.textContent?.trim(), "Fix with Kilo")
-assert.equal(rowFix("comments")?.textContent?.trim(), "Fix 2 with Kilo")
+assert.equal(rowFix("checks")?.textContent?.trim(), "Fix with Tavern")
+assert.equal(rowFix("comments")?.textContent?.trim(), "Fix 2 with Tavern")
 assert.match(row("conversation")?.textContent ?? "", /3 PR comments/)
-assert.equal(rowFix("conversation")?.textContent?.trim(), "Fix 1 with Kilo")
+assert.equal(rowFix("conversation")?.textContent?.trim(), "Fix 1 with Tavern")
 // Discussion is lower-confidence feedback than CI or review threads.
 assert.equal(rowFix("checks")?.getAttribute("data-variant"), "primary")
 assert.equal(rowFix("comments")?.getAttribute("data-variant"), "primary")
@@ -1500,7 +1500,7 @@ assert.equal(sent.length, mark + 1)
 assert.equal(ci.autoSend, true)
 assert.equal(ci.comments[0]?.origin, "ci")
 // CI has no sent state; the button stays while failures exist.
-assert.equal(rowFix("checks")?.textContent?.trim(), "Fix with Kilo")
+assert.equal(rowFix("checks")?.textContent?.trim(), "Fix with Tavern")
 
 rowFix("comments")!.click()
 const threadsSent = sent.at(-1) as { comments: Array<{ id: string; origin: string }> }

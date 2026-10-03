@@ -9,8 +9,8 @@
 
 import { createMemo, For, Show } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import { BasicTool } from "@kilocode/kilo-ui/basic-tool"
-import { ToolRegistry, type ToolProps } from "@kilocode/kilo-ui/message-part"
+import { BasicTool } from "@taverncode/tavern-ui/basic-tool"
+import { ToolRegistry, type ToolProps } from "@taverncode/tavern-ui/message-part"
 
 /** Tools that should be open by default in the VS Code sidebar. */
 const DEFAULT_OPEN_TOOLS = ["bash"]

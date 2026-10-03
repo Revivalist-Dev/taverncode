@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "chat--message-list-layout-correction"
 const scrollButton = (page: Page) => page.locator(".scroll-to-bottom-button")
 

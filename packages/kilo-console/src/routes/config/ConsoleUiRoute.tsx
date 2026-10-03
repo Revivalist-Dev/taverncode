@@ -1,7 +1,7 @@
 import { Show } from "solid-js"
-import { Button } from "@kilocode/kilo-web-ui/button"
-import { Card } from "@kilocode/kilo-web-ui/card"
-import { Spinner } from "@kilocode/kilo-web-ui/spinner"
+import { Button } from "@taverncode/tavern-web-ui/button"
+import { Card } from "@taverncode/tavern-web-ui/card"
+import { Spinner } from "@taverncode/tavern-web-ui/spinner"
 import { CustomSelect, type SelectOption } from "../../components/CustomSelect"
 import { ConfigPage } from "./ConfigPage"
 import {
@@ -23,7 +23,7 @@ export function ConsoleUiRoute() {
   return (
     <ConfigPage
       title="Console UI"
-      description="Configure the local Kilo Console interface. These preferences are saved in your user config."
+      description="Configure the local Tavern Console interface. These preferences are saved in your user config."
       actions={
         <>
           <Show when={state.configured()}>

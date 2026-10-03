@@ -5,15 +5,15 @@ import * as path from "node:path"
 import { SetupScriptService } from "../SetupScriptService"
 
 function setupRoot(): string {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "kilo-setup-script-"))
+  return fs.mkdtempSync(path.join(os.tmpdir(), "tavern-setup-script-"))
 }
 
 function scriptPath(root: string, name: string): string {
-  return path.join(root, ".kilo", name)
+  return path.join(root, ".tavern", name)
 }
 
 function writeScript(root: string, name: string, content = "echo ok\n"): string {
-  const dir = path.join(root, ".kilo")
+  const dir = path.join(root, ".tavern")
   fs.mkdirSync(dir, { recursive: true })
   const script = path.join(dir, name)
   fs.writeFileSync(script, content, "utf-8")

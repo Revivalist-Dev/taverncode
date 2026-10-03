@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import path from "path"
-import { TestProfile } from "../../script/kilocode/test-profile"
+import { TestProfile } from "../../script/taverncode/test-profile"
 
 const root = path.resolve(import.meta.dir, "..")
 const glob = new Bun.Glob("**/*.test.{ts,tsx}")
@@ -13,30 +13,30 @@ describe("test profiles", () => {
     if (!result.ok) return
     expect(result.files.length).toBeGreaterThan(20)
     expect(result.files).toContain("server/httpapi-v2-pty.test.ts")
-    expect(result.files).toContain("kilocode/cli/install-artifact.test.ts")
-    expect(result.files).toContain("kilocode/cli/tui/thread.test.ts")
-    expect(result.files).toContain("kilocode/sandbox/macos-confinement.test.ts")
-    expect(result.files).toContain("kilocode/core-watcher.test.ts")
-    expect(result.files).toContain("kilocode/background-process.test.ts")
+    expect(result.files).toContain("taverncode/cli/install-artifact.test.ts")
+    expect(result.files).toContain("taverncode/cli/tui/thread.test.ts")
+    expect(result.files).toContain("taverncode/sandbox/macos-confinement.test.ts")
+    expect(result.files).toContain("taverncode/core-watcher.test.ts")
+    expect(result.files).toContain("taverncode/background-process.test.ts")
     expect(result.files).toContain("filesystem/filesystem.test.ts")
-    const sandbox = all.filter((file) => file.startsWith("kilocode/sandbox/"))
-    expect(result.files.filter((file) => file.startsWith("kilocode/sandbox/"))).toEqual(sandbox)
+    const sandbox = all.filter((file) => file.startsWith("taverncode/sandbox/"))
+    expect(result.files.filter((file) => file.startsWith("taverncode/sandbox/"))).toEqual(sandbox)
     expect(result.files).not.toContain("cli/run/footer.view.test.tsx")
     expect(result.files).not.toContain("mcp/lifecycle.test.ts")
     expect(result.files).not.toContain("server/httpapi-pty-websocket.test.ts")
     expect(result.files).not.toContain("shell/shell.test.ts")
-    expect(result.files).not.toContain("kilocode/sessions/remote-ws.test.ts")
+    expect(result.files).not.toContain("taverncode/sessions/remote-ws.test.ts")
     expect(result.files).not.toContain("provider/header-timeout.test.ts")
     // Platform-neutral application logic is covered by the full Linux and
     // Windows suites. Keep these heavy, darwin-agnostic files out of the
     // profile so the single macOS shard stays fast.
     expect(result.files).not.toContain("session/prompt.test.ts")
     expect(result.files).not.toContain("snapshot/snapshot.test.ts")
-    expect(result.files).not.toContain("kilocode/daemon.test.ts")
+    expect(result.files).not.toContain("taverncode/daemon.test.ts")
     expect(result.files).not.toContain("cli/smokes/read-only.test.ts")
     expect(result.files).not.toContain("cli/acp/lifecycle.test.ts")
     expect(result.files).not.toContain("cli/run/run-process.test.ts")
-    expect(result.files).not.toContain("kilocode/server/config-overlay.test.ts")
+    expect(result.files).not.toContain("taverncode/server/config-overlay.test.ts")
     expect(result.files).not.toContain("server/httpapi-listen.test.ts")
   })
 

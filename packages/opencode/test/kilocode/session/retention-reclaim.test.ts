@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import { statSync } from "node:fs"
 import { Database } from "@opencode-ai/core/database/database"
-import { KiloSessionRetention } from "../../../src/kilocode/session/retention"
+import { KiloSessionRetention } from "../../../src/taverncode/session/retention"
 import { tmpdir } from "../../fixture/fixture"
 
 const use = <A, E>(effect: Effect.Effect<A, E, Database.Service>, file: string) =>

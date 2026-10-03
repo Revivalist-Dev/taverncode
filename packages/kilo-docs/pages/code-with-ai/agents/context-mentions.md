@@ -1,11 +1,11 @@
 ---
 title: "Context & Mentions"
-description: "How to provide context to Kilo Code using mentions"
+description: "How to provide context to Tavern Code using mentions"
 ---
 
 # Context Mentions
 
-Providing the right context helps Kilo Code understand your project and perform tasks accurately. All platforms support `@`-mentions for referencing files, and the agent can also discover context on its own using built-in tools like `read`, `grep`, and `glob`.
+Providing the right context helps Tavern Code understand your project and perform tasks accurately. All platforms support `@`-mentions for referencing files, and the agent can also discover context on its own using built-in tools like `read`, `grep`, and `glob`.
 
 {% tabs %}
 {% tab label="VSCode" %}
@@ -31,7 +31,7 @@ Type `@` in the chat input to get autocomplete suggestions. You can mention:
 
 Selecting a suggestion inserts the mention and highlights it in the input. File contents, terminal output, and git changes are attached as context when you send the message.
 
-Terminal context is limited to 500 lines or 50,000 characters. Longer output is truncated. If no terminal content is available, Kilo reports that terminal content is unavailable instead of attaching an empty file.
+Terminal context is limited to 500 lines or 50,000 characters. Longer output is truncated. If no terminal content is available, Tavern reports that terminal content is unavailable instead of attaching an empty file.
 
 ### Referencing Past Chats
 
@@ -68,11 +68,11 @@ VS Code requires holding **Shift** when dragging files from outside the editor (
 
 The extension automatically includes context from your editor with each message — your currently focused file and all open editor tabs. You don't need to mention these explicitly.
 
-Selected code and editor diagnostics (errors/warnings) are not included automatically. However, you can send these to Kilo Code through VS Code's Code Actions: select code or hover over an error, then use the lightbulb menu to find context-dependent actions like "Explain with Kilo Code" or "Fix with Kilo Code."
+Selected code and editor diagnostics (errors/warnings) are not included automatically. However, you can send these to Tavern Code through VS Code's Code Actions: select code or hover over an error, then use the lightbulb menu to find context-dependent actions like "Explain with Tavern Code" or "Fix with Tavern Code."
 
 ### Session-scoped file references
 
-In Agent Manager, file mentions, clickable file links, and review-comment file links use the referenced session's directory or worktree. File-link validation and native VS Code opening use the same scope, even after you switch sessions. Kilo rejects an unqualified session ID when it is ambiguous across projects instead of opening or validating a file in the wrong project.
+In Agent Manager, file mentions, clickable file links, and review-comment file links use the referenced session's directory or worktree. File-link validation and native VS Code opening use the same scope, even after you switch sessions. Tavern rejects an unqualified session ID when it is ambiguous across projects instead of opening or validating a file in the wrong project.
 
 ### Tool-Based File Access
 
@@ -111,9 +111,9 @@ When you describe a task, the agent uses its tools — `read`, `grep`, `glob`, a
 In the terminal-based TUI, you can provide context in several ways:
 
 - **Type `@` for file autocomplete** — In the TUI, type `@` followed by a filename to get autocomplete suggestions. Selecting a file attaches its contents to your message. You can limit how much is included by appending a line range, e.g. `@src/utils.ts#10-50`.
-- **Reference a past chat** — Type `@`, choose **Past chats**, then search for and select a session. Kilo adds that chat history as context when you send the message without switching sessions.
+- **Reference a past chat** — Type `@`, choose **Past chats**, then search for and select a session. Tavern adds that chat history as context when you send the message without switching sessions.
 - **Mention file paths in your message** — Simply refer to files by path in your conversation text (e.g., "look at src/utils.ts") and the agent will read them.
-- **Use `kilo run -f`** — When using the non-interactive `kilo run` command, pass `-f path/to/file.ts` to explicitly include a file's contents in the context.
+- **Use `tavern run -f`** — When using the non-interactive `tavern run` command, pass `-f path/to/file.ts` to explicitly include a file's contents in the context.
 - **Let the agent find files itself** — The agent has access to `glob` (find files by pattern), `grep` (search file contents), and `read` (read file contents) tools. Describe what you're looking for and it will locate the relevant code.
 
 ### Tool-Based File Access
@@ -136,7 +136,7 @@ This means the agent can explore your entire project as needed, rather than bein
 | **Describe the task clearly** | The agent finds context on its own — focus on _what_ you want done rather than _where_ the code is |
 | **Mention files when helpful** | If you know the exact file, mention its path to save the agent a search step |
 | **Reference a past chat** | Type `@` and choose **Past chats** to add another session's chat history as context without switching sessions. |
-| **Use `kilo run -f`** | Pass key files with `-f` when using `kilo run` for immediate context |
+| **Use `tavern run -f`** | Pass key files with `-f` when using `tavern run` for immediate context |
 | **Trust the agent's tools** | The agent can search, read, and explore your codebase — let it do the discovery work |
 
 {% /tab %}

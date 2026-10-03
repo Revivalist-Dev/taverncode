@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { KiloConnectionService } from "../../src/services/cli-backend/connection-service"
 import { SdkSSEAdapter, type SSEPayload } from "../../src/services/cli-backend/sdk-sse-adapter"
 
@@ -60,7 +60,7 @@ describe("SdkSSEAdapter", () => {
   it("normalizes nested sync envelopes at the SSE boundary", async () => {
     const adapter = new SdkSSEAdapter(
       client(async function* (opts) {
-        expect(opts.headers).toEqual({ "x-kilo-sse-skip-fork-sync": "1" })
+        expect(opts.headers).toEqual({ "x-tavern-sse-skip-fork-sync": "1" })
         yield sync()
         await aborted(opts.signal)
       }),

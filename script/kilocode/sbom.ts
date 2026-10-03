@@ -6,10 +6,10 @@
  * Kept as a thin front end over `sbom/` so workflow YAML stays declarative and
  * the same validation runs locally and in CI.
  *
- *   bun script/kilocode/sbom.ts validate <sidecar...>
- *   bun script/kilocode/sbom.ts verify --manifest <file> [--dir <dir>]
- *   bun script/kilocode/sbom.ts checksums --manifest <file> [--dir <dir>] --out <file>
- *   bun script/kilocode/sbom.ts merge --into <file> --from <file>
+ *   bun script/taverncode/sbom.ts validate <sidecar...>
+ *   bun script/taverncode/sbom.ts verify --manifest <file> [--dir <dir>]
+ *   bun script/taverncode/sbom.ts checksums --manifest <file> [--dir <dir>] --out <file>
+ *   bun script/taverncode/sbom.ts merge --into <file> --from <file>
  */
 
 import fs from "node:fs"

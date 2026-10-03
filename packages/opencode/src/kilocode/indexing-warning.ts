@@ -1,5 +1,5 @@
-import type { IndexingStatus } from "@kilocode/kilo-indexing/status"
-import { zeroID } from "@opencode-ai/core/kilocode/zero-id"
+import type { IndexingStatus } from "@taverncode/tavern-indexing/status"
+import { zeroID } from "@opencode-ai/core/taverncode/zero-id"
 
 export const INDEXING_WARNING_CODES = ["qdrant.version-incompatible", "qdrant.version-unavailable"] as const
 

@@ -1,4 +1,4 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
 // Regression test for the freeze bug: before the caps + worker offload,
 // Snapshot.diffFull on a file with tens of thousands of lines could block
@@ -78,7 +78,7 @@ test("pathological diffFull workload finishes quickly and does not block abort",
           expect(after).toBeTruthy()
 
           const app = Server.Default().app
-          const headers = { "x-kilo-directory": tmp.path }
+          const headers = { "x-tavern-directory": tmp.path }
           const warm = yield* Effect.promise(() =>
             Promise.resolve(app.request(`/session/${session.id}/abort`, { method: "POST", headers })),
           )

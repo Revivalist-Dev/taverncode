@@ -11,7 +11,7 @@ import { Agent } from "@/agent/agent"
 import { InstanceRef } from "@/effect/instance-ref"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { Git } from "@/git"
-import { Wakeup } from "@/kilocode/wakeup"
+import { Wakeup } from "@/taverncode/wakeup"
 import {
   CronCreateTool,
   CronDeleteTool,
@@ -22,7 +22,7 @@ import {
   type CronDeleteParams,
   type CronListMeta,
   type CronListParams,
-} from "@/kilocode/tool/cron"
+} from "@/taverncode/tool/cron"
 import { MessageID, SessionID } from "@/session/schema"
 import { Storage } from "@/storage/storage"
 import * as Truncate from "@/tool/truncate"

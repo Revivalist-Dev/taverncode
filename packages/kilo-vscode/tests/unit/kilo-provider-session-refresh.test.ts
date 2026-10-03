@@ -4,8 +4,8 @@ import {
   loadMoreSessions,
   flushPendingSessionRefresh,
   type SessionRefreshContext,
-} from "../../src/kilo-provider-utils"
-import { createSessionPageState } from "../../src/kilo-provider/session-page"
+} from "../../src/tavern-provider-utils"
+import { createSessionPageState } from "../../src/tavern-provider/session-page"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
 const { KiloProvider } = await import("../../src/KiloProvider")
@@ -87,11 +87,11 @@ function createClient() {
     indexing: {
       status: async () => ({ data: { state: "disabled" } }),
     },
-    kilo: {
+    tavern: {
       notifications: async () => ({ data: [] }),
       profile: async () => ({ data: {} }),
     },
-    kilocode: {
+    taverncode: {
       wakeups: async (_params: {
         directory: string
       }): Promise<{ data: Array<{ sessionID: string; pending: number }> }> => ({
@@ -140,7 +140,7 @@ describe("KiloProvider pending session refresh", () => {
     await connection.connect()
     const reads: string[] = []
     const ctx = {
-      globalStorageUri: { fsPath: "/storage/kilocode.kilo-code" },
+      globalStorageUri: { fsPath: "/storage/taverncode.tavern-code" },
       globalState: { get: (_key: string, fallback?: unknown) => fallback },
       secrets: {
         get: async (key: string) => {
@@ -488,7 +488,7 @@ describe("KiloProvider pending session refresh", () => {
 
   it("reconciles a cancelled wakeup to zero after a complete seed", async () => {
     const client = createClient()
-    client.kilocode.wakeups = async () => ({ data: [{ sessionID: "s1", pending: 2 }] })
+    client.taverncode.wakeups = async () => ({ data: [{ sessionID: "s1", pending: 2 }] })
     const connection = createConnection(client)
     await connection.connect()
     const provider = new KiloProvider({} as never, connection as never)
@@ -500,7 +500,7 @@ describe("KiloProvider pending session refresh", () => {
     await internal.seedSessionWakeups()
     expect(sent).toContainEqual({ type: "sessionWakeup", sessionID: "s1", pending: 2 })
 
-    client.kilocode.wakeups = async () => ({ data: [] })
+    client.taverncode.wakeups = async () => ({ data: [] })
     await internal.seedSessionWakeups()
 
     expect(sent).toContainEqual({ type: "sessionWakeup", sessionID: "s1", pending: 0 })
@@ -509,7 +509,7 @@ describe("KiloProvider pending session refresh", () => {
 
   it("keeps tracked wakeups when one directory fails", async () => {
     const client = createClient()
-    client.kilocode.wakeups = async () => ({ data: [{ sessionID: "s1", pending: 2 }] })
+    client.taverncode.wakeups = async () => ({ data: [{ sessionID: "s1", pending: 2 }] })
     const connection = createConnection(client)
     connection.getKnownDirectories = () => ["/repo", "/good"]
     await connection.connect()
@@ -523,7 +523,7 @@ describe("KiloProvider pending session refresh", () => {
     expect(internal.wakeupSessions.has("s1")).toBe(true)
 
     sent.length = 0
-    client.kilocode.wakeups = async (params: { directory: string }) => {
+    client.taverncode.wakeups = async (params: { directory: string }) => {
       if (params.directory === "/good") throw new Error("offline")
       return { data: [] }
     }
@@ -536,7 +536,7 @@ describe("KiloProvider pending session refresh", () => {
   it("keeps a wakeup scheduled while a complete seed is in flight", async () => {
     const client = createClient()
     const pending = deferred<{ data: Array<{ sessionID: string; pending: number }> }>()
-    client.kilocode.wakeups = () => pending.promise
+    client.taverncode.wakeups = () => pending.promise
     const connection = createConnection(client)
     await connection.connect()
     const provider = new KiloProvider({} as never, connection as never)

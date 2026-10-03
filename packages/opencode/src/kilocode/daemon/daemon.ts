@@ -10,11 +10,11 @@ import { Flock } from "@opencode-ai/core/util/flock"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 import { Filesystem } from "@/util/filesystem"
 import { Process } from "@/util/process"
-import { serverUrls } from "@/kilocode/cli/server-urls"
+import { serverUrls } from "@/taverncode/cli/server-urls"
 
 export namespace Daemon {
-  const username = "kilo"
-  const lock = "kilocode-daemon"
+  const username = "tavern"
+  const lock = "taverncode-daemon"
   export const PortRange = { start: 4097, end: 4116 } as const
 
   export const Network = z.object({
@@ -180,7 +180,7 @@ export namespace Daemon {
   }
 
   export function matches(state: State, input: Options, explicit: readonly NetworkOption[]) {
-    if (state.password === "kilo") return false
+    if (state.password === "tavern") return false
     const options = Network.parse(input)
     return explicit.every((name) => {
       if (name === "hostname") return state.hostname === options.hostname
@@ -404,7 +404,7 @@ export namespace Daemon {
       if (code(err) === "ENOENT") return ""
       throw err
     })
-    const match = text.match(/kilo server listening on http:\/\/([^:\s]+):(\d+)/)
+    const match = text.match(/tavern server listening on http:\/\/([^:\s]+):(\d+)/)
     if (!match) return undefined
     return { hostname: match[1], port: Number(match[2]) }
   }

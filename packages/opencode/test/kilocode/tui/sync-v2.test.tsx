@@ -1,11 +1,11 @@
 /** @jsxImportSource @opentui/solid */
 import { expect, test } from "bun:test"
 import { testRender } from "@opentui/solid"
-import type { Event, GlobalEvent } from "@kilocode/sdk/v2"
+import type { Event, GlobalEvent } from "@taverncode/sdk/v2"
 import { onMount } from "solid-js"
 import { ProjectProvider, useProject } from "@tui/context/project"
 import { SDKProvider } from "@tui/context/sdk"
-import { SyncProviderV2, useSyncV2 } from "@/kilocode/plugins/sync-v2"
+import { SyncProviderV2, useSyncV2 } from "@/taverncode/plugins/sync-v2"
 import { createEventSource, createFetch, directory, json } from "../../../../tui/test/fixture/tui-sdk"
 
 async function wait(fn: () => boolean, timeout = 2000) {
@@ -16,7 +16,7 @@ async function wait(fn: () => boolean, timeout = 2000) {
   }
 }
 
-// kilocode_change start - live events are filtered by the resolved project ID
+// taverncode_change start - live events are filtered by the resolved project ID
 function synced(ready: () => void) {
   const project = useProject()
   onMount(async () => {
@@ -24,7 +24,7 @@ function synced(ready: () => void) {
     ready()
   })
 }
-// kilocode_change end
+// taverncode_change end
 
 function global(payload: Event): GlobalEvent {
   return { directory, project: "proj_test", payload }

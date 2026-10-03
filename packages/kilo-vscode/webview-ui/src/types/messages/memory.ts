@@ -8,9 +8,9 @@ import type {
   MemoryRememberResponse,
   MemoryRebuildResponse,
   MemoryStatusResponse,
-} from "@kilocode/sdk/v2"
-import type { MemoryOperation as SharedMemoryOperation } from "@kilocode/kilo-memory/commands"
-import type { MemorySchema } from "@kilocode/kilo-memory/schema"
+} from "@taverncode/sdk/v2"
+import type { MemoryOperation as SharedMemoryOperation } from "@taverncode/tavern-memory/commands"
+import type { MemorySchema } from "@taverncode/tavern-memory/schema"
 
 export type MemorySourceFile = MemorySchema.Source
 

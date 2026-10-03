@@ -1,11 +1,11 @@
 ---
 title: "VS Code Extension Architecture"
-description: "Architecture of the Kilo VS Code extension and Agent Manager"
+description: "Architecture of the Tavern VS Code extension and Agent Manager"
 ---
 
 # VS Code Extension Architecture
 
-The VS Code extension (`packages/kilo-vscode/`) is a client of [Kilo CLI runtime](/docs/contributing/architecture/cli-runtime). It bundles platform CLI binary, starts one shared editor-owned `kilo serve` server on demand, and drives that server through generated SDK HTTP calls plus global SSE.
+The VS Code extension (`packages/tavern-vscode/`) is a client of [Tavern CLI runtime](/docs/contributing/architecture/cli-runtime). It bundles platform CLI binary, starts one shared editor-owned `tavern serve` server on demand, and drives that server through generated SDK HTTP calls plus global SSE.
 
 {% callout type="info" title="Scope" %}
 This page covers extension-host ownership, webview routing, Agent Manager, local terminal paths, recovery, bundled resources, and build outputs. It is not full extension feature inventory.
@@ -15,7 +15,7 @@ This page covers extension-host ownership, webview routing, Agent Manager, local
 
 [CLI Runtime](/docs/contributing/architecture/cli-runtime) defines shared local-server authentication, directory routing, provider routing, persistence, and SSE contracts. This page starts at VS Code client boundary.
 
-Activation creates one `KiloConnectionService`. It owns one `ServerManager`, one active SDK client, and one SSE adapter. `ServerManager` owns child process lifecycle. This editor-owned child is separate from detached local daemon managed by `kilo daemon`.
+Activation creates one `KiloConnectionService`. It owns one `ServerManager`, one active SDK client, and one SSE adapter. `ServerManager` owns child process lifecycle. This editor-owned child is separate from detached local daemon managed by `tavern daemon`.
 
 ```mermaid
 flowchart LR
@@ -27,8 +27,8 @@ flowchart LR
     sse["SdkSSEAdapter"]
   end
 
-  server["bin/kilo serve --port 0"]
-  runtime["Kilo CLI runtime"]
+  server["bin/tavern serve --port 0"]
+  runtime["Tavern CLI runtime"]
 
   consumers --> service
   service --> manager --> server
@@ -40,9 +40,9 @@ flowchart LR
 | Area | Behavior |
 |---|---|
 | Startup | Lazy on client demand; autocomplete prewarm can start server during activation |
-| Binary | Uses extension `bin/kilo`, or `bin/kilo.exe` on Windows |
-| Port | Starts `kilo serve --port 0`; CLI server prefers `4096`, then asks OS for free port |
-| Authentication | Generates random 32-byte hex password per spawn and passes it as `KILO_SERVER_PASSWORD`; username defaults to `kilo` |
+| Binary | Uses extension `bin/tavern`, or `bin/tavern.exe` on Windows |
+| Port | Starts `tavern serve --port 0`; CLI server prefers `4096`, then asks OS for free port |
+| Authentication | Generates random 32-byte hex password per spawn and passes it as `KILO_SERVER_PASSWORD`; username defaults to `tavern` |
 | Reuse | Sidebar, editor tabs, panels, Agent Manager, and host services share active server |
 | Exit | `ServerManager` clears dead child; connection service clears SDK/SSE state and enters error state |
 | Replacement | Later retry or connection attempt starts replacement server |
@@ -87,7 +87,7 @@ Agent Manager is extension feature, not separate product. It opens as editor tab
 |---|---|---|
 | Primary use | One active chat view | Multi-session orchestration |
 | Git isolation | Workspace root by default | Optional worktree per session |
-| Backend | Shared `kilo serve` process | Same shared process |
+| Backend | Shared `tavern serve` process | Same shared process |
 | Request routing | Workspace directory | Session worktree path passed as SDK `directory` |
 | CLI instance key | Normalized workspace root | Normalized worktree directory |
 
@@ -97,7 +97,7 @@ Agent Manager request path is:
 session worktree path -> SDK directory -> CLI directory-routing middleware -> InstanceStore directory key
 ```
 
-Agent Manager persists state in `.kilo/agent-manager.json` and worktrees under `.kilo/worktrees/`. Startup migration moves Agent Manager-owned data from legacy `.kilocode/` paths when target items do not already exist and repairs git worktree refs.
+Agent Manager persists state in `.tavern/agent-manager.json` and worktrees under `.tavern/worktrees/`. Startup migration moves Agent Manager-owned data from legacy `.taverncode/` paths when target items do not already exist and repairs git worktree refs.
 
 ## State boundaries
 
@@ -110,16 +110,16 @@ VS Code extension has two terminal paths:
 | Surface | Owner | Use |
 |---|---|---|
 | VS Code integrated terminal | VS Code host | Shell terminals and setup-script execution surfaced through editor |
-| CLI PTY WebSocket tab | Agent Manager and `kilo serve` server | Server-created PTY session streamed over loopback WebSocket |
+| CLI PTY WebSocket tab | Agent Manager and `tavern serve` server | Server-created PTY session streamed over loopback WebSocket |
 
-Agent Manager PTY WebSocket URL uses `auth_token=<base64 kilo:password>` query mode because browser WebSocket API cannot attach Basic header. Webview CSP permits loopback HTTP and WebSocket origins for active server port. CLI also exposes scope-bound short-lived PTY ticket API as alternate browser WebSocket auth mode.
+Agent Manager PTY WebSocket URL uses `auth_token=<base64 tavern:password>` query mode because browser WebSocket API cannot attach Basic header. Webview CSP permits loopback HTTP and WebSocket origins for active server port. CLI also exposes scope-bound short-lived PTY ticket API as alternate browser WebSocket auth mode.
 
 ## Config split
 
 | Config owner | Examples |
 |---|---|
-| VS Code settings | `kilo-code.new.*` extension UI, proxy, autocomplete, and integration settings |
-| CLI config | Global and project `kilo.jsonc`, `kilo.json`, compatible OpenCode files, provider auth, tools, permissions, agents |
+| VS Code settings | `tavern-code.new.*` extension UI, proxy, autocomplete, and integration settings |
+| CLI config | Global and project `tavern.jsonc`, `tavern.json`, compatible OpenCode files, provider auth, tools, permissions, agents |
 
 Extension-specific behavior belongs in VS Code settings. Agent runtime behavior belongs in CLI config so TUI, Console, VS Code, and JetBrains can share it.
 
@@ -127,13 +127,13 @@ Extension-specific behavior belongs in VS Code settings. Agent runtime behavior 
 
 | Resource | Behavior |
 |---|---|
-| CLI executable | Platform binary under extension `bin/`; Windows uses `kilo.exe` |
+| CLI executable | Platform binary under extension `bin/`; Windows uses `tavern.exe` |
 | CLI Tree-sitter WASM | Copied under `bin/tree-sitter`; backend spawn sets `KILO_TREE_SITTER_WASM_DIR` |
 | FFmpeg helper | Bundled for supported targets for speech capture; capture code also checks system fallback paths |
 | Empty-window cwd | Uses extension global storage directory when no VS Code workspace folder exists |
 | Empty-window indexing | Sets `KILO_DISABLE_CODEBASE_INDEXING=vscode-no-workspace` so CLI reports indexing disabled |
 
-Speech-to-text captures audio locally, then sends completed recording through shared editor-owned `kilo serve` server to authenticated Kilo Gateway transcription path. It is batch transcription, not direct provider streaming.
+Speech-to-text captures audio locally, then sends completed recording through shared editor-owned `tavern serve` server to authenticated Tavern Gateway transcription path. It is batch transcription, not direct provider streaming.
 
 ## Recovery
 
@@ -156,7 +156,7 @@ Speech-to-text captures audio locally, then sends completed recording through sh
 | Diff Virtual webview | `webview-ui/diff-virtual/index.tsx` | `dist/diff-virtual.js` |
 | Shared Shiki worker | synthetic worker entry | `dist/shiki-worker.js` |
 
-Extension host bundle targets Node/CommonJS. Browser webviews and shared worker use esbuild browser bundles. Run `bun run typecheck`, `bun run lint`, and targeted unit tests from `packages/kilo-vscode/` after changing this area.
+Extension host bundle targets Node/CommonJS. Browser webviews and shared worker use esbuild browser bundles. Run `bun run typecheck`, `bun run lint`, and targeted unit tests from `packages/tavern-vscode/` after changing this area.
 
 ## Source map
 
@@ -164,12 +164,12 @@ Paths below are relative to [`Kilo-Org/kilocode`](https://github.com/Kilo-Org/ki
 
 | Concern | Source path |
 |---|---|
-| Activation | `packages/kilo-vscode/src/extension.ts` |
-| Editor-owned server child process | `packages/kilo-vscode/src/services/cli-backend/server-manager.ts` |
-| Shared SDK and SSE ownership | `packages/kilo-vscode/src/services/cli-backend/connection-service.ts` |
-| SSE reconnect adapter | `packages/kilo-vscode/src/services/cli-backend/sdk-sse-adapter.ts` |
-| Agent Manager | `packages/kilo-vscode/src/agent-manager/` |
-| Build entries | `packages/kilo-vscode/esbuild.js` |
+| Activation | `packages/tavern-vscode/src/extension.ts` |
+| Editor-owned server child process | `packages/tavern-vscode/src/services/cli-backend/server-manager.ts` |
+| Shared SDK and SSE ownership | `packages/tavern-vscode/src/services/cli-backend/connection-service.ts` |
+| SSE reconnect adapter | `packages/tavern-vscode/src/services/cli-backend/sdk-sse-adapter.ts` |
+| Agent Manager | `packages/tavern-vscode/src/agent-manager/` |
+| Build entries | `packages/tavern-vscode/esbuild.js` |
 
 ## Related pages
 

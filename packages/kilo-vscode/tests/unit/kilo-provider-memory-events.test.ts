@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
 const { KiloProvider } = await import("../../src/KiloProvider")
@@ -14,7 +14,7 @@ type Internals = {
 
 function status(root: string) {
   return {
-    root: `${root}/.kilo/memory`,
+    root: `${root}/.tavern/memory`,
     state: {
       enabled: true,
       autoConsolidate: true,
@@ -174,7 +174,7 @@ describe("KiloProvider memory events", () => {
         },
         disable: async (input: { directory: string }) => {
           calls.push(["disable", input.directory])
-          return { data: { root: `${input.directory}/.kilo/memory`, state: status(input.directory).state } }
+          return { data: { root: `${input.directory}/.tavern/memory`, state: status(input.directory).state } }
         },
       },
     } as unknown as KiloClient

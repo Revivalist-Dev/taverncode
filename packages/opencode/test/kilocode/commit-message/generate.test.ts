@@ -1,5 +1,5 @@
 import { describe, expect, test, mock, beforeEach, spyOn } from "bun:test"
-import type { GitContext } from "@/kilocode/commit-message/types"
+import type { GitContext } from "@/taverncode/commit-message/types"
 import type { Provider } from "@/provider/provider"
 
 // Mock dependencies before importing the module under test.
@@ -48,7 +48,7 @@ mock.module("@opencode-ai/core/util/log", () => ({
   }),
 }))
 
-import { CommitMessageRuntime, generateCommitMessage, NoChangesError } from "../../../src/kilocode/commit-message/generate"
+import { CommitMessageRuntime, generateCommitMessage, NoChangesError } from "../../../src/taverncode/commit-message/generate"
 
 const context = spyOn(CommitMessageRuntime, "context").mockImplementation(async (repoPath, selectedFiles) => {
   captured = { path: repoPath, selected: selectedFiles }

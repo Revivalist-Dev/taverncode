@@ -7,13 +7,13 @@ import { MercuryEditError, MercuryEditProvider } from "./MercuryEditProvider"
 import type { NextEditSuggestionManager } from "./NextEditSuggestionManager"
 import type { MercuryEditRequestContext, MercuryRecentSnippet } from "./types"
 
-const INLINE_COMPLETION_ACCEPTED_COMMAND = "kilo-code.new.autocomplete.nextEdit.accepted"
+const INLINE_COMPLETION_ACCEPTED_COMMAND = "tavern-code.new.autocomplete.nextEdit.accepted"
 const DEFAULT_DEBOUNCE_MS = 250
 
 export interface NextEditProviderDeps {
-  /** Routes Mercury calls through the local Kilo gateway (handles auth + BYOK). */
+  /** Routes Mercury calls through the local Tavern gateway (handles auth + BYOK). */
   connectionService: KiloConnectionService
-  /** Optional source of recently-viewed snippets (kilocode's VisibleCodeTracker can adapt to this). */
+  /** Optional source of recently-viewed snippets (taverncode's VisibleCodeTracker can adapt to this). */
   getRecentlyViewedSnippets?: (document: vscode.TextDocument) => MercuryRecentSnippet[]
   /** Returns false for files that must not be sent to a server (.env etc). */
   isFileAllowed: (fsPath: string) => Promise<boolean>

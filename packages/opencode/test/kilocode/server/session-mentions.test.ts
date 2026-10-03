@@ -65,7 +65,7 @@ afterEach(async () => {
   await resetDatabase()
 })
 
-describe.serial("Kilo session mentions", () => {
+describe.serial("Tavern session mentions", () => {
   it.instance(
     "lists more than 50 root sessions without a cursor",
     () =>

@@ -1,14 +1,14 @@
 ---
 title: "Cloud Platform Architecture"
-description: "Architecture overview for Kilo Cloud services and hosted runtimes"
+description: "Architecture overview for Tavern Cloud services and hosted runtimes"
 ---
 
 # Cloud Platform Architecture
 
-Kilo Cloud is hosted platform layer for authentication, model routing, billing, product configuration, automation, and scoped execution services. Cloud implementation lives in open-source [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud) repository.
+Tavern Cloud is hosted platform layer for authentication, model routing, billing, product configuration, automation, and scoped execution services. Cloud implementation lives in open-source [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud) repository.
 
 {% callout type="info" title="Static source scope" %}
-This page describes Worker surfaces, bindings, routes, and code paths present in `Kilo-Org/cloud`. Static source shows deployable architecture, not live production enablement, rollout percentages, retention configuration, or vendor settings. Validate live environment before making production or compliance claims. Use [Kilo Cloud Security Architecture](/docs/contributing/architecture/cloud-security) for trust boundaries and data flows.
+This page describes Worker surfaces, bindings, routes, and code paths present in `Kilo-Org/cloud`. Static source shows deployable architecture, not live production enablement, rollout percentages, retention configuration, or vendor settings. Validate live environment before making production or compliance claims. Use [Tavern Cloud Security Architecture](/docs/contributing/architecture/cloud-security) for trust boundaries and data flows.
 {% /callout %}
 
 ## How to use this page
@@ -20,9 +20,9 @@ Use this page to understand hosted service topology: which product boundaries ex
 | Layer | Responsibility | Examples |
 |---|---|---|
 | Web control plane | Identity, organization authorization, billing, product configuration, and API orchestration | Next.js application in `apps/web/` |
-| Shared cloud services | Model routing, asynchronous orchestration, real-time delivery, persistence adapters, and operational services | Kilo Gateway, Workers, queues, Durable Objects, R2, KV, Hyperdrive |
+| Shared cloud services | Model routing, asynchronous orchestration, real-time delivery, persistence adapters, and operational services | Tavern Gateway, Workers, queues, Durable Objects, R2, KV, Hyperdrive |
 | Scoped execution | Runs code or scoped runtime workloads | Cloud Agent, Gas Town container |
-| External providers | Services outside Kilo Cloud trust boundary | Model providers, source-control providers, messaging providers, telemetry providers |
+| External providers | Services outside Tavern Cloud trust boundary | Model providers, source-control providers, messaging providers, telemetry providers |
 
 Where these pages say `owner`, they mean personal user or organization that authorizes scoped product state and credentials.
 
@@ -46,10 +46,10 @@ Where these pages say `owner`, they mean personal user or organization that auth
 flowchart LR
   clients["Browser, editor, and mobile clients"]
   web["Web control plane"]
-  gateway["Kilo Gateway"]
+  gateway["Tavern Gateway"]
   automation["Automation Workers"]
   agent["Cloud Agent"]
-  chat["Kilo Chat / Event Service / Notifications"]
+  chat["Tavern Chat / Event Service / Notifications"]
   town["Gas Town"]
   wasteland["Wasteland"]
   repos["GitHub and GitLab repositories"]
@@ -81,14 +81,14 @@ Not every hosted flow launches Cloud Agent. Shared services also route model req
 |---|---|---|
 | Session execution | `cloud-agent-next`{% linebreak /%}`session-ingest`{% linebreak /%}`git-token-service`{% linebreak /%}`notifications` | Hosted coding sessions, session ingestion, repository credentials, and completion push |
 | Automation | `code-review-infra`{% linebreak /%}`auto-triage-infra`{% linebreak /%}`auto-fix-infra`{% linebreak /%}`security-auto-analysis`{% linebreak /%}`security-sync`{% linebreak /%}`webhook-agent-ingest` | Queue-backed review, triage, fix, security, and configured trigger flows |
-| Real-time chat | `kilo-chat`{% linebreak /%}`event-service`{% linebreak /%}`notifications` | Conversation state, WebSocket delivery, and mobile push |
+| Real-time chat | `tavern-chat`{% linebreak /%}`event-service`{% linebreak /%}`notifications` | Conversation state, WebSocket delivery, and mobile push |
 | Multi-agent orchestration | `gastown`{% linebreak /%}`wasteland` | Town execution and collaborative commons |
-| Evaluation and operations | `o11y`{% linebreak /%}`kilo-ops`{% linebreak /%}`model-eval-ingest` | Metrics, alerts, operations, and model-evaluation ingestion |
+| Evaluation and operations | `o11y`{% linebreak /%}`tavern-ops`{% linebreak /%}`model-eval-ingest` | Metrics, alerts, operations, and model-evaluation ingestion |
 | Attribution | `ai-attribution` | AI-edit attribution events |
 
-## Kilo Gateway
+## Tavern Gateway
 
-Gateway consists of cloud API routes plus `packages/kilo-gateway/` client integration in `Kilo-Org/kilocode`. It handles account-aware and anonymous-free model access. See [Cloud Security](/docs/contributing/architecture/cloud-security#model-request-gateway) for request branches and endpoint families.
+Gateway consists of cloud API routes plus `packages/tavern-gateway/` client integration in `Kilo-Org/kilocode`. It handles account-aware and anonymous-free model access. See [Cloud Security](/docs/contributing/architecture/cloud-security#model-request-gateway) for request branches and endpoint families.
 
 | Responsibility | Description |
 |---|---|
@@ -98,7 +98,7 @@ Gateway consists of cloud API routes plus `packages/kilo-gateway/` client integr
 | Catalogs | Serves model, provider, embedding-model, and transcription-model surfaces |
 | Usage and billing | Records applicable token usage, credits, entitlements, and billing metadata |
 
-Auto Model clients send stable `kilo-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
+Auto Model clients send stable `tavern-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
 
 Eligible gateway requests can include normalized project label for usage attribution and grouping. Label identifies project without sending full repository URL.
 
@@ -155,7 +155,7 @@ flowchart TB
 
 | Service | Hosted execution relationship |
 |---|---|
-| Kilo Bot | Launches Cloud Agent for requested repository work |
+| Tavern Bot | Launches Cloud Agent for requested repository work |
 | Code Review | Runs queued review sessions through Cloud Agent |
 | Auto Triage | Can classify issue without Cloud Agent during duplicate check; launches Cloud Agent when classification session is needed |
 | Auto Fix | Launches Cloud Agent to create issue-fix pull request |
@@ -205,7 +205,7 @@ sequenceDiagram
   participant Ticket as Event Service ticket API
   participant Events as Event Service
   participant Session as UserSessionDO
-  participant Chat as Kilo Chat conversation-state DOs
+  participant Chat as Tavern Chat conversation-state DOs
   participant Notify as NotificationChannelDO
   participant Expo
   participant Queue as Receipt queue
@@ -229,7 +229,7 @@ sequenceDiagram
   end
 ```
 
-Kilo Chat stores conversation state in Durable Objects and fans events out through Event Service. Notifications checks Event Service presence context before selected pushes and processes Expo receipts asynchronously. See [Cloud Security](/docs/contributing/architecture/cloud-security#chat-events-and-notifications) for ticket and push-delivery trust boundaries.
+Tavern Chat stores conversation state in Durable Objects and fans events out through Event Service. Notifications checks Event Service presence context before selected pushes and processes Expo receipts asynchronously. See [Cloud Security](/docs/contributing/architecture/cloud-security#chat-events-and-notifications) for ticket and push-delivery trust boundaries.
 
 ## Gas Town and Wasteland
 
@@ -285,9 +285,9 @@ Paths below are relative to [`Kilo-Org/cloud`](https://github.com/Kilo-Org/cloud
 | Session ingestion and Git tokens | `services/session-ingest/`{% linebreak /%}`services/git-token-service/` |
 | Automation Workers | `services/code-review-infra/`{% linebreak /%}`services/auto-triage-infra/`{% linebreak /%}`services/auto-fix-infra/`{% linebreak /%}`services/webhook-agent-ingest/` |
 | Security Agent | `apps/web/src/lib/security-agent/`{% linebreak /%}`services/security-auto-analysis/`{% linebreak /%}`services/security-sync/` |
-| Chat, events, and notifications | `services/kilo-chat/`{% linebreak /%}`services/event-service/`{% linebreak /%}`services/notifications/` |
+| Chat, events, and notifications | `services/tavern-chat/`{% linebreak /%}`services/event-service/`{% linebreak /%}`services/notifications/` |
 | Multi-agent orchestration | `services/gastown/`{% linebreak /%}`services/wasteland/` |
-| Observability and operations | `services/o11y/`{% linebreak /%}`services/kilo-ops/`{% linebreak /%}`services/model-eval-ingest/` |
+| Observability and operations | `services/o11y/`{% linebreak /%}`services/tavern-ops/`{% linebreak /%}`services/model-eval-ingest/` |
 | Attribution | `services/ai-attribution/` |
 
 ## Related pages

@@ -13,7 +13,7 @@
  * - Agent Manager visible presence is routed through
  *   AgentManagerVisiblePresence so cleanup cannot leave a stale displayed id.
  *
- * Protects against accidental removal during Kilo development.
+ * Protects against accidental removal during Tavern development.
  */
 
 import { describe, it, expect } from "bun:test"

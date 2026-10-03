@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { mutates } from "@/kilocode/sandbox/git"
+import { mutates } from "@/taverncode/sandbox/git"
 
 const read = [
   "git status",

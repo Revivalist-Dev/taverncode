@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test"
 import { seedSessionStatuses, seedSessionWakeups } from "../../src/session-status"
-import type { SessionStatus } from "@kilocode/sdk/v2/client"
+import type { SessionStatus } from "@taverncode/sdk/v2/client"
 
 /**
  * Minimal fake client that satisfies the KiloClient.session.status() call.
@@ -220,7 +220,7 @@ type WakeupResult = { data: Array<{ sessionID: string; pending: number }> | null
 
 function createWakeupClient(byDirectory: Record<string, WakeupResult>) {
   return {
-    kilocode: {
+    taverncode: {
       wakeups: async (params: { directory: string }) => {
         const result = byDirectory[params.directory]
         if (result === undefined) return { data: [] }

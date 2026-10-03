@@ -23,7 +23,7 @@ function body(input: string | undefined, fallback = "(empty)") {
 
 export function evidence(sections: { title: string; body?: string }[]) {
   return [
-    "```kilo-memory-evidence-v1",
+    "```tavern-memory-evidence-v1",
     ...sections.flatMap((section) => [`## ${section.title}`, body(section.body)]),
     "```",
   ].join("\n")

@@ -1,15 +1,15 @@
 ---
 title: "AI Providers"
-description: "Configure and connect different AI model providers to Kilo Code"
+description: "Configure and connect different AI model providers to Tavern Code"
 ---
 
 # AI Providers
 
-Kilo Code supports a wide variety of AI providers, giving you flexibility in how you power your AI-assisted development workflow. Choose from cloud providers, local models, or AI gateways based on your needs.
+Tavern Code supports a wide variety of AI providers, giving you flexibility in how you power your AI-assisted development workflow. Choose from cloud providers, local models, or AI gateways based on your needs.
 
 ## Getting Started
 
-The fastest way to get started is with **Kilo Code's built-in provider**, which requires no configuration. Simply sign in and start coding.
+The fastest way to get started is with **Tavern Code's built-in provider**, which requires no configuration. Simply sign in and start coding.
 
 For users who want to use their own API keys or need specific models, we support over 30 providers.
 
@@ -35,7 +35,7 @@ Major AI companies offering powerful models via API:
 
 Run models on your own hardware for privacy and offline use:
 
-- **[Atomic Chat](/docs/ai-providers/atomic-chat)** - Local models with TurboQuant inference and auto-discovery in Kilo Code
+- **[Atomic Chat](/docs/ai-providers/atomic-chat)** - Local models with TurboQuant inference and auto-discovery in Tavern Code
 - **[Anaconda Desktop](/docs/ai-providers/anaconda-desktop)** - Discover and connect to a local text-generation model server
 - **[Ollama](/docs/ai-providers/ollama)** - Easy local model management
 - **[LM Studio](/docs/ai-providers/lmstudio)** - Desktop app for local models
@@ -56,7 +56,7 @@ Route requests through unified APIs with additional features:
 
 | Priority | Recommended Provider |
 |---|---|
-| Ease of use | [Kilo Code (built-in)](/docs/ai-providers/kilocode) |
+| Ease of use | [Tavern Code (built-in)](/docs/ai-providers/taverncode) |
 | Best value | Zhipu AI or Mistral |
 | Privacy/Offline | Ollama or LM Studio |
 | Enterprise | AWS Bedrock or Google Vertex |
@@ -70,12 +70,12 @@ Route requests through unified APIs with additional features:
 
 ## Disabling Built-in Providers
 
-You can prevent specific providers from loading using `disabled_providers` in your `kilo.json` (or `kilo.jsonc`). This is useful to hide models from built-in or detected providers that you don't intend to use.
+You can prevent specific providers from loading using `disabled_providers` in your `tavern.json` (or `tavern.jsonc`). This is useful to hide models from built-in or detected providers that you don't intend to use.
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
-  "disabled_providers": ["kilo", "openai"]
+  "$schema": "https://app.tavern.ai/config.json",
+  "disabled_providers": ["tavern", "openai"]
 }
 ```
 
@@ -83,15 +83,15 @@ To allow only specific providers and disable everything else, use `enabled_provi
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "enabled_providers": ["anthropic"]
 }
 ```
 
-Both fields accept provider IDs — the lowercase identifier used in the `provider/model` format (e.g. `kilo`, `anthropic`, `openai`, `google`, `groq`).
+Both fields accept provider IDs — the lowercase identifier used in the `provider/model` format (e.g. `tavern`, `anthropic`, `openai`, `google`, `groq`).
 
 ## Next Steps
 
-- **New to Kilo Code?** Start with the [Kilo Code provider](/docs/ai-providers/kilocode) - no setup required
+- **New to Tavern Code?** Start with the [Tavern Code provider](/docs/ai-providers/taverncode) - no setup required
 - **Have an API key?** Jump to your provider's page for configuration instructions
 - **Want to compare?** Check out [Model Selection](/docs/code-with-ai/agents/model-selection) for guidance on choosing models

@@ -1,5 +1,5 @@
 /**
- * Structural and policy validation for Kilo SBOM documents.
+ * Structural and policy validation for Tavern SBOM documents.
  *
  * Schema-shaped correctness -- required properties, type/enum/pattern
  * conformance, hash and licence object shapes, and everything else the
@@ -7,7 +7,7 @@
  * `@cyclonedx/cyclonedx-library`'s ajv-backed validator instead of being
  * re-implemented by hand.
  *
- * What remains here is Kilo policy the schema cannot express: an SBOM that is
+ * What remains here is Tavern policy the schema cannot express: an SBOM that is
  * schema-valid but does not name the artifact it describes, or whose
  * dependency graph points at components that were filtered out, is still
  * useless to a market surveillance authority. Schema issues and policy issues
@@ -43,7 +43,7 @@ type CycloneDxLibrary = {
 // does not implement `JsonValidator` at all. Loading it through `require()`
 // with an explicit local type for the handful of members actually used
 // sidesteps that conditional type resolution instead of overriding a shared,
-// non-Kilo tsconfig setting.
+// non-Tavern tsconfig setting.
 const cdx = createRequire(import.meta.url)("@cyclonedx/cyclonedx-library") as CycloneDxLibrary
 
 const schema = new cdx.Validation.JsonValidator(cdx.Spec.Version.v1dot6)
@@ -85,7 +85,7 @@ export async function validate(input: unknown) {
   const meta = bom.metadata
   if (typeof meta !== "object" || meta === null) return [...issues, "metadata is required"]
   const tools: Record_[] = meta.tools?.components ?? []
-  if (!tools.some((tool) => tool?.name === "kilo-sbom")) {
+  if (!tools.some((tool) => tool?.name === "tavern-sbom")) {
     issues.push("metadata.tools.components must record the generating tool")
   }
 
@@ -161,5 +161,5 @@ export async function validate(input: unknown) {
 
 export async function assertValid(bom: unknown, label: string) {
   const issues = await validate(bom)
-  if (issues.length) throw new Error(`${label} is not a valid Kilo SBOM:\n- ${issues.join("\n- ")}`)
+  if (issues.length) throw new Error(`${label} is not a valid Tavern SBOM:\n- ${issues.join("\n- ")}`)
 }

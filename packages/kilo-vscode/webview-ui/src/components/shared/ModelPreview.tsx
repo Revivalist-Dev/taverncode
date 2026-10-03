@@ -1,9 +1,9 @@
 import { Show, For, useContext, type Component } from "solid-js"
 import type { EnrichedModel } from "../../context/provider"
 import { SessionContext } from "../../context/session"
-import { Markdown } from "@kilocode/kilo-ui/markdown"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Markdown } from "@taverncode/tavern-ui/markdown"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { useLanguage } from "../../context/language"
 import {
   autoChoices,

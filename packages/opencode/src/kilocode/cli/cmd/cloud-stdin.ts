@@ -1,6 +1,6 @@
 import type { Argv } from "yargs"
 import { Effect } from "effect"
-import { PromptSchema } from "@/kilocode/cloud/contracts"
+import { PromptSchema } from "@/taverncode/cloud/contracts"
 import { CliError, fail } from "@/cli/effect-cmd"
 
 const maximumCharacters = 100_000

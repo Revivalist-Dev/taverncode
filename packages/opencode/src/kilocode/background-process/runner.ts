@@ -1,4 +1,4 @@
-import { KiloPtySelfCommand } from "@/kilocode/pty/self-command"
+import { KiloPtySelfCommand } from "@/taverncode/pty/self-command"
 import { Filesystem } from "@/util/filesystem"
 import { Process } from "@/util/process"
 import { isRecord } from "@/util/record"

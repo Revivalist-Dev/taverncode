@@ -1,8 +1,8 @@
-# Kilo JetBrains
+# Tavern JetBrains
 
 AI coding agent plugin for JetBrains IDEs.
 
-To try the v7 Early Access Program plugin, follow the [JetBrains EAP installation guide](https://kilo.ai/docs/code-with-ai/platforms/jetbrains#jetbrains-early-access).
+To try the v7 Early Access Program plugin, follow the [JetBrains EAP installation guide](https://tavern.ai/docs/code-with-ai/platforms/jetbrains#jetbrains-early-access).
 
 ---
 
@@ -40,39 +40,39 @@ This installs Node dependencies required by the build scripts.
 
 ## Open in IntelliJ
 
-When you open the monorepo root in IntelliJ IDEA, the Gradle project at `packages/kilo-jetbrains/` should be auto-detected via `.idea/gradle.xml`. If not, link it manually: **File > Settings > Build Tools > Gradle > +** and select `packages/kilo-jetbrains/settings.gradle.kts`.
+When you open the monorepo root in IntelliJ IDEA, the Gradle project at `packages/tavern-jetbrains/` should be auto-detected via `.idea/gradle.xml`. If not, link it manually: **File > Settings > Build Tools > Gradle > +** and select `packages/tavern-jetbrains/settings.gradle.kts`.
 
 ---
 
 ## Build locally
 
-From `packages/kilo-jetbrains/`:
+From `packages/tavern-jetbrains/`:
 
 ```
 bun run build
 ```
 
-This builds the plugin without bundling CLI binaries. The backend downloads the pinned Kilo CLI release for the host platform at connect time. The plugin archive is output to `build/distributions/`.
+This builds the plugin without bundling CLI binaries. The backend downloads the pinned Tavern CLI release for the host platform at connect time. The plugin archive is output to `build/distributions/`.
 
 Or via Turbo from the repo root:
 
 ```
-bun turbo build --filter=@kilocode/kilo-jetbrains
+bun turbo build --filter=@taverncode/tavern-jetbrains
 ```
 
 ---
 
 ## Build for production
 
-From `packages/kilo-jetbrains/`:
+From `packages/tavern-jetbrains/`:
 
 ```
 bun run build:production
 ```
 
-This builds the plugin without bundling CLI binaries. The backend downloads the pinned Kilo CLI release for the host platform at connect time.
+This builds the plugin without bundling CLI binaries. The backend downloads the pinned Tavern CLI release for the host platform at connect time.
 
-The built plugin archive is at `build/distributions/kilo.jetbrains-<version>.zip`. This zip can be installed in any JetBrains IDE via **Settings > Plugins > Install Plugin from Disk**.
+The built plugin archive is at `build/distributions/tavern.jetbrains-<version>.zip`. This zip can be installed in any JetBrains IDE via **Settings > Plugins > Install Plugin from Disk**.
 
 ---
 
@@ -84,7 +84,7 @@ See [RELEASING.md](RELEASING.md) for the full release process, including how to 
 
 ## Run the plugin
 
-Use the checked-in `Run IDE (Split Mode)` run configuration (or `./gradlew --no-configuration-cache runIdeSplitMode` from `packages/kilo-jetbrains/`) to launch the backend and frontend halves of a local split-mode sandbox. The backend downloads the pinned CLI release on first connect.
+Use the checked-in `Run IDE (Split Mode)` run configuration (or `./gradlew --no-configuration-cache runIdeSplitMode` from `packages/tavern-jetbrains/`) to launch the backend and frontend halves of a local split-mode sandbox. The backend downloads the pinned CLI release on first connect.
 
 Use `runIde` only when you need a monolithic sandboxed IntelliJ instance.
 
@@ -104,12 +104,12 @@ All properties below are passed with `-P` on the Gradle command line or in the r
 
 | Property | Default | Description |
 |---|---|---|
-| `kilo.splitModeServerPort` | `0` | Backend split-mode server port. `0` or omitted lets the IntelliJ Platform Gradle Plugin pick a free port when the task runs. |
-| `kilo.dev.storage.isolated` | `false` | When `true`, CLI runs with `XDG_*_HOME` pointing to `.kilo-dev/` in the worktree root, fully isolating dev storage from your real Kilo installation. Enabled by default in the checked-in split-mode run configurations. |
-| `kilo.dev.worktree.root` | monorepo root | Worktree root used to resolve `.kilo-dev/`. Auto-detected from the Gradle project directory; override only when the auto-detection is wrong. |
+| `tavern.splitModeServerPort` | `0` | Backend split-mode server port. `0` or omitted lets the IntelliJ Platform Gradle Plugin pick a free port when the task runs. |
+| `tavern.dev.storage.isolated` | `false` | When `true`, CLI runs with `XDG_*_HOME` pointing to `.tavern-dev/` in the worktree root, fully isolating dev storage from your real Tavern installation. Enabled by default in the checked-in split-mode run configurations. |
+| `tavern.dev.worktree.root` | monorepo root | Worktree root used to resolve `.tavern-dev/`. Auto-detected from the Gradle project directory; override only when the auto-detection is wrong. |
 
 The checked-in IDE run configurations pass `--no-configuration-cache` because the IntelliJ Platform Gradle Plugin run-IDE tasks are not configuration-cache compatible in this setup.
-They also pass `--purge-old-log-directories` so stale sandbox logs do not hide the current backend and frontend `kilo.log*` files.
+They also pass `--purge-old-log-directories` so stale sandbox logs do not hide the current backend and frontend `tavern.log*` files.
 
 Example with a fixed split-mode port:
 
@@ -119,17 +119,17 @@ Example with a fixed split-mode port:
 
 ### Dev storage isolation
 
-When `kilo.dev.storage.isolated=true`, the CLI subprocess receives standard `XDG_*_HOME` env vars pointing under `.kilo-dev/` in the worktree root:
+When `tavern.dev.storage.isolated=true`, the CLI subprocess receives standard `XDG_*_HOME` env vars pointing under `.tavern-dev/` in the worktree root:
 
 ```
-.kilo-dev/
-  data/    -> XDG_DATA_HOME   (CLI uses .../data/kilo for sessions, logs, ...)
-  config/  -> XDG_CONFIG_HOME (CLI uses .../config/kilo for global config)
-  state/   -> XDG_STATE_HOME  (CLI uses .../state/kilo for state)
-  cache/   -> XDG_CACHE_HOME  (CLI uses .../cache/kilo for cache, bin)
+.tavern-dev/
+  data/    -> XDG_DATA_HOME   (CLI uses .../data/tavern for sessions, logs, ...)
+  config/  -> XDG_CONFIG_HOME (CLI uses .../config/tavern for global config)
+  state/   -> XDG_STATE_HOME  (CLI uses .../state/tavern for state)
+  cache/   -> XDG_CACHE_HOME  (CLI uses .../cache/tavern for cache, bin)
 ```
 
-This keeps all development data isolated from your real Kilo installation. The `.kilo-dev/` directory is gitignored and created automatically on first run.
+This keeps all development data isolated from your real Tavern installation. The `.tavern-dev/` directory is gitignored and created automatically on first run.
 
 The checked-in `Run IDE (Backend)`, `Run IDE (Frontend)`, and `Run IDE (Split Mode)` run configurations enable this by default. To disable it:
 
@@ -141,16 +141,16 @@ The checked-in `Run IDE (Backend)`, `Run IDE (Frontend)`, and `Run IDE (Split Mo
 
 ### Debug logging properties
 
-The plugin supports a few JVM system properties for local debugging. These are most useful with sandbox runs because the logs are mirrored to `kilo.log*` files for frontend and backend.
+The plugin supports a few JVM system properties for local debugging. These are most useful with sandbox runs because the logs are mirrored to `tavern.log*` files for frontend and backend.
 
-`kilo.dev.log.level`
+`tavern.dev.log.level`
 
-- Controls the Kilo debug file logger level.
+- Controls the Tavern debug file logger level.
 - Supported values: `DEBUG`, `INFO`, `WARN`, `ERROR`, `OFF`
 - Default: `INFO`
 - Use `DEBUG` to enable detailed chat tracing and lazy `log.debug { ... }` summaries.
 
-`kilo.dev.log.chat.content`
+`tavern.dev.log.chat.content`
 
 - Controls how much chat text content appears in structured chat logs.
 - Supported values:
@@ -159,27 +159,27 @@ The plugin supports a few JVM system properties for local debugging. These are m
   - `full`: sanitized full content
 - Default: `off`
 
-`kilo.dev.log.chat.preview.max`
+`tavern.dev.log.chat.preview.max`
 
-- Maximum preview size when `kilo.dev.log.chat.content=preview`
+- Maximum preview size when `tavern.dev.log.chat.content=preview`
 - Default: `160`
 
 Where to find the log files:
 
-- In sandbox runs, Kilo writes separate dev log files for each side under the IDE sandbox log directory reported by `PathManager.getLogDir()`.
-- Frontend log file: `<sandbox log dir>/kilo-frontend/kilo.log`
-- Backend log file: `<sandbox log dir>/kilo-backend/kilo.log`
-- Rotated files use numbered suffixes: `kilo.log.0`, `kilo.log.1`.
-- Each sandbox process starts a new `kilo.log`, so the file holds exactly one run and the previous run stays readable as `kilo.log.0`. Installed builds keep appending instead.
+- In sandbox runs, Tavern writes separate dev log files for each side under the IDE sandbox log directory reported by `PathManager.getLogDir()`.
+- Frontend log file: `<sandbox log dir>/tavern-frontend/tavern.log`
+- Backend log file: `<sandbox log dir>/tavern-backend/tavern.log`
+- Rotated files use numbered suffixes: `tavern.log.0`, `tavern.log.1`.
+- Each sandbox process starts a new `tavern.log`, so the file holds exactly one run and the previous run stays readable as `tavern.log.0`. Installed builds keep appending instead.
 - In practice these sit under the current `log_run*` sandbox logs for the active run.
-- If you are unsure of the exact sandbox root, open the IDE log directory from the running sandbox instance and then look for the `kilo-frontend/` and `kilo-backend/` subdirectories.
+- If you are unsure of the exact sandbox root, open the IDE log directory from the running sandbox instance and then look for the `tavern-frontend/` and `tavern-backend/` subdirectories.
 
 ### Reading the logs in the Run tool window
 
-The checked-in IDE run configurations attach both files as `<log_file>` tabs ("Backend Kilo", "Frontend Kilo"). Two IntelliJ defaults are worth knowing:
+The checked-in IDE run configurations attach both files as `<log_file>` tabs ("Backend Tavern", "Frontend Tavern"). Two IntelliJ defaults are worth knowing:
 
 - `skipped` defaults to `true`, which makes the tab open the file at its current end offset and show nothing that was already written. The checked-in configurations set `skipped="false"`. The `show_all` attribute is unrelated — it only selects "every glob match" over "the newest match" for pattern paths.
-- The tab's log level filter defaults to **Show errors and warnings**, and Kilo's dev logs are almost entirely `INFO`/`DEBUG`, so a correctly wired tab still looks empty. Open the tab's filter control (funnel icon) and pick **Show all**. This is a per-project setting stored in `.idea/workspace.xml` under `LogFilters`, so it cannot ship with the run configuration.
+- The tab's log level filter defaults to **Show errors and warnings**, and Tavern's dev logs are almost entirely `INFO`/`DEBUG`, so a correctly wired tab still looks empty. Open the tab's filter control (funnel icon) and pick **Show all**. This is a per-project setting stored in `.idea/workspace.xml` under `LogFilters`, so it cannot ship with the run configuration.
 
 Runs started from the Agent Manager against a git worktree get their log paths rebased onto that worktree, because `$PROJECT_DIR$` was already expanded against the main checkout when the configuration was read (`WorktreeRunAdapter.rebaseLogs`).
 
@@ -200,7 +200,7 @@ Adding a type means one `PATHS` entry, not a generic rewrite: blanket-rebasing e
 Module-classpath configurations (Application, Spring Boot, tests) are not transplanted — their classpath comes from the main checkout's module — and go through the platform's own build-system delegation instead (`WorktreeRunDelegate`). Anything neither path can run is listed in a collapsed **Not Supported** submenu with the reason, and logged by `WorktreeRunManager.configs`:
 
 ```bash
-grep "worktree run: configs listed" packages/kilo-jetbrains/.intellijPlatform/sandbox/kilo.jetbrains/kilo-backend/kilo.log
+grep "worktree run: configs listed" packages/tavern-jetbrains/.intellijPlatform/sandbox/tavern.jetbrains/tavern-backend/tavern.log
 ```
 
 Worktree npm runs need the worktree's own `node_modules`; that is what the Agent Manager setup script is for.

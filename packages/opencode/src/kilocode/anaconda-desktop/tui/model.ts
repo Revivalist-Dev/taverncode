@@ -1,4 +1,4 @@
-import type { AnacondaDesktopStatus } from "@kilocode/sdk/v2"
+import type { AnacondaDesktopStatus } from "@taverncode/sdk/v2"
 import { DOWNLOAD_URL } from "../domain"
 
 export type ReadyStatus = Extract<AnacondaDesktopStatus, { type: "ready" }>
@@ -123,7 +123,7 @@ function ready(status: Extract<AnacondaDesktopStatus, { type: "ready" }>): Setup
   if (status.toolcall === "supported") {
     return {
       title: "Anaconda Desktop is ready",
-      lines: [...base, "Tool calling: supported. Connect to import this server into Kilo."],
+      lines: [...base, "Tool calling: supported. Connect to import this server into Tavern."],
       actions: [{ key: "c", label: "connect / refresh now", type: "connect" }, desktop, refresh],
     }
   }

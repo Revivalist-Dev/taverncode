@@ -73,7 +73,7 @@ export const DevSetupCommand = cmd({
     }
 
     UI.empty()
-    UI.println(`  ${B}Kilo CLI dev launcher setup${N}`)
+    UI.println(`  ${B}Tavern CLI dev launcher setup${N}`)
     UI.empty()
     UI.println(`  ${D}Repo:${N}    ${repo}`)
     UI.println(`  ${D}Shell:${N}   ${shell}${args.shell ? "" : `  ${D}(detected from $SHELL)${N}`}`)
@@ -120,7 +120,7 @@ export const DevSetupCommand = cmd({
   },
 })
 
-// Deprecated: kept so `kilo dev-alias` keeps working for scripts/docs.
+// Deprecated: kept so `tavern dev-alias` keeps working for scripts/docs.
 export const DevAliasCommand = cmd({
   command: "dev-alias [shell]",
   describe: false as const,
@@ -301,7 +301,7 @@ export async function detectRepo(): Promise<string> {
   if (meta && !isBunfsPath(meta)) candidates.push(path.dirname(meta))
 
   // process.execPath points at the binary itself; walk up from its directory.
-  // For a local build it's <repo>/packages/opencode/dist/<target>/bin/kilo, so
+  // For a local build it's <repo>/packages/opencode/dist/<target>/bin/tavern, so
   // findRepoFrom eventually hits the repo's packages/opencode/package.json.
   if (process.execPath) candidates.push(path.dirname(process.execPath))
   candidates.push(process.cwd())
@@ -312,6 +312,6 @@ export async function detectRepo(): Promise<string> {
   }
 
   throw new Error(
-    "cannot locate kilocode source checkout; set KILO_DEV_REPO=/path/to/kilocode or run ./bin/kilodev dev-setup from the repo",
+    "cannot locate taverncode source checkout; set KILO_DEV_REPO=/path/to/taverncode or run ./bin/kilodev dev-setup from the repo",
   )
 }

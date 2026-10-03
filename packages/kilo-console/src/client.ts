@@ -1,4 +1,4 @@
-import { createKiloClient, type Config as EffectiveConfig } from "@kilocode/sdk/v2/client"
+import { createKiloClient, type Config as EffectiveConfig } from "@taverncode/sdk/v2/client"
 import type {
   AgentBuilderPreviewResponse,
   AgentBuilderSaveResponse,
@@ -31,7 +31,7 @@ import type {
   Worktree,
   WorktreeDiffItem,
   WorktreeListResponse,
-} from "@kilocode/sdk/v2/client"
+} from "@taverncode/sdk/v2/client"
 
 export type Scope = "global" | "project"
 
@@ -124,7 +124,7 @@ type Hit = {
 
 const ports = Array.from({ length: 20 }, (_, index) => 4097 + index)
 const day = 24 * 60 * 60 * 1000
-const key = "kilo.config.server"
+const key = "tavern.config.server"
 const discovery: { run?: Promise<string | undefined> } = {}
 
 const fetcher = window.fetch.bind(window) as typeof fetch
@@ -141,8 +141,8 @@ function decode(input: string) {
 
 function server(input: string) {
   const url = new URL(input)
-  const user = decode(url.username) || "kilo"
-  const pass = decode(url.password) || "kilo"
+  const user = decode(url.username) || "tavern"
+  const pass = decode(url.password) || "tavern"
   url.username = ""
   url.password = ""
   url.search = ""
@@ -412,42 +412,42 @@ export async function load(input: Query): Promise<Snapshot> {
 }
 
 export async function loadEmbeddingModels(input: Query): Promise<KiloEmbeddingModelCatalog> {
-  return demand("Kilo embedding models", await client(input).indexing.models())
+  return demand("Tavern embedding models", await client(input).indexing.models())
 }
 
 export async function loadKiloProfile(input: ProjectQuery): Promise<KiloProfileData> {
   const sdk = client(input)
-  const result = await sdk.kilo.profile(directory(input))
-  return demand("Kilo profile", result)
+  const result = await sdk.tavern.profile(directory(input))
+  return demand("Tavern profile", result)
 }
 
 export async function setKiloOrganization(input: ProjectQuery, organizationId: string | null) {
   const sdk = client(input)
-  const result = await sdk.kilo.organization.set({ ...directory(input), organizationId })
-  demand("Switch Kilo account", result)
+  const result = await sdk.tavern.organization.set({ ...directory(input), organizationId })
+  demand("Switch Tavern account", result)
   await sdk.global.dispose()
 }
 
 export async function logoutKilo(input: ProjectQuery) {
   const sdk = client(input)
-  const result = await sdk.auth.remove({ providerID: "kilo" })
-  demand("Log out of Kilo", result)
+  const result = await sdk.auth.remove({ providerID: "tavern" })
+  demand("Log out of Tavern", result)
   await sdk.global.dispose()
 }
 
 export async function startKiloLogin(input: ProjectQuery): Promise<ProviderAuthAuthorization> {
   const sdk = client(input)
-  const result = await sdk.provider.oauth.authorize({ ...directory(input), providerID: "kilo", method: 0 })
-  return demand("Start Kilo login", result)
+  const result = await sdk.provider.oauth.authorize({ ...directory(input), providerID: "tavern", method: 0 })
+  return demand("Start Tavern login", result)
 }
 
 export async function completeKiloLogin(input: ProjectQuery, signal?: AbortSignal) {
   const sdk = client(input)
   const result = await sdk.provider.oauth.callback(
-    { ...directory(input), providerID: "kilo", method: 0 },
+    { ...directory(input), providerID: "tavern", method: 0 },
     signal ? { signal } : undefined,
   )
-  demand("Complete Kilo login", result)
+  demand("Complete Tavern login", result)
   await sdk.global.dispose()
 }
 
@@ -621,9 +621,9 @@ export async function loadProjectDiffFile(input: Query, dir: string, file: strin
   return demand("Worktree diff file", result)
 }
 
-export async function createProjectPty(input: Query, dir: string, title = "Kilo session"): Promise<ProjectPtyInfo> {
+export async function createProjectPty(input: Query, dir: string, title = "Tavern session"): Promise<ProjectPtyInfo> {
   const sdk = client({ url: input.url, dir })
-  const result = await sdk.pty.create({ directory: dir, command: "kilo", cwd: dir, title })
+  const result = await sdk.pty.create({ directory: dir, command: "tavern", cwd: dir, title })
   return demand("Create terminal", result)
 }
 

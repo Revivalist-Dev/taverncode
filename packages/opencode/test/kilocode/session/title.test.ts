@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "bun:test"
 import type { ModelMessage } from "ai"
 import { MessageV2 } from "@/session/message-v2"
-import { KiloSessionTitle } from "@/kilocode/session/title"
+import { KiloSessionTitle } from "@/taverncode/session/title"
 
 const sessionID = "ses_test" as MessageV2.WithParts["info"]["sessionID"]
 

@@ -4,7 +4,7 @@ import { poll } from "./polling.js"
 import { initiateDeviceAuth, pollDeviceAuth } from "./device.js"
 import { getKiloProfile, getKiloDefaultModel, defaultOrganizationId } from "../api/profile.js"
 import { POLL_INTERVAL_MS } from "../api/constants.js"
-import type { AuthOuathResult } from "@kilocode/plugin"
+import type { AuthOuathResult } from "@taverncode/plugin"
 
 /**
  * TUI-compatible device authorization flow
@@ -87,7 +87,7 @@ export async function authenticateWithDeviceAuthTUI(inputs?: Record<string, stri
       // Return success with OAuth credentials
       return {
         type: "success",
-        provider: "kilo",
+        provider: "tavern",
         refresh: token,
         access: token,
         expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year

@@ -1,16 +1,16 @@
-// kilocode_change - new file
+// taverncode_change - new file
 
 import { Global } from "@opencode-ai/core/global"
 import { Effect } from "effect"
-import { staticEnvLines, type EditorContext } from "@/kilocode/editor-context"
-import { KiloMemory } from "@kilocode/kilo-memory/effect"
-import type { MemoryPaths } from "@kilocode/kilo-memory/effect/paths"
-import { MemoryMarker } from "@/kilocode/memory/marker"
+import { staticEnvLines, type EditorContext } from "@/taverncode/editor-context"
+import { KiloMemory } from "@taverncode/tavern-memory/effect"
+import type { MemoryPaths } from "@taverncode/tavern-memory/effect/paths"
+import { MemoryMarker } from "@/taverncode/memory/marker"
 import type { Provider } from "@/provider/provider"
 import type { InstanceContext } from "@/project/instance-context"
 import * as Log from "@opencode-ai/core/util/log"
 
-const log = Log.create({ service: "kilocode.system-prompt" })
+const log = Log.create({ service: "taverncode.system-prompt" })
 
 export namespace KilocodeSystemPrompt {
   export function shouldIncludePersona(agent: string) {
@@ -26,7 +26,7 @@ export namespace KilocodeSystemPrompt {
         `  Is directory a git repo: ${input.ctx.project.vcs === "git" ? "yes" : "no"}`,
         `  Platform: ${process.platform}`,
         `  Today's date: ${new Date().toDateString()}`,
-        `  Project config: .kilo/command/*.md, .kilo/agent/*.md, kilo.json, AGENTS.md. Put new commands and agents in .kilo/. Do not use .kilocode/ or .opencode/.`,
+        `  Project config: .tavern/command/*.md, .tavern/agent/*.md, tavern.json, AGENTS.md. Put new commands and agents in .tavern/. Do not use .taverncode/ or .opencode/.`,
         `  Global config: ${Global.Path.config}/ (same structure)`,
         ...staticEnvLines(input.editor),
         `</env>`,
@@ -61,7 +61,7 @@ export namespace KilocodeSystemPrompt {
       const blocks = project?.blocks ?? []
       // Emit the memory guidance once per prompt, not repeated per injected block.
       const guidance = [
-        "The following Kilo memory blocks are saved project memory from this project's previous sessions. You do have this prior-session context; never claim you lack memory of earlier work here while these blocks are present.",
+        "The following Tavern memory blocks are saved project memory from this project's previous sessions. You do have this prior-session context; never claim you lack memory of earlier work here while these blocks are present.",
         "The latest_session_digest record is the most recent session; prefer it for continuity unless the request clearly refers to older or different work.",
         "When the user asks about prior work, where things stopped, what was happening, or wants to continue — however they phrase it — answer directly from latest_session_digest or the newest relevant session_digest record below.",
         "Use saved memory when it is directly relevant to the user's request, especially matching corrections, constraints, conventions, and prior decisions.",

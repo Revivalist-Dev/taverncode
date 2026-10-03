@@ -1,5 +1,5 @@
 import { type Component, For, Show, createSignal } from "solid-js"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { DeferredPopover } from "../src/components/shared/DeferredPopover"
 
 export interface InlineOption<T extends string> {
@@ -28,7 +28,7 @@ interface InlineSelectProps<T extends string> {
 /**
  * Compact dropdown sized for a diff toolbar row.
  *
- * Deliberately not kilo-ui's `Select`: that renders an input-sized control
+ * Deliberately not tavern-ui's `Select`: that renders an input-sized control
  * (32px, base font) which dwarfs the ghost buttons and radio group it sits
  * next to. This mirrors the `am-selector-trigger` markup the branch pickers
  * use, shrunk via `.diff-inline-trigger`, so every control in the row shares

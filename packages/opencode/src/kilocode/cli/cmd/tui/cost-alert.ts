@@ -1,5 +1,5 @@
 import type { useToast } from "@tui/ui/toast"
-import type { useNudge } from "@/kilocode/cli/cmd/tui/context/nudge"
+import type { useNudge } from "@/taverncode/cli/cmd/tui/context/nudge"
 
 export type CostAlertCommand =
   | { type: "prompt" }
@@ -40,7 +40,7 @@ export interface CostAlertController {
 }
 
 // The prompt-mutating bits (prefill/clearPrompt) stay with the component; this owns
-// the parsing, nudge calls, and toast messaging so they live under kilocode/.
+// the parsing, nudge calls, and toast messaging so they live under taverncode/.
 export function createCostAlertController(deps: {
   prefill: () => void
   clearPrompt: () => void

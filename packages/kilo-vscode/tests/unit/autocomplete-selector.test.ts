@@ -11,8 +11,8 @@ describe("autocomplete document selector", () => {
   })
 
   it("uses the matching FIM model for notebook fallback", () => {
-    expect(notebookModel("kilo", "inception/mercury-next-edit").id).toBe("kilo/inception/mercury-edit-2")
+    expect(notebookModel("tavern", "inception/mercury-next-edit").id).toBe("tavern/inception/mercury-edit-2")
     expect(notebookModel("inception", "mercury-next-edit").id).toBe("inception/mercury-edit-2")
-    expect(notebookModel("kilo", "mistralai/codestral-2508").id).toBe("kilo/mistralai/codestral-2508")
+    expect(notebookModel("tavern", "mistralai/codestral-2508").id).toBe("tavern/mistralai/codestral-2508")
   })
 })

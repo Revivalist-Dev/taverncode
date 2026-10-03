@@ -3,8 +3,8 @@ import { Database } from "@opencode-ai/core/database/database"
 import type { Config } from "@/config/config"
 import type { RuntimeFlags } from "@/effect/runtime-flags"
 import type { SessionID } from "@/session/schema"
-import { BoardEnabled } from "@/kilocode/board/enabled"
-import { BoardStore } from "@/kilocode/board/store"
+import { BoardEnabled } from "@/taverncode/board/enabled"
+import { BoardStore } from "@/taverncode/board/store"
 
 /**
  * Metadata kind a client puts on the text part a human typed into a subagent

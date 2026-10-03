@@ -1,5 +1,5 @@
 // Regressions for SessionPrompt.runLoop compaction-history safety.
-// Ensures Kilo's post-filterCompacted trim and post-summary media strip are
+// Ensures Tavern's post-filterCompacted trim and post-summary media strip are
 // applied before messages are serialized for the provider request.
 
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
@@ -47,9 +47,9 @@ import { Skill } from "../../src/skill"
 import { Snapshot } from "../../src/snapshot"
 import { ToolRegistry } from "../../src/tool/registry"
 import { Truncate } from "../../src/tool/truncate"
-import { KiloSessions } from "../../src/kilo-sessions/kilo-sessions"
+import { KiloSessions } from "../../src/tavern-sessions/tavern-sessions"
 import * as Log from "@opencode-ai/core/util/log"
-import { MemoryService } from "@kilocode/kilo-memory/effect/service"
+import { MemoryService } from "@taverncode/tavern-memory/effect/service"
 import { provideTmpdirServer } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 import { reply, TestLLMServer } from "../lib/llm-server"

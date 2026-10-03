@@ -1,12 +1,12 @@
 import { createMemo, createResource, createSignal } from "solid-js"
-import type { McpLocalConfig, McpRemoteConfig, McpStatus } from "@kilocode/sdk/v2/client"
+import type { McpLocalConfig, McpRemoteConfig, McpStatus } from "@taverncode/sdk/v2/client"
 import { parse as parseYaml } from "yaml"
 import type { Snapshot } from "../../../client"
 import { authenticateMcp, connectMcp, disconnectMcp } from "../../../client"
 import { useConfig } from "../../../context/config"
 import { clean, errMsg, text, words, type McpMap } from "../../../shared/utils"
 
-const market = "https://api.kilo.ai/api/marketplace/mcps"
+const market = "https://api.tavern.ai/api/marketplace/mcps"
 const pattern = /^[\w\-@.]+$/
 
 type Resolved = Snapshot["overlay"]["collections"][string][number]

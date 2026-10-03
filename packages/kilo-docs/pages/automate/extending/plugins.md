@@ -1,12 +1,12 @@
 ---
 title: "Plugins"
-description: "Extend the Kilo CLI with custom hooks, tools, auth providers, and more"
+description: "Extend the Tavern CLI with custom hooks, tools, auth providers, and more"
 platform: new
 ---
 
 # Plugins
 
-Plugins extend Kilo by hooking into events, adding custom tools, registering auth or model providers, and customizing runtime behavior. They are TypeScript or JavaScript modules loaded at startup, and work in both the Kilo CLI and the VS Code extension.
+Plugins extend Tavern by hooking into events, adding custom tools, registering auth or model providers, and customizing runtime behavior. They are TypeScript or JavaScript modules loaded at startup, and work in both the Tavern CLI and the VS Code extension.
 
 ## What plugins can do
 
@@ -40,7 +40,7 @@ Add an array of plugin specifiers to your config file:
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "plugin": [
     "@your-org/your-plugin",
     "your-plugin@1.2.3",
@@ -66,53 +66,53 @@ Config files live in the same locations as the rest of your CLI configuration �
 
 Drop TypeScript or JavaScript files into a `plugin/` or `plugins/` folder inside any config directory:
 
-- Global: `~/.config/kilo/plugin/`
-- Project: `.kilo/plugin/` or legacy `.kilocode/plugin/`
+- Global: `~/.config/tavern/plugin/`
+- Project: `.tavern/plugin/` or legacy `.taverncode/plugin/`
 
 Every `.ts` or `.js` file in those directories is auto-registered at startup — no need to list them in the config file.
 
 ```text
 my-project/
-├── kilo.json
-└── .kilo/
+├── tavern.json
+└── .tavern/
     └── plugin/
         ├── env-guard.ts
         └── notifications.ts
 ```
 
-### From the `kilo plugin` command
+### From the `tavern plugin` command
 
 Install an npm plugin and patch your config in one step:
 
 ```bash
 # Install into the current project's config
-kilo plugin my-plugin
+tavern plugin my-plugin
 
 # Install into your global config
-kilo plugin my-plugin --global
+tavern plugin my-plugin --global
 
 # Replace an existing entry
-kilo plugin my-plugin --force
+tavern plugin my-plugin --force
 ```
 
-The command resolves the package, reads its `package.json` for plugin entrypoints, and writes the entry into the appropriate config file (`.kilo/opencode.jsonc` / `.kilo/tui.jsonc` for local installs, or `~/.config/kilo/opencode.jsonc` / `~/.config/kilo/tui.jsonc` for `--global`) while preserving JSONC comments.
+The command resolves the package, reads its `package.json` for plugin entrypoints, and writes the entry into the appropriate config file (`.tavern/opencode.jsonc` / `.tavern/tui.jsonc` for local installs, or `~/.config/tavern/opencode.jsonc` / `~/.config/tavern/tui.jsonc` for `--global`) while preserving JSONC comments.
 
 ### How plugins are installed
 
 - **npm plugins** are installed automatically at startup using Bun. Packages and their dependencies are cached under `packages/` in the current CLI XDG cache directory (`~/.cache/opencode/packages/` by default, or `$XDG_CACHE_HOME/opencode/packages/` when `XDG_CACHE_HOME` is set).
 - **Pinned npm versions** like `my-plugin@1.2.3` install that exact version and do not check for newer registry versions. Bare package names resolve to `latest` and can refresh when the cached copy becomes stale.
-- **Install scripts are disabled** for npm plugins. Kilo installs packages with lifecycle scripts such as `install` and `postinstall` blocked.
-- **Local plugins** are loaded directly from the plugin directory. If your plugin imports external packages, add a `package.json` to your config directory (see [Dependencies](#dependencies)) — Kilo runs `bun install` on startup so imports resolve.
+- **Install scripts are disabled** for npm plugins. Tavern installs packages with lifecycle scripts such as `install` and `postinstall` blocked.
+- **Local plugins** are loaded directly from the plugin directory. If your plugin imports external packages, add a `package.json` to your config directory (see [Dependencies](#dependencies)) — Tavern runs `bun install` on startup so imports resolve.
 
 ### Load order
 
 Plugins from all sources run on every session. They load in this order:
 
-1. Internal built-ins (Kilo Gateway auth, Codex auth, Copilot auth, Cloudflare, etc.)
-2. Global config plugin array (`~/.config/kilo/kilo.json`)
-3. Global plugin directory (`~/.config/kilo/plugin/`)
-4. Project config plugin array (`kilo.json` / `opencode.json`)
-5. Project plugin directory (`.kilo/plugin/` and friends)
+1. Internal built-ins (Tavern Gateway auth, Codex auth, Copilot auth, Cloudflare, etc.)
+2. Global config plugin array (`~/.config/tavern/tavern.json`)
+3. Global plugin directory (`~/.config/tavern/plugin/`)
+4. Project config plugin array (`tavern.json` / `opencode.json`)
+5. Project plugin directory (`.tavern/plugin/` and friends)
 
 Duplicates (same package, same version) are deduplicated. Hooks from multiple plugins run sequentially in load order.
 
@@ -131,8 +131,8 @@ A plugin is a module that exports a function returning a set of [hooks](#hooks-r
 Create a file in your plugin directory:
 
 ```ts
-// .kilo/plugin/hello.ts
-import type { Plugin } from "@kilocode/plugin"
+// .tavern/plugin/hello.ts
+import type { Plugin } from "@taverncode/plugin"
 
 const hello: Plugin = async ({ project, client, $, directory, worktree }) => {
   console.log("hello plugin loaded")
@@ -152,19 +152,19 @@ The plugin function receives a context object:
 | `project` | Current project metadata. |
 | `directory` | Current working directory for this session. |
 | `worktree` | Git worktree root for this session. |
-| `client` | A Kilo SDK client (`@kilocode/sdk`) for calling the local server. |
+| `client` | A Tavern SDK client (`@taverncode/sdk`) for calling the local server. |
 | `$` | [Bun's shell API](https://bun.com/docs/runtime/shell). |
-| `serverUrl` | URL of the local Kilo server. |
+| `serverUrl` | URL of the local Tavern server. |
 | `experimental_workspace` | Register workspace adaptors (used by Agent Manager). |
 
 The function returns a `Hooks` object. Any second argument is the options object passed via config (e.g. the `{ apiKey: "..." }` from `["my-plugin", { apiKey: "..." }]`).
 
 ### Register workspace adaptors
 
-Workspace adaptors let plugins add custom workspace targets to Kilo's workspace creation flow. This API is experimental and may change.
+Workspace adaptors let plugins add custom workspace targets to Tavern's workspace creation flow. This API is experimental and may change.
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@taverncode/plugin"
 import { mkdir, rm } from "node:fs/promises"
 
 const WorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
@@ -172,7 +172,7 @@ const WorkspacePlugin: Plugin = async ({ experimental_workspace }) => {
     name: "Folder",
     description: "Create a blank folder",
     configure(config) {
-      return { ...config, directory: `/tmp/kilo-${Date.now()}` }
+      return { ...config, directory: `/tmp/tavern-${Date.now()}` }
     },
     async create(config) {
       await mkdir(config.directory!, { recursive: true })
@@ -198,7 +198,7 @@ An adaptor implements `configure(config)`, `create(config, env, from?)`, `remove
 Plugins must default-export a module descriptor. `id` is required for local-file plugins and inferred from `package.json#name` for npm plugins.
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@taverncode/plugin"
 
 const server: Plugin = async (ctx) => ({
   /* hooks */
@@ -214,7 +214,7 @@ An npm plugin can also expose a TUI entry point (`tui`) for [TUI plugins](#tui-p
 
 ### Package manifest for npm plugins
 
-Published npm plugins should declare separate package entrypoints for each runtime they support. Kilo detects install targets from `package.json`:
+Published npm plugins should declare separate package entrypoints for each runtime they support. Tavern detects install targets from `package.json`:
 
 - `exports["./server"]` marks the package as a server plugin.
 - `exports["./tui"]` marks the package as a TUI plugin.
@@ -223,7 +223,7 @@ Published npm plugins should declare separate package entrypoints for each runti
 
 ```json
 {
-  "name": "@acme/kilo-plugin",
+  "name": "@acme/tavern-plugin",
   "type": "module",
   "main": "./dist/server.js",
   "exports": {
@@ -248,7 +248,7 @@ Theme-only packages can omit code entrypoints and provide package-relative theme
 
 ```json
 {
-  "name": "@acme/kilo-themes",
+  "name": "@acme/tavern-themes",
   "oc-themes": ["themes/acme-dark.json", "themes/acme-light.json"]
 }
 ```
@@ -260,15 +260,15 @@ Theme-only packages can omit code entrypoints and provide package-relative theme
 Install the plugin package locally and import its types:
 
 ```bash
-bun add -d @kilocode/plugin
+bun add -d @taverncode/plugin
 ```
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
-import { tool } from "@kilocode/plugin/tool"
+import type { Plugin } from "@taverncode/plugin"
+import { tool } from "@taverncode/plugin/tool"
 ```
 
-Kilo automatically creates a `package.json` in config directories that contain a `plugin/` folder and installs `@kilocode/plugin` so types resolve out of the box.
+Tavern automatically creates a `package.json` in config directories that contain a `plugin/` folder and installs `@taverncode/plugin` so types resolve out of the box.
 
 ### Engine compatibility
 
@@ -288,7 +288,7 @@ If the running CLI does not satisfy the range, the plugin is skipped and a warni
 Local plugins and custom tools can use external npm packages. Add a `package.json` to your config directory:
 
 ```json
-// .kilo/package.json
+// .tavern/package.json
 {
   "dependencies": {
     "shescape": "^2.1.0"
@@ -296,12 +296,12 @@ Local plugins and custom tools can use external npm packages. Add a `package.jso
 }
 ```
 
-Kilo runs `bun install` at startup so your plugins can import the packages:
+Tavern runs `bun install` at startup so your plugins can import the packages:
 
 ```ts
-// .kilo/plugin/escape-bash.ts
+// .tavern/plugin/escape-bash.ts
 import { escape } from "shescape"
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@taverncode/plugin"
 
 const EscapeBash: Plugin = async () => ({
   "tool.execute.before": async (input, output) => {
@@ -316,7 +316,7 @@ export default { id: "escape-bash", server: EscapeBash }
 
 ## Publish your plugin to the Marketplace
 
-The [Kilo Marketplace](https://github.com/Kilo-Org/kilo-marketplace) lists plugins from two sources:
+The [Tavern Marketplace](https://github.com/Kilo-Org/tavern-marketplace) lists plugins from two sources:
 
 - **Registry plugins** are published to npm. Set the catalog `content` to the package name, for example `my-plugin` or `my-plugin@^1.2.0`.
 - **Git-hosted plugins** live in a public git repository. Set the catalog `content` to a git spec.
@@ -333,7 +333,7 @@ git:<repo>[@ref][#subpath]
 
 The catalog `id` must equal the plugin identity. For a registry plugin, use the npm package name. For a git plugin, use the normalized git identity: `git/` plus the repo without its scheme and without a trailing `.git`, plus the subpath when present. For example, `git:github.com/owner/repo@v1` has the id `git/github.com/owner/repo`.
 
-Git plugins must be self-contained. Kilo clones the repository at the given ref and loads the plugin directly. It does not install npm dependencies for git plugins, so vendor any runtime dependencies into the repository.
+Git plugins must be self-contained. Tavern clones the repository at the given ref and loads the plugin directly. It does not install npm dependencies for git plugins, so vendor any runtime dependencies into the repository.
 
 The repository or package must contain a `package.json` that declares at least one supported target:
 
@@ -347,11 +347,11 @@ For a plugin that supports both targets, use separate `./server` and `./tui` ent
 ### Submit your plugin
 
 1. Choose the source. Publish and test a registry plugin, or host a self-contained plugin in a public git repository.
-2. Add a `PLUGIN.yaml` entry under `plugins/<id>/PLUGIN.yaml` in the [Kilo Marketplace repository](https://github.com/Kilo-Org/kilo-marketplace). The directory path must equal `id`.
+2. Add a `PLUGIN.yaml` entry under `plugins/<id>/PLUGIN.yaml` in the [Tavern Marketplace repository](https://github.com/Kilo-Org/tavern-marketplace). The directory path must equal `id`.
 3. Regenerate `plugins/marketplace.yaml` with the generator in the marketplace repository. Do not edit it manually.
 4. Submit a pull request with the manifest and the regenerated catalog. Describe what the plugin does, its source, and which targets you tested.
 
-See the [plugin README](https://github.com/Kilo-Org/kilo-marketplace/blob/main/plugins/README.md) for the `PLUGIN.yaml` fields and the generator commands, and the [contribution guidelines](https://github.com/Kilo-Org/kilo-marketplace/blob/main/CONTRIBUTING.md) for the review process.
+See the [plugin README](https://github.com/Kilo-Org/tavern-marketplace/blob/main/plugins/README.md) for the `PLUGIN.yaml` fields and the generator commands, and the [contribution guidelines](https://github.com/Kilo-Org/tavern-marketplace/blob/main/CONTRIBUTING.md) for the review process.
 
 ---
 
@@ -384,7 +384,7 @@ Every hook is optional. Return only the ones you care about.
 | `chat.headers` | Add or replace HTTP headers on the LLM API call. |
 | `permission.ask` | Auto-allow or auto-deny permission prompts. |
 | `command.execute.before` | Intercept slash command execution; mutate the resulting `parts`. |
-| `shell.env` | Inject environment variables into every shell command Kilo runs. |
+| `shell.env` | Inject environment variables into every shell command Tavern runs. |
 
 ### Providers & auth
 
@@ -396,7 +396,7 @@ Every hook is optional. Return only the ones you care about.
 Provider hooks can replace or refresh the model catalog for a provider. The hook receives the provider definition and auth context, and returns a map of model ID to model metadata:
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@taverncode/plugin"
 
 const ProviderPlugin: Plugin = async () => ({
   provider: {
@@ -413,7 +413,7 @@ const ProviderPlugin: Plugin = async () => ({
 export default { id: "my-provider", server: ProviderPlugin }
 ```
 
-Kilo fills provider/model IDs from the returned catalog and uses the returned models in the picker and provider router.
+Tavern fills provider/model IDs from the returned catalog and uses the returned models in the picker and provider router.
 
 ### Experimental
 
@@ -429,7 +429,7 @@ These hooks live behind the `experimental.` prefix and may change between releas
 
 ### Events
 
-The `event` hook fires for every event on Kilo's internal bus. Common event types include:
+The `event` hook fires for every event on Tavern's internal bus. Common event types include:
 
 - **Session**: `session.created`, `session.updated`, `session.idle`, `session.error`, `session.deleted`, `session.compacted`, `session.diff`, `session.status`
 - **Message**: `message.updated`, `message.removed`, `message.part.updated`, `message.part.removed`
@@ -460,9 +460,9 @@ const server: Plugin = async () => ({
 Plugins can register tools the model can call alongside the built-in ones. Use the `tool()` helper for type-safety:
 
 ```ts
-// .kilo/plugin/database.ts
-import type { Plugin } from "@kilocode/plugin"
-import { tool } from "@kilocode/plugin/tool"
+// .tavern/plugin/database.ts
+import type { Plugin } from "@taverncode/plugin"
+import { tool } from "@taverncode/plugin/tool"
 
 const DatabasePlugin: Plugin = async () => ({
   tool: {
@@ -494,7 +494,7 @@ If a custom tool uses the same name as a built-in tool, **the custom tool wins**
 
 ### Alternative: standalone tool files
 
-For tools that don't need the full plugin context, drop them in a `tool/` or `tools/` folder inside any config directory — for example `.kilo/tool/database.ts` or `~/.config/kilo/tool/database.ts`. The filename becomes the tool name, and each file exports a `tool()` definition directly. The layout is identical to the [OpenCode custom tools guide](https://opencode.ai/docs/custom-tools); use `.kilo/`, or legacy `.kilocode/`, instead of `.opencode/`.
+For tools that don't need the full plugin context, drop them in a `tool/` or `tools/` folder inside any config directory — for example `.tavern/tool/database.ts` or `~/.config/tavern/tool/database.ts`. The filename becomes the tool name, and each file exports a `tool()` definition directly. The layout is identical to the [OpenCode custom tools guide](https://opencode.ai/docs/custom-tools); use `.tavern/`, or legacy `.taverncode/`, instead of `.opencode/`.
 
 ---
 
@@ -509,8 +509,8 @@ Configure the `attention` section of `tui.json` or `tui.jsonc` to enable notific
 ### Block reads of `.env` files
 
 ```ts
-// .kilo/plugin/env-guard.ts
-import type { Plugin } from "@kilocode/plugin"
+// .tavern/plugin/env-guard.ts
+import type { Plugin } from "@taverncode/plugin"
 
 const EnvGuard: Plugin = async () => ({
   "tool.execute.before": async (input, output) => {
@@ -526,8 +526,8 @@ export default { id: "env-guard", server: EnvGuard }
 ### Inject environment variables into every shell command
 
 ```ts
-// .kilo/plugin/inject-env.ts
-import type { Plugin } from "@kilocode/plugin"
+// .tavern/plugin/inject-env.ts
+import type { Plugin } from "@taverncode/plugin"
 
 const InjectEnv: Plugin = async () => ({
   "shell.env": async (input, output) => {
@@ -541,10 +541,10 @@ export default { id: "inject-env", server: InjectEnv }
 
 ### Structured logging
 
-Prefer `client.app.log()` over `console.log` so entries land in Kilo's log pipeline:
+Prefer `client.app.log()` over `console.log` so entries land in Tavern's log pipeline:
 
 ```ts
-import type { Plugin } from "@kilocode/plugin"
+import type { Plugin } from "@taverncode/plugin"
 
 const Logger: Plugin = async ({ client }) => {
   await client.app.log({
@@ -566,8 +566,8 @@ Levels: `debug`, `info`, `warn`, `error`.
 ### Inject context during session compaction
 
 ```ts
-// .kilo/plugin/compaction.ts
-import type { Plugin } from "@kilocode/plugin"
+// .tavern/plugin/compaction.ts
+import type { Plugin } from "@taverncode/plugin"
 
 const Compaction: Plugin = async () => ({
   "experimental.session.compacting": async (input, output) => {
@@ -584,7 +584,7 @@ Set `output.prompt` to replace the default compaction prompt entirely — when p
 
 ### Stop auto-continuing after compaction
 
-By default, Kilo sends a synthetic "continue" turn after compaction so the agent resumes the interrupted task. Use `experimental.compaction.autocontinue` to disable that turn for specific sessions or providers:
+By default, Tavern sends a synthetic "continue" turn after compaction so the agent resumes the interrupted task. Use `experimental.compaction.autocontinue` to disable that turn for specific sessions or providers:
 
 ```ts
 const CompactionStop: Plugin = async () => ({
@@ -600,9 +600,9 @@ The hook receives the `sessionID`, `agent`, `model`, `provider`, compacted `mess
 
 ## TUI plugins
 
-Plugins can also target the Kilo TUI itself — registering slash commands, routes, slots, dialogs, and keybinds. TUI plugins are SolidJS modules exported from `"./tui"` in your plugin package, or theme-only packages declared with `oc-themes`.
+Plugins can also target the Tavern TUI itself — registering slash commands, routes, slots, dialogs, and keybinds. TUI plugins are SolidJS modules exported from `"./tui"` in your plugin package, or theme-only packages declared with `oc-themes`.
 
-TUI plugins live in a separate module namespace (`@kilocode/plugin/tui`) and have their own API surface (`TuiPluginApi`). Because the TUI API is larger and still evolving, this guide doesn't cover it exhaustively — use the types in `@kilocode/plugin/tui` as the reference, and look at the built-in TUI plugins under `packages/opencode/src/cli/cmd/tui/feature-plugins/` for working examples.
+TUI plugins live in a separate module namespace (`@taverncode/plugin/tui`) and have their own API surface (`TuiPluginApi`). Because the TUI API is larger and still evolving, this guide doesn't cover it exhaustively — use the types in `@taverncode/plugin/tui` as the reference, and look at the built-in TUI plugins under `packages/opencode/src/cli/cmd/tui/feature-plugins/` for working examples.
 
 Common TUI APIs include:
 
@@ -617,7 +617,7 @@ Host slots include `home_prompt_right`, `session_prompt`, `session_prompt_right`
 
 ## Troubleshooting
 
-- **Plugin failed to load** — check the CLI logs with `kilo --print-logs --log-level DEBUG`. Load failures are also surfaced as session errors in the TUI and VS Code extension.
+- **Plugin failed to load** — check the CLI logs with `tavern --print-logs --log-level DEBUG`. Load failures are also surfaced as session errors in the TUI and VS Code extension.
 - **Plugin loaded but hooks never fire** — make sure the default export includes `server`:
 
   ```ts
@@ -630,13 +630,13 @@ Host slots include `home_prompt_right`, `session_prompt`, `session_prompt_right`
 
 - **Local plugin can't find an npm import** — add a `package.json` in the config directory so `bun install` picks up the dependency (see [Dependencies](#dependencies)).
 - **Plugin loads in dev but not in CI** — verify `KILO_PURE` is not set, and that npm-installed plugins are cached under `packages/` in the current CLI XDG cache directory (`~/.cache/opencode/packages/` by default, or `$XDG_CACHE_HOME/opencode/packages/` when `XDG_CACHE_HOME` is set). Run with `--log-level DEBUG` to see install output.
-- **Reset the plugin cache** — delete the plugin package folder under the CLI's `packages/` cache directory (or the `node_modules` cache under your config directory) and restart Kilo.
+- **Reset the plugin cache** — delete the plugin package folder under the CLI's `packages/` cache directory (or the `node_modules` cache under your config directory) and restart Tavern.
 
 ---
 
 ## Reference
 
-- Types: [`@kilocode/plugin`](https://github.com/Kilo-Org/kilocode/tree/main/packages/plugin) — `Plugin`, `Hooks`, `PluginInput`, `ToolDefinition`, `AuthHook`, `ProviderHook`.
+- Types: [`@taverncode/plugin`](https://github.com/Kilo-Org/kilocode/tree/main/packages/plugin) — `Plugin`, `Hooks`, `PluginInput`, `ToolDefinition`, `AuthHook`, `ProviderHook`.
 - Example plugin: [`packages/plugin/src/example.ts`](https://github.com/Kilo-Org/kilocode/blob/main/packages/plugin/src/example.ts)
-- CLI command: [`kilo plugin`](/docs/code-with-ai/platforms/cli-reference#kilo-plugin)
+- CLI command: [`tavern plugin`](/docs/code-with-ai/platforms/cli-reference#tavern-plugin)
 - Upstream docs (behavior is identical to OpenCode): [opencode.ai/docs/plugins](https://opencode.ai/docs/plugins) and [opencode.ai/docs/custom-tools](https://opencode.ai/docs/custom-tools)

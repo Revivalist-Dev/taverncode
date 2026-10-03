@@ -1,4 +1,4 @@
-import { createKiloClient, type Event, type KiloClient } from "@kilocode/sdk/v2"
+import { createKiloClient, type Event, type KiloClient } from "@taverncode/sdk/v2"
 import z from "zod"
 import { setTimeout } from "node:timers/promises"
 import { promisify } from "node:util"
@@ -6,8 +6,8 @@ import { promisify } from "node:util"
 const connections = new WeakMap<KiloClient, NonNullable<Parameters<typeof createKiloClient>[0]>>()
 const capability = z.object({
   paths: z.object({
-    "/kilocode/session/{sessionID}/drain": z.object({
-      post: z.object({ operationId: z.literal("kilocode.drainSession") }),
+    "/taverncode/session/{sessionID}/drain": z.object({
+      post: z.object({ operationId: z.literal("taverncode.drainSession") }),
     }),
   }),
 })
@@ -100,7 +100,7 @@ export namespace KiloRunDrain {
         failure.resolve(error instanceof Error ? error : new Error("Session event stream ended before completion"))
       },
       async wait(sdk: KiloClient, directory?: string) {
-        const result = await race(sdk.kilocode.drainSession({ sessionID, directory, token }, { signal: abort.signal }))
+        const result = await race(sdk.taverncode.drainSession({ sessionID, directory, token }, { signal: abort.signal }))
         if (result.error || result.data !== true) throw new Error("Server did not acknowledge session completion")
         await race(acknowledged.promise)
       },

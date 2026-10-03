@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { configFeatures, serverFeatures } from "../features"
 import { retry } from "../services/cli-backend/retry"
 import type { ConfigTarget } from "./config-bindings"

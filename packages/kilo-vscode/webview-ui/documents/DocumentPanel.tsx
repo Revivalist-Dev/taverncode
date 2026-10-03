@@ -4,13 +4,13 @@ import { MarkdownPane } from "../diff-viewer/MarkdownDiffView"
 import { documentPath, isMarkdownPath, type DocumentData, type DocumentTab } from "./state"
 import { InspectorTabStrip } from "../agent-manager/InspectorTabStrip"
 import { SortableClosableTab } from "../agent-manager/ClosableTab"
-import { useCodeComponent } from "@kilocode/kilo-ui/context/code"
-import { FileIcon } from "@kilocode/kilo-ui/file-icon"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Tooltip, TooltipKeybind } from "@kilocode/kilo-ui/tooltip"
-import { ContextMenu } from "@kilocode/kilo-ui/context-menu"
+import { useCodeComponent } from "@taverncode/tavern-ui/context/code"
+import { FileIcon } from "@taverncode/tavern-ui/file-icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Tooltip, TooltipKeybind } from "@taverncode/tavern-ui/tooltip"
+import { ContextMenu } from "@taverncode/tavern-ui/context-menu"
 import type { DiffLineAnnotation, AnnotationSide, SelectedLineRange } from "@pierre/diffs"
 import type { WorktreeFileDiff } from "../src/types/messages"
 import type { ReviewComment } from "../diff-viewer/review-comments"
@@ -66,7 +66,7 @@ function copyText(text: string): Promise<boolean> {
   return (navigator.clipboard?.writeText(text) ?? Promise.reject(new Error("Clipboard unavailable"))).then(
     () => true,
     (err) => {
-      console.error("[Kilo New] Failed to copy text:", err)
+      console.error("[Tavern New] Failed to copy text:", err)
       return false
     },
   )

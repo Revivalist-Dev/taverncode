@@ -2217,7 +2217,7 @@ export type GlobalEvent = {
 export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR"
 
 /**
- * Server configuration for the kilo serve command
+ * Server configuration for the tavern serve command
  */
 export type ServerConfig = {
   port?: number
@@ -2230,7 +2230,7 @@ export type ServerConfig = {
 export type IndexingConfig = {
   enabled?: boolean
   provider?:
-    | "kilo"
+    | "tavern"
     | "openai"
     | "ollama"
     | "openai-compatible"
@@ -2243,7 +2243,7 @@ export type IndexingConfig = {
   model?: string | null
   dimension?: number | null
   vectorStore?: "lancedb" | "qdrant"
-  kilo?: {
+  tavern?: {
     apiKey?: string
     baseUrl?: string
     organizationId?: string
@@ -2563,7 +2563,7 @@ export type Config = {
   indexing?: IndexingConfig
   console?: {
     /**
-     * Width of the Kilo Console project context sidebar in pixels
+     * Width of the Tavern Console project context sidebar in pixels
      */
     context_sidebar_width?: number
     diff_style?: "unified" | "split"
@@ -5246,7 +5246,7 @@ export type EventSuggestionDismissed = {
 
 export type EventKilocodeAgentManagerStart = {
   id: string
-  type: "kilocode.agent_manager.start"
+  type: "taverncode.agent_manager.start"
   properties: {
     requestID: string
     sessionID: string
@@ -5269,13 +5269,13 @@ export type EventKilocodeAgentManagerStart = {
 
 export type EventKilocodeAgentManagerRequested = {
   id: string
-  type: "kilocode.agent_manager.requested"
+  type: "taverncode.agent_manager.requested"
   properties: AgentManagerRequest
 }
 
 export type EventKilocodeAgentManagerCancelled = {
   id: string
-  type: "kilocode.agent_manager.cancelled"
+  type: "taverncode.agent_manager.cancelled"
   properties: {
     requestID: AgentManagerRequestId
     sessionID: string
@@ -5285,13 +5285,13 @@ export type EventKilocodeAgentManagerCancelled = {
 
 export type EventKilocodeNotebookRequested = {
   id: string
-  type: "kilocode.notebook.requested"
+  type: "taverncode.notebook.requested"
   properties: NotebookRequest
 }
 
 export type EventKilocodeNotebookCancelled = {
   id: string
-  type: "kilocode.notebook.cancelled"
+  type: "taverncode.notebook.cancelled"
   properties: {
     requestID: NotebookRequestId
     sessionID: string
@@ -5301,7 +5301,7 @@ export type EventKilocodeNotebookCancelled = {
 
 export type EventKiloSessionsRemoteStatusChanged = {
   id: string
-  type: "kilo-sessions.remote-status-changed"
+  type: "tavern-sessions.remote-status-changed"
   properties: {
     enabled: boolean
     connected: boolean
@@ -16109,7 +16109,7 @@ export type IndexingModelsError = IndexingModelsErrors[keyof IndexingModelsError
 
 export type IndexingModelsResponses = {
   /**
-   * Kilo embedding model catalog
+   * Tavern embedding model catalog
    */
   200: KiloEmbeddingModelCatalog
 }
@@ -16185,7 +16185,7 @@ export type KiloProfileData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/profile"
+  url: "/tavern/profile"
 }
 
 export type KiloProfileErrors = {
@@ -16235,7 +16235,7 @@ export type KiloAuthStatusData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/auth-status"
+  url: "/tavern/auth-status"
 }
 
 export type KiloAuthStatusErrors = {
@@ -16249,7 +16249,7 @@ export type KiloAuthStatusError = KiloAuthStatusErrors[keyof KiloAuthStatusError
 
 export type KiloAuthStatusResponses = {
   /**
-   * Kilo authentication status
+   * Tavern authentication status
    */
   200: {
     authenticated: boolean
@@ -16267,7 +16267,7 @@ export type KiloModesData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/modes"
+  url: "/tavern/modes"
 }
 
 export type KiloModesErrors = {
@@ -16328,7 +16328,7 @@ export type KiloFimData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/fim"
+  url: "/tavern/fim"
 }
 
 export type KiloFimErrors = {
@@ -16383,7 +16383,7 @@ export type KiloEditData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/edit"
+  url: "/tavern/edit"
 }
 
 export type KiloEditErrors = {
@@ -16426,7 +16426,7 @@ export type KiloAudioTranscriptionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/audio/transcriptions"
+  url: "/tavern/audio/transcriptions"
 }
 
 export type KiloAudioTranscriptionsErrors = {
@@ -16457,7 +16457,7 @@ export type KiloModelsImagesData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/models/images"
+  url: "/tavern/models/images"
 }
 
 export type KiloModelsImagesErrors = {
@@ -16489,7 +16489,7 @@ export type KiloModelsTranscriptionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/models/transcriptions"
+  url: "/tavern/models/transcriptions"
 }
 
 export type KiloModelsTranscriptionsErrors = {
@@ -16521,7 +16521,7 @@ export type KiloNotificationsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/notifications"
+  url: "/tavern/notifications"
 }
 
 export type KiloNotificationsErrors = {
@@ -16561,7 +16561,7 @@ export type KiloOrganizationSetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/organization"
+  url: "/tavern/organization"
 }
 
 export type KiloOrganizationSetErrors = {
@@ -16592,7 +16592,7 @@ export type KiloCloudSessionsData = {
     limit?: number
     gitUrl?: string
   }
-  url: "/kilo/cloud-sessions"
+  url: "/tavern/cloud-sessions"
 }
 
 export type KiloCloudSessionsErrors = {
@@ -16631,7 +16631,7 @@ export type KiloCloudSessionGetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/{id}"
+  url: "/tavern/cloud/session/{id}"
 }
 
 export type KiloCloudSessionGetErrors = {
@@ -16691,7 +16691,7 @@ export type KiloCloudSessionImportData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilo/cloud/session/import"
+  url: "/tavern/cloud/session/import"
 }
 
 export type KiloCloudSessionImportErrors = {
@@ -16739,7 +16739,7 @@ export type KilocodeResumeSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/resume"
+  url: "/taverncode/session/{sessionID}/resume"
 }
 
 export type KilocodeResumeSessionErrors = {
@@ -16775,7 +16775,7 @@ export type KilocodeDrainSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/drain"
+  url: "/taverncode/session/{sessionID}/drain"
 }
 
 export type KilocodeDrainSessionErrors = {
@@ -16811,7 +16811,7 @@ export type KilocodeSessionBoardData = {
     before?: string
     limit?: number
   }
-  url: "/kilocode/session/{sessionID}/board"
+  url: "/taverncode/session/{sessionID}/board"
 }
 
 export type KilocodeSessionBoardErrors = {
@@ -16855,7 +16855,7 @@ export type KilocodeResetSessionBoardData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session/{sessionID}/board/reset"
+  url: "/taverncode/session/{sessionID}/board/reset"
 }
 
 export type KilocodeResetSessionBoardErrors = {
@@ -16896,7 +16896,7 @@ export type KilocodeHeapSnapshotData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/heap/snapshot"
+  url: "/taverncode/heap/snapshot"
 }
 
 export type KilocodeHeapSnapshotErrors = {
@@ -16924,7 +16924,7 @@ export type KilocodeCommandFilesData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/command/files"
+  url: "/taverncode/command/files"
 }
 
 export type KilocodeCommandFilesErrors = {
@@ -16954,7 +16954,7 @@ export type KilocodeRemoveCommandData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/command/remove"
+  url: "/taverncode/command/remove"
 }
 
 export type KilocodeRemoveCommandErrors = {
@@ -16984,7 +16984,7 @@ export type KilocodeRemoveSkillData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/skill/remove"
+  url: "/taverncode/skill/remove"
 }
 
 export type KilocodeRemoveSkillErrors = {
@@ -17015,7 +17015,7 @@ export type KilocodeRemoveAgentData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent/remove"
+  url: "/taverncode/agent/remove"
 }
 
 export type KilocodeRemoveAgentErrors = {
@@ -17043,7 +17043,7 @@ export type KilocodeMarketplaceListData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace"
+  url: "/taverncode/marketplace"
 }
 
 export type KilocodeMarketplaceListErrors = {
@@ -17077,7 +17077,7 @@ export type KilocodeMarketplaceInstallData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace/install"
+  url: "/taverncode/marketplace/install"
 }
 
 export type KilocodeMarketplaceInstallErrors = {
@@ -17109,7 +17109,7 @@ export type KilocodeMarketplaceRemoveData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/marketplace/remove"
+  url: "/taverncode/marketplace/remove"
 }
 
 export type KilocodeMarketplaceRemoveErrors = {
@@ -17140,7 +17140,7 @@ export type KilocodeRemoveSnapshotData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/snapshot/remove"
+  url: "/taverncode/snapshot/remove"
 }
 
 export type KilocodeRemoveSnapshotErrors = {
@@ -17170,7 +17170,7 @@ export type KilocodeTeardownWorktreeData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/worktree/teardown"
+  url: "/taverncode/worktree/teardown"
 }
 
 export type KilocodeTeardownWorktreeErrors = {
@@ -17201,7 +17201,7 @@ export type KilocodeSnapshotPrepareData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/snapshot/prepare"
+  url: "/taverncode/snapshot/prepare"
 }
 
 export type KilocodeSnapshotPrepareErrors = {
@@ -17232,7 +17232,7 @@ export type KilocodeProviderUsageGetData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/provider-usage"
+  url: "/taverncode/provider-usage"
 }
 
 export type KilocodeProviderUsageGetErrors = {
@@ -17265,7 +17265,7 @@ export type KilocodeProviderUsageRefreshData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/provider-usage/refresh"
+  url: "/taverncode/provider-usage/refresh"
 }
 
 export type KilocodeProviderUsageRefreshErrors = {
@@ -17299,7 +17299,7 @@ export type KilocodeNotebookListData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook"
+  url: "/taverncode/notebook"
 }
 
 export type KilocodeNotebookListErrors = {
@@ -17331,7 +17331,7 @@ export type KilocodeNotebookReplyData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook/{requestID}/reply"
+  url: "/taverncode/notebook/{requestID}/reply"
 }
 
 export type KilocodeNotebookReplyErrors = {
@@ -17367,7 +17367,7 @@ export type KilocodeNotebookRejectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/notebook/{requestID}/reject"
+  url: "/taverncode/notebook/{requestID}/reject"
 }
 
 export type KilocodeNotebookRejectErrors = {
@@ -17399,7 +17399,7 @@ export type KilocodeAgentManagerListData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager"
+  url: "/taverncode/agent-manager"
 }
 
 export type KilocodeAgentManagerListErrors = {
@@ -17432,7 +17432,7 @@ export type KilocodeAgentManagerReplyData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager/{requestID}/reply"
+  url: "/taverncode/agent-manager/{requestID}/reply"
 }
 
 export type KilocodeAgentManagerReplyErrors = {
@@ -17469,7 +17469,7 @@ export type KilocodeAgentManagerRejectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/agent-manager/{requestID}/reject"
+  url: "/taverncode/agent-manager/{requestID}/reject"
 }
 
 export type KilocodeAgentManagerRejectErrors = {
@@ -17569,7 +17569,7 @@ export type KilocodeBackgroundJobsData = {
     workspace?: string
     sessionID: string
   }
-  url: "/kilocode/background-jobs"
+  url: "/taverncode/background-jobs"
 }
 
 export type KilocodeBackgroundJobsErrors = {
@@ -17610,7 +17610,7 @@ export type KilocodeBackgroundJobCancelData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/background-jobs/{jobID}/cancel"
+  url: "/taverncode/background-jobs/{jobID}/cancel"
 }
 
 export type KilocodeBackgroundJobCancelErrors = {
@@ -17646,7 +17646,7 @@ export type KilocodeBackgroundJobPromoteData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/background-jobs/{jobID}/promote"
+  url: "/taverncode/background-jobs/{jobID}/promote"
 }
 
 export type KilocodeBackgroundJobPromoteErrors = {
@@ -17680,7 +17680,7 @@ export type KilocodeWakeupsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/wakeups"
+  url: "/taverncode/wakeups"
 }
 
 export type KilocodeWakeupsErrors = {
@@ -17711,7 +17711,7 @@ export type KilocodeRetentionStatusData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention"
+  url: "/taverncode/retention"
 }
 
 export type KilocodeRetentionStatusErrors = {
@@ -17764,7 +17764,7 @@ export type KilocodeRetentionRunData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention/run"
+  url: "/taverncode/retention/run"
 }
 
 export type KilocodeRetentionRunErrors = {
@@ -17815,7 +17815,7 @@ export type KilocodeRetentionCancelData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/retention/cancel"
+  url: "/taverncode/retention/cancel"
 }
 
 export type KilocodeRetentionCancelErrors = {
@@ -17845,7 +17845,7 @@ export type AnacondaDesktopStatusData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/status"
+  url: "/taverncode/anaconda-desktop/status"
 }
 
 export type AnacondaDesktopStatusErrors = {
@@ -17873,7 +17873,7 @@ export type AnacondaDesktopOpenData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/open"
+  url: "/taverncode/anaconda-desktop/open"
 }
 
 export type AnacondaDesktopOpenErrors = {
@@ -17911,7 +17911,7 @@ export type AnacondaDesktopSyncData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/anaconda-desktop/sync"
+  url: "/taverncode/anaconda-desktop/sync"
 }
 
 export type AnacondaDesktopSyncErrors = {
@@ -17964,7 +17964,7 @@ export type KilocodeMigrateSessionsData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/migrate/sessions"
+  url: "/taverncode/migrate/sessions"
 }
 
 export type KilocodeMigrateSessionsErrors = {
@@ -17999,7 +17999,7 @@ export type KilocodeMigrateDiscoverData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/migrate/sessions/discover"
+  url: "/taverncode/migrate/sessions/discover"
 }
 
 export type KilocodeMigrateDiscoverErrors = {
@@ -18345,7 +18345,7 @@ export type KilocodeSessionImportProjectData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/project"
+  url: "/taverncode/session-import/project"
 }
 
 export type KilocodeSessionImportProjectErrors = {
@@ -18408,7 +18408,7 @@ export type KilocodeSessionImportSessionData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/session"
+  url: "/taverncode/session-import/session"
 }
 
 export type KilocodeSessionImportSessionErrors = {
@@ -18488,7 +18488,7 @@ export type KilocodeSessionImportMessageData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/message"
+  url: "/taverncode/session-import/message"
 }
 
 export type KilocodeSessionImportMessageErrors = {
@@ -18607,7 +18607,7 @@ export type KilocodeSessionImportPartData = {
     directory?: string
     workspace?: string
   }
-  url: "/kilocode/session-import/part"
+  url: "/taverncode/session-import/part"
 }
 
 export type KilocodeSessionImportPartErrors = {

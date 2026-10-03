@@ -399,7 +399,7 @@ describe("related", () => {
   })
 
   it("matches a real repository for the reflexive, ancestor, and merge cases", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "kilo-related-"))
+    const dir = mkdtempSync(join(tmpdir(), "tavern-related-"))
     const run = (args: string[]) =>
       execFileSync("git", args, { cwd: dir, encoding: "utf8", windowsHide: true, stdio: ["ignore", "pipe", "ignore"] })
     try {
@@ -1056,7 +1056,7 @@ describe("parseTimeline", () => {
       {
         __typename: "IssueComment",
         id: "IC_bot1",
-        author: { login: "kilo-code-bot", __typename: "Bot" },
+        author: { login: "tavern-code-bot", __typename: "Bot" },
         body: "Review summary",
       },
       { __typename: "IssueComment", id: "IC_bot2", author: { login: "dependabot[bot]" }, body: "Bump dependency" },

@@ -5,7 +5,7 @@ import {
   MAX_SESSION_ID_LENGTH,
   cliSessionContext,
   platformContext,
-} from "../../../src/kilocode/presence/context"
+} from "../../../src/taverncode/presence/context"
 import {
   attachedUnion,
   dedupe,
@@ -16,7 +16,7 @@ import {
   validateSnapshot,
   visibleUnion,
   type ViewerState,
-} from "../../../src/kilocode/presence/policy"
+} from "../../../src/taverncode/presence/policy"
 
 const UUID = "00000000-0000-4000-8000-000000000000"
 

@@ -21,8 +21,8 @@ import { ShellTool } from "../../../src/tool/shell"
 import { Plugin } from "../../../src/plugin"
 import { disposeAllInstances, provideTmpdirInstance, tmpdir } from "../../fixture/fixture"
 import { testEffect } from "../../lib/effect"
-import { ConfigProtection } from "../../../src/kilocode/permission/config-paths"
-import { KilocodePaths } from "../../../src/kilocode/paths"
+import { ConfigProtection } from "../../../src/taverncode/permission/config-paths"
+import { KilocodePaths } from "../../../src/taverncode/paths"
 
 const runtime = ManagedRuntime.make(
   Layer.mergeAll(

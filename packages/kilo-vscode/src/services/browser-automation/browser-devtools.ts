@@ -116,7 +116,7 @@ export class BrowserDevtools {
       res.end()
       return true
     }
-    if (scope.path === "kilo-bootstrap.js") {
+    if (scope.path === "tavern-bootstrap.js") {
       const script = [
         `localStorage.setItem("ui-theme",JSON.stringify(${JSON.stringify(scope.target.theme)}))`,
         'localStorage.setItem("currentDockState",JSON.stringify("undocked"))',
@@ -139,7 +139,7 @@ export class BrowserDevtools {
                 .toString("utf8")
                 .replace(
                   /<script\s+type="module"/i,
-                  '<script src="./kilo-bootstrap.js"></script><script type="module"',
+                  '<script src="./tavern-bootstrap.js"></script><script type="module"',
                 ),
             )
           : data

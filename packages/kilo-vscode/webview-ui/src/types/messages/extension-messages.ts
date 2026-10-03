@@ -1,4 +1,4 @@
-import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@taverncode/sdk/v2/client"
 import type { DiffSourceCapabilities, DiffSourceDescriptor } from "../../../../src/diff/sources/types"
 import type { PRComment, PRReactionContent } from "../../../agent-manager/pr/pr-types"
 import type { PartBatch, PartRemove, PartUpdate } from "../../../../src/shared/stream-messages"
@@ -431,7 +431,7 @@ export interface AppendReviewCommentsToTerminalMessage {
 export interface TriggerTaskMessage {
   type: "triggerTask"
   text: string
-  /** Label for a prompt Kilo composed, such as an editor code action. */
+  /** Label for a prompt Tavern composed, such as an editor code action. */
   injectedTitle?: string
 }
 
@@ -950,7 +950,7 @@ export interface AgentManagerStateMessage {
   /** Why each unhealthy worktree is unhealthy; healthy worktrees are omitted. */
   worktreeHealth?: Record<string, "absent-restorable" | "absent-gone" | "unregistered" | "unavailable">
   /**
-   * Directories under `.kilo/worktrees/` that no worktree claims.
+   * Directories under `.tavern/worktrees/` that no worktree claims.
    *
    * `broken` still holds a git checkout, so it can contain work that exists nowhere else; `leftover`
    * is a bare directory. The notice says which, because the two do not deserve the same warning.

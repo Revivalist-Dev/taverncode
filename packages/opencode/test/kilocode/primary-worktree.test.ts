@@ -5,7 +5,7 @@ import { CrossSpawnSpawner } from "@opencode-ai/core/cross-spawn-spawner"
 import { Effect, Layer } from "effect"
 import path from "path"
 import { Git } from "../../src/git"
-import { primaryPaths, primaryWorktree } from "../../src/kilocode/primary-worktree"
+import { primaryPaths, primaryWorktree } from "../../src/taverncode/primary-worktree"
 import { tmpdirScoped } from "../fixture/fixture"
 import { testEffect } from "../lib/effect"
 

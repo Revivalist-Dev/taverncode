@@ -1,12 +1,12 @@
-import { Button } from "@kilocode/kilo-ui/button"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { ProviderIcon } from "@kilocode/kilo-ui/provider-icon"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { showToast } from "@kilocode/kilo-ui/toast"
+import { Button } from "@taverncode/tavern-ui/button"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { ProviderIcon } from "@taverncode/tavern-ui/provider-icon"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { showToast } from "@taverncode/tavern-ui/toast"
 import { For, Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { useConfig } from "../../context/config"
@@ -563,7 +563,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
         <div style={{ display: "flex", gap: "16px", "align-items": "center" }}>
           <ProviderIcon id="synthetic" width={20} height={20} />
           <div
-            style={{ "font-size": "var(--kilo-font-size-16)", "font-weight": "500", color: "var(--vscode-foreground)" }}
+            style={{ "font-size": "var(--tavern-font-size-16)", "font-weight": "500", color: "var(--vscode-foreground)" }}
           >
             {editing() ? language.t("provider.custom.edit.title") : language.t("provider.custom.title")}
           </div>
@@ -571,15 +571,15 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
 
         <form onSubmit={save} style={{ display: "flex", "flex-direction": "column", gap: "20px" }}>
           <div style={{ display: "flex", "flex-direction": "column", gap: "10px" }}>
-            <div style={{ "font-size": "var(--kilo-font-size-14)", color: "var(--text-base)" }}>
+            <div style={{ "font-size": "var(--tavern-font-size-14)", color: "var(--text-base)" }}>
               {language.t("provider.custom.description.prefix")}
               <a
-                href="https://kilo.ai/docs/ai-providers#custom-provider"
+                href="https://tavern.ai/docs/ai-providers#custom-provider"
                 onClick={(e) => {
                   e.preventDefault()
                   vscode.postMessage({
                     type: "openExternal",
-                    url: "https://kilo.ai/docs/ai-providers#custom-provider",
+                    url: "https://tavern.ai/docs/ai-providers#custom-provider",
                   })
                 }}
               >
@@ -625,7 +625,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
             <div style={{ display: "flex", "flex-direction": "column", gap: "4px" }}>
               <label
                 style={{
-                  "font-size": "var(--kilo-font-size-12)",
+                  "font-size": "var(--tavern-font-size-12)",
                   "font-weight": "500",
                   color: "var(--text-weak-base)",
                 }}
@@ -686,7 +686,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
               <div style={{ display: "flex", "align-items": "center", gap: "8px" }}>
                 <label
                   style={{
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--tavern-font-size-12)",
                     "font-weight": "500",
                     color: "var(--text-weak-base)",
                   }}
@@ -751,7 +751,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
             <Show when={fetchError()}>
               {(err) => (
                 <span
-                  style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-errorForeground, #f14c4c)" }}
+                  style={{ "font-size": "var(--tavern-font-size-12)", color: "var(--vscode-errorForeground, #f14c4c)" }}
                 >
                   {err()}
                 </span>
@@ -763,7 +763,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
               {(status) => (
                 <span
                   style={{
-                    "font-size": "var(--kilo-font-size-12)",
+                    "font-size": "var(--tavern-font-size-12)",
                     color: "var(--text-weak-base, var(--vscode-descriptionForeground))",
                   }}
                 >
@@ -795,7 +795,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
                   >
                     <span
                       style={{
-                        "font-size": "var(--kilo-font-size-12)",
+                        "font-size": "var(--tavern-font-size-12)",
                         "font-weight": "500",
                         color: "var(--text-weak-base)",
                       }}
@@ -852,7 +852,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
                             gap: "8px",
                             padding: "4px 2px",
                             cursor: "pointer",
-                            "font-size": "var(--kilo-font-size-13)",
+                            "font-size": "var(--tavern-font-size-13)",
                             color: "var(--text-base, var(--vscode-foreground))",
                           }}
                         >
@@ -885,7 +885,7 @@ const CustomProviderDialog = (props: CustomProviderDialogProps) => {
           {/* Headers */}
           <div style={{ display: "flex", "flex-direction": "column", gap: "12px" }}>
             <label
-              style={{ "font-size": "var(--kilo-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
+              style={{ "font-size": "var(--tavern-font-size-12)", "font-weight": "500", color: "var(--text-weak-base)" }}
             >
               {language.t("provider.custom.headers.label")}
             </label>

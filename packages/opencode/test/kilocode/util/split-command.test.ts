@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { splitCommand } from "@/kilocode/util/split-command"
+import { splitCommand } from "@/taverncode/util/split-command"
 
 describe("splitCommand", () => {
   test("honors quoted segments with spaces", () => {

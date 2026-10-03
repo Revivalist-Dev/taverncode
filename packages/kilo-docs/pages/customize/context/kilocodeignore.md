@@ -1,22 +1,22 @@
 ---
-title: ".kilocodeignore"
-description: "Control which files Kilo Code can access"
+title: ".taverncodeignore"
+description: "Control which files Tavern Code can access"
 ---
 
-# .kilocodeignore
+# .taverncodeignore
 
 ## Overview
 
-`.kilocodeignore` is a root-level file that tells Kilo Code which files and folders it should not access. It uses standard `.gitignore` pattern syntax, but it only affects Kilo Code's file access, not Git.
+`.taverncodeignore` is a root-level file that tells Tavern Code which files and folders it should not access. It uses standard `.gitignore` pattern syntax, but it only affects Tavern Code's file access, not Git.
 
-If no `.kilocodeignore` file exists, Kilo Code can access all files in the workspace.
+If no `.taverncodeignore` file exists, Tavern Code can access all files in the workspace.
 
 ## Quick Start
 
 {% tabs %}
 {% tab label="VSCode" %}
 
-The primary mechanism for controlling file access is the **permission system** in `kilo.jsonc`. You define tool-level permissions with glob patterns:
+The primary mechanism for controlling file access is the **permission system** in `tavern.jsonc`. You define tool-level permissions with glob patterns:
 
 ```json
 {
@@ -27,7 +27,7 @@ The primary mechanism for controlling file access is the **permission system** i
 }
 ```
 
-If you have an existing `.kilocodeignore` file, it is still supported. The **IgnoreMigrator** automatically converts `.kilocodeignore` patterns into permission `deny` rules on `read` and `edit` tools, so your existing rules continue to work without manual changes.
+If you have an existing `.taverncodeignore` file, it is still supported. The **IgnoreMigrator** automatically converts `.taverncodeignore` patterns into permission `deny` rules on `read` and `edit` tools, so your existing rules continue to work without manual changes.
 
 You can also exclude paths from the file watcher separately using `watcher.ignore`:
 
@@ -42,7 +42,7 @@ You can also exclude paths from the file watcher separately using `watcher.ignor
 {% /tab %}
 {% tab label="CLI" %}
 
-The primary mechanism for controlling file access is the **permission system** in `kilo.jsonc`. You define tool-level permissions with glob patterns:
+The primary mechanism for controlling file access is the **permission system** in `tavern.jsonc`. You define tool-level permissions with glob patterns:
 
 ```json
 {
@@ -53,7 +53,7 @@ The primary mechanism for controlling file access is the **permission system** i
 }
 ```
 
-If you have an existing `.kilocodeignore` file, it is still supported. The **IgnoreMigrator** automatically converts `.kilocodeignore` patterns into permission `deny` rules on `read` and `edit` tools, so your existing rules continue to work without manual changes.
+If you have an existing `.taverncodeignore` file, it is still supported. The **IgnoreMigrator** automatically converts `.taverncodeignore` patterns into permission `deny` rules on `read` and `edit` tools, so your existing rules continue to work without manual changes.
 
 You can also exclude paths from the file watcher separately using `watcher.ignore`:
 
@@ -70,7 +70,7 @@ You can also exclude paths from the file watcher separately using `watcher.ignor
 
 ## Pattern Rules
 
-`.kilocodeignore` follows the same rules as `.gitignore`:
+`.taverncodeignore` follows the same rules as `.gitignore`:
 
 - `#` starts a comment
 - `*` and `**` match wildcards
@@ -117,7 +117,7 @@ If a file is denied by a permission rule, the tool will report that access was b
 
 ### Permission Rules
 
-Permission rules are defined per-tool in `kilo.jsonc`. Patterns are evaluated in order — the last matching rule wins:
+Permission rules are defined per-tool in `tavern.jsonc`. Patterns are evaluated in order — the last matching rule wins:
 
 ```json
 {
@@ -136,9 +136,9 @@ Permission rules are defined per-tool in `kilo.jsonc`. Patterns are evaluated in
 }
 ```
 
-### Migrating from .kilocodeignore
+### Migrating from .taverncodeignore
 
-If you already have a `.kilocodeignore` file, you don't need to do anything — the IgnoreMigrator reads your existing patterns and applies them as `deny` rules on `read` and `edit` tools automatically. You can optionally move your rules into `kilo.jsonc` for more granular control (e.g. denying edits but allowing reads).
+If you already have a `.taverncodeignore` file, you don't need to do anything — the IgnoreMigrator reads your existing patterns and applies them as `deny` rules on `read` and `edit` tools automatically. You can optionally move your rules into `tavern.jsonc` for more granular control (e.g. denying edits but allowing reads).
 
 ### File Watcher Exclusions
 
@@ -157,7 +157,7 @@ The `watcher.ignore` setting controls which paths the file watcher skips. This i
 
 ### Permission Rules
 
-Permission rules are defined per-tool in `kilo.jsonc`. Patterns are evaluated in order — the last matching rule wins:
+Permission rules are defined per-tool in `tavern.jsonc`. Patterns are evaluated in order — the last matching rule wins:
 
 ```json
 {
@@ -176,9 +176,9 @@ Permission rules are defined per-tool in `kilo.jsonc`. Patterns are evaluated in
 }
 ```
 
-### Migrating from .kilocodeignore
+### Migrating from .taverncodeignore
 
-If you already have a `.kilocodeignore` file, you don't need to do anything — the IgnoreMigrator reads your existing patterns and applies them as `deny` rules on `read` and `edit` tools automatically. You can optionally move your rules into `kilo.jsonc` for more granular control (e.g. denying edits but allowing reads).
+If you already have a `.taverncodeignore` file, you don't need to do anything — the IgnoreMigrator reads your existing patterns and applies them as `deny` rules on `read` and `edit` tools automatically. You can optionally move your rules into `tavern.jsonc` for more granular control (e.g. denying edits but allowing reads).
 
 ### File Watcher Exclusions
 
@@ -195,12 +195,12 @@ The `watcher.ignore` setting controls which paths the file watcher skips. This i
 {% /tab %}
 {% /tabs %}
 
-## Checkpoints vs .kilocodeignore
+## Checkpoints vs .taverncodeignore
 
-Checkpoint tracking is separate from file access rules. Files blocked by `.kilocodeignore` or permission rules can still be checkpointed if they are not excluded by `.gitignore`. See the [Checkpoints](/docs/code-with-ai/features/checkpoints) documentation for details.
+Checkpoint tracking is separate from file access rules. Files blocked by `.taverncodeignore` or permission rules can still be checkpointed if they are not excluded by `.gitignore`. See the [Checkpoints](/docs/code-with-ai/features/checkpoints) documentation for details.
 
 ## Troubleshooting
 
-- **Kilo can't access a file you want:** Remove or narrow the matching rule in `.kilocodeignore` (legacy) or adjust the permission rules in `kilo.jsonc` (VSCode extension & CLI).
+- **Tavern can't access a file you want:** Remove or narrow the matching rule in `.taverncodeignore` (legacy) or adjust the permission rules in `tavern.jsonc` (VSCode extension & CLI).
 - **A file still appears in lists:** In the legacy extension, check the setting that shows ignored files in lists and searches. In the extension & CLI, verify your permission and watcher ignore configuration.
-- **`.kilocodeignore` patterns not working in the new platform:** Ensure the file is at the workspace root. The IgnoreMigrator reads it automatically — check that your patterns use valid `.gitignore` syntax.
+- **`.taverncodeignore` patterns not working in the new platform:** Ensure the file is at the workspace root. The IgnoreMigrator reads it automatically — check that your patterns use valid `.gitignore` syntax.

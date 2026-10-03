@@ -1,7 +1,7 @@
 /**
- * Kilo News Component
+ * Tavern News Component
  *
- * Self-contained component that fetches and displays Kilo news/notifications.
+ * Self-contained component that fetches and displays Tavern news/notifications.
  * Shows a banner on the home screen; clicking opens a dialog with all news items.
  */
 
@@ -10,9 +10,9 @@ import { useSync } from "@tui/context/sync"
 import { useSDK } from "@tui/context/sdk"
 import { useDialog } from "@tui/ui/dialog"
 import { useKV } from "@tui/context/kv"
-import type { KilocodeNotification } from "@kilocode/kilo-gateway"
+import type { KilocodeNotification } from "@taverncode/tavern-gateway"
 import { NotificationBanner } from "./notification-banner.js"
-import { DialogKiloNotifications } from "./dialog-kilo-notifications.js"
+import { DialogKiloNotifications } from "./dialog-tavern-notifications.js"
 import { News } from "./news.js"
 
 export function KiloNews() {
@@ -23,7 +23,7 @@ export function KiloNews() {
 
   const [notifications, setNotifications] = createSignal<KilocodeNotification[]>([])
   const [fetched, setFetched] = createSignal(false)
-  const isKiloConnected = createMemo(() => sync.data.provider_next.connected.includes("kilo"))
+  const isKiloConnected = createMemo(() => sync.data.provider_next.connected.includes("tavern"))
   const unread = createMemo(() => News.unread(notifications(), kv.get(News.key, [])))
 
   const openNewsDialog = () => {
@@ -44,7 +44,7 @@ export function KiloNews() {
 
         if (!isKiloConnected()) return
 
-        const result = await sdk.client.kilo.notifications()
+        const result = await sdk.client.tavern.notifications()
         const items = result.data?.filter(({ showIn }) => !showIn || showIn.includes("cli"))
         if (items && items.length > 0) {
           setNotifications(items)

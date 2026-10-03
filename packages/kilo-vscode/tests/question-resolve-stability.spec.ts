@@ -11,7 +11,7 @@ import { expect, test, type Page } from "@playwright/test"
  * until the completed card can take over.
  */
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const STORY_ID = "labs-tool-call-lab--question-resolve-stability"
 const ROW = '[data-part-id="matrix-question-resolve-part"]'
 

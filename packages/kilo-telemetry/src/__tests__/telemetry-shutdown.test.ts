@@ -39,7 +39,7 @@ describe("Telemetry.shutdown timeout (#9788)", () => {
     // is unreachable (offline, firewall, DNS adblock resolving the host to
     // 0.0.0.0), an explicit flush() call before shutdown retries 3x with 3s
     // gaps plus 10s per attempt before throwing, blocking process.exit on
-    // short-lived commands like `kilo --help`. The fix drops the explicit
+    // short-lived commands like `tavern --help`. The fix drops the explicit
     // flush() (PostHog.shutdown drains the queue itself) and threads a caller-
     // supplied timeoutMs through to PostHog.shutdown.
     const { Telemetry } = await import("../telemetry.js")

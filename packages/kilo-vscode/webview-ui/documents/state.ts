@@ -195,9 +195,9 @@ export function createDocumentInspector(
     const message = vscode.onMessage((item) => {
       if (item.type === "document.result" || item.type === "agentManager.document") documents.onMessage(item)
     })
-    window.addEventListener("kilo:open-file", handler)
+    window.addEventListener("tavern:open-file", handler)
     onCleanup(() => {
-      window.removeEventListener("kilo:open-file", handler)
+      window.removeEventListener("tavern:open-file", handler)
       message()
     })
   })

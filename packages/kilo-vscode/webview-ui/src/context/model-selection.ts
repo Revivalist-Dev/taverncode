@@ -17,7 +17,7 @@ export function resolveModelSelection(input: {
 }): ModelSelection | null {
   const pending = input.ready === false || (input.ready !== undefined && input.organizationId === undefined)
   const validate = (selection: ModelSelection | null | undefined) => {
-    if (!selection || (pending && selection.providerID === "kilo")) return null
+    if (!selection || (pending && selection.providerID === "tavern")) return null
     return isModelValid(input.providers, input.connected, selection) ? selection : null
   }
   const preference =
@@ -29,11 +29,11 @@ export function resolveModelSelection(input: {
   if (preference) return preference
   if (pending) return null
   if (input.organizationId) {
-    const recommendation = input.defaults?.kilo
-    const selection = recommendation ? validate({ providerID: "kilo", modelID: recommendation }) : null
+    const recommendation = input.defaults?.tavern
+    const selection = recommendation ? validate({ providerID: "tavern", modelID: recommendation }) : null
     if (selection) return selection
-    const first = Object.keys(input.providers.kilo?.models ?? {}).at(0)
-    return first ? validate({ providerID: "kilo", modelID: first }) : null
+    const first = Object.keys(input.providers.tavern?.models ?? {}).at(0)
+    return first ? validate({ providerID: "tavern", modelID: first }) : null
   }
   for (const selection of input.recent ?? []) {
     const model = validate(selection)

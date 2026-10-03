@@ -10,7 +10,7 @@ import { ModelSelectorBase } from "../components/shared/ModelSelector"
 import { SessionContext } from "../context/session"
 import type { EnrichedModel } from "../context/provider"
 import type { ModelSelection } from "../types/messages"
-import { Markdown } from "@kilocode/kilo-ui/markdown"
+import { Markdown } from "@taverncode/tavern-ui/markdown"
 
 const meta: Meta = {
   title: "Shared",
@@ -50,7 +50,7 @@ export const ModelSelectorNoProviders: Story = {
     <StoryProviders>
       <div style={{ display: "flex", "align-items": "center", gap: "8px" }}>
         <ModelSelectorBase
-          value={{ providerID: "kilo", modelID: "kilo-auto/frontier" }}
+          value={{ providerID: "tavern", modelID: "tavern-auto/frontier" }}
           onSelect={() => {}}
           placement="bottom-start"
         />
@@ -61,10 +61,10 @@ export const ModelSelectorNoProviders: Story = {
 
 const ACCESSIBLE_MODELS: EnrichedModel[] = [
   {
-    id: "kilo-auto/efficient",
-    name: "Kilo Auto Efficient",
-    providerID: "kilo",
-    providerName: "Kilo",
+    id: "tavern-auto/efficient",
+    name: "Tavern Auto Efficient",
+    providerID: "tavern",
+    providerName: "Tavern",
     recommendedIndex: 0,
     options: {
       description:
@@ -73,10 +73,10 @@ const ACCESSIBLE_MODELS: EnrichedModel[] = [
     autoRouting: { models: ["google/gemini-2.5-flash", "anthropic/claude-sonnet-4.6"] },
   },
   {
-    id: "kilo-auto/frontier",
-    name: "Kilo Auto Frontier",
-    providerID: "kilo",
-    providerName: "Kilo",
+    id: "tavern-auto/frontier",
+    name: "Tavern Auto Frontier",
+    providerID: "tavern",
+    providerName: "Tavern",
     recommendedIndex: 1,
     options: {
       description: "Routes each request to the strongest available models.",
@@ -84,23 +84,23 @@ const ACCESSIBLE_MODELS: EnrichedModel[] = [
     autoRouting: { models: ["openai/gpt-5.5", "anthropic/claude-opus-4.6"] },
   },
   {
-    id: "kilo-auto/legacy",
-    name: "Kilo Auto Legacy",
-    providerID: "kilo",
-    providerName: "Kilo",
+    id: "tavern-auto/legacy",
+    name: "Tavern Auto Legacy",
+    providerID: "tavern",
+    providerName: "Tavern",
   },
   { id: "omega", name: "Omega", providerID: "openai", providerName: "OpenAI", recommendedIndex: 2 },
-  { id: "alpha", name: "Alpha", providerID: "kilo", providerName: "Kilo" },
-  { id: "bravo", name: "Bravo", providerID: "kilo", providerName: "Kilo" },
-  { id: "charlie", name: "Charlie", providerID: "kilo", providerName: "Kilo" },
-  { id: "delta", name: "Delta", providerID: "kilo", providerName: "Kilo" },
-  { id: "echo", name: "Echo", providerID: "kilo", providerName: "Kilo" },
+  { id: "alpha", name: "Alpha", providerID: "tavern", providerName: "Tavern" },
+  { id: "bravo", name: "Bravo", providerID: "tavern", providerName: "Tavern" },
+  { id: "charlie", name: "Charlie", providerID: "tavern", providerName: "Tavern" },
+  { id: "delta", name: "Delta", providerID: "tavern", providerName: "Tavern" },
+  { id: "echo", name: "Echo", providerID: "tavern", providerName: "Tavern" },
   { id: "nova", name: "Nova", providerID: "nvidia", providerName: "NVIDIA" },
   { id: "nemotron", name: "Nemotron", providerID: "nvidia", providerName: "NVIDIA" },
 ]
 
 const AccessibleModelSelector = () => {
-  const [value, setValue] = createSignal<ModelSelection | null>({ providerID: "kilo", modelID: "alpha" })
+  const [value, setValue] = createSignal<ModelSelection | null>({ providerID: "tavern", modelID: "alpha" })
 
   return (
     <div style={{ display: "flex", "align-items": "center", gap: "12px" }}>
@@ -135,7 +135,7 @@ export const ModelSelectorSelectedFavorite: Story = {
   render: () => {
     const session = {
       ...mockSessionValue(),
-      favoriteModels: () => [{ providerID: "kilo", modelID: "alpha" }],
+      favoriteModels: () => [{ providerID: "tavern", modelID: "alpha" }],
     }
 
     return (
@@ -154,8 +154,8 @@ export const ModelSelectorMostUsed: Story = {
     const session = {
       ...mockSessionValue(),
       modelUsageHistory: () => ({
-        "kilo/alpha": { count: 3, lastUsed: 100 },
-        "kilo/bravo": { count: 12, lastUsed: 200 },
+        "tavern/alpha": { count: 3, lastUsed: 100 },
+        "tavern/bravo": { count: 12, lastUsed: 200 },
         "nvidia/nova": { count: 7, lastUsed: 300 },
       }),
     }

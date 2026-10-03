@@ -1,8 +1,8 @@
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { retry } from "../services/cli-backend/retry"
 
-const KEY = "kilo.dismissedNotificationIds"
+const KEY = "tavern.dismissedNotificationIds"
 
 interface NotificationAction {
   actionText: string
@@ -48,7 +48,7 @@ export async function fetchAndSendNotifications(ctx: NotificationsContext): Prom
   }
 
   try {
-    const { data: all } = await retry(() => ctx.client!.kilo.notifications(undefined, { throwOnError: true }))
+    const { data: all } = await retry(() => ctx.client!.tavern.notifications(undefined, { throwOnError: true }))
     const notifications = all.filter((n) => !n.showIn || n.showIn.includes("extension"))
     const existing = ctx.context?.globalState.get<string[]>(KEY, []) ?? []
     const active = new Set(notifications.map((n) => n.id))
@@ -58,7 +58,7 @@ export async function fetchAndSendNotifications(ctx: NotificationsContext): Prom
     ctx.set(message)
     ctx.post(message)
   } catch (error) {
-    console.error("[Kilo New] KiloProvider: Failed to fetch notifications:", error)
+    console.error("[Tavern New] KiloProvider: Failed to fetch notifications:", error)
   }
 }
 

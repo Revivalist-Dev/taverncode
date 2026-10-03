@@ -2,10 +2,10 @@
 import { expect, spyOn, test } from "bun:test"
 import { RGBA } from "@opentui/core"
 import { testRender } from "@opentui/solid"
-import type { TuiPluginApi } from "@kilocode/plugin/tui"
-import type { Event, Message, Part, Session } from "@kilocode/sdk/v2"
+import type { TuiPluginApi } from "@taverncode/plugin/tui"
+import type { Event, Message, Part, Session } from "@taverncode/sdk/v2"
 import { createSignal } from "solid-js"
-import { MemorySidebar } from "@/kilocode/cli/cmd/tui/component/memory-status"
+import { MemorySidebar } from "@/taverncode/cli/cmd/tui/component/memory-status"
 import { directory } from "../../../../fixture/tui-sdk"
 
 const id = "ses_memory_status"

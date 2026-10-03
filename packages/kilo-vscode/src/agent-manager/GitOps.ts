@@ -65,7 +65,7 @@ export interface ExecBufferResult {
 /**
  * Fixed SSH command injected by {@link nonInteractiveEnv} when the user has
  * not already configured their own. Exported so callers can check whether a
- * `GIT_SSH_COMMAND` originated from Kilo (safe) or was inherited from the
+ * `GIT_SSH_COMMAND` originated from Tavern (safe) or was inherited from the
  * parent process (untrusted).
  */
 export const KILO_NON_INTERACTIVE_SSH_COMMAND = "ssh -o BatchMode=yes"
@@ -113,7 +113,7 @@ export function nonInteractiveEnv(): NodeJS.ProcessEnv {
 }
 
 /**
- * True when `env.GIT_SSH_COMMAND` is the fixed value Kilo sets, rather than
+ * True when `env.GIT_SSH_COMMAND` is the fixed value Tavern sets, rather than
  * an inherited one from the parent process. Use this to decide whether it's
  * safe to pass `allowUnsafeSshCommand: true` to simple-git.
  */
@@ -417,7 +417,7 @@ export class GitOps {
    * merge-base with `baseBranch`. Optionally scoped to `selectedFiles`.
    */
   async buildWorktreePatch(sourcePath: string, baseBranch: string, selectedFiles?: string[]): Promise<string> {
-    const tmp = await fs.mkdtemp(nodePath.join(os.tmpdir(), "kilo-apply-"))
+    const tmp = await fs.mkdtemp(nodePath.join(os.tmpdir(), "tavern-apply-"))
     const index = nodePath.join(tmp, "index")
     const env = { ...process.env, GIT_INDEX_FILE: index }
     const files = (selectedFiles ?? [])

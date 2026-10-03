@@ -33,9 +33,9 @@ describe("Markdown bidirectional rendering contract", () => {
         useMarked: () => ({ parse: async () => "" }),
         deferredHighlight: async () => {},
         fnv1a: (text) => text,
-        KiloTheme: { name: "Kilo" },
+        KiloTheme: { name: "Tavern" },
       }))
-      mock.module("./src/kilocode/mermaid/markdown-mermaid", () => ({
+      mock.module("./src/taverncode/mermaid/markdown-mermaid", () => ({
         cleanupMermaidActions: () => {},
         hasMermaid: () => false,
         preserveMermaid: () => false,

@@ -22,15 +22,15 @@ import { SessionStatus } from "@/session/status"
 import { SessionRunState } from "@/session/run-state"
 import { MessageV2 } from "@/session/message-v2"
 import { MessageID, PartID, SessionID } from "@/session/schema"
-import { Goal } from "@/kilocode/session/goal/runner"
-import { GoalLink } from "@/kilocode/session/goal/link"
-import { GoalPolicy } from "@/kilocode/session/goal/policy"
-import { GoalState } from "@/kilocode/session/goal/state"
-import { Wakeup } from "@/kilocode/wakeup"
-import { SessionDrain } from "@/kilocode/session/drain"
-import { KiloSessionContinuation } from "@/kilocode/session/continuation"
-import { KiloSessionPromptQueue } from "@/kilocode/session/prompt-queue"
-import { Suggestion } from "@/kilocode/suggestion"
+import { Goal } from "@/taverncode/session/goal/runner"
+import { GoalLink } from "@/taverncode/session/goal/link"
+import { GoalPolicy } from "@/taverncode/session/goal/policy"
+import { GoalState } from "@/taverncode/session/goal/state"
+import { Wakeup } from "@/taverncode/wakeup"
+import { SessionDrain } from "@/taverncode/session/drain"
+import { KiloSessionContinuation } from "@/taverncode/session/continuation"
+import { KiloSessionPromptQueue } from "@/taverncode/session/prompt-queue"
+import { Suggestion } from "@/taverncode/suggestion"
 import { TestInstance } from "../../fixture/fixture"
 import { awaitWithTimeout, pollWithTimeout, testEffect } from "../../lib/effect"
 import { httpError, reply, TestLLMServer } from "../../lib/llm-server"
@@ -221,7 +221,7 @@ it.instance(
     const run = yield* setup()
     yield* run.sessions.setMetadata({
       sessionID: run.session.id,
-      metadata: { ...retained, "kilo.goal": { text: objective, status: "paused", active: false } },
+      metadata: { ...retained, "tavern.goal": { text: objective, status: "paused", active: false } },
     })
     yield* run.llm.push(
       reply().tool("goal", { action: "resume" }),
@@ -588,7 +588,7 @@ it.instance(
     })
     yield* run.wait(1)
     yield* run.paused
-    expect(yield* run.metadata).toMatchObject({ ...retained, "kilo.goal": { text, active: false, status: "paused" } })
+    expect(yield* run.metadata).toMatchObject({ ...retained, "tavern.goal": { text, active: false, status: "paused" } })
     const body = JSON.stringify((yield* run.llm.hits).at(-1)?.body)
     expect(body).toContain("Implement this design\\n\\nKeep the file requirements.")
     expect(body).toContain("Use accessible controls")
@@ -790,7 +790,7 @@ for (const text of ["pause", "resume", "clear"]) {
       yield* run.command(`-- ${text}`)
       yield* run.wait(1)
       yield* run.paused
-      expect(yield* run.metadata).toMatchObject({ ...retained, "kilo.goal": { text, active: false, status: "paused" } })
+      expect(yield* run.metadata).toMatchObject({ ...retained, "tavern.goal": { text, active: false, status: "paused" } })
     }),
   )
 }
@@ -816,7 +816,7 @@ it.instance(
     yield* idle
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     yield* wait(4)
     yield* idle
@@ -830,7 +830,7 @@ it.instance(
     )
     for (const hit of yield* llm.hits) expect(JSON.stringify(hit.body)).toContain(objective)
     yield* prompt.cancel(session.id)
-    expect(yield* metadata).toMatchObject({ ...retained, "kilo.goal": { text: objective, active: false } })
+    expect(yield* metadata).toMatchObject({ ...retained, "tavern.goal": { text: objective, active: false } })
     yield* Effect.sleep("5200 millis")
     expect(yield* llm.hits).toHaveLength(4)
   }),
@@ -888,7 +888,7 @@ for (const disposed of [false, true]) {
       expect((yield* status.get(session.id)).type).toBe("idle")
       expect(yield* metadata).toMatchObject({
         ...retained,
-        "kilo.goal": { text: objective, active: false, status: "paused" },
+        "tavern.goal": { text: objective, active: false, status: "paused" },
       })
       const stopped = (yield* sessions.messages({ sessionID: session.id })).at(-1)
       expect(stopped?.info.role === "assistant" && MessageV2.AbortedError.isInstance(stopped.info.error)).toBe(true)
@@ -933,7 +933,7 @@ it.instance(
     yield* paused
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": {
+      "tavern.goal": {
         text: objective,
         active: false,
         status: "complete",
@@ -987,7 +987,7 @@ for (const kind of ["permission", "suggestion"] as const) {
           expect(String(Cause.squash(exit.cause))).toContain("Resolve pending questions and permissions")
         expect(yield* run.metadata).toMatchObject({
           ...retained,
-          "kilo.goal": { text: objective, active: true, status: "active" },
+          "tavern.goal": { text: objective, active: true, status: "active" },
         })
         const pending = yield* list
         expect(pending).toHaveLength(1)
@@ -1057,7 +1057,7 @@ for (const idle of [false, true]) {
       expect((yield* run.status.get(run.session.id)).type).toBe(idle ? "idle" : "busy")
       expect(yield* run.metadata).toMatchObject({
         ...retained,
-        "kilo.goal": { text: objective, active: true, status: "active" },
+        "tavern.goal": { text: objective, active: true, status: "active" },
       })
       gate.resolve()
       yield* run.wait(4)
@@ -1094,7 +1094,7 @@ it.instance(
     expect(Exit.hasInterrupts(yield* Fiber.await(pending))).toBe(true)
     expect(yield* run.metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     expect(yield* run.llm.hits).toHaveLength(1)
     yield* run.prompt.cancel(run.session.id)
@@ -1122,7 +1122,7 @@ for (const busy of [true, false]) {
         expect(Exit.isFailure(exit) && Cause.squash(exit.cause) instanceof Session.BusyError).toBe(true)
         expect(yield* run.metadata).toMatchObject({
           ...retained,
-          "kilo.goal": { text: objective, active: true, status: "active" },
+          "tavern.goal": { text: objective, active: true, status: "active" },
         })
         expect(KiloSessionPromptQueue.active(run.session.id)).toBe(base)
         expect((yield* run.sessions.messages({ sessionID: run.session.id })).map((message) => message.info.id)).toEqual(
@@ -1244,11 +1244,11 @@ it.instance(
     })
     yield* sessions.setMetadata({
       sessionID: session.id,
-      metadata: { ...retained, "kilo.goal": { text: objective, active: true } },
+      metadata: { ...retained, "tavern.goal": { text: objective, active: true } },
     })
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: false, status: "paused" },
+      "tavern.goal": { text: objective, active: false, status: "paused" },
     })
     const status = yield* control("")
     expect(status.parts).toEqual(
@@ -1259,18 +1259,18 @@ it.instance(
     const fork = yield* sessions.fork({ sessionID: session.id })
     expect(fork.metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: false, status: "paused" },
+      "tavern.goal": { text: objective, active: false, status: "paused" },
     })
     expect((yield* sessions.get(fork.id)).metadata).toEqual(fork.metadata)
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     yield* control("")
     yield* control("pause")
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: false, status: "paused" },
+      "tavern.goal": { text: objective, active: false, status: "paused" },
     })
     yield* control("")
     expect(yield* llm.hits).toHaveLength(1)
@@ -1295,12 +1295,12 @@ it.instance(
     yield* idle
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     yield* awaitWithTimeout(store.reload({ directory: instance.directory }), "goal prevented instance disposal")
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: false, status: "paused" },
+      "tavern.goal": { text: objective, active: false, status: "paused" },
     })
     yield* Effect.sleep("5200 millis")
     expect(yield* llm.hits).toHaveLength(2)
@@ -1369,7 +1369,7 @@ it.instance(
     yield* run.wait(1)
     expect(yield* run.metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     yield* awaitWithTimeout(Fiber.await(ordinary), "ordinary response was not replaced")
     expect(KiloSessionPromptQueue.active(run.session.id)).not.toBe(base)
@@ -1419,7 +1419,7 @@ it.instance(
       expect(String(Cause.squash(exit.cause))).toContain("Resolve pending questions and permissions")
     expect(yield* run.metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: objective, active: false, status: "paused" },
+      "tavern.goal": { text: objective, active: false, status: "paused" },
     })
     expect(yield* run.sessions.messages({ sessionID: run.session.id })).toEqual(before)
     expect(yield* question.list()).toEqual([request])
@@ -1467,7 +1467,7 @@ it.instance(
     yield* wait(2)
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: "Review the validation results", active: true },
+      "tavern.goal": { text: "Review the validation results", active: true },
     })
     expect(JSON.stringify((yield* llm.hits).at(-1)?.body)).toContain("Review the validation results")
     const state = yield* SessionRunState.Service
@@ -1486,7 +1486,7 @@ it.instance(
     expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBe(true)
     expect(yield* metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: "Review the validation results", active: false },
+      "tavern.goal": { text: "Review the validation results", active: false },
     })
     yield* Effect.sleep("5200 millis")
     expect(yield* llm.hits).toHaveLength(2)
@@ -1570,7 +1570,7 @@ it.instance(
     yield* awaitWithTimeout(Fiber.join(next), "newer start did not finish after cancellation")
     expect(yield* run.metadata).toMatchObject({
       ...retained,
-      "kilo.goal": { text: "Continue the newer objective", active: true },
+      "tavern.goal": { text: "Continue the newer objective", active: true },
     })
     yield* run.prompt.cancel(run.session.id, "session")
     expect(yield* run.llm.hits).toHaveLength(0)
@@ -1621,7 +1621,7 @@ it.instance(
     yield* Fiber.join(start)
     expect(yield* run.metadata).toMatchObject({
       ...metadata,
-      "kilo.goal": { text: objective, active: true, status: "active" },
+      "tavern.goal": { text: objective, active: true, status: "active" },
     })
     yield* run.prompt.cancel(run.session.id)
   }),
@@ -1847,7 +1847,7 @@ for (const kind of ["replay", "continue", "stop"] as const) {
       expect(last?.role === "assistant" && last.parentID).not.toBe(original?.info.id)
       expect(yield* run.metadata).toMatchObject({
         ...retained,
-        "kilo.goal": { text: objective, active: true, status: "active" },
+        "tavern.goal": { text: objective, active: true, status: "active" },
       })
       yield* run.wait(count + 1)
       expect(JSON.stringify((yield* run.llm.hits).at(-1)?.body)).toContain(objective)
@@ -1971,7 +1971,7 @@ for (const kind of ["success", "delivery-error", "independent-child"] as const) 
       yield* run.idle
       expect(yield* run.metadata).toMatchObject({
         ...retained,
-        "kilo.goal": { text: objective, active: true, status: "active" },
+        "tavern.goal": { text: objective, active: true, status: "active" },
       })
       const delegated = (yield* run.sessions.children(run.session.id)).at(0)
       if (!delegated) throw new Error("Goal did not create a child")
@@ -2134,7 +2134,7 @@ const dropWait = (run: Run) =>
       sessionID: run.session.id,
       metadata: {
         ...fresh.metadata,
-        "kilo.goal": {
+        "tavern.goal": {
           text: saved.text,
           status: saved.status,
           active: saved.active,

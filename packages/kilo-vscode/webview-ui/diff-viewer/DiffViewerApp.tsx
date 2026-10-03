@@ -1,18 +1,18 @@
 import { batch, createEffect, createMemo, createSignal, on, onCleanup, Show } from "solid-js"
 import type { Component } from "solid-js"
-import { DialogProvider } from "@kilocode/kilo-ui/context/dialog"
-import { CodeComponentProvider } from "@kilocode/kilo-ui/context/code"
-import { DiffComponentProvider } from "@kilocode/kilo-ui/context/diff"
-import { FileComponentProvider } from "@kilocode/kilo-ui/context/file"
-import { MarkedProvider } from "@kilocode/kilo-ui/context/marked"
-import { Code } from "@kilocode/kilo-ui/code"
-import { Diff } from "@kilocode/kilo-ui/diff"
-import { File } from "@kilocode/kilo-ui/file"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { ThemeProvider } from "@kilocode/kilo-ui/theme"
-import { Toast } from "@kilocode/kilo-ui/toast"
+import { DialogProvider } from "@taverncode/tavern-ui/context/dialog"
+import { CodeComponentProvider } from "@taverncode/tavern-ui/context/code"
+import { DiffComponentProvider } from "@taverncode/tavern-ui/context/diff"
+import { FileComponentProvider } from "@taverncode/tavern-ui/context/file"
+import { MarkedProvider } from "@taverncode/tavern-ui/context/marked"
+import { Code } from "@taverncode/tavern-ui/code"
+import { Diff } from "@taverncode/tavern-ui/diff"
+import { File } from "@taverncode/tavern-ui/file"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { ThemeProvider } from "@taverncode/tavern-ui/theme"
+import { Toast } from "@taverncode/tavern-ui/toast"
 import { FullScreenDiffView } from "./FullScreenDiffView"
 import { mergeWorktreeDiffs, resolveDiffFile } from "./diff-state"
 import { LanguageProvider, useLanguage } from "../src/context/language"
@@ -480,7 +480,7 @@ const DiffViewerShell: Component = () => {
 
 export const DiffViewerApp: Component = () => {
   return (
-    <ThemeProvider defaultTheme="kilo-vscode">
+    <ThemeProvider defaultTheme="tavern-vscode">
       <DialogProvider>
         <VSCodeProvider>
           <ServerProvider>

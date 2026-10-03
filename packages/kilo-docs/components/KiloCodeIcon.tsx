@@ -6,5 +6,5 @@ interface KiloCodeIconProps {
 }
 
 export function KiloCodeIcon({ size = "1.2em" }: KiloCodeIconProps) {
-  return <Icon src="/docs/img/kilo-v1.svg" srcDark="/docs/img/kilo-v1-white.svg" alt="Kilo Code Icon" size={size} />
+  return <Icon src="/docs/img/tavern-v1.svg" srcDark="/docs/img/tavern-v1-white.svg" alt="Tavern Code Icon" size={size} />
 }

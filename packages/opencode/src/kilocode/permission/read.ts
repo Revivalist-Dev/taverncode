@@ -1,5 +1,5 @@
 import { Wildcard } from "@/util/wildcard"
-import { PermissionRule, type Rule } from "@/kilocode/permission/rule"
+import { PermissionRule, type Rule } from "@/taverncode/permission/rule"
 
 function guard(pattern: string) {
   if (Wildcard.match(pattern, "*.env.example")) return

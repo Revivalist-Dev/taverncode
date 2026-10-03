@@ -1,9 +1,9 @@
 import { For, Show, createMemo, createSignal, type Component } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Markdown } from "@kilocode/kilo-ui/markdown"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Markdown } from "@taverncode/tavern-ui/markdown"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { isCIReviewComment, isPRReviewComment } from "../../../../src/shared/review-comments"
 import { PRAvatar } from "../../../agent-manager/pr/PRAvatar"
 import { useLanguage } from "../../context/language"
@@ -84,7 +84,7 @@ function Group(props: ReviewCommentsProps & { source: "local" | "pr" | "ci" }) {
     // An outdated PR thread is anchored to a line that has since moved, so
     // jumping there lands on unrelated code. Open the file at the top instead.
     const at = outdated(item) || (isPRReviewComment(item) && item.side === "deletions") ? undefined : item.line
-    const event = new CustomEvent("kilo:open-file", {
+    const event = new CustomEvent("tavern:open-file", {
       cancelable: true,
       detail: { filePath: item.file, line: at, column: 1, sessionID: props.sessionID },
     })

@@ -1,20 +1,20 @@
 ---
-title: "Kilo Code CLI: Run the AI Coding Agent from Your Terminal"
-description: "Using Kilo Code from the command line"
+title: "Tavern Code CLI: Run the AI Coding Agent from Your Terminal"
+description: "Using Tavern Code from the command line"
 platform: new
 ---
 
 {% callout type="warning" title="Version Notice" %}
-This documentation applies only to Kilo version 1.0 and later. Users running versions below 1.0 should upgrade before proceeding.
+This documentation applies only to Tavern version 1.0 and later. Users running versions below 1.0 should upgrade before proceeding.
 {% /callout %}
 
-# Kilo Code CLI: AI Coding Agent in Your Terminal
+# Tavern Code CLI: AI Coding Agent in Your Terminal
 
 Orchestrate agents from your terminal. Plan, debug, and code fast with keyboard-first navigation on the command line.
 
-The Kilo Code CLI uses the same underlying technology that powers the IDE extensions, so you can expect the same workflow to handle agentic coding tasks from start to finish.
+The Tavern Code CLI uses the same underlying technology that powers the IDE extensions, so you can expect the same workflow to handle agentic coding tasks from start to finish.
 
-**Source code & issues (Kilo CLI 1.0):** [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode) · [Report an issue](https://github.com/Kilo-Org/kilocode/issues)
+**Source code & issues (Tavern CLI 1.0):** [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode) · [Report an issue](https://github.com/Kilo-Org/kilocode/issues)
 
 ## Getting Started
 
@@ -22,45 +22,45 @@ The Kilo Code CLI uses the same underlying technology that powers the IDE extens
 
 {% partial file="install-cli.md" /%}
 
-Change directory to where you want to work and run kilo:
+Change directory to where you want to work and run tavern:
 
 ```bash
 # Start the TUI
-kilo
+tavern
 
 # Check the version
-kilo --version
+tavern --version
 
 # Get help
-kilo --help
+tavern --help
 ```
 
 ### First-Time Setup with `/connect`
 
-After installation, run `kilo` and use the `/connect` command to add your first provider credentials. This is the interactive way to configure API keys for model providers.
+After installation, run `tavern` and use the `/connect` command to add your first provider credentials. This is the interactive way to configure API keys for model providers.
 
 ## Opening Links
 
-Links in agent responses use terminal hyperlink metadata when the terminal supports it. Kilo also handles links inside the TUI, so mouse capture does not make supported HTTP(S) links inactive. Move the pointer over a link to see the hover underline, then click it to open the default browser.
+Links in agent responses use terminal hyperlink metadata when the terminal supports it. Tavern also handles links inside the TUI, so mouse capture does not make supported HTTP(S) links inactive. Move the pointer over a link to see the hover underline, then click it to open the default browser.
 
 Ghostty sends native link clicks through the TUI when mouse capture is enabled. Use `Ctrl+Shift+click` on Linux or `Cmd+Shift+click` on macOS for terminal-native activation. The application click handler does not depend on those modifiers.
 
-If a link cannot open, select and copy its visible URL. Links are opened on the machine running Kilo, so use the copy fallback when Kilo runs over SSH and the browser is on your local machine. `KILO_DISABLE_MOUSE=1` can help diagnose terminal-native link behavior, but it also disables TUI mouse controls and is not required for normal link activation.
+If a link cannot open, select and copy its visible URL. Links are opened on the machine running Tavern, so use the copy fallback when Tavern runs over SSH and the browser is on your local machine. `KILO_DISABLE_MOUSE=1` can help diagnose terminal-native link behavior, but it also disables TUI mouse controls and is not required for normal link activation.
 
 ## Update
 
-Upgrade the Kilo CLI:
+Upgrade the Tavern CLI:
 
-`kilo upgrade`
+`tavern upgrade`
 
 Or use npm:
 
-`npm update -g @kilocode/cli`
+`npm update -g @taverncode/cli`
 
-## What you can do with Kilo Code CLI
+## What you can do with Tavern Code CLI
 
 - **Plan and execute code changes without leaving your terminal.** Use your command line to make edits to your project without opening your IDE.
-- **Switch between hundreds of LLMs without constraints.** Other CLI tools only work with one model or curate opinionated lists. With Kilo, you can switch models without booting up another tool.
+- **Switch between hundreds of LLMs without constraints.** Other CLI tools only work with one model or curate opinionated lists. With Tavern, you can switch models without booting up another tool.
 - **Choose the right mode for the task in your workflow.** Select between Architect, Ask, Debug, Orchestrator, or custom agent modes.
 - **Automate tasks.** Get AI assistance writing shell scripts for tasks like renaming all of the files in a folder or transforming sizes for a set of images.
 - **Extend capabilities with skills.** Add domain expertise and repeatable workflows through [Agent Skills](#skills).
@@ -73,8 +73,8 @@ Or use npm:
 
 For detailed help on every command and subcommand, see the [CLI Command Reference](/docs/code-with-ai/platforms/cli-reference).
 
-{% callout type="warning" title="Kilo Console is deprecated" %}
-The `kilo console` command and its browser interface are deprecated and will be removed in a future release. Use the CLI TUI, VS Code extension, or JetBrains plugin to run sessions. Use the CLI slash commands, other extensions, or edit Kilo configuration files directly to manage settings.
+{% callout type="warning" title="Tavern Console is deprecated" %}
+The `tavern console` command and its browser interface are deprecated and will be removed in a future release. Use the CLI TUI, VS Code extension, or JetBrains plugin to run sessions. Use the CLI slash commands, other extensions, or edit Tavern configuration files directly to manage settings.
 {% /callout %}
 
 ### Global Options
@@ -137,18 +137,18 @@ The `kilo console` command and its browser interface are deprecated and will be 
 | `/reload` | - | Reload every instance of the project from disk (config, skills, agents, and commands) |
 | `/editor` | - | Open external editor |
 | `/auto-approve` | `/autoapprove`, `/approve-all`, `/approveall` | Toggle auto-approve mode for all permission prompts (saved to global config) |
-| `/caffeinate` | `/caffenate` | Toggle Keep Awake: prevent system sleep while Kilo sessions run |
+| `/caffeinate` | `/caffenate` | Toggle Keep Awake: prevent system sleep while Tavern sessions run |
 | `/privacy` | - | Toggle privacy mode (blurs PII in the TUI) |
 | `/exit` | `/quit`, `/q` | Exit the app |
 
-`/reload` reloads every instance of the project, including the main checkout and sibling worktrees. Kilo refuses the reload while any session in the project is running; wait for it to finish or abort it first.
+`/reload` reloads every instance of the project, including the main checkout and sibling worktrees. Tavern refuses the reload while any session in the project is running; wait for it to finish or abort it first.
 
-#### Kilo Gateway Commands (when connected)
+#### Tavern Gateway Commands (when connected)
 
 | Command | Aliases | Description |
 |---|---|---|
-| `/profile` | `/me`, `/whoami` | View your Kilo Gateway profile |
-| `/teams` | `/team`, `/org`, `/orgs` | Switch between Kilo Gateway teams |
+| `/profile` | `/me`, `/whoami` | View your Tavern Gateway profile |
+| `/teams` | `/team`, `/org`, `/orgs` | Switch between Tavern Gateway teams |
 | `/remote` | - | Toggle remote mode for Cloud Agent access |
 
 #### Built-in Commands
@@ -167,7 +167,7 @@ Continue work started in Claude Code or the OpenAI Codex CLI without copying tra
 2. Run `/resume-claude` or `/resume-codex`.
 3. Pick one of the 10 most recent sessions for the current directory, or pass a session UUID directly, for example `/resume-claude <uuid>`.
 
-Kilo discovers Claude Code transcripts under `~/.claude/projects/` and Codex CLI rollouts under `~/.codex/sessions/`. The imported history keeps its original order and ends with an import notice. Content that Kilo cannot represent, such as some tool outputs, is skipped and counted in that notice.
+Tavern discovers Claude Code transcripts under `~/.claude/projects/` and Codex CLI rollouts under `~/.codex/sessions/`. The imported history keeps its original order and ends with an import notice. Content that Tavern cannot represent, such as some tool outputs, is skipped and counted in that notice.
 
 ## Local Code Reviews
 
@@ -188,16 +188,16 @@ Review your code locally before pushing — catch issues early without waiting f
 Configuration is managed through:
 
 - `/connect` command for provider setup (interactive)
-- Config files in **`~/.config/kilo/`**: use **`kilo.jsonc`** for provider, model, permission, and **MCP** settings. Restart the CLI after editing. See [Using MCP in Kilo Code](/docs/automate/mcp/using-in-kilo-code) for MCP config format.
+- Config files in **`~/.config/tavern/`**: use **`tavern.jsonc`** for provider, model, permission, and **MCP** settings. Restart the CLI after editing. See [Using MCP in Tavern Code](/docs/automate/mcp/using-in-tavern-code) for MCP config format.
 - **`tui.jsonc`** for terminal UI settings such as notifications, sounds, themes, and keybindings
-- `kilo auth` for credential management
+- `tavern auth` for credential management
 
 ## CLI Notifications and Sounds
 
 CLI attention alerts are disabled by default. Enable and configure them by editing the TUI configuration:
 
-- Edit `~/.config/kilo/tui.jsonc` (or `tui.json`) for global settings.
-- Edit `.kilo/tui.json` (or `tui.jsonc`) for project settings.
+- Edit `~/.config/tavern/tui.jsonc` (or `tui.json`) for global settings.
+- Edit `.tavern/tui.json` (or `tui.jsonc`) for project settings.
 
 For VS Code sounds and notifications, see [Notifications](/docs/getting-started/settings/notifications).
 
@@ -239,7 +239,7 @@ To replace individual sounds, add file paths under `attention.sounds`:
 }
 ```
 
-Supported sound names are `default`, `question`, `permission`, `error`, `done`, and `subagent_done`. Relative paths are resolved from the directory containing the TUI configuration file. If an override cannot be loaded, Kilo falls back to the active sound pack and then the built-in `opencode.default` pack.
+Supported sound names are `default`, `question`, `permission`, `error`, `done`, and `subagent_done`. Relative paths are resolved from the directory containing the TUI configuration file. If an override cannot be loaded, Tavern falls back to the active sound pack and then the built-in `opencode.default` pack.
 
 The `attention.sound_pack` setting selects a sound pack registered by a TUI plugin. Setting an arbitrary pack name does not install or load a pack. Per-event file overrides remain the simplest way to customize sounds without a plugin.
 
@@ -264,7 +264,7 @@ The `diff_open` and `session_move` TUI keybindings run the same actions and are 
 
 ## Permissions
 
-Kilo Code uses the permission config to decide whether a given action should run automatically, prompt you, or be blocked.
+Tavern Code uses the permission config to decide whether a given action should run automatically, prompt you, or be blocked.
 
 ### Actions
 
@@ -280,7 +280,7 @@ You can set permissions globally (with `*`), and override specific tools.
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "permission": {
     "*": "ask",
     "bash": "allow",
@@ -293,7 +293,7 @@ You can also set all permissions at once:
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "permission": "allow"
 }
 ```
@@ -304,7 +304,7 @@ For most permissions, you can use an object to apply different actions based on 
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "permission": {
     "bash": {
       "*": "ask",
@@ -341,11 +341,11 @@ You can use `~` or `$HOME` at the start of a pattern to reference your home dire
 
 ### External Directories
 
-Use `external_directory` to allow tool calls that touch paths outside the working directory where Kilo was started. This applies to any tool that takes a path as input (for example `read`, `edit`, `glob`, `grep`, and many bash commands).
+Use `external_directory` to allow tool calls that touch paths outside the working directory where Tavern was started. This applies to any tool that takes a path as input (for example `read`, `edit`, `glob`, `grep`, and many bash commands).
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "permission": {
     "external_directory": {
       "~/projects/personal/**": "allow"
@@ -358,7 +358,7 @@ Any directory allowed here inherits the same defaults as the current workspace. 
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "permission": {
     "external_directory": {
       "~/projects/personal/**": "allow"
@@ -376,26 +376,26 @@ In Ask and Plan modes, `external_directory` allow rules can still permit reads o
 
 ## Configuration
 
-The Kilo CLI is a fork of [OpenCode](https://opencode.ai) and supports the same configuration options. The CLI you install with `npm install -g @kilocode/cli` (Kilo CLI 1.0) is built from [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode). For comprehensive configuration documentation, see the [OpenCode Config documentation](https://opencode.ai/docs/config).
+The Tavern CLI is a fork of [OpenCode](https://opencode.ai) and supports the same configuration options. The CLI you install with `npm install -g @taverncode/cli` (Tavern CLI 1.0) is built from [Kilo-Org/kilocode](https://github.com/Kilo-Org/kilocode). For comprehensive configuration documentation, see the [OpenCode Config documentation](https://opencode.ai/docs/config).
 
-### Config File Location (Kilo CLI 1.0)
+### Config File Location (Tavern CLI 1.0)
 
 | Scope | Path |
 |---|---|
-| **Global** | `~/.config/kilo/kilo.json[c]` or legacy `opencode.json[c]` (Windows config dir may vary) |
-| **Project** | `./kilo.json[c]`, legacy `./opencode.json[c]`, or config inside `./.kilo/` (legacy `./.kilocode/` is also read) |
+| **Global** | `~/.config/tavern/tavern.json[c]` or legacy `opencode.json[c]` (Windows config dir may vary) |
+| **Project** | `./tavern.json[c]`, legacy `./opencode.json[c]`, or config inside `./.tavern/` (legacy `./.taverncode/` is also read) |
 
 Project-level configuration takes precedence over global settings.
 
 {% callout type="warning" %}
-**Migrating from opencode?** Kilo no longer falls back to opencode configuration stored in `.opencode` directories (such as `~/.config/opencode` or a project `./.opencode/`). To keep using it, move your global config into `~/.config/kilo/` and any project config into `./.kilo/`.
+**Migrating from opencode?** Tavern no longer falls back to opencode configuration stored in `.opencode` directories (such as `~/.config/opencode` or a project `./.opencode/`). To keep using it, move your global config into `~/.config/tavern/` and any project config into `./.tavern/`.
 {% /callout %}
 
 ### Key Configuration Options
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "model": "anthropic/claude-sonnet-4-20250514",
   "provider": {
     "anthropic": {
@@ -417,7 +417,7 @@ Common configuration options include:
 - **`formatter`** - Code formatter configuration (`true`, `false`, or formatter-specific entries)
 - **`lsp`** - Language server configuration (`true`, `false`, or server-specific entries)
 - **`disabled_providers`** / **`enabled_providers`** - Control which providers are available
-- **`privacy_mode`** - Blur PII in the TUI (balance, team name, Kilo Pass usage) and require confirmation before `/profile` reveals account details — see [Privacy Mode](#privacy-mode)
+- **`privacy_mode`** - Blur PII in the TUI (balance, team name, Tavern Pass usage) and require confirmation before `/profile` reveals account details — see [Privacy Mode](#privacy-mode)
 
 {% callout type="tip" %}
 **Using a model that's not in the built-in list?** You can register any model by adding it under `provider.<provider_id>.models` in your config file. See [Custom Models](/docs/code-with-ai/agents/custom-models) for full details and examples.
@@ -453,7 +453,7 @@ The TUI gives `Ctrl+Z` to input undo on Windows because native Windows terminals
 
 #### Enabling Shift+Enter in Windows Terminal
 
-Some terminals don't send modifier keys with Enter by default. Windows Terminal requires a one-time configuration to forward `Shift+Enter` as an escape sequence that Kilo can read.
+Some terminals don't send modifier keys with Enter by default. Windows Terminal requires a one-time configuration to forward `Shift+Enter` as an escape sequence that Tavern can read.
 
 Open your `settings.json` at:
 
@@ -486,11 +486,11 @@ Add this entry to the root-level `keybindings` array:
 ]
 ```
 
-Save the file and restart Windows Terminal or open a new tab. `Shift+Enter` will now insert a newline in the Kilo prompt instead of submitting the message.
+Save the file and restart Windows Terminal or open a new tab. `Shift+Enter` will now insert a newline in the Tavern prompt instead of submitting the message.
 
 ### OpenTelemetry Export
 
-Kilo telemetry is enabled by default and can be disabled with `experimental.openTelemetry = false`:
+Tavern telemetry is enabled by default and can be disabled with `experimental.openTelemetry = false`:
 
 ```jsonc
 {
@@ -504,7 +504,7 @@ If `OTEL_EXPORTER_OTLP_ENDPOINT` is set, the CLI exports OpenTelemetry traces an
 
 ### Privacy Mode
 
-Set `privacy_mode` to `true` in `kilo.jsonc`, or toggle it with the `/privacy` command, to blur always-visible personal information in the TUI:
+Set `privacy_mode` to `true` in `tavern.jsonc`, or toggle it with the `/privacy` command, to blur always-visible personal information in the TUI:
 
 ```jsonc
 {
@@ -514,10 +514,10 @@ Set `privacy_mode` to `true` in `kilo.jsonc`, or toggle it with the `/privacy` c
 
 When privacy mode is on:
 
-- The sidebar footer shows the balance as `•••`, collapses the team name to "Team credits", and hides the Kilo Pass usage block.
+- The sidebar footer shows the balance as `•••`, collapses the team name to "Team credits", and hides the Tavern Pass usage block.
 - `/profile` asks for confirmation before revealing your email, name, balance, and team on screen.
 
-Privacy mode only affects the TUI display. The `kilo profile` CLI command is unaffected.
+Privacy mode only affects the TUI display. The `tavern profile` CLI command is unaffected.
 
 ### Environment Variables
 
@@ -536,16 +536,16 @@ Use `{env:VARIABLE_NAME}` syntax in config files to reference environment variab
 ```
 
 {% callout type="warning" title="Only works in trusted config" %}
-`{env:VAR}` (and `{file:...}`) references are resolved **only** in trusted config: your global config (`~/.config/kilo`), a config passed via `KILO_CONFIG` / `KILO_CONFIG_CONTENT`, or organization/MDM-managed config. A project-level `kilo.json` / `opencode.json` committed to a repository **cannot** use `{env:VAR}` — the reference is ignored and a warning is logged. This prevents a malicious repository from exfiltrating your secrets to an attacker-controlled `baseURL` simply by being opened. `{file:...}` still works in project config, but only for files that resolve inside the project root — references that leave it (absolute paths outside the root, `../` traversal, and symlink escapes) are rejected.
+`{env:VAR}` (and `{file:...}`) references are resolved **only** in trusted config: your global config (`~/.config/tavern`), a config passed via `KILO_CONFIG` / `KILO_CONFIG_CONTENT`, or organization/MDM-managed config. A project-level `tavern.json` / `opencode.json` committed to a repository **cannot** use `{env:VAR}` — the reference is ignored and a warning is logged. This prevents a malicious repository from exfiltrating your secrets to an attacker-controlled `baseURL` simply by being opened. `{file:...}` still works in project config, but only for files that resolve inside the project root — references that leave it (absolute paths outside the root, `../` traversal, and symlink escapes) are rejected.
 {% /callout %}
 
 For full details on all configuration options including compaction, file watchers, plugins, and experimental features, see the [OpenCode Config documentation](https://opencode.ai/docs/config).
 
 ## Interactive Mode
 
-Interactive mode is the default mode when running Kilo Code without the `--auto` flag, designed to work interactively with a user through the console.
+Interactive mode is the default mode when running Tavern Code without the `--auto` flag, designed to work interactively with a user through the console.
 
-In interactive mode Kilo Code will request approval for operations which have not been auto-approved, allowing the user to review and approve operations before they are executed, and optionally add them to the auto-approval list.
+In interactive mode Tavern Code will request approval for operations which have not been auto-approved, allowing the user to review and approve operations before they are executed, and optionally add them to the auto-approval list.
 
 ### Interactive Command Approval
 
@@ -566,7 +566,7 @@ Selecting an "Always run" option will:
 2. Save the selected pattern as an `allow` rule under `permission.bash` in your global config
 3. Auto-approve future matching commands, including matching approvals already waiting in other open sessions
 
-Kilo only saves the pattern you select. Approving a specific command does not approve redirected variants or broader command patterns unless that broader option is shown and selected.
+Tavern only saves the pattern you select. Approving a specific command does not approve redirected variants or broader command patterns unless that broader option is shown and selected.
 
 ### Pasting Large Text
 
@@ -574,11 +574,11 @@ Pasting a large block of text (five or more lines, or over 800 characters) into 
 
 ## Autonomous Mode (Non-Interactive)
 
-Autonomous mode allows Kilo Code to run in automated environments like CI/CD pipelines without requiring user interaction.
+Autonomous mode allows Tavern Code to run in automated environments like CI/CD pipelines without requiring user interaction.
 
 ```bash
 # Run in autonomous mode with a message
-kilo run --auto "Implement feature X"
+tavern run --auto "Implement feature X"
 ```
 
 ### Autonomous Mode Behavior
@@ -608,7 +608,7 @@ This instructs the AI to proceed without user input.
 - `124`: Timeout (task exceeded time limit)
 - `1`: Error (initialization, execution, or request failure)
 
-A run that finishes without an assistant message also exits `1`, reporting `run ended without an assistant message; the model returned no output` on stderr or as a final `error` record with `--format json`. If the prompt request fails, Kilo reports that error instead.
+A run that finishes without an assistant message also exits `1`, reporting `run ended without an assistant message; the model returned no output` on stderr or as a final `error` record with `--format json`. If the prompt request fails, Tavern reports that error instead.
 
 Without `--auto`, a non-interactive run cannot prompt for approval and auto-rejects any permission request it receives. If a run auto-rejected at least one request, it exits `1` with a stderr diagnostic naming the cause, since the task likely did not complete. Pass `--auto` for autonomous use.
 
@@ -616,9 +616,9 @@ Without `--auto`, a non-interactive run cannot prompt for approval and auto-reje
 
 ```yaml
 # GitHub Actions example
-- name: Run Kilo Code
+- name: Run Tavern Code
   run: |
-    kilo run "Implement the new feature" --auto
+    tavern run "Implement the new feature" --auto
 ```
 
 ## Session Continuation
@@ -627,8 +627,8 @@ Resume your last conversation from the current workspace using the `--continue` 
 
 ```bash
 # Resume the most recent session from this workspace
-kilo --continue
-kilo -c
+tavern --continue
+tavern -c
 ```
 
 This feature:
@@ -643,13 +643,13 @@ This feature:
 
 ```bash
 # Start a session
-kilo
+tavern
 # > "Create a REST API"
 # ... work on the task ...
 # Exit with /exit
 
 # Later, resume the same session
-kilo --continue
+tavern --continue
 # Conversation history is restored, ready to continue
 ```
 
@@ -661,7 +661,7 @@ kilo --continue
 
 ## Remote Connections
 
-Remote Connections let you access your local CLI sessions from the Cloud Agents web interface. Requires [Kilo Gateway](/docs/gateway) connection.
+Remote Connections let you access your local CLI sessions from the Cloud Agents web interface. Requires [Tavern Gateway](/docs/gateway) connection.
 
 ### Enabling Remote Mode
 
@@ -671,11 +671,11 @@ Remote Connections let you access your local CLI sessions from the Cloud Agents 
 /remote
 ```
 
-Requires connection to Kilo Gateway. The `/remote` command appears only when authenticated.
+Requires connection to Tavern Gateway. The `/remote` command appears only when authenticated.
 
 **Enable by default:**
 
-Add to `~/.config/kilo/config.json`:
+Add to `~/.config/tavern/config.json`:
 
 ```json
 {
@@ -685,18 +685,18 @@ Add to `~/.config/kilo/config.json`:
 
 ### Using Remote Mode
 
-Once enabled, start a CLI session and open [Cloud Agents](https://app.kilo.ai/cloud). Your local session appears in the dashboard. See [Cloud Agent Remote Connections](/docs/code-with-ai/platforms/cloud-agent#remote-connections) for details.
+Once enabled, start a CLI session and open [Cloud Agents](https://app.tavern.ai/cloud). Your local session appears in the dashboard. See [Cloud Agent Remote Connections](/docs/code-with-ai/platforms/cloud-agent#remote-connections) for details.
 
 A connected client can start a session in a child folder of the CLI's launch directory, or continue an existing cloud session locally. Requested folders must remain within the launch directory; absolute paths and paths that escape it are rejected.
 
 ### Requirements
 
-- Connection to Kilo Gateway
-- Same Kilo account on CLI and Cloud Agent
+- Connection to Tavern Gateway
+- Same Tavern account on CLI and Cloud Agent
 - CLI must remain running with internet connection
 
 {% callout type="warning" title="Security Warning" %}
-Anyone with access to your Kilo account can send messages to your computer when remote mode is enabled.
+Anyone with access to your Tavern account can send messages to your computer when remote mode is enabled.
 {% /callout %}
 
 ## Environment Variable Overrides
@@ -704,12 +704,12 @@ Anyone with access to your Kilo account can send messages to your computer when 
 The CLI supports overriding config values with environment variables. The supported environment variables are:
 
 - `KILO_PROVIDER`: Override the active provider ID
-- For `kilocode` provider: `KILOCODE_<FIELD_NAME>` (e.g., `KILOCODE_MODEL` → `kilocodeModel`)
+- For `taverncode` provider: `KILOCODE_<FIELD_NAME>` (e.g., `KILOCODE_MODEL` → `taverncodeModel`)
 - For other providers: `KILO_<FIELD_NAME>` (e.g., `KILO_API_KEY` → `apiKey`)
 
 ## Using the CLI in an Organization
 
-If you belong to a Kilo organization (Team or Enterprise), you can route CLI requests through that organization. The process differs slightly between interactive and non-interactive usage.
+If you belong to a Tavern organization (Team or Enterprise), you can route CLI requests through that organization. The process differs slightly between interactive and non-interactive usage.
 
 ### Interactive Usage
 
@@ -717,9 +717,9 @@ In an interactive CLI session, use the `/teams` command to select an organizatio
 
 Your selection is persisted locally so it carries over to future sessions.
 
-### Non-Interactive Usage (`kilo run`)
+### Non-Interactive Usage (`tavern run`)
 
-There is no `--org` or `--team` flag on `kilo run`. Instead, the organization is determined from the following sources, in order of priority (highest first):
+There is no `--org` or `--team` flag on `tavern run`. Instead, the organization is determined from the following sources, in order of priority (highest first):
 
 1. **`KILO_ORG_ID` environment variable** — Best for non-interactive and CI environments.
 

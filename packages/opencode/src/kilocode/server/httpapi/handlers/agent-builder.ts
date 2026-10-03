@@ -1,5 +1,5 @@
 import * as InstanceState from "@/effect/instance-state"
-import { AgentBuilder } from "@/kilocode/agent/builder"
+import { AgentBuilder } from "@/taverncode/agent/builder"
 import { InstanceStore } from "@/project/instance-store"
 import { InstanceHttpApi } from "@/server/routes/instance/httpapi/api"
 import { Effect } from "effect"

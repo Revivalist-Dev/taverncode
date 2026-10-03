@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { ExternalMarkdown } from "../../../src/kilocode/config/external-markdown"
+import { ExternalMarkdown } from "../../../src/taverncode/config/external-markdown"
 import { tmpdir } from "../../fixture/fixture"
 
 describe("external Markdown sources", () => {
   test("requires a global allow for the exact canonical directory", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const source = path.join(dir, "project", ".kilo", "agents")
+        const source = path.join(dir, "project", ".tavern", "agents")
         const root = path.join(dir, "shared", "agents")
         await Bun.write(path.join(root, "shared.md"), "prompt")
         await fs.mkdir(path.dirname(source), { recursive: true })

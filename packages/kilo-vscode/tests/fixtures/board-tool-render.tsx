@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { Window } from "happy-dom"
-import type { AssistantMessage, ToolPart } from "@kilocode/sdk/v2"
+import type { AssistantMessage, ToolPart } from "@taverncode/sdk/v2"
 
 const window = new Window({ url: "http://localhost" })
 Object.assign(globalThis, {
@@ -28,11 +28,11 @@ Object.assign(globalThis, {
 const { createSignal } = await import("solid-js")
 const { createStore } = await import("solid-js/store")
 const { render } = await import("solid-js/web")
-const { Part } = await import("@kilocode/kilo-ui/message-part")
-const { AgentAvatarPalette } = await import("@kilocode/kilo-ui/agent-avatar")
-const { BoardMessage, BoardRoute } = await import("@kilocode/kilo-ui/board-message")
-const { BoardNavigationProvider } = await import("@kilocode/kilo-ui/context/board-navigation")
-const { MarkedProvider, createMarkedParser } = await import("@kilocode/kilo-ui/context/marked")
+const { Part } = await import("@taverncode/tavern-ui/message-part")
+const { AgentAvatarPalette } = await import("@taverncode/tavern-ui/agent-avatar")
+const { BoardMessage, BoardRoute } = await import("@taverncode/tavern-ui/board-message")
+const { BoardNavigationProvider } = await import("@taverncode/tavern-ui/context/board-navigation")
+const { MarkedProvider, createMarkedParser } = await import("@taverncode/tavern-ui/context/marked")
 
 const labels = ["initial", "hidden", "latest", "reopened", "search", "search-updated"]
 const outputs = labels.map((label) =>

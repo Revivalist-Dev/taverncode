@@ -1,36 +1,36 @@
 import { expect, test } from "bun:test"
 import { internalTuiPlugins } from "@/plugin/tui/internal"
 
-const kilo = [
+const tavern = [
   "internal:home-news",
   "internal:home-onboarding",
-  "internal:kilo-attention",
-  "internal:kilo-home-footer",
-  "internal:kilo-permissions",
-  "internal:kilo-sidebar-footer",
-  "internal:kilo-sidebar-memory",
-  "internal:kilo-memory-palette",
-  "internal:kilo-sidebar-background-processes",
-  "internal:kilo-sidebar-indexing",
-  "internal:kilo-sidebar-pr",
-  "internal:kilo-sidebar-usage",
+  "internal:tavern-attention",
+  "internal:tavern-home-footer",
+  "internal:tavern-permissions",
+  "internal:tavern-sidebar-footer",
+  "internal:tavern-sidebar-memory",
+  "internal:tavern-memory-palette",
+  "internal:tavern-sidebar-background-processes",
+  "internal:tavern-sidebar-indexing",
+  "internal:tavern-sidebar-pr",
+  "internal:tavern-sidebar-usage",
   "internal:sandbox",
   "internal:remote",
   "internal:reload",
 ]
 
-test("internal TUI registry preserves every Kilo plugin before upstream builtins", () => {
+test("internal TUI registry preserves every Tavern plugin before upstream builtins", () => {
   const ids = internalTuiPlugins({ experimentalEventSystem: false, experimentalSessionSwitcher: false }).map(
     (plugin) => plugin.id,
   )
 
-  expect(ids.slice(0, kilo.length)).toEqual(kilo)
+  expect(ids.slice(0, tavern.length)).toEqual(tavern)
   expect(new Set(ids).size).toBe(ids.length)
   expect(ids).toContain("internal:sidebar-context")
   expect(ids).toContain("diff-viewer")
 })
 
-test("experimental Kilo TUI plugins remain wired", () => {
+test("experimental Tavern TUI plugins remain wired", () => {
   const ids = internalTuiPlugins({ experimentalEventSystem: true, experimentalSessionSwitcher: true }).map(
     (plugin) => plugin.id,
   )

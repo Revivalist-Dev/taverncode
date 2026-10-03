@@ -19,7 +19,7 @@ import { sanitizeProjectMcpHeaders } from "./mcp-headers"
 import { KilocodeConfigSources } from "./sources"
 
 export namespace KilocodeConfigOverlay {
-  const log = Log.create({ service: "kilocode.config.overlay" })
+  const log = Log.create({ service: "taverncode.config.overlay" })
 
   export const Scope = z.enum(["global", "project"])
   export type Scope = z.infer<typeof Scope>
@@ -83,8 +83,8 @@ export namespace KilocodeConfigOverlay {
     sources: KilocodeConfigSources.Source[]
   }
 
-  const files = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json"] as const
-  const dirs = [".kilocode", ".kilo"] as const
+  const files = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json"] as const
+  const dirs = [".taverncode", ".tavern"] as const
 
   const fieldPaths = [
     ["model"],
@@ -105,9 +105,9 @@ export namespace KilocodeConfigOverlay {
     ["indexing", "model"],
     ["indexing", "dimension"],
     ["indexing", "vectorStore"],
-    ["indexing", "kilo", "apiKey"],
-    ["indexing", "kilo", "baseUrl"],
-    ["indexing", "kilo", "organizationId"],
+    ["indexing", "tavern", "apiKey"],
+    ["indexing", "tavern", "baseUrl"],
+    ["indexing", "tavern", "organizationId"],
     ["indexing", "openai", "apiKey"],
     ["indexing", "ollama", "baseUrl"],
     ["indexing", "openai-compatible", "baseUrl"],
@@ -135,7 +135,7 @@ export namespace KilocodeConfigOverlay {
 
   export async function project(input: { directory: string; worktree?: string }): Promise<Config.Info> {
     const found = await projectFiles(input)
-    // kilocode_change - project config is untrusted; confine {file:} reads to the project root
+    // taverncode_change - project config is untrusted; confine {file:} reads to the project root
     const root = input.worktree && input.worktree !== "/" ? input.worktree : input.directory
     const configs = await Promise.all(found.map((file) => load(file, { root, source: file })))
     return configs.reduce((result, cfg) => KilocodeConfig.mergeConfig(result, cfg), {} as Config.Info)
@@ -145,11 +145,11 @@ export namespace KilocodeConfigOverlay {
     const found = await Filesystem.findUp(dirs.toReversed(), input.directory, input.worktree)
     const roots = await Filesystem.findUp([...files], input.directory, input.worktree)
     const candidates = [...found.flatMap((dir) => files.map((file) => path.join(dir, file))), ...roots]
-    return candidates.find((file) => existsSync(file)) ?? path.join(input.directory, ".kilo", "kilo.jsonc")
+    return candidates.find((file) => existsSync(file)) ?? path.join(input.directory, ".tavern", "tavern.jsonc")
   }
 
   export function globalTarget() {
-    const candidates = ["kilo.jsonc", "kilo.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
+    const candidates = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json", "config.json"].map((file) =>
       path.join(Global.Path.config, file),
     )
     return candidates.find((file) => existsSync(file)) ?? candidates[0]
@@ -190,11 +190,11 @@ export namespace KilocodeConfigOverlay {
   }
 
   export async function resolve(input: Input): Promise<Result> {
-    // kilocode_change start - project agents untrusted, {file:} confined to the project root; global agents trusted
+    // taverncode_change start - project agents untrusted, {file:} confined to the project root; global agents trusted
     const root = input.worktree && input.worktree !== "/" ? input.worktree : input.directory
     const local = await withAgents(await project(input), await projectDirs(input), false, root)
     const global = await withAgents(input.global, globalDirs(), true)
-    // kilocode_change end
+    // taverncode_change end
     const [globalTarget, projectTarget] = await Promise.all([
       target({ ...input, scope: "global" }),
       target({ ...input, scope: "project" }),
@@ -241,10 +241,10 @@ export namespace KilocodeConfigOverlay {
   }
 
   function globalDirs() {
-    return [Global.Path.config, path.join(Global.Path.home, ".kilocode"), path.join(Global.Path.home, ".kilo")]
+    return [Global.Path.config, path.join(Global.Path.home, ".taverncode"), path.join(Global.Path.home, ".tavern")]
   }
 
-  // kilocode_change start - root confines untrusted agent {file:} reads
+  // taverncode_change start - root confines untrusted agent {file:} reads
   async function withAgents(input: Config.Info, dirs: string[], trusted: boolean, root?: string): Promise<Config.Info> {
     const [dir, ...rest] = dirs
     if (!dir) return input
@@ -255,10 +255,10 @@ export namespace KilocodeConfigOverlay {
     const next = KilocodeConfig.mergeConfig(KilocodeConfig.mergeConfig(input, { agent }), { agent: mode })
     return withAgents(next, rest, trusted, root)
   }
-  // kilocode_change end
+  // taverncode_change end
 
   async function load(file: string, fileScope?: ConfigVariable.FileScope): Promise<Config.Info> {
-    // kilocode_change start - a single unsafe/invalid project config file must not break the settings overlay;
+    // taverncode_change start - a single unsafe/invalid project config file must not break the settings overlay;
     // untrusted {env:} and out-of-scope {file:} throw InvalidError here, so skip the offending file like the
     // main config loader does rather than failing the whole overlay.
     return await loadUnsafe(file, fileScope).catch((err) => {
@@ -268,9 +268,9 @@ export namespace KilocodeConfigOverlay {
   }
 
   async function loadUnsafe(file: string, fileScope?: ConfigVariable.FileScope): Promise<Config.Info> {
-    // kilocode_change end
+    // taverncode_change end
     const text = await Bun.file(file).text()
-    // kilocode_change start - remove variable-bearing MCP headers before resolving other project file references
+    // taverncode_change start - remove variable-bearing MCP headers before resolving other project file references
     const sanitized = sanitizeProjectMcpHeaders(ConfigParse.jsonc(text, file), file)
     const content = JSON.stringify(sanitized.config) ?? text
     const expanded = await ConfigVariable.substitute({
@@ -283,7 +283,7 @@ export namespace KilocodeConfigOverlay {
     const parsed = ConfigParse.jsonc(expanded, file)
     if (!isRecord(parsed)) return {}
     for (const warning of sanitized.warnings) log.warn(warning.message, { path: warning.path })
-    // kilocode_change end
+    // taverncode_change end
     return ConfigParse.schema(Config.Info, ConfigV2Compat.lower(parsed, file).value, file) as Config.Info
   }
 

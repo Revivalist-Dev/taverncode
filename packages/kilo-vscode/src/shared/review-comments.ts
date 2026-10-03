@@ -314,6 +314,6 @@ export function parseReview(value: unknown, content: string): ReviewMessageData 
 
 export function partReview(metadata: unknown, content: string): ReviewMessageView | undefined {
   const root = record(metadata)
-  const kilo = record(root?.kilo)
-  return view(kilo?.review, content)
+  const tavern = record(root?.tavern)
+  return view(tavern?.review, content)
 }

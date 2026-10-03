@@ -1,13 +1,13 @@
-import { KiloShutdown } from "@/kilocode/cli/shutdown"
-import { futureDue } from "@/kilocode/session/scheduled"
-import { GoalLink } from "@/kilocode/session/goal/link"
-import { GoalState } from "@/kilocode/session/goal/state"
+import { KiloShutdown } from "@/taverncode/cli/shutdown"
+import { futureDue } from "@/taverncode/session/scheduled"
+import { GoalLink } from "@/taverncode/session/goal/link"
+import { GoalState } from "@/taverncode/session/goal/state"
 import { Session } from "@/session/session"
 import { SessionID } from "@/session/schema"
 import { Storage } from "@/storage/storage"
 import { EventV2Bridge } from "@/event-v2-bridge"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
-import { WakeupEvent } from "@opencode-ai/schema/kilocode/wakeup-event"
+import { WakeupEvent } from "@opencode-ai/schema/taverncode/wakeup-event"
 import { Context, Effect, Fiber, Layer, Option, Semaphore } from "effect"
 import { fireLayer, text as wakeupText } from "./resume"
 import * as schema from "./schema"
@@ -59,7 +59,7 @@ export namespace Wakeup {
     readonly cronCancel: (id: ID, sessionID?: SessionID) => Effect.Effect<CronInfo | undefined>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/Wakeup") {}
+  export class Service extends Context.Service<Service, Interface>()("@taverncode/Wakeup") {}
 
   const key = (info: { sessionID: SessionID; id: ID }) => ["wakeup", String(info.sessionID), String(info.id)]
   const cronKey = (info: { sessionID: SessionID; id: ID }) => ["cron", String(info.sessionID), String(info.id)]
@@ -404,7 +404,7 @@ export namespace Wakeup {
             sessionID,
             metadata: {
               ...session.metadata,
-              "kilo.goal": {
+              "tavern.goal": {
                 text: goal.text,
                 status: goal.status,
                 active: goal.active,

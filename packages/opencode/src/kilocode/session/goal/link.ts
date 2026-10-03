@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/taverncode/background-process"
 import type { SessionID } from "@/session/schema"
 import { GoalState } from "./state"
 

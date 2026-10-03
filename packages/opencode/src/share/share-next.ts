@@ -1,6 +1,6 @@
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { httpClient } from "@opencode-ai/core/effect/app-node-platform"
-import type * as SDK from "@kilocode/sdk/v2"
+import type * as SDK from "@taverncode/sdk/v2"
 import { serviceUse } from "@opencode-ai/core/effect/service-use"
 import { Effect, Exit, Layer, Option, Schema, Scope, Context, Stream } from "effect"
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/unstable/http"
@@ -91,7 +91,7 @@ function api(resource: string): Api {
   }
 }
 
-// kilocode_change start - preserve the share transport contract when stored legacy summary diffs omit file details
+// taverncode_change start - preserve the share transport contract when stored legacy summary diffs omit file details
 function transport(info: EventV2.Data<typeof Session.Event.Updated>["info"]): SDK.Session {
   const value = info as Session.Info
   return {
@@ -104,7 +104,7 @@ function transport(info: EventV2.Data<typeof Session.Event.Updated>["info"]): SD
       : undefined,
   }
 }
-// kilocode_change end
+// taverncode_change end
 
 const legacyApi = api("share")
 const consoleApi = api("shares")

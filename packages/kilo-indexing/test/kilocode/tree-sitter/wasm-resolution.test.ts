@@ -14,7 +14,7 @@ describe("tree-sitter WASM resolution", () => {
   })
 
   test("prefers installed CLI tree-sitter resources over module resolution", async () => {
-    const root = await mkdtemp(join(tmpdir(), "kilo-tree-sitter-wasm-"))
+    const root = await mkdtemp(join(tmpdir(), "tavern-tree-sitter-wasm-"))
     try {
       const dir = join(root, "bin", "tree-sitter")
       await mkdir(dir, { recursive: true })

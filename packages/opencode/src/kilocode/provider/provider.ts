@@ -1,13 +1,13 @@
-// kilocode_change - new file
+// taverncode_change - new file
 //
-// Kilo-specific provider logic extracted from packages/opencode/src/provider/provider.ts
+// Tavern-specific provider logic extracted from packages/opencode/src/provider/provider.ts
 // to minimize merge conflicts with upstream opencode.
 //
 // This module exports patch functions and data that the upstream provider.ts
-// calls at well-defined injection points (each marked with kilocode_change).
+// calls at well-defined injection points (each marked with taverncode_change).
 
-import { createKilo, type KiloProvider, AI_SDK_PROVIDERS, PROMPTS } from "@kilocode/kilo-gateway"
-import { DEFAULT_HEADERS } from "@/kilocode/const"
+import { createKilo, type KiloProvider, AI_SDK_PROVIDERS, PROMPTS } from "@taverncode/tavern-gateway"
+import { DEFAULT_HEADERS } from "@/taverncode/const"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { optionalOmitUndefined } from "@opencode-ai/core/schema"
@@ -31,7 +31,7 @@ export const REQUEST_TIMEOUT_MS = 300_000 // 5 minutes
 type BundledSDK = { languageModel(modelId: string): LanguageModelV3 }
 
 export const KILO_BUNDLED_PROVIDERS: Record<string, () => Promise<(options: any) => BundledSDK>> = {
-  "@kilocode/kilo-gateway": async () => createKilo as unknown as (options: any) => BundledSDK,
+  "@taverncode/tavern-gateway": async () => createKilo as unknown as (options: any) => BundledSDK,
 }
 
 // ---------------------------------------------------------------------------
@@ -59,12 +59,12 @@ export const KILO_MODEL_SCHEMA_EXTENSIONS = {
 }
 
 // ---------------------------------------------------------------------------
-// fromModelsDevModel patch — returns kilo-specific fields
+// fromModelsDevModel patch — returns tavern-specific fields
 // ---------------------------------------------------------------------------
 
 export function patchModelsDevModel(providerID: string, source: any) {
   return {
-    variants: providerID === "kilo" ? (source.variants ?? {}) : {},
+    variants: providerID === "tavern" ? (source.variants ?? {}) : {},
     recommendedIndex: source.recommendedIndex,
     prompt: source.prompt,
     isFree: source.isFree,
@@ -78,7 +78,7 @@ export function patchModelsDevModel(providerID: string, source: any) {
 }
 
 // ---------------------------------------------------------------------------
-// Config model patch — merges kilo-specific fields from config + existing
+// Config model patch — merges tavern-specific fields from config + existing
 // ---------------------------------------------------------------------------
 
 export function patchConfigModel(cfg: any, existing: any) {
@@ -176,16 +176,16 @@ export function patchKiloProviderAuth(
   info: Auth.Info | undefined,
 ) {
   if (!provider) return
-  const options = config.provider?.kilo?.options
+  const options = config.provider?.tavern?.options
   const key = token(options, info)
   const org = organization(options, info)
-  if (key !== undefined) provider.options.kilocodeToken = key
-  if (org !== undefined) provider.options.kilocodeOrganizationId = org
+  if (key !== undefined) provider.options.taverncodeToken = key
+  if (org !== undefined) provider.options.taverncodeOrganizationId = org
 }
 
 export function publicKiloProvider(provider: Provider.Info): Provider.Info {
-  if (provider.id !== "kilo") return provider
-  return { ...provider, key: undefined, options: omit(provider.options, ["apiKey", "kilocodeToken"]) }
+  if (provider.id !== "tavern") return provider
+  return { ...provider, key: undefined, options: omit(provider.options, ["apiKey", "taverncodeToken"]) }
 }
 
 export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> {
@@ -200,19 +200,19 @@ export function kiloCustomLoaders(dep: CustomDep): Record<string, CustomLoader> 
         options: {},
       }),
 
-    kilo: Effect.fnUntraced(function* (input: any) {
+    tavern: Effect.fnUntraced(function* (input: any) {
       const env = yield* dep.env()
       const config = yield* dep.config()
       const hasKey = yield* Effect.gen(function* () {
         if (input.env.some((item: string) => env[item])) return true
         if (yield* dep.auth(input.id)) return true
-        if (config.provider?.["kilo"]?.options?.apiKey) return true
+        if (config.provider?.["tavern"]?.options?.apiKey) return true
         return false
       })
 
       const options: Record<string, string> = {}
       if (env.KILO_ORG_ID) {
-        options.kilocodeOrganizationId = env.KILO_ORG_ID
+        options.taverncodeOrganizationId = env.KILO_ORG_ID
       }
       if (config.hide_prompt_training_models === true) {
         options.dataCollection = "deny"
@@ -265,7 +265,7 @@ export function patchCustomLoaderResult(
     case "cerebras":
       result.options.headers = {
         ...result.options.headers,
-        "X-Cerebras-3rd-Party-Integration": "kilo",
+        "X-Cerebras-3rd-Party-Integration": "tavern",
       }
       break
     case "azure": {
@@ -286,7 +286,7 @@ export function patchCustomLoaderResult(
       break
     }
     // gitlab User-Agent and cloudflare error message are patched inline
-    // in provider.ts with single-line kilocode_change markers
+    // in provider.ts with single-line taverncode_change markers
   }
 }
 
@@ -295,16 +295,16 @@ export function patchCustomLoaderResult(
 // ---------------------------------------------------------------------------
 
 export function kiloSmallModelPriority(providerID: string): string[] | undefined {
-  if (providerID.startsWith("kilo")) return ["kilo-auto/small"]
+  if (providerID.startsWith("tavern")) return ["tavern-auto/small"]
   return undefined
 }
 
 /**
- * True when the user has kilo credentials: a KILO_API_KEY env var, a stored
- * auth entry, or an apiKey in the kilo provider config. Mirrors the hasKey
- * check in the kilo custom loader. The kilo provider is autoloaded with an
+ * True when the user has tavern credentials: a KILO_API_KEY env var, a stored
+ * auth entry, or an apiKey in the tavern provider config. Mirrors the hasKey
+ * check in the tavern custom loader. The tavern provider is autoloaded with an
  * anonymous key even without credentials, so this gates the cloud
- * kilo-auto/small fallback to users who can actually reach it.
+ * tavern-auto/small fallback to users who can actually reach it.
  */
 export function hasKiloCredentials(
   cfg: { provider?: Record<string, { options?: { apiKey?: string } } | null> },
@@ -313,7 +313,7 @@ export function hasKiloCredentials(
 ) {
   if (env.KILO_API_KEY) return true
   if (auth) return true
-  if (cfg.provider?.["kilo"]?.options?.apiKey) return true
+  if (cfg.provider?.["tavern"]?.options?.apiKey) return true
   return false
 }
 

@@ -5,11 +5,11 @@ import { ConfigProtection } from "./permission/config-paths"
 import { ConfigMarkdown } from "@/config/markdown"
 import { ConfigParse } from "@/config/parse"
 import { Config } from "@/config/config"
-import { Excess } from "@/kilocode/config/excess"
+import { Excess } from "@/taverncode/config/excess"
 import { ConfigAgentV1 } from "@opencode-ai/core/v1/config/agent"
 import { ConfigCommandV1 } from "@opencode-ai/core/v1/config/command"
 import { ConfigErrorV1, FrontmatterError } from "@opencode-ai/core/v1/config/error"
-import { Instance } from "@/kilocode/instance"
+import { Instance } from "@/taverncode/instance"
 import { Filesystem } from "@/util/filesystem"
 
 export namespace ConfigValidation {
@@ -126,9 +126,9 @@ export namespace ConfigValidation {
 
   function isConfig(filepath: string): boolean {
     if (!path.isAbsolute(filepath)) return ConfigProtection.isRelative(filepath)
-    // Global config dirs (e.g. ~/.config/kilo/)
+    // Global config dirs (e.g. ~/.config/tavern/)
     if (ConfigProtection.isAbsolute(filepath)) return true
-    // Project-local config (e.g. /project/.kilo/command/foo.md)
+    // Project-local config (e.g. /project/.tavern/command/foo.md)
     try {
       const rel = path.relative(Instance.worktree, filepath)
       if (!rel.startsWith("..")) return ConfigProtection.isRelative(rel)

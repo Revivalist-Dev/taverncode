@@ -59,7 +59,7 @@ export namespace Telemetry {
   let initialized = false
   let startTime = 0
   let props: TelemetryProperties = {
-    appName: "kilo-cli",
+    appName: "tavern-cli",
     appVersion: "unknown",
     platform: process.platform,
     os_name: process.platform,
@@ -125,7 +125,7 @@ export namespace Telemetry {
       ...(Identity.getUserId() &&
         (event === TelemetryEvent.CLI_START || event === TelemetryEvent.AUTH_SUCCESS) && {
           $set: {
-            ...(org && { kilocodeOrganizationId: org }),
+            ...(org && { taverncodeOrganizationId: org }),
             appName: props.appName,
             appVersion: props.appVersion,
             platform: props.platform,

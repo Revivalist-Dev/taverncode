@@ -3,7 +3,7 @@ import { ModelV2 } from "@opencode-ai/core/model"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { SessionV1 } from "@opencode-ai/core/v1/session"
 import { MessageV2 } from "../../src/session/message-v2"
-import { KiloPartLifecycle } from "../../src/kilocode/session/part-lifecycle"
+import { KiloPartLifecycle } from "../../src/taverncode/session/part-lifecycle"
 import { MessageID, PartID, SessionID } from "../../src/session/schema"
 import type { Provider } from "../../src/provider/provider"
 

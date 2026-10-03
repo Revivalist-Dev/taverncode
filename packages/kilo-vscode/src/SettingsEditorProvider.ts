@@ -3,13 +3,13 @@ import { KiloProvider } from "./KiloProvider"
 import { resolvePanelProjectDirectory } from "./project-directory"
 import type { KiloConnectionService } from "./services/cli-backend"
 import type { RemoteStatusService } from "./services/RemoteStatusService"
-import type { AgentManagerSettingsHandler } from "./kilo-provider/options"
+import type { AgentManagerSettingsHandler } from "./tavern-provider/options"
 
 type PanelView = "settings" | "profile" | "indexing"
 
 const PANEL_TITLES: Record<PanelView, string> = {
-  settings: "Kilo Settings",
-  profile: "Kilo Profile",
+  settings: "Tavern Settings",
+  profile: "Tavern Profile",
   indexing: "Codebase Indexing",
 }
 
@@ -48,9 +48,9 @@ export class SettingsEditorProvider implements vscode.Disposable {
     return resolvePanelProjectDirectory(active, vscode.workspace.workspaceFolders)
   }
 
-  /** Extract the PanelView from a viewType string like "kilo-code.new.settingsPanel". */
+  /** Extract the PanelView from a viewType string like "tavern-code.new.settingsPanel". */
   static viewFromType(type: string): PanelView | undefined {
-    const match = type.match(/^kilo-code\.new\.(\w+)Panel$/)
+    const match = type.match(/^tavern-code\.new\.(\w+)Panel$/)
     if (!match) return undefined
     const view = match[1] as PanelView
     if (!(view in PANEL_TITLES)) return undefined
@@ -77,7 +77,7 @@ export class SettingsEditorProvider implements vscode.Disposable {
     }
 
     const panel = vscode.window.createWebviewPanel(
-      `kilo-code.new.${view}Panel`,
+      `tavern-code.new.${view}Panel`,
       PANEL_TITLES[view],
       vscode.ViewColumn.Active,
       {
@@ -102,8 +102,8 @@ export class SettingsEditorProvider implements vscode.Disposable {
 
   private wirePanel(panel: vscode.WebviewPanel, view: PanelView, projectDirectory: string | null): void {
     panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-light.svg"),
-      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "kilo-dark.svg"),
+      light: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-light.svg"),
+      dark: vscode.Uri.joinPath(this.extensionUri, "assets", "icons", "tavern-dark.svg"),
     }
 
     // Create a dedicated KiloProvider for this panel so it has full
@@ -153,7 +153,7 @@ export class SettingsEditorProvider implements vscode.Disposable {
 
     const title = PANEL_TITLES[view]
     panel.onDidDispose(() => {
-      console.log(`[Kilo New] ${title} panel disposed`)
+      console.log(`[Tavern New] ${title} panel disposed`)
       closePanelDisposable.dispose()
       readyDisposable.dispose()
       tabDisposable.dispose()

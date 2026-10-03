@@ -15,7 +15,7 @@ import {
   isOpenableLink,
   type LinkRenderer,
   type LinkOpener,
-} from "../../src/kilocode/link-interactions"
+} from "../../src/taverncode/link-interactions"
 
 function event(input: Partial<MouseEvent>): MouseEvent {
   return {

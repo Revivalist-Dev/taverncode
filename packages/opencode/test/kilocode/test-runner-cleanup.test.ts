@@ -17,7 +17,7 @@ function env(marker: string) {
 
 function spawn(name: string, marker: string, args: string[] = []) {
   return Bun.spawn(
-    ["bun", "run", "script/test-runner.ts", "--concurrency", "1", "--retries", "-1", ...args, `kilocode/${name}`],
+    ["bun", "run", "script/test-runner.ts", "--concurrency", "1", "--retries", "-1", ...args, `taverncode/${name}`],
     {
       cwd: root,
       env: env(marker),

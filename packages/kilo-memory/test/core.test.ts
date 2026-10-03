@@ -13,7 +13,7 @@ import { MemorySchema } from "../src/schema"
 import { KiloMemory } from "../src/effect/index"
 
 async function tmp() {
-  const dir = await mkdtemp(path.join(os.tmpdir(), "kilo-memory-"))
+  const dir = await mkdtemp(path.join(os.tmpdir(), "tavern-memory-"))
   return {
     dir,
     root: path.join(dir, "memory"),
@@ -129,7 +129,7 @@ describe("memory core package", () => {
         const status = await KiloMemory.status({ root: t.root })
         expect(status.state.enabled).toBe(true)
 
-        await writeFile(paths.manifest, '{"kind":"kilo-memory","version":1}\n')
+        await writeFile(paths.manifest, '{"kind":"tavern-memory","version":1}\n')
         await writeFile(paths.decisions, '{"kind":"log"}\n')
         await KiloMemory.status({ root: t.root })
         expect(await Bun.file(paths.decisions).exists()).toBe(true)
@@ -284,13 +284,13 @@ describe("memory core package", () => {
       await Memory.remember({
         root: t.root,
         key: "設定_é",
-        text: "日本語の設定は packages/kilo-vscode に保存します。",
+        text: "日本語の設定は packages/tavern-vscode に保存します。",
       })
       const shown = await Memory.show({ root: t.root })
 
       expect(id.display).toBe("proyecto_ñ_日本")
       expect(id.folder).toContain("proyecto_ñ_日本-")
-      expect(shown.sources.project).toContain("- 設定_é :: 日本語の設定は packages/kilo-vscode に保存します。")
+      expect(shown.sources.project).toContain("- 設定_é :: 日本語の設定は packages/tavern-vscode に保存します。")
       expect(shown.items).toContain("id=project.md:Facts:設定_é")
     })
   })
@@ -640,7 +640,7 @@ describe("memory core package", () => {
       await Memory.remember({
         root: t.root,
         key: "memory_tests",
-        text: "Run memory tests from packages/opencode with bun test ./test/kilocode/memory.",
+        text: "Run memory tests from packages/opencode with bun test ./test/taverncode/memory.",
       })
       await Memory.recordSession({
         root: t.root,
@@ -757,7 +757,7 @@ describe("memory core package", () => {
         ops: [
           { action: "add", key: "pruebas_cli", text: "Ejecuta las pruebas CLI desde packages/opencode." },
           { action: "add", key: "memoire", text: "Les corrections de mémoire restent dans corrections.md." },
-          { action: "add", key: "設定", text: "日本語の設定は packages/kilo-vscode に保存します。" },
+          { action: "add", key: "設定", text: "日本語の設定は packages/tavern-vscode に保存します。" },
         ],
       })
 
@@ -1103,7 +1103,7 @@ describe("memory core package", () => {
           "",
           "## Commands",
           "- sdk_regen :: Run SDK regeneration from repo root with ./script/generate.ts.",
-          "- vscode_unit_tests :: Run VS Code memory unit tests from packages/kilo-vscode with bun test tests/unit/memory-command.test.ts.",
+          "- vscode_unit_tests :: Run VS Code memory unit tests from packages/tavern-vscode with bun test tests/unit/memory-command.test.ts.",
           ...Array.from(
             { length: 40 },
             (_, idx) =>

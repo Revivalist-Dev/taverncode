@@ -8,14 +8,14 @@ import { LocationServiceMap, locationServiceMapLayer } from "@opencode-ai/core/l
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { Cause, Context, Effect, Exit, Layer, Scope } from "effect"
 
-const log = Log.create({ service: "kilocode-watcher" })
+const log = Log.create({ service: "taverncode-watcher" })
 
 export namespace KilocodeWatcher {
   export interface Interface {
     readonly init: () => Effect.Effect<void>
   }
 
-  export class Service extends Context.Service<Service, Interface>()("@kilocode/Watcher") {}
+  export class Service extends Context.Service<Service, Interface>()("@taverncode/Watcher") {}
 
   // Embedded editor clients (VS Code, JetBrains) have their own file watching
   // and git integration and do not consume the CLI's vcs.branch.updated event,

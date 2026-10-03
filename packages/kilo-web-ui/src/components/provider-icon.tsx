@@ -1,16 +1,16 @@
 import { splitProps, type Component } from "solid-js"
-import { ProviderIcon as Icon, type ProviderIconProps } from "@kilocode/kilo-ui/provider-icon"
+import { ProviderIcon as Icon, type ProviderIconProps } from "@taverncode/tavern-ui/provider-icon"
 
 export type { ProviderIconProps }
 
 export const ProviderIcon: Component<ProviderIconProps> = (props) => {
   const [local, rest] = splitProps(props, ["id", "class", "classList"])
-  if (local.id !== "kilo") return <Icon {...props} />
+  if (local.id !== "tavern") return <Icon {...props} />
 
   return (
     <svg
       data-component="provider-icon"
-      data-provider="kilo"
+      data-provider="tavern"
       viewBox="0 0 16 16"
       aria-hidden="true"
       {...rest}

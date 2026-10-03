@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 /**
- * Shared kilocode_change marker helpers used by both the marker fixer and the
+ * Shared taverncode_change marker helpers used by both the marker fixer and the
  * reset-candidate classifier. The logic here was originally inlined in
- * fix-kilocode-markers.ts.
+ * fix-taverncode-markers.ts.
  */
 
 import { $ } from "bun"
@@ -47,13 +47,13 @@ export interface Marks {
 export type Style = "slash" | "hash" | "jsx" | "block"
 
 export const standalone = [
-  /^\s*\/\/\s*kilocode_change\b.*$/,
-  /^\s*#\s*kilocode_change\b.*$/,
-  /^\s*\{?\s*\/\*\s*kilocode_change\b.*\*\/\}?\s*$/,
+  /^\s*\/\/\s*taverncode_change\b.*$/,
+  /^\s*#\s*taverncode_change\b.*$/,
+  /^\s*\{?\s*\/\*\s*taverncode_change\b.*\*\/\}?\s*$/,
 ]
-export const start = /\bkilocode_change\s+start\b/
-export const end = /\bkilocode_change\s+end\b/
-export const freshmark = /\bkilocode_change\s*-\s*new\s*file\b/
+export const start = /\btaverncode_change\s+start\b/
+export const end = /\btaverncode_change\s+end\b/
+export const freshmark = /\btaverncode_change\s*-\s*new\s*file\b/
 export const unsupported = new Set([".json", ".jsonc", ".lock", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico"])
 export const styles = new Map<string, Style>([
   [".ts", "slash"],
@@ -102,8 +102,8 @@ export function join(text: Text) {
 
 function strip(file: string, line: string): { line: string | null; mark?: string } {
   if (standalone.some((item) => item.test(line))) return { line: null }
-  if (style(file) === "hash") return comment(line, [/^#\s*kilocode_change\b/])
-  return comment(line, [/^\{\/\*\s*kilocode_change\b/, /^\/\*\s*kilocode_change\b/, /^\/\/\s*kilocode_change\b/])
+  if (style(file) === "hash") return comment(line, [/^#\s*taverncode_change\b/])
+  return comment(line, [/^\{\/\*\s*taverncode_change\b/, /^\/\*\s*taverncode_change\b/, /^\/\/\s*taverncode_change\b/])
 }
 
 function comment(line: string, tokens: RegExp[]) {
@@ -236,17 +236,17 @@ function child(lines: string[], start: number) {
 }
 
 function block(mode: Style, pad: string) {
-  if (mode === "hash") return { start: `${pad}# kilocode_change start`, end: `${pad}# kilocode_change end` }
-  if (mode === "jsx") return { start: `${pad}{/* kilocode_change start */}`, end: `${pad}{/* kilocode_change end */}` }
-  if (mode === "block") return { start: `${pad}/* kilocode_change start */`, end: `${pad}/* kilocode_change end */` }
-  return { start: `${pad}// kilocode_change start`, end: `${pad}// kilocode_change end` }
+  if (mode === "hash") return { start: `${pad}# taverncode_change start`, end: `${pad}# taverncode_change end` }
+  if (mode === "jsx") return { start: `${pad}{/* taverncode_change start */}`, end: `${pad}{/* taverncode_change end */}` }
+  if (mode === "block") return { start: `${pad}/* taverncode_change start */`, end: `${pad}/* taverncode_change end */` }
+  return { start: `${pad}// taverncode_change start`, end: `${pad}// taverncode_change end` }
 }
 
 function note(mode: Style) {
-  if (mode === "hash") return " # kilocode_change"
-  if (mode === "jsx") return " {/* kilocode_change */}"
-  if (mode === "block") return " /* kilocode_change */"
-  return " // kilocode_change"
+  if (mode === "hash") return " # taverncode_change"
+  if (mode === "jsx") return " {/* taverncode_change */}"
+  if (mode === "block") return " /* taverncode_change */"
+  return " // taverncode_change"
 }
 
 function indent(line: string) {
@@ -361,7 +361,7 @@ export function annotate(file: string, clean: Clean, found: Range[]) {
 export function fresh(file: string, clean: Clean) {
   const lines = [...clean.text.lines]
   const mode = style(file)
-  const line = clean.marks.file ?? (mode === "hash" ? "# kilocode_change - new file" : "// kilocode_change - new file")
+  const line = clean.marks.file ?? (mode === "hash" ? "# taverncode_change - new file" : "// taverncode_change - new file")
   const at = lines[0]?.startsWith("#!") ? 1 : 0
   lines.splice(at, 0, line)
   return join({ ...clean.text, lines })
@@ -403,7 +403,7 @@ function patch(out: string): Diff {
 }
 
 export async function changed(base: Text, head: Text, opts?: { ignoreWhitespace?: boolean }): Promise<Diff> {
-  const dir = await mkdtemp(path.join(tmpdir(), "kilo-markers-"))
+  const dir = await mkdtemp(path.join(tmpdir(), "tavern-markers-"))
   const left = path.join(dir, "upstream")
   const right = path.join(dir, "current")
 

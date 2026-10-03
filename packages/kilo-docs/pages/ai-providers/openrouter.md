@@ -1,10 +1,10 @@
 ---
-title: "Using OpenRouter with Kilo Code | Unified AI API"
-description: "Access hundreds of AI models through a single API by configuring OpenRouter in Kilo Code. Setup guide for VS Code and the CLI."
+title: "Using OpenRouter with Tavern Code | Unified AI API"
+description: "Access hundreds of AI models through a single API by configuring OpenRouter in Tavern Code. Setup guide for VS Code and the CLI."
 sidebar_label: OpenRouter
 ---
 
-# Using OpenRouter With Kilo Code
+# Using OpenRouter With Tavern Code
 
 OpenRouter is an AI platform that provides access to a wide variety of language models from different providers, all through a single API. This can simplify setup and allow you to easily experiment with different models.
 
@@ -16,19 +16,19 @@ OpenRouter is an AI platform that provides access to a wide variety of language 
 2.  **Get an API Key:** Go to the [keys page](https://openrouter.ai/keys). You should see an API key listed. If not, create a new key.
 3.  **Copy the Key:** Copy the API key.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add OpenRouter and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 **Environment variable:**
 
@@ -36,7 +36,7 @@ Set the API key as an environment variable or configure it in your `kilo.json` c
 export OPENROUTER_API_KEY="your-api-key"
 ```
 
-**Config file** (`~/.config/kilo/kilo.json` or `./kilo.json`):
+**Config file** (`~/.config/tavern/tavern.json` or `./tavern.json`):
 
 ```jsonc
 {
@@ -63,7 +63,7 @@ Then set your default model:
 
 OpenRouter provides an [optional "middle-out" message transform](https://openrouter.ai/docs/guides/features/message-transforms) to help with prompts that exceed the maximum context size of a model.
 
-The middle-out transform is not exposed as a dedicated UI control in the VS Code extension. To enable it, set `transforms` on the model's `options` in your `kilo.json` config file. Anything under `options` is forwarded verbatim to the OpenRouter AI SDK as `providerOptions.openrouter`:
+The middle-out transform is not exposed as a dedicated UI control in the VS Code extension. To enable it, set `transforms` on the model's `options` in your `tavern.json` config file. Anything under `options` is forwarded verbatim to the OpenRouter AI SDK as `providerOptions.openrouter`:
 
 ```jsonc
 {
@@ -85,7 +85,7 @@ The middle-out transform is not exposed as a dedicated UI control in the VS Code
 
 OpenRouter can route to many different inference providers. This can be controlled directly via OpenRouter's [`provider` routing parameter](https://openrouter.ai/docs/guides/routing/provider-selection).
 
-Provider routing is not exposed as dedicated UI controls in the VS Code extension. To configure it, set OpenRouter's `provider` routing fields under the model's `options` in your `kilo.json` config file. Everything under `options` is forwarded to the OpenRouter AI SDK as `providerOptions.openrouter`, so any field from the [OpenRouter provider routing docs](https://openrouter.ai/docs/guides/routing/provider-selection) can be used.
+Provider routing is not exposed as dedicated UI controls in the VS Code extension. To configure it, set OpenRouter's `provider` routing fields under the model's `options` in your `tavern.json` config file. Everything under `options` is forwarded to the OpenRouter AI SDK as `providerOptions.openrouter`, so any field from the [OpenRouter provider routing docs](https://openrouter.ai/docs/guides/routing/provider-selection) can be used.
 
 ```jsonc
 {

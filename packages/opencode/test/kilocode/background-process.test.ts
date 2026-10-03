@@ -1,6 +1,6 @@
 import { describe, expect } from "bun:test"
 import { Bus } from "@/bus"
-import { BackgroundProcess } from "@/kilocode/background-process"
+import { BackgroundProcess } from "@/taverncode/background-process"
 import { SessionID } from "@/session/schema"
 import { Shell } from "@opencode-ai/core/shell"
 import { Filesystem } from "@/util/filesystem"

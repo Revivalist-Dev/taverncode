@@ -18,7 +18,7 @@ export interface ProxyRuntime {
   readonly socket?: string | undefined
 }
 
-export const CurrentProxy = Context.Reference<ProxyRuntime | undefined>("@kilocode/sandbox/CurrentProxy", {
+export const CurrentProxy = Context.Reference<ProxyRuntime | undefined>("@taverncode/sandbox/CurrentProxy", {
   defaultValue: () => undefined,
 })
 
@@ -31,7 +31,7 @@ export type ProxyFactory = (
   input: ReadonlyArray<string>,
 ) => Promise<ProxyRuntime & { readonly close: () => Promise<void> }>
 
-export const CurrentProxyFactory = Context.Reference<ProxyFactory>("@kilocode/sandbox/CurrentProxyFactory", {
+export const CurrentProxyFactory = Context.Reference<ProxyFactory>("@taverncode/sandbox/CurrentProxyFactory", {
   defaultValue: () => startProxy,
 })
 
@@ -102,7 +102,7 @@ export async function startProxy(
   server.on("connect", (request, client, head) => {
     client.on("error", () => undefined)
     if (!authenticate(request.headers["proxy-authorization"], token)) {
-      client.end('HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm="kilo"\r\n\r\n')
+      client.end('HTTP/1.1 407 Proxy Authentication Required\r\nProxy-Authenticate: Basic realm="tavern"\r\n\r\n')
       return
     }
     try {
@@ -182,7 +182,7 @@ export async function startProxy(
   })
   server.on("request", async (request, response) => {
     if (!authenticate(request.headers["proxy-authorization"], token)) {
-      response.writeHead(407, { "Proxy-Authenticate": 'Basic realm="kilo"' })
+      response.writeHead(407, { "Proxy-Authenticate": 'Basic realm="tavern"' })
       response.end()
       return
     }
@@ -236,7 +236,7 @@ export async function startProxy(
   const port = typeof address === "object" && address ? address.port : undefined
   if (!port) throw new Error("Sandbox proxy did not bind a TCP port")
 
-  const dir = platform === "linux" ? await mkdtemp(path.join(os.tmpdir(), "kilo-sandbox-proxy-")) : undefined
+  const dir = platform === "linux" ? await mkdtemp(path.join(os.tmpdir(), "tavern-sandbox-proxy-")) : undefined
   const socket = dir ? path.join(dir, "proxy.sock") : undefined
   const bridgeSockets = new Set<Socket>()
   const bridge = socket
@@ -266,7 +266,7 @@ export async function startProxy(
     })
     await chmod(socket, 0o600)
   }
-  const url = `http://kilo:${encodeURIComponent(token)}@127.0.0.1:${port}`
+  const url = `http://tavern:${encodeURIComponent(token)}@127.0.0.1:${port}`
   return {
     url,
     token,

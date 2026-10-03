@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, realpathSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { execFileSync } from "node:child_process"
-import { createKiloClient, type QuestionRequest } from "@kilocode/sdk/v2/client"
+import { createKiloClient, type QuestionRequest } from "@taverncode/sdk/v2/client"
 import { ProjectContext } from "../../src/agent-manager/project/context"
 import { baseUpdatePrompt, handleBaseUpdate } from "../../src/agent-manager/base-update"
 import type { BaseUpdateRequest } from "../../webview-ui/src/types/messages/agent-manager"
@@ -30,7 +30,7 @@ beforeEach(() => {
     "--allow-empty",
   )
   command(root, "worktree", "add", "-q", "-b", "feature", join(root, "worktree"), "release")
-  mkdirSync(join(root, ".kilo"))
+  mkdirSync(join(root, ".tavern"))
   ctx = new ProjectContext("owner", root, true, { log: () => undefined })
   wt = ctx.stateManager().addWorktree({ branch: "feature", path: join(root, "worktree"), parentBranch: "release" })
 })
@@ -198,7 +198,7 @@ it.each([
     const part = (sent?.body as { parts: Array<{ text: string; metadata?: unknown }> }).parts.at(0)
     const text = part?.text
     expect(sent?.directory).toBe(wt.path)
-    expect(part?.metadata).toEqual({ kilo: { injected: { title: `Update from ${base}` } } })
+    expect(part?.metadata).toEqual({ tavern: { injected: { title: `Update from ${base}` } } })
     expect(text).toContain(`saved base branch "${base}"`)
     expect(text).toContain("worktree's current branch")
     expect(text).toContain("Do not switch branches")

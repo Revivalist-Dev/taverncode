@@ -5,7 +5,7 @@ import path from "path"
 import fs from "fs/promises"
 import { setTimeout as sleep } from "node:timers/promises"
 import { afterAll } from "bun:test"
-import { remove as cleanup } from "./kilocode/cleanup" // kilocode_change
+import { remove as cleanup } from "./taverncode/cleanup" // taverncode_change
 
 // Set XDG env vars FIRST, before any src/ imports
 const dir = path.join(os.tmpdir(), "opencode-test-data-" + process.pid)
@@ -30,7 +30,7 @@ afterAll(async () => {
   // Windows can keep SQLite WAL handles alive until GC finalizers run, so we
   // force GC and retry teardown to avoid flaky EBUSY in test cleanup.
   await rm(30)
-  await cleanup(dir) // kilocode_change
+  await cleanup(dir) // taverncode_change
 })
 
 process.env["XDG_DATA_HOME"] = path.join(dir, "share")
@@ -40,8 +40,8 @@ process.env["XDG_STATE_HOME"] = path.join(dir, "state")
 process.env["KILO_MODELS_PATH"] = path.join(import.meta.dir, "tool", "fixtures", "models-api.json")
 process.env["KILO_EXPERIMENTAL_EVENT_SYSTEM"] = "true"
 process.env["KILO_EXPERIMENTAL_WORKSPACES"] = "true"
-process.env["KILO_EXPERIMENTAL_DISABLE_FILEWATCHER"] ??= "true" // kilocode_change - see test.yml: per-instance watchers are too heavy/racy for unit tests; watcher tests opt back in
-process.env["KILO_SNAPSHOT_MATERIALIZE_IDLE_MS"] ??= "0" // kilocode_change - snapshot tests wait for materialization; the idle deferral test opts back in
+process.env["KILO_EXPERIMENTAL_DISABLE_FILEWATCHER"] ??= "true" // taverncode_change - see test.yml: per-instance watchers are too heavy/racy for unit tests; watcher tests opt back in
+process.env["KILO_SNAPSHOT_MATERIALIZE_IDLE_MS"] ??= "0" // taverncode_change - snapshot tests wait for materialization; the idle deferral test opts back in
 
 // Set test home directory to isolate tests from user's actual home directory
 // This prevents tests from picking up real user configs/skills from ~/.claude/skills
@@ -54,7 +54,7 @@ const testManagedConfigDir = path.join(dir, "managed")
 process.env["KILO_TEST_MANAGED_CONFIG_DIR"] = testManagedConfigDir
 
 // Write the cache version file to prevent global/index.ts from clearing the cache
-const cacheDir = path.join(dir, "cache", "kilo")
+const cacheDir = path.join(dir, "cache", "tavern")
 await fs.mkdir(cacheDir, { recursive: true })
 await fs.writeFile(path.join(cacheDir, "version"), "21")
 
@@ -92,17 +92,17 @@ process.env["KILO_DB"] = ":memory:"
 
 // Now safe to import from src/
 const { initProjectors } = await import("../src/server/projectors")
-// kilocode_change: bind the package memory effect layer to opencode for tests (paths/instance/log/events)
-const { installMemoryRuntime } = await import("../src/kilocode/memory/runtime") // kilocode_change
+// taverncode_change: bind the package memory effect layer to opencode for tests (paths/instance/log/events)
+const { installMemoryRuntime } = await import("../src/taverncode/memory/runtime") // taverncode_change
 
 initProjectors()
-installMemoryRuntime() // kilocode_change
+installMemoryRuntime() // taverncode_change
 
-// kilocode_change start - fail closed: unit tests must never open a disk database. Both DB
+// taverncode_change start - fail closed: unit tests must never open a disk database. Both DB
 // path resolvers (core Database.path and the v1 client in src/storage/db.ts) honor KILO_DB
 // verbatim when it is ":memory:", so asserting the resolved core path after all preload
 // imports catches env mutations, import-order regressions, and channel/absolute fallbacks
-// that would silently point tests at the real database under ~/.local/share/kilo.
+// that would silently point tests at the real database under ~/.local/share/tavern.
 // (Do not name the database file here: database-reset-safety.test.ts scans test sources
 // for the file name next to removal calls, and this file legitimately contains fs.rm.)
 if (process.env["KILO_DB"] !== ":memory:") {
@@ -115,4 +115,4 @@ if (process.env["KILO_DB"] !== ":memory:") {
     throw new Error(`unit test preload: database path must resolve to ":memory:", got "${resolved}"`)
   }
 }
-// kilocode_change end
+// taverncode_change end

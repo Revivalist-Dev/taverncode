@@ -1,5 +1,5 @@
-import { Button } from "@kilocode/kilo-web-ui/button"
-import { Input } from "@kilocode/kilo-web-ui/input"
+import { Button } from "@taverncode/tavern-web-ui/button"
+import { Input } from "@taverncode/tavern-web-ui/input"
 import { createUniqueId, Show } from "solid-js"
 
 type Props = {

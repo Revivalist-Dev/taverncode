@@ -1,11 +1,11 @@
-import { Button } from "@kilocode/kilo-ui/button"
-import { useDialog } from "@kilocode/kilo-ui/context/dialog"
-import { Dialog } from "@kilocode/kilo-ui/dialog"
-import { Select } from "@kilocode/kilo-ui/select"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { TextField } from "@kilocode/kilo-ui/text-field"
-import { showToast } from "@kilocode/kilo-ui/toast"
-import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@kilocode/sdk/v2/client"
+import { Button } from "@taverncode/tavern-ui/button"
+import { useDialog } from "@taverncode/tavern-ui/context/dialog"
+import { Dialog } from "@taverncode/tavern-ui/dialog"
+import { Select } from "@taverncode/tavern-ui/select"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { TextField } from "@taverncode/tavern-ui/text-field"
+import { showToast } from "@taverncode/tavern-ui/toast"
+import type { ProviderAuthAuthorization, ProviderAuthMethod } from "@taverncode/sdk/v2/client"
 import { Component, For, Match, Show, Switch, createMemo, createSignal, onCleanup, onMount } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "../../context/language"
@@ -215,7 +215,7 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
           <div style={{ display: "flex", "flex-direction": "column", gap: "4px" }}>
             <label
               style={{
-                "font-size": "var(--kilo-font-size-12)",
+                "font-size": "var(--tavern-font-size-12)",
                 "font-weight": "500",
                 color: "var(--text-weak-base)",
               }}
@@ -237,7 +237,7 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
               triggerVariant="settings"
             />
             <Show when={props.invalid && props.error}>
-              <span style={{ "font-size": "var(--kilo-font-size-12)", color: "var(--vscode-errorForeground)" }}>
+              <span style={{ "font-size": "var(--tavern-font-size-12)", color: "var(--vscode-errorForeground)" }}>
                 {props.error}
               </span>
             </Show>
@@ -267,7 +267,7 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
         )}
       </For>
       <Show when={props.error && !props.invalidKey}>
-        <div style={{ color: "var(--vscode-errorForeground)", "font-size": "var(--kilo-font-size-13)" }}>
+        <div style={{ color: "var(--vscode-errorForeground)", "font-size": "var(--tavern-font-size-13)" }}>
           {props.error}
         </div>
       </Show>
@@ -586,10 +586,10 @@ const ProviderConnectDialog: Component<ProviderConnectDialogProps> = (props) => 
           <div class="provider-connect-byok">
             {language.t("provider.connect.kiloGateway.byok.prefix")}
             <a
-              href="https://blog.kilo.ai/p/kilo-gateway-now-supports-byok-20-providers"
+              href="https://blog.tavern.ai/p/tavern-gateway-now-supports-byok-20-providers"
               onClick={(e) => {
                 e.preventDefault()
-                openExternal("https://blog.kilo.ai/p/kilo-gateway-now-supports-byok-20-providers")
+                openExternal("https://blog.tavern.ai/p/tavern-gateway-now-supports-byok-20-providers")
               }}
               class="provider-connect-byok-link"
             >

@@ -4,7 +4,7 @@ import path from "path"
 const root = path.join(__dirname, "..", "..")
 
 const files = [
-  "src/kilocode/cli/cmd/tui/feature-plugins/home/tips.ts",
+  "src/taverncode/cli/cmd/tui/feature-plugins/home/tips.ts",
   "src/cli/cmd/run.ts",
   "src/config/config.ts",
   "src/server/routes/instance/httpapi/public.ts",
@@ -13,8 +13,8 @@ const files = [
 
 const command = /opencode\s+(--[a-z-]+|run|serve|auth|upgrade|agent|github|mcp)\b/g
 
-describe("Kilo command branding", () => {
-  test("user-facing command help uses the `kilo` binary name", async () => {
+describe("Tavern command branding", () => {
+  test("user-facing command help uses the `tavern` binary name", async () => {
     const results = await Promise.all(
       files.map(async (file) => ({
         file,

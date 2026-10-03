@@ -145,7 +145,7 @@ export interface IconProps extends Omit<Props, "name"> {
 
 export function Icon(props: IconProps) {
   const [local, others] = splitProps(props, ["name", "size", "class", "classList"])
-  // Read the table reactively: `name` can switch between a kilo-ui icon and an
+  // Read the table reactively: `name` can switch between a tavern-ui icon and an
   // upstream icon after mount (for example PR badge status changes).
   const icon = () => icons[local.name as Name]
   return (

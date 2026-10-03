@@ -65,13 +65,13 @@ Unlike `/goal`, the agent's call does not cancel the current response. The goal 
 | Blocked | A request was rejected or execution was blocked. Resolve the blocker, then resume |
 | Complete | The working model reported the goal met |
 
-**Complete (model-reported)** means the model reported success. Kilo does not independently verify the result. Review the work before you rely on it.
+**Complete (model-reported)** means the model reported success. Tavern does not independently verify the result. Review the work before you rely on it.
 
 The objective and the last report stay on the session until you clear the goal. They survive session restarts and forks. Active goals become paused after a backend restart; complete goals stay complete.
 
 ## Automatic pauses
 
-Kilo pauses an active goal when progress stops or the session changes direction:
+Tavern pauses an active goal when progress stops or the session changes direction:
 
 - The agent replies with no successful action and no completion report.
 - Work fails, such as a model error or a failed command.
@@ -91,7 +91,7 @@ During a goal, the working model reports the outcome with the `goal_report` tool
 
 Only the root goal worker can call `goal_report`. Delegated workers return their findings to the root. The tool uses the permission name `goal_report`, so goal execution keeps the session's existing permission rules, and a rejected permission request blocks the goal.
 
-A report is the model's own report, not independent verification, and Kilo saves it only after the turn finishes without an error or a rejected request.
+A report is the model's own report, not independent verification, and Tavern saves it only after the turn finishes without an error or a rejected request.
 
 ## Clarification questions
 
@@ -99,13 +99,13 @@ The `question` tool is unavailable during active goal execution, including deleg
 
 ## Attachments and drafts in VS Code
 
-Goal-composer mode accepts multiline objectives and file or image attachments. If an attachment cannot be read during creation, Kilo keeps the existing goal running and preserves your draft, so you can correct it and try again.
+Goal-composer mode accepts multiline objectives and file or image attachments. If an attachment cannot be read during creation, Tavern keeps the existing goal running and preserves your draft, so you can correct it and try again.
 
 ## Limits and integration
 
-- A custom command or an MCP prompt named `goal` is reserved. Kilo rejects it and reports an error; rename it.
-- The goal is stored under the `kilo.goal` session metadata key.
-- Headless mode supports only status and controls through `kilo run --command goal`, which accepts no argument, `pause`, or `clear`. The agent can still start or resume a goal itself with the `goal` tool.
+- A custom command or an MCP prompt named `goal` is reserved. Tavern rejects it and reports an error; rename it.
+- The goal is stored under the `tavern.goal` session metadata key.
+- Headless mode supports only status and controls through `tavern run --command goal`, which accepts no argument, `pause`, or `clear`. The agent can still start or resume a goal itself with the `goal` tool.
 
 ## Related
 

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test"
 import path from "path"
 import { mkdir } from "fs/promises"
 import { tmpdir } from "../fixture/fixture"
-import { ConsoleAssets } from "../../src/kilocode/console/assets"
+import { ConsoleAssets } from "../../src/taverncode/console/assets"
 
 const original = process.env.KILO_CONSOLE_ASSET_DIR
 
@@ -14,10 +14,10 @@ afterEach(() => {
 async function assets(dir: string) {
   await mkdir(path.join(dir, "assets"), { recursive: true })
   await Bun.write(path.join(dir, "index.html"), '<!doctype html><html><body><div id="root">console</div></body></html>')
-  await Bun.write(path.join(dir, "assets", "app.js"), "console.log('kilo')")
+  await Bun.write(path.join(dir, "assets", "app.js"), "console.log('tavern')")
 }
 
-describe("Kilo Console UI routes", () => {
+describe("Tavern Console UI routes", () => {
   test("serves the console index for /console and SPA routes", async () => {
     await using tmp = await tmpdir()
     process.env.KILO_CONSOLE_ASSET_DIR = tmp.path
@@ -42,7 +42,7 @@ describe("Kilo Console UI routes", () => {
     const asset = await ConsoleAssets.resolve("/console/assets/app.js")
     expect(asset && "file" in asset).toBe(true)
     if (!asset || !("file" in asset)) return
-    expect(await Bun.file(asset.file).text()).toContain("kilo")
+    expect(await Bun.file(asset.file).text()).toContain("tavern")
 
     expect(await ConsoleAssets.resolve("/console/assets/missing.js")).toEqual({ missing: true })
   })

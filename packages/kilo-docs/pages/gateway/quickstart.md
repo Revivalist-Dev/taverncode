@@ -1,15 +1,15 @@
 ---
 title: "Quickstart"
-description: "Get started with the Kilo AI Gateway in minutes. Make your first AI model request using the Vercel AI SDK, OpenAI SDK, Python, or cURL."
+description: "Get started with the Tavern AI Gateway in minutes. Make your first AI model request using the Vercel AI SDK, OpenAI SDK, Python, or cURL."
 ---
 
 # Quickstart
 
-This guide walks you through making your first AI model request with the Kilo AI Gateway. While this guide focuses on the [Vercel AI SDK](https://ai-sdk.dev), you can also use the [OpenAI SDK](/docs/gateway/sdks-and-frameworks#openai-sdk), [Python](/docs/gateway/sdks-and-frameworks#python), or [cURL](/docs/gateway/sdks-and-frameworks#curl).
+This guide walks you through making your first AI model request with the Tavern AI Gateway. While this guide focuses on the [Vercel AI SDK](https://ai-sdk.dev), you can also use the [OpenAI SDK](/docs/gateway/sdks-and-frameworks#openai-sdk), [Python](/docs/gateway/sdks-and-frameworks#python), or [cURL](/docs/gateway/sdks-and-frameworks#curl).
 
 ## Prerequisites
 
-You need a Kilo account with API credits. Sign up at [kilo.ai](https://kilo.ai) and add credits from your account dashboard.
+You need a Tavern account with API credits. Sign up at [tavern.ai](https://tavern.ai) and add credits from your account dashboard.
 
 ## Using the Vercel AI SDK
 
@@ -29,13 +29,13 @@ npm install ai @ai-sdk/openai dotenv
 
 ### 3. Set up your API key
 
-Create a `.env` file and add your Kilo API key:
+Create a `.env` file and add your Tavern API key:
 
 ```bash
 KILO_API_KEY=your_api_key_here
 ```
 
-For step-by-step instructions on getting an API key, please see the [Kilo Gateway API Key instructions](/docs/getting-started/setup-authentication#kilo-gateway-api-key).
+For step-by-step instructions on getting an API key, please see the [Tavern Gateway API Key instructions](/docs/getting-started/setup-authentication#tavern-gateway-api-key).
 
 ### 4. Create and run your script
 
@@ -46,14 +46,14 @@ import { streamText } from "ai"
 import { createOpenAI } from "@ai-sdk/openai"
 import "dotenv/config"
 
-const kilo = createOpenAI({
-  baseURL: "https://api.kilo.ai/api/gateway",
+const tavern = createOpenAI({
+  baseURL: "https://api.tavern.ai/api/gateway",
   apiKey: process.env.KILO_API_KEY,
 })
 
 async function main() {
   const result = streamText({
-    model: kilo.chat("anthropic/claude-sonnet-4.5"),
+    model: tavern.chat("anthropic/claude-sonnet-4.5"),
     prompt: "Invent a new holiday and describe its traditions.",
   })
 
@@ -79,7 +79,7 @@ You should see the model's response streamed to your terminal.
 
 ## Using the OpenAI SDK
 
-The Kilo AI Gateway is fully OpenAI-compatible, so you can use the OpenAI SDK by pointing it to the Kilo base URL.
+The Tavern AI Gateway is fully OpenAI-compatible, so you can use the OpenAI SDK by pointing it to the Tavern base URL.
 
 {% tabs %}
 {% tab label="TypeScript" %}
@@ -89,7 +89,7 @@ import OpenAI from "openai"
 
 const client = new OpenAI({
   apiKey: process.env.KILO_API_KEY,
-  baseURL: "https://api.kilo.ai/api/gateway",
+  baseURL: "https://api.tavern.ai/api/gateway",
 })
 
 const response = await client.chat.completions.create({
@@ -109,7 +109,7 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key=os.getenv("KILO_API_KEY"),
-    base_url="https://api.kilo.ai/api/gateway",
+    base_url="https://api.tavern.ai/api/gateway",
 )
 
 response = client.chat.completions.create(
@@ -128,7 +128,7 @@ print(response.choices[0].message.content)
 ## Using cURL
 
 ```bash
-curl -X POST "https://api.kilo.ai/api/gateway/chat/completions" \
+curl -X POST "https://api.tavern.ai/api/gateway/chat/completions" \
   -H "Authorization: Bearer $KILO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

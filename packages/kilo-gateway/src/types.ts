@@ -59,23 +59,23 @@ export interface PollResult<T> {
 // ============================================================================
 
 /**
- * Options for creating a Kilo provider instance
+ * Options for creating a Tavern provider instance
  */
 export interface KiloProviderOptions {
   /**
-   * KiloCode authentication token
+   * TavernCode authentication token
    */
-  kilocodeToken?: string
+  taverncodeToken?: string
 
   /**
    * Organization ID for multi-tenant setups
    */
-  kilocodeOrganizationId?: string
+  taverncodeOrganizationId?: string
 
   /**
    * Model ID to use (e.g., "anthropic/claude-sonnet-4")
    */
-  kilocodeModel?: string
+  taverncodeModel?: string
 
   /**
    * Specific OpenRouter provider to use
@@ -83,9 +83,9 @@ export interface KiloProviderOptions {
   openRouterSpecificProvider?: string
 
   /**
-   * Base URL for the KiloCode API
+   * Base URL for the TavernCode API
    * Can be overridden by KILO_API_URL environment variable
-   * @default "https://api.kilo.ai"
+   * @default "https://api.tavern.ai"
    */
   baseURL?: string
 
@@ -95,7 +95,7 @@ export interface KiloProviderOptions {
   headers?: Record<string, string>
 
   /**
-   * API key (alternative to kilocodeToken)
+   * API key (alternative to taverncodeToken)
    */
   apiKey?: string
 

@@ -2,12 +2,12 @@ import { afterEach, describe, expect, test } from "bun:test"
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
 import type { Config } from "../../src/config/config"
-import { KiloIndexing } from "../../src/kilocode/indexing"
-import { IndexingWorker } from "../../src/kilocode/indexing-worker-client"
+import { KiloIndexing } from "../../src/taverncode/indexing"
+import { IndexingWorker } from "../../src/taverncode/indexing-worker-client"
 import { disposeAllInstances, provideTestInstance, tmpdir } from "../fixture/fixture"
 
 const cfg: Partial<Config.Info> = {
-  plugin: ["@kilocode/kilo-indexing"],
+  plugin: ["@taverncode/tavern-indexing"],
   indexing: {
     enabled: true,
     provider: "ollama",
@@ -39,7 +39,7 @@ describe("indexing worktrees", () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
     process.env["KILO_CONFIG_DIR"] = tmp.path
     await Bun.$`git -C ${tmp.path} add opencode.json && git -C ${tmp.path} commit -m config`.quiet()
-    const worktree = path.join(tmp.path, ".kilo", "worktrees", "feature")
+    const worktree = path.join(tmp.path, ".tavern", "worktrees", "feature")
     await Bun.$`git -C ${tmp.path} worktree add -b feature ${worktree}`.quiet()
 
     const calls: Array<{ directory: string; baseline?: string }> = []
@@ -69,7 +69,7 @@ describe("indexing worktrees", () => {
   test("does not classify an ordinary directory from its pathname", async () => {
     await using tmp = await tmpdir({ git: true, config: cfg })
     process.env["KILO_CONFIG_DIR"] = tmp.path
-    const directory = path.join(tmp.path, ".kilocode", "worktrees", "feature")
+    const directory = path.join(tmp.path, ".taverncode", "worktrees", "feature")
     await mkdir(directory, { recursive: true })
     await Bun.write(path.join(directory, "file.ts"), "export const value = 1\n")
 

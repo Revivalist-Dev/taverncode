@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test"
 import { FormatError } from "@/cli/error"
 
 describe("MCP errors", () => {
-  test("uses Kilo-neutral capability messaging", () => {
+  test("uses Tavern-neutral capability messaging", () => {
     const error = FormatError({ name: "MCPFailed", data: { name: "example" } })
 
     expect(error).toBe('MCP server "example" failed.')
@@ -21,7 +21,7 @@ describe("model not found errors", () => {
 
     const named = FormatError({ name: "ProviderModelNotFoundError", data })
     expect(named).toContain("No models are currently available.")
-    expect(named).toContain("kilo.json")
+    expect(named).toContain("tavern.json")
     expect(named).not.toContain("opencode.json")
     expect(FormatError({ _tag: "ProviderModelNotFoundError", ...data })).toContain("No models are currently available.")
   })
@@ -39,14 +39,14 @@ describe("model not found errors", () => {
 })
 
 describe("remote config authentication errors", () => {
-  test("uses the Kilo login command", () => {
+  test("uses the Tavern login command", () => {
     const error = FormatError({
       _tag: "ConfigRemoteAuthError",
       url: "https://example.com/config.json",
       remote: "team config",
     })
 
-    expect(error).toContain("kilo auth login https://example.com/config.json")
+    expect(error).toContain("tavern auth login https://example.com/config.json")
     expect(error).not.toContain("opencode auth login")
   })
 })

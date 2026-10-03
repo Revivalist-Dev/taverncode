@@ -38,7 +38,7 @@ afterEach(() => {
 })
 
 function directory() {
-  const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "kilo-am-msg-")))
+  const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "tavern-am-msg-")))
   directories.push(dir)
   return dir
 }

@@ -1,9 +1,9 @@
 import { For, Show, createMemo, createSignal, type Component } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { FileIcon } from "@kilocode/kilo-ui/file-icon"
-import { Icon } from "@kilocode/kilo-ui/icon"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Button } from "@taverncode/tavern-ui/button"
+import { FileIcon } from "@taverncode/tavern-ui/file-icon"
+import { Icon } from "@taverncode/tavern-ui/icon"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { codeContextLabel, type CodeContext } from "../../../../src/shared/code-context"
 import { useLanguage } from "../../context/language"
 import { useVSCode } from "../../context/vscode"
@@ -41,7 +41,7 @@ export const CodeContextChips: Component<CodeContextChipsProps> = (props) => {
   }
 
   const reveal = (context: CodeContext) => {
-    const event = new CustomEvent("kilo:open-file", {
+    const event = new CustomEvent("tavern:open-file", {
       cancelable: true,
       detail: { filePath: context.filePath, line: context.startLine, column: 1, sessionID: props.sessionID },
     })

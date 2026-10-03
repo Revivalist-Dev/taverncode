@@ -1,6 +1,6 @@
 import type { Argv } from "yargs"
 import type { Info as AuthInfo } from "../../../auth"
-import type { KilocodeBalance, KilocodeProfile } from "@kilocode/kilo-gateway"
+import type { KilocodeBalance, KilocodeProfile } from "@taverncode/tavern-gateway"
 import { cmd } from "../../../cli/cmd/cmd"
 import { UI } from "../../../cli/ui"
 
@@ -63,7 +63,7 @@ interface Args {
 
 export const ProfileCommand = cmd({
   command: "profile",
-  describe: "show Kilo account profile",
+  describe: "show Tavern account profile",
   builder: (yargs: Argv) =>
     yargs.option("json", {
       describe: "output profile as JSON",
@@ -77,17 +77,17 @@ export const ProfileCommand = cmd({
 
 export async function handle(args: Args) {
   const get = args.getAuth ?? stored
-  const auth = await get("kilo")
+  const auth = await get("tavern")
   const error = args.error ?? UI.error
   const exit = args.exit ?? ((code: number) => (process.exitCode = code))
 
   if (!auth || auth.type !== "oauth") {
-    error("Not authenticated with Kilo Gateway")
+    error("Not authenticated with Tavern Gateway")
     exit(1)
     return
   }
 
-  const { fetchBalance, fetchProfile } = await import("@kilocode/kilo-gateway")
+  const { fetchBalance, fetchProfile } = await import("@taverncode/tavern-gateway")
   const org = auth.accountId ?? null
   const result = await (async () => {
     try {

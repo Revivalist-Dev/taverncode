@@ -1,4 +1,4 @@
-import type { TuiPlugin } from "@kilocode/plugin/tui"
+import type { TuiPlugin } from "@taverncode/plugin/tui"
 import type { InternalTuiPlugin } from "@/plugin/tui/internal"
 import { SessionSwitcherDialog } from "./dialog"
 

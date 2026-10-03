@@ -15,7 +15,7 @@ import type { ExtensionMessage } from "../types/messages"
 import { applyFontSize, clampFontSize, readFontSize } from "../font-size"
 import { resolveReasoningDisplay } from "../utils/reasoning-display"
 import type { ReasoningDisplay } from "../types/messages"
-import { ToolApprovalVisibilityProvider } from "@kilocode/kilo-ui/message-part"
+import { ToolApprovalVisibilityProvider } from "@taverncode/tavern-ui/message-part"
 
 interface DisplayContextValue {
   reasoningDisplay: Accessor<ReasoningDisplay>
@@ -75,7 +75,7 @@ export const DisplayProvider: ParentComponent = (props) => {
         autoApprovalReasonVisible,
       }}
     >
-      {/* Bridges the toggle into kilo-ui's generic gate so every tool render hides the line consistently. */}
+      {/* Bridges the toggle into tavern-ui's generic gate so every tool render hides the line consistently. */}
       <ToolApprovalVisibilityProvider value={autoApprovalReasonVisible}>
         {props.children}
       </ToolApprovalVisibilityProvider>

@@ -2,13 +2,13 @@ import { describe, expect, test } from "bun:test"
 import { Provider } from "../../../src/provider/provider"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
-import { filterPromptTrainingModels, nonEmptyProviders } from "../../../src/kilocode/provider/model-filter"
+import { filterPromptTrainingModels, nonEmptyProviders } from "../../../src/taverncode/provider/model-filter"
 
 function model(id: string, training?: boolean): Provider.Model {
   return {
     id: ModelV2.ID.make(id),
-    providerID: ProviderV2.ID.kilo,
-    api: { id: "kilo", url: "https://api.kilo.ai", npm: "@kilocode/kilo-gateway" },
+    providerID: ProviderV2.ID.tavern,
+    api: { id: "tavern", url: "https://api.tavern.ai", npm: "@taverncode/tavern-gateway" },
     name: id,
     capabilities: {
       temperature: true,
@@ -41,9 +41,9 @@ function provider(id: string, models: Record<string, Provider.Model>): Provider.
 }
 
 describe("prompt-training model filter", () => {
-  test("hides only explicitly marked Kilo Gateway models", () => {
+  test("hides only explicitly marked Tavern Gateway models", () => {
     const providers = {
-      kilo: provider("kilo", {
+      tavern: provider("tavern", {
         training: model("training", true),
         private: model("private", false),
         unknown: model("unknown"),
@@ -55,18 +55,18 @@ describe("prompt-training model filter", () => {
 
     const result = filterPromptTrainingModels(providers, true)
 
-    expect(Object.keys(result.kilo.models)).toEqual(["private", "unknown"])
+    expect(Object.keys(result.tavern.models)).toEqual(["private", "unknown"])
     expect(Object.keys(result.other.models)).toEqual(["training"])
-    expect(Object.keys(providers.kilo.models)).toEqual(["training", "private", "unknown"])
+    expect(Object.keys(providers.tavern.models)).toEqual(["training", "private", "unknown"])
   })
 
   test("preserves the catalog when disabled", () => {
-    const providers = { kilo: provider("kilo", { training: model("training", true) }) }
+    const providers = { tavern: provider("tavern", { training: model("training", true) }) }
     expect(filterPromptTrainingModels(providers, false)).toBe(providers)
   })
 
   test("excludes providers without visible models from default selection", () => {
-    const providers = { kilo: provider("kilo", { training: model("training", true) }) }
+    const providers = { tavern: provider("tavern", { training: model("training", true) }) }
     const visible = filterPromptTrainingModels(providers, true)
     expect(nonEmptyProviders(visible)).toEqual({})
   })

@@ -1,4 +1,4 @@
-import type { KiloClient } from "@kilocode/sdk/v2"
+import type { KiloClient } from "@taverncode/sdk/v2"
 import open from "open"
 import type { DialogContext } from "@tui/ui/dialog"
 import type { ToastContext } from "@tui/ui/toast"
@@ -6,8 +6,8 @@ import {
   showMemoryDialog,
   showMemoryHelpDialog,
   showMemoryStatusDialog,
-} from "@/kilocode/cli/cmd/tui/component/dialog-memory"
-import { runMemoryCommand } from "@/kilocode/cli/cmd/tui/memory-command"
+} from "@/taverncode/cli/cmd/tui/component/dialog-memory"
+import { runMemoryCommand } from "@/taverncode/cli/cmd/tui/memory-command"
 
 export namespace MemoryPrompt {
   export async function run(input: {

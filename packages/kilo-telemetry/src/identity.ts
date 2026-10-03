@@ -1,7 +1,7 @@
 import * as path from "path"
 import { createHash } from "crypto"
 import { writeFile, chmod, rename, rm } from "fs/promises"
-import { fetchProfile } from "@kilocode/kilo-gateway"
+import { fetchProfile } from "@taverncode/tavern-gateway"
 
 export namespace Identity {
   let machineId: string | null = null

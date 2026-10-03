@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
-import { plain, session, supports, tui } from "../../src/kilocode/cli/logo"
+import { plain, session, supports, tui } from "../../src/taverncode/cli/logo"
 
-describe("kilocode logo", () => {
+describe("taverncode logo", () => {
   test("allows remote terminals", () => {
     expect(supports({ SSH_TTY: "/dev/pts/0" }, "linux")).toBe(true)
     expect(supports({ SSH_CLIENT: "127.0.0.1 12345 22" }, "linux")).toBe(true)

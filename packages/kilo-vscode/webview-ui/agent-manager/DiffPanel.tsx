@@ -1,8 +1,8 @@
 import { type Component, createMemo, Show, type JSXElement } from "solid-js"
-import { Accordion } from "@kilocode/kilo-ui/accordion"
-import { IconButton } from "@kilocode/kilo-ui/icon-button"
-import { Spinner } from "@kilocode/kilo-ui/spinner"
-import { Tooltip } from "@kilocode/kilo-ui/tooltip"
+import { Accordion } from "@taverncode/tavern-ui/accordion"
+import { IconButton } from "@taverncode/tavern-ui/icon-button"
+import { Spinner } from "@taverncode/tavern-ui/spinner"
+import { Tooltip } from "@taverncode/tavern-ui/tooltip"
 import { DiffStyleSelect } from "../diff-viewer/InlineSelect"
 import {
   LONG_DIFF_MARKER_FILE_COUNT,

@@ -1,6 +1,6 @@
 import { createEffect, createMemo, createSignal } from "solid-js"
 import type { Accessor } from "solid-js"
-import type { AgentBuilderPreviewResponse, Model, Provider } from "@kilocode/sdk/v2/client"
+import type { AgentBuilderPreviewResponse, Model, Provider } from "@taverncode/sdk/v2/client"
 import { previewAgent, saveAgent, type AgentPayload, type Scope, type Snapshot } from "../../../client"
 import { useConfig } from "../../../context/config"
 import { clean, friendly, sorted, toMode, toolCapabilities, toolName } from "../../../shared/utils"

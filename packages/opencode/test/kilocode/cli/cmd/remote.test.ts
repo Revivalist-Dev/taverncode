@@ -1,12 +1,12 @@
-// kilocode_change - new file
+// taverncode_change - new file
 // K1 W1: verify `buildInstanceAdvertisement`'s payload shape as real behavior.
 //
-// The command handler's enablement path is covered in kilo-sessions.test.ts.
+// The command handler's enablement path is covered in tavern-sessions.test.ts.
 // These tests exercise the shared builder without the CLI lifecycle.
 
 import { describe, expect, test } from "bun:test"
-// Shared helper lives in kilo-sessions; remote.ts re-exports for the CLI path.
-import { buildInstanceAdvertisement } from "../../../../src/kilo-sessions/instance-advertisement"
+// Shared helper lives in tavern-sessions; remote.ts re-exports for the CLI path.
+import { buildInstanceAdvertisement } from "../../../../src/tavern-sessions/instance-advertisement"
 
 describe("RemoteCommand instance advertisement (K1 W1)", () => {
   test("buildInstanceAdvertisement resolves name/projectName/version from the directory and installation version", () => {

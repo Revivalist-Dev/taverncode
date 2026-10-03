@@ -12,14 +12,14 @@ export const anacondaDesktopDict = {
   "provider.anaconda.status.unavailable": "Недоступно",
   "provider.anaconda.state.unsupported": "Anaconda Desktop не підтримується на {{platform}}.",
   "provider.anaconda.state.notInstalled":
-    "Встановіть Anaconda Desktop на цьому комп'ютері, а потім поверніться сюди. Kilo не запускає інсталятор за вас.",
+    "Встановіть Anaconda Desktop на цьому комп'ютері, а потім поверніться сюди. Tavern не запускає інсталятор за вас.",
   "provider.anaconda.state.notRunning":
     "Відкрийте Anaconda Desktop, завершіть налаштування та увійдіть, потім виберіть «Перевірити ще раз».",
   "provider.anaconda.state.invalidConfig":
     "Налаштування Anaconda Desktop неповне. Відкрийте Desktop, завершіть налаштування та перезапустіть його за потреби.",
-  "provider.anaconda.state.signedOut": "Відкрийте Anaconda Desktop та увійдіть перед підключенням Kilo.",
+  "provider.anaconda.state.signedOut": "Відкрийте Anaconda Desktop та увійдіть перед підключенням Tavern.",
   "provider.anaconda.state.unauthorized":
-    "Kilo не вдалося отримати доступ до Anaconda Desktop. Відкрийте Desktop, увійдіть знову та перезапустіть його за потреби.",
+    "Tavern не вдалося отримати доступ до Anaconda Desktop. Відкрийте Desktop, увійдіть знову та перезапустіть його за потреби.",
   "provider.anaconda.state.unavailable":
     "Anaconda Desktop ще не відповідає. Відкрийте його та зачекайте, доки програма завершить запуск.",
   "provider.anaconda.state.noModel":
@@ -31,7 +31,7 @@ export const anacondaDesktopDict = {
   "provider.anaconda.state.unhealthy":
     "Активний сервер інференсу ще не справний. Перевірте його в Anaconda Desktop та перезапустіть сервер за потреби.",
   "provider.anaconda.state.ready":
-    "Kilo знайшов справний локальний сервер генерації тексту та може імпортувати його поточні налаштування підключення.",
+    "Tavern знайшов справний локальний сервер генерації тексту та може імпортувати його поточні налаштування підключення.",
   "provider.anaconda.server": "Активний сервер інференсу",
   "provider.anaconda.context": "Вікно контексту",
   "provider.anaconda.contextValue": "{{count}} токенів",
@@ -48,7 +48,7 @@ export const anacondaDesktopDict = {
   "provider.anaconda.action.continue": "Усе одно продовжити",
   "provider.anaconda.action.manage": "Керувати / Оновити",
   "provider.anaconda.toast.refreshed.title": "Anaconda Desktop оновлено",
-  "provider.anaconda.toast.refreshed.description": "Активний локальний сервер та моделі актуальні в Kilo.",
+  "provider.anaconda.toast.refreshed.description": "Активний локальний сервер та моделі актуальні в Tavern.",
   "settings.providers.note.anacondaDesktop": "Запустіть модель, що обслуговується локально через Anaconda Desktop.",
   "settings.providers.tag.local": "Локальний",
 } as const
@@ -96,7 +96,7 @@ export const dict = {
     "Розмову скасовано. Стан відновлення робочого простору для цього попереднього скасування недоступний.",
   "revert.banner.workspace.enableSnapshots": "Увімкнути знімки",
   "revert.disabled.agentBusy": "Зачекайте завершення агента",
-  "revert.error.body": "Репозиторій може використовуватися. Повторіть спробу або перегляньте журнали Kilo.",
+  "revert.error.body": "Репозиторій може використовуватися. Повторіть спробу або перегляньте журнали Tavern.",
   "command.session.compact": "Стиснути сесію",
   "command.session.export": "Експортувати запис сеансу",
 
@@ -121,7 +121,7 @@ export const dict = {
   "provider.connect.status.waiting": "Очікування авторизації...",
   "provider.connect.status.failed": "Авторизація не вдалася: {{error}}",
   "provider.connect.apiKey.description":
-    "Введіть свій API-ключ {{provider}}, щоб підключити акаунт {{provider}} і використовувати моделі {{provider}} в Kilo.",
+    "Введіть свій API-ключ {{provider}}, щоб підключити акаунт {{provider}} і використовувати моделі {{provider}} в Tavern.",
   "provider.connect.apiKey.description.local":
     "Connect to your local {{provider}} server. Leave the API key empty if the server does not require one (default for localhost).",
   "provider.connect.atomicChat.description":
@@ -144,14 +144,14 @@ export const dict = {
   "provider.connect.oauth.code.visit.prefix": "Перейдіть за ",
   "provider.connect.oauth.code.visit.link": "цим посиланням",
   "provider.connect.oauth.code.visit.suffix":
-    " щоб отримати код авторизації для підключення акаунта та використання моделей {{provider}} у Kilo.",
+    " щоб отримати код авторизації для підключення акаунта та використання моделей {{provider}} у Tavern.",
   "provider.connect.oauth.code.label": "Код авторизації {{method}}",
   "provider.connect.oauth.code.placeholder": "Код авторизації",
   "provider.connect.oauth.code.required": "Код авторизації обов'язковий",
   "provider.connect.oauth.auto.visit.prefix": "Перейдіть за ",
   "provider.connect.oauth.auto.visit.link": "цим посиланням",
   "provider.connect.oauth.auto.visit.suffix":
-    " та введіть код нижче, щоб підключити акаунт і використовувати моделі {{provider}} у Kilo.",
+    " та введіть код нижче, щоб підключити акаунт і використовувати моделі {{provider}} у Tavern.",
   "provider.connect.oauth.auto.confirmationCode": "Код підтвердження",
   "provider.connect.toast.connected.title": "{{provider}} підключено",
   "provider.connect.toast.connected.description": "Моделі {{provider}} тепер доступні.",
@@ -220,9 +220,9 @@ export const dict = {
     "Кнопка 'Покращити запит' допомагає вдосконалити ваш запит, надаючи додатковий контекст, уточнення або перефразування. Введіть запит тут і натисніть кнопку ще раз, щоб побачити, як це працює.",
   "prompt.action.sandbox.enable": "Увімкнути пісочницю",
   "prompt.action.sandbox.disable": "Вимкнути пісочницю",
-  "prompt.action.sandbox.enabled": "Пісочницю увімкнено. Команди оболонки агента обмежені каталогами проєкту та Kilo.",
+  "prompt.action.sandbox.enabled": "Пісочницю увімкнено. Команди оболонки агента обмежені каталогами проєкту та Tavern.",
   "prompt.action.sandbox.disabled":
-    "Пісочницю вимкнено. Натисніть, щоб обмежити запис команд оболонки агента каталогами проєкту та Kilo.",
+    "Пісочницю вимкнено. Натисніть, щоб обмежити запис команд оболонки агента каталогами проєкту та Tavern.",
   "prompt.action.sandbox.status.enabled": "Пісочницю увімкнено",
   "prompt.action.sandbox.status.disabled": "Пісочницю вимкнено",
   "prompt.action.sandbox.filesystem": "Файлова система",
@@ -231,7 +231,7 @@ export const dict = {
   "prompt.action.sandbox.network.blocked": "Заблоковано",
   "prompt.action.sandbox.network.allowed": "Дозволено",
   "prompt.action.sandbox.unrestricted": "Без обмежень",
-  "prompt.action.sandbox.description.enabled": "Запис дозволено лише в каталогах проєкту та Kilo.",
+  "prompt.action.sandbox.description.enabled": "Запис дозволено лише в каталогах проєкту та Tavern.",
   "prompt.action.sandbox.description.escalation":
     "Правила дозволів і автоматичне схвалення діють усередині пісочниці. Команди, яким потрібно вийти з неї, завжди запитують.",
   "prompt.action.sandbox.description.disabled": "Натисніть, щоб обмежити запис у файлову систему та доступ до мережі.",
@@ -246,7 +246,7 @@ export const dict = {
   "speechToText.tooltip.transcribing": "Транскрибування... Натисніть, щоб скасувати.",
   "speechToText.tooltip.error": "Помилка голосового введення. Натисніть, щоб очистити.",
   "speechToText.error.title": "Помилка голосового введення",
-  "speechToText.error.loginRequired": "Увійдіть до Kilo, щоб використовувати голосове введення.",
+  "speechToText.error.loginRequired": "Увійдіть до Tavern, щоб використовувати голосове введення.",
   "speechToText.error.emptyTranscript": "Мовлення не виявлено.",
 
   "prompt.toast.promptSendFailed.title": "Не вдалося надіслати запит",
@@ -285,7 +285,7 @@ export const dict = {
     "Команда повністю виконується без обмежень файлової системи та мережі, лише для цієї команди. Git має записувати в .git, який доступний лише для читання в пісочниці та розташований поза робочим деревом у пов'язаному worktree. Правила дозволів Bash і автоматичне схвалення ніколи не схвалюють цей запит автоматично.",
   "ui.permission.manageAutoApprove": "Керувати правилами автоматичного схвалення",
   "ui.permission.reject": "Відхилити",
-  "ui.permission.feedbackPlaceholder": "Скажіть Kilo, що зробити інакше",
+  "ui.permission.feedbackPlaceholder": "Скажіть Tavern, що зробити інакше",
   "ui.permission.feedbackHint": "Enter для відхилення, Esc для скасування",
   "ui.permission.doomLoop.prompt":
     "Виявлено потенційний цикл під час роботи інструмента {{tool}}. Продовжити виконання?",
@@ -333,7 +333,7 @@ export const dict = {
   "session.messages.loadEarlier": "Завантажити попередні повідомлення",
   "session.messages.loading": "Завантаження повідомлень...",
 
-  "sidebar.topBar.label": "Навігація Kilo Code",
+  "sidebar.topBar.label": "Навігація Tavern Code",
   "sidebar.topBar.newTask": "Нове завдання",
   "sidebar.topBar.history": "Історія",
   "sidebar.topBar.agentManager": "Agent Manager",
@@ -501,21 +501,21 @@ export const dict = {
   "settings.config.status.loadedLegacy": "завантажено застарілу конфігурацію",
   "settings.config.status.notLoaded": "не завантажено",
   "settings.config.status.create": "не знайдено - створити цей файл",
-  "settings.config.title": "Відкрити файл конфігурації Kilo ({{scope}})",
+  "settings.config.title": "Відкрити файл конфігурації Tavern ({{scope}})",
   "settings.config.placeholder":
     "Файли конфігурації об'єднуються по порядку; файли, позначені як завантажені, наразі впливають на налаштування.",
-  "settings.config.noWorkspace": "Відкрийте папку робочої області, щоб відредагувати локальний файл конфігурації Kilo.",
-  "settings.config.openFailed": "Не вдалося відкрити файл конфігурації Kilo ({{scope}}): {{message}}",
+  "settings.config.noWorkspace": "Відкрийте папку робочої області, щоб відредагувати локальний файл конфігурації Tavern.",
+  "settings.config.openFailed": "Не вдалося відкрити файл конфігурації Tavern ({{scope}}): {{message}}",
   "settings.config.source.xdg": "Глобальна конфігурація XDG",
-  "settings.config.source.homeKilo": "Конфігурація .kilo (Home)",
-  "settings.config.source.homeKilocode": "Конфігурація .kilocode (Home)",
+  "settings.config.source.homeKilo": "Конфігурація .tavern (Home)",
+  "settings.config.source.homeKilocode": "Конфігурація .taverncode (Home)",
   "settings.config.source.homeOpencode": "Конфігурація .opencode (Home)",
   "settings.config.source.envFile": "Файл середовища KILO_CONFIG",
   "settings.config.source.envDir": "KILO_CONFIG_DIR",
   "settings.config.source.envContent": "Вбудована конфігурація середовища",
-  "settings.config.source.projectKilo": "Конфігурація .kilo проєкту",
+  "settings.config.source.projectKilo": "Конфігурація .tavern проєкту",
   "settings.config.source.projectRoot": "Коренева конфігурація проєкту",
-  "settings.config.source.projectKilocode": "Застаріла конфігурація .kilocode",
+  "settings.config.source.projectKilocode": "Застаріла конфігурація .taverncode",
   "settings.config.source.projectOpencode": "Застаріла конфігурація .opencode",
   "settings.models.title": "Моделі",
 
@@ -566,7 +566,7 @@ export const dict = {
   "feedback.dialog.github": "Повідомити про проблему на GitHub",
   "feedback.dialog.discord": "Приєднатися до нашої спільноти Discord",
   "feedback.dialog.support": "Служба підтримки клієнтів",
-  "workStyle.onboarding.welcome": "Ласкаво просимо до Kilo",
+  "workStyle.onboarding.welcome": "Ласкаво просимо до Tavern",
   "workStyle.onboarding.title": "Виберіть, як ви хочете працювати",
   "workStyle.onboarding.settingsNote": "Ці параметри можна будь-коли змінити в розділі",
   "workStyle.onboarding.settings": "«Налаштування».",
@@ -576,7 +576,7 @@ export const dict = {
   "workStyle.choice.visibility": "Видимість",
   "workStyle.choice.human-in-the-loop.eyebrow": "Людина контролює процес",
   "workStyle.choice.human-in-the-loop.title": "Спочатку перевірка",
-  "workStyle.choice.human-in-the-loop.description": "Kilo призупиняється та показує свій план у процесі роботи.",
+  "workStyle.choice.human-in-the-loop.description": "Tavern призупиняється та показує свій план у процесі роботи.",
   "workStyle.choice.human-in-the-loop.permissions": "Запитує дозвіл перед редагуванням файлів або виконанням команд.",
   "workStyle.choice.human-in-the-loop.bash": "Запитує дозвіл на кожну команду термінала.",
   "workStyle.choice.human-in-the-loop.visibility": "Розгортає міркування, команди та зміни для перевірки.",
@@ -588,7 +588,7 @@ export const dict = {
   "workStyle.choice.autonomous.visibility":
     "Згортає деталі інструментів, з компактним попереднім переглядом міркувань.",
   "session.cloud.import.title": "Імпортувати з хмари",
-  "session.cloud.import.placeholder": "Ідентифікатор сесії, URL або команда kilo import",
+  "session.cloud.import.placeholder": "Ідентифікатор сесії, URL або команда tavern import",
   "session.cloud.import.button": "Імпортувати",
   "session.cloud.import.invalid": "Недійсний формат ідентифікатора сесії",
   "session.cloud.import.legacy": "Схоже, це застаріла сесія, яка більше не підтримується.",
@@ -598,7 +598,7 @@ export const dict = {
   "deviceAuth.toast.codeCopied": "Код скопійовано до буфера обміну",
   "deviceAuth.toast.errorCopied": "Помилку скопійовано до буфера обміну",
   "deviceAuth.status.initiating": "Ініціалізація входу...",
-  "deviceAuth.title": "Увійти до Kilo Code",
+  "deviceAuth.title": "Увійти до Tavern Code",
   "deviceAuth.step1": "Крок 1: Відкрийте цей URL",
   "deviceAuth.action.copyUrl": "Копіювати URL",
   "deviceAuth.action.openBrowser": "Відкрити браузер",
@@ -621,7 +621,7 @@ export const dict = {
 
   "profile.title": "Профіль",
   "profile.notLoggedIn": "Не увійшов",
-  "profile.action.login": "Увійти через Kilo Code",
+  "profile.action.login": "Увійти через Tavern Code",
   "profile.balance.title": "Баланс",
   "profile.balance.refresh": "Оновити баланс",
   "profile.usage.title": "Плани та використання",
@@ -637,7 +637,7 @@ export const dict = {
   "profile.usage.plan.unknown": "План: Статус невідомий",
   "profile.usage.action.manage": "Керувати",
   "profile.usage.action.managePlan": "Керування {{plan}}",
-  "profile.usage.routing": "Оплата плану активна. Маршрутизація через Kilo Gateway {{state}}.",
+  "profile.usage.routing": "Оплата плану активна. Маршрутизація через Tavern Gateway {{state}}.",
   "profile.usage.routingState.disabled": "вимкнена",
   "profile.usage.routingState.missing": "відсутня",
   "profile.usage.routingState.replaced": "замінена",
@@ -663,11 +663,11 @@ export const dict = {
   "profile.usage.status.exhausted": "Вичерпано",
   "profile.action.dashboard": "Панель керування",
   "profile.action.topUp": "Поповнити",
-  "profile.pass.subscribe": "Отримайте Kilo Pass, щоб додати кредити та заробляти бонуси",
+  "profile.pass.subscribe": "Отримайте Tavern Pass, щоб додати кредити та заробляти бонуси",
   "profile.pass.bonus": "Бонус",
   "profile.pass.usage": "Використання за цей місяць",
   "profile.pass.paid": "Оплачено",
-  "profile.pass.meter": "Щомісячне використання Kilo Pass",
+  "profile.pass.meter": "Щомісячне використання Tavern Pass",
   "profile.pass.renews": "Поновлюється",
   "profile.action.logout": "Вийти",
 
@@ -725,10 +725,10 @@ export const dict = {
 
   "settings.experimental.title": "Експериментальне",
   "settings.language.title": "Мова",
-  "settings.aboutKiloCode.title": "Про Kilo Code",
+  "settings.aboutKiloCode.title": "Про Tavern Code",
 
   "session.messages.welcome":
-    "Kilo Code — це асистент з кодування на базі ШІ. Попросіть його розробити функцію, виправити помилку або пояснити вашу кодову базу.",
+    "Tavern Code — це асистент з кодування на базі ШІ. Попросіть його розробити функцію, виправити помилку або пояснити вашу кодову базу.",
   "session.messages.scrollToBottom": "Прокрутити до низу",
   "session.messages.initializing": "Ініціалізація...",
   "session.messages.taskStarting": "Запуск...",
@@ -812,10 +812,10 @@ export const dict = {
   "settings.aboutKiloCode.importSettings": "Імпортувати",
   "settings.aboutKiloCode.importSettings.invalidJson":
     "Недійсний файл JSON. Будь ласка, виберіть дійсний файл налаштувань.",
-  "settings.aboutKiloCode.importSettings.invalidConfig": "Файл не містить дійсних налаштувань Kilo.",
+  "settings.aboutKiloCode.importSettings.invalidConfig": "Файл не містить дійсних налаштувань Tavern.",
   "settings.aboutKiloCode.importSettings.tooLarge": "Файл занадто великий. Файли налаштувань мають бути менше 1 МБ.",
   "settings.aboutKiloCode.importSettings.newerVersion":
-    "Цей файл було експортовано з новішої версії Kilo. Деякі налаштування можуть бути проігноровані.",
+    "Цей файл було експортовано з новішої версії Tavern. Деякі налаштування можуть бути проігноровані.",
   "settings.aboutKiloCode.importSettings.success":
     "Налаштування імпортовано. Перегляньте зміни вище, потім натисніть Зберегти.",
 
@@ -831,7 +831,7 @@ export const dict = {
   "settings.agentBehaviour.subtab.skills": "Навички",
 
   "settings.browser.description":
-    "Налаштуйте вбудовану автоматизацію браузера на основі Playwright. Kilo може переходити веб-сторінками, взаємодіяти з ними та робити знімки екрана у ваших сесіях.",
+    "Налаштуйте вбудовану автоматизацію браузера на основі Playwright. Tavern може переходити веб-сторінками, взаємодіяти з ними та робити знімки екрана у ваших сесіях.",
   "settings.browser.enable.title": "Увімкнути автоматизацію браузера",
   "settings.browser.enable.description":
     "Увімкнути прив'язаний до сесії браузер Agent Manager для локальних програм і загальнодоступних HTTPS-сторінок.",
@@ -842,7 +842,7 @@ export const dict = {
   "settings.browser.headless.description": "Запускати в безголовому режимі (без видимого вікна браузера).",
 
   "settings.language.description":
-    '"Автоматично" використовує мову відображення VS Code. Виберіть мову для інтерфейсу Kilo Code.',
+    '"Автоматично" використовує мову відображення VS Code. Виберіть мову для інтерфейсу Tavern Code.',
   "settings.language.auto": "Автоматично (мова VS Code)",
   "settings.language.current": "Поточна:",
 
@@ -863,10 +863,10 @@ export const dict = {
     "Відтворювати звуки, коли сеанси завершуються, виникає помилка або потрібна ваша відповідь",
   "settings.notifications.workbench.title": "Увімкнути сповіщення VS Code",
   "settings.notifications.workbench.description":
-    "Показувати сповіщення VS Code, коли Kilo завершує завдання або потрібна ваша відповідь",
+    "Показувати сповіщення VS Code, коли Tavern завершує завдання або потрібна ваша відповідь",
   "settings.notifications.os.title": "Увімкнути сповіщення операційної системи",
   "settings.notifications.os.description":
-    "Показувати нативні сповіщення операційної системи, коли Kilo завершує завдання або потрібна ваша відповідь, а VS Code неактивний.",
+    "Показувати нативні сповіщення операційної системи, коли Tavern завершує завдання або потрібна ваша відповідь, а VS Code неактивний.",
   "settings.notifications.testSound": "Тест",
   "settings.notifications.testOS": "Тест",
   "settings.notifications.testOS.testing": "Надсилання тестового сповіщення…",
@@ -890,7 +890,7 @@ export const dict = {
   "settings.experimental.batch.description": "Увімкнути пакетну обробку кількох викликів інструментів",
   "settings.experimental.imageGeneration.title": "Генерація зображень",
   "settings.experimental.imageGeneration.description": "Увімкнути генерацію зображень за допомогою ШІ",
-  "settings.agentBehaviour.sharedAgentBoard.title": "Kilo Swarm",
+  "settings.agentBehaviour.sharedAgentBoard.title": "Tavern Swarm",
   "settings.agentBehaviour.sharedAgentBoard.description":
     "Надайте спільну дошку головному сеансу та його субагентам, які виконують завдання, включно з вкладеними субагентами. Використовуйте її для паралельних спроб знайти розв'язання або взаємодоповнювальної роботи, а не для кожного завдання.",
   "settings.experimental.imageGenerationModel.title": "Модель зображень",
@@ -902,18 +902,18 @@ export const dict = {
   "settings.models.speechToTextModel.customPlaceholder": "whisper-1",
   "settings.models.speechToTextBaseUrl.title": "Базова URL-адреса мовлення в текст",
   "settings.models.speechToTextBaseUrl.description":
-    "Використовуйте сумісний з OpenAI API транскрипції замість Kilo Gateway. Моделі читаються з /models, а аудіо надсилається на /audio/transcriptions. Залиште порожнім, щоб використовувати Kilo Gateway.",
+    "Використовуйте сумісний з OpenAI API транскрипції замість Tavern Gateway. Моделі читаються з /models, а аудіо надсилається на /audio/transcriptions. Залиште порожнім, щоб використовувати Tavern Gateway.",
   "settings.models.speechToTextBaseUrl.placeholder": "https://api.openai.com/v1",
   "settings.models.speechToTextApiKey.title": "Ключ API мовлення в текст",
   "settings.models.speechToTextApiKey.description":
-    "Bearer-токен, який надсилається на власну базову URL-адресу транскрипції. Зберігається у вашому файлі конфігурації Kilo.",
+    "Bearer-токен, який надсилається на власну базову URL-адресу транскрипції. Зберігається у вашому файлі конфігурації Tavern.",
   "settings.models.speechToTextApiKey.placeholder": "sk-...",
   "settings.models.speechToText.disabledDescription":
-    "Увімкніть провайдер Kilo та виконайте вхід, щоб використовувати Speech to Text, або вкажіть нижче власну базову URL-адресу транскрипції.",
+    "Увімкніть провайдер Tavern та виконайте вхід, щоб використовувати Speech to Text, або вкажіть нижче власну базову URL-адресу транскрипції.",
   "settings.models.speechToText.remoteDescription":
-    "Голосове введення недоступне у віддалених вікнах. Відкрийте Kilo у локальному вікні, щоб використовувати мікрофон.",
+    "Голосове введення недоступне у віддалених вікнах. Відкрийте Tavern у локальному вікні, щоб використовувати мікрофон.",
   "settings.models.speechToTextModel.title": "Модель мовлення в текст",
-  "settings.models.speechToTextModel.description": "Виберіть модель транскрипції Kilo Gateway для голосового введення.",
+  "settings.models.speechToTextModel.description": "Виберіть модель транскрипції Tavern Gateway для голосового введення.",
   "settings.experimental.nativeNotebookTools.title": "Власні інструменти для блокнотів",
   "settings.experimental.nativeNotebookTools.description":
     "Увімкнути експериментальні інструменти для читання, редагування та виконання блокнотів VS Code",
@@ -943,7 +943,7 @@ export const dict = {
   "settings.experimental.mcpTimeout.description": "Тайм-аут у мілісекундах для запитів до MCP-сервера",
   "settings.experimental.remote.title": "Керування Remote",
   "settings.experimental.remote.description":
-    "Увімкніть керування Remote сеансами через Kilo Cloud. Це також вплине на CLI на цьому комп'ютері.",
+    "Увімкніть керування Remote сеансами через Tavern Cloud. Це також вплине на CLI на цьому комп'ютері.",
   "settings.experimental.remote.current": "Поточний стан:",
   "settings.experimental.remote.startup": "Автоматичне ввімкнення під час запуску:",
   "settings.experimental.remote.active": "Активний",
@@ -955,7 +955,7 @@ export const dict = {
     "Спрямовує виклики інструментів MCP через ізольоване середовище виконання JavaScript із виявленням інструментів на вимогу замість прямого надання кожного інструменту MCP. Економить контекст, коли підключено багато інструментів MCP.",
   "settings.sandboxing.enabled.title": "Пісочниця",
   "settings.sandboxing.enabled.description":
-    "Виконувати команди оболонки агента в пісочниці на рівні ОС, яка обмежує запис до каталогів стану проєкту та Kilo",
+    "Виконувати команди оболонки агента в пісочниці на рівні ОС, яка обмежує запис до каталогів стану проєкту та Tavern",
 
   "settings.agentBehaviour.defaultAgent.title": "Агент за замовчуванням",
   "settings.agentBehaviour.defaultAgent.description": "Агент, що використовується, якщо не вказано інший",
@@ -1012,7 +1012,7 @@ export const dict = {
   "settings.agentBehaviour.claudeCompat.heading": "Сумісність з Claude Code",
   "settings.agentBehaviour.claudeCompat.title": "Завантажувати файли Claude Code",
   "settings.agentBehaviour.claudeCompat.description":
-    "Завантажувати інструкції та навички CLAUDE.md з вашого каталогу конфігурації Claude Code у сесії. Увімкніть це, якщо ви хочете, щоб Kilo використовував ваші інструкції та навички Claude Code. Потребує перезапуску.",
+    "Завантажувати інструкції та навички CLAUDE.md з вашого каталогу конфігурації Claude Code у сесії. Увімкніть це, якщо ви хочете, щоб Tavern використовував ваші інструкції та навички Claude Code. Потребує перезапуску.",
   "settings.agentBehaviour.removeMcp.title": "Видалити MCP-сервер",
   "settings.agentBehaviour.removeMcp.confirm": 'Видалити MCP-сервер "{{name}}"? Це видалить його з вашої конфігурації.',
   "settings.agentBehaviour.removeMcp.button": "Видалити",
@@ -1033,7 +1033,7 @@ export const dict = {
   "settings.agentBehaviour.addMcp.url.placeholder": "напр. http://localhost:3000/sse",
   "settings.agentBehaviour.mcpBrowseMarketplace": "Переглянути Marketplace",
   "settings.agentBehaviour.mcpEmpty":
-    "MCP-серверів не налаштовано. Додайте MCP-сервери до kilo.jsonc або попросіть агента додати їх.",
+    "MCP-серверів не налаштовано. Додайте MCP-сервери до tavern.jsonc або попросіть агента додати їх.",
   "settings.agentBehaviour.workflows.description":
     "Робочі процеси — це власні команди з косою рискою, визначені у вашій конфігурації. Введіть /назва-команди в чаті, щоб викликати їх. Команди налаштовуються в розділі 'command' файлу opencode.json.",
   "settings.agentBehaviour.workflows.empty":
@@ -1087,7 +1087,7 @@ export const dict = {
     "Створювати контрольні точки перед редагуванням файлів, щоб мати можливість відновити попередні стани",
   "settings.autoCleanup.enable.title": "Увімкнути автоматичне очищення сесій",
   "settings.autoCleanup.enable.description":
-    "Автоматично видаляє стару історію сесій після визначеної кількості днів, в усіх проєктах і в усіх клієнтах Kilo на цьому комп'ютері, а не лише в цьому вікні. Запущені сесії та сесії з нещодавнім форком ніколи не видаляються. Видалення необоротне.",
+    "Автоматично видаляє стару історію сесій після визначеної кількості днів, в усіх проєктах і в усіх клієнтах Tavern на цьому комп'ютері, а не лише в цьому вікні. Запущені сесії та сесії з нещодавнім форком ніколи не видаляються. Видалення необоротне.",
   "settings.autoCleanup.defaultRetention.title": "Зберігати сесії (днів)",
   "settings.autoCleanup.defaultRetention.description":
     "Як довго зберігається історія сесій до видалення автоматичним очищенням.",
@@ -1106,7 +1106,7 @@ export const dict = {
     "Видалення сесій: оброблено {{processed}}/{{total}} (видалено {{deleted}}, невдалих {{failed}})",
   "settings.autoCleanup.runNow": "Запустити очищення зараз",
   "settings.autoCleanup.runNow.confirm":
-    "Безповоротно видалити застарілі сесії в усіх проєктах і в усіх клієнтах Kilo на цьому комп'ютері?",
+    "Безповоротно видалити застарілі сесії в усіх проєктах і в усіх клієнтах Tavern на цьому комп'ютері?",
   "settings.autoCleanup.stop": "Зупинити очищення",
   "settings.autoCleanup.progress.cancelling": "Зупинка очищення сеансів...",
   "settings.autoCleanup.lastRun.cancelled": "перервано",
@@ -1140,7 +1140,7 @@ export const dict = {
   "settings.context.memory.storage.enable": "Enable memory to create project memory files.",
   "settings.context.memory.inspect": "Перевірити",
   "chat.memory.project.disabled": "Пам’ять проєкту вимкнено",
-  "chat.memory.project.empty": "This project doesn't have any memory yet. It will start showing after you use Kilo.",
+  "chat.memory.project.empty": "This project doesn't have any memory yet. It will start showing after you use Tavern.",
   "chat.memory.command.failed": "Команду пам’яті не виконано",
   "chat.memory.updated": "Memory updated",
   "chat.memory.rebuild": "Memory index rebuilt",
@@ -1176,7 +1176,7 @@ export const dict = {
   "settings.display.username.title": "Ім'я користувача",
   "settings.display.username.description": "Власне ім'я користувача, що відображається в чатах",
   "settings.display.fontSize.title": "Розмір шрифту",
-  "settings.display.fontSize.description": "Налаштуйте розмір шрифту webview UI для Kilo незалежно від VS Code.",
+  "settings.display.fontSize.description": "Налаштуйте розмір шрифту webview UI для Tavern незалежно від VS Code.",
   "settings.display.reasoningDisplay.title": "Блоки міркувань",
   "settings.display.reasoningDisplay.description":
     "Виберіть, як починаються блоки міркувань. Розгорнуті показує повний текст, Попередній перегляд обмежує його коротким прокручуваним переглядом, а Заголовок показує лише заголовок та індикатор потокового передавання, доки ви не відкриєте його.",
@@ -1223,7 +1223,7 @@ export const dict = {
     "Модель за замовчуванням та рівень міркування для субагентів task-tool. Залиште порожнім, щоб успадкувати модель агента, що викликає.",
   "settings.models.hidePromptTraining.title": "Приховувати моделі, що навчаються на запитах",
   "settings.models.hidePromptTraining.description":
-    "Приховувати моделі Kilo Gateway, постачальники яких можуть використовувати ваші запити для навчання.",
+    "Приховувати моделі Tavern Gateway, постачальники яких можуть використовувати ваші запити для навчання.",
   "settings.providers.modeModels": "Модель для кожного режиму",
   "settings.providers.modeModels.description":
     "Перевизначити стандартну модель для певних режимів. Якщо не встановлено, використовується загальна стандартна модель.",
@@ -1322,10 +1322,10 @@ export const dict = {
   "notifications.action.close": "Закрити",
   "notifications.action.tryModel": "Спробувати {{model}}",
   "notifications.action.tryModelGeneric": "Спробувати модель",
-  "settings.indexing.kiloModel.title": "Пресет моделі Kilo",
-  "settings.indexing.kiloModel.description": "Виберіть підтримувану модель Kilo-hosted embeddings.",
-  "settings.indexing.kiloSignIn.title": "Потрібен вхід у Kilo",
-  "settings.indexing.kiloSignIn.description": "Увійдіть у Kilo, щоб використовувати hosted embeddings.",
+  "settings.indexing.kiloModel.title": "Пресет моделі Tavern",
+  "settings.indexing.kiloModel.description": "Виберіть підтримувану модель Tavern-hosted embeddings.",
+  "settings.indexing.kiloSignIn.title": "Потрібен вхід у Tavern",
+  "settings.indexing.kiloSignIn.description": "Увійдіть у Tavern, щоб використовувати hosted embeddings.",
   // Missing translations - English fallbacks until translated
   "profile.switchingAccount": "Перемикання акаунту…",
   "settings.agentBehaviour.createMode": "Створити новий режим",
@@ -1376,7 +1376,7 @@ export const dict = {
     "Файли, змінені в робочому дереві, але ще не підготовлені, плюс невідстежувані (нові) файли.",
   "diffViewer.source.session.label": "Сесія",
   "diffViewer.source.session.tooltip":
-    "Файли, змінені Kilo під час поточної сесії, на основі знімків по ходу. Скидається при старті нової сесії.",
+    "Файли, змінені Tavern під час поточної сесії, на основі знімків по ходу. Скидається при старті нової сесії.",
   "diffViewer.group.session": "Сесія",
   "diffViewer.group.git": "Git",
   "diffViewer.comment.postToGithub": "Опублікувати на GitHub",
@@ -1386,7 +1386,7 @@ export const dict = {
   "diffViewer.comment.openPR": "Відкрити PR",
   "diffViewer.comment.localChanges": "Локальні зміни",
   "diffViewer.comment.prChanges": "Зміни PR",
-  "diffViewer.comment.sendToKilo": "Надіслати до Kilo",
+  "diffViewer.comment.sendToKilo": "Надіслати до Tavern",
   "diffViewer.comment.sendToGithub": "Надіслати до GitHub #{{number}}",
   "diffViewer.comment.chooseDestination": "Вибрати призначення",
   "diffViewer.notice.snapshotsDisabled":

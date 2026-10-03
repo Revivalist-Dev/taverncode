@@ -1,5 +1,5 @@
 import * as vscode from "vscode"
-import type { KiloClient } from "@kilocode/sdk/v2/client"
+import type { KiloClient } from "@taverncode/sdk/v2/client"
 import { getMigrationErrorMessage } from "../errors/migration-error"
 import type { MigrationSessionProgress, MigrationSessionSelection } from "../legacy-types"
 import { createSessionID } from "./lib/ids"
@@ -76,9 +76,9 @@ export async function migrate(
     progress({ phase: "preparing" })
     const payload = await parseSession(source.id, source.dir, source.item, undefined, key)
     progress({ phase: "storing" })
-    const project = await client.kilocode.sessionImport.project(payload.project, { throwOnError: true })
+    const project = await client.taverncode.sessionImport.project(payload.project, { throwOnError: true })
     const projectID = project.data?.id ?? payload.project.id
-    const session = await client.kilocode.sessionImport.session(
+    const session = await client.taverncode.sessionImport.session(
       {
         ...payload.session,
         projectID,
@@ -99,11 +99,11 @@ export async function migrate(
     }
 
     for (const msg of payload.messages) {
-      await client.kilocode.sessionImport.message(msg, { throwOnError: true })
+      await client.taverncode.sessionImport.message(msg, { throwOnError: true })
     }
 
     for (const part of payload.parts) {
-      await client.kilocode.sessionImport.part(part, { throwOnError: true })
+      await client.taverncode.sessionImport.part(part, { throwOnError: true })
     }
 
     progress({ phase: "done" })

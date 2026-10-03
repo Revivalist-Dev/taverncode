@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright"
 import { expect, test, type Locator, type Page } from "@playwright/test"
 
-const GLOBALS = "colorScheme:dark;theme:kilo-vscode;vscodeTheme:dark-modern"
+const GLOBALS = "colorScheme:dark;theme:tavern-vscode;vscodeTheme:dark-modern"
 const RULES = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"]
 
 // Explicitly ratchet in repaired/stable workflows rather than making existing
@@ -151,7 +151,7 @@ test.describe("webview accessibility ratchet", () => {
   test("Profile login exposes a keyboard-operable named control", async ({ page }) => {
     await open(page, "profile--not-logged-in")
 
-    const login = page.getByRole("button", { name: "Login with Kilo Code" })
+    const login = page.getByRole("button", { name: "Login with Tavern Code" })
     await reach(page, login)
     await expect(login).toBeFocused()
 

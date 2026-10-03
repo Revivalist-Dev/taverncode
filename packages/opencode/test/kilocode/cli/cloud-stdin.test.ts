@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { Effect } from "effect"
 import yargs from "yargs"
-import { CloudSendCommand, CloudStartCommand } from "../../../src/kilocode/cli/cmd/cloud"
-import { readCloudPromptStdin, resolveCloudPrompt, withCloudPrompt } from "../../../src/kilocode/cli/cmd/cloud-stdin"
+import { CloudSendCommand, CloudStartCommand } from "../../../src/taverncode/cli/cmd/cloud"
+import { readCloudPromptStdin, resolveCloudPrompt, withCloudPrompt } from "../../../src/taverncode/cli/cmd/cloud-stdin"
 
 const encoder = new TextEncoder()
 

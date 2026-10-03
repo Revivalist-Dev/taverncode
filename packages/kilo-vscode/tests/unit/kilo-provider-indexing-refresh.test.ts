@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test"
-import type { Config } from "@kilocode/sdk/v2/client"
+import type { Config } from "@taverncode/sdk/v2/client"
 import { indexingConsentStore, type IndexingProject } from "../../src/indexing-consent"
-import { fetchSnapshot } from "../../src/kilo-provider/config-snapshot"
+import { fetchSnapshot } from "../../src/tavern-provider/config-snapshot"
 
 // vscode mock is provided by the shared preload (tests/setup/vscode-mock.ts)
 const { KiloProvider } = await import("../../src/KiloProvider")
@@ -42,7 +42,7 @@ function binding(internal: Internals, scope: "global" | "project") {
     directory: "/repo",
     target: {
       scope,
-      path: scope === "global" ? "/config/kilo.jsonc" : "/repo/.kilo/kilo.jsonc",
+      path: scope === "global" ? "/config/tavern.jsonc" : "/repo/.tavern/tavern.jsonc",
       revision: `${scope}-revision`,
       exists: false,
       writable: true,
@@ -59,7 +59,7 @@ function createConnection() {
     targets: {
       global: {
         scope: "global",
-        path: "/config/kilo.jsonc",
+        path: "/config/tavern.jsonc",
         revision: "global-next",
         exists: true,
         writable: true,
@@ -67,7 +67,7 @@ function createConnection() {
       },
       project: {
         scope: "project",
-        path: "/repo/.kilo/kilo.jsonc",
+        path: "/repo/.tavern/tavern.jsonc",
         revision: "project-next",
         exists: true,
         writable: true,
@@ -132,7 +132,7 @@ function indexing(dir = "/repo", root = dir) {
   const store = indexingConsentStore(context as never)
   store.project = async () => ({ id: "prj-test", root, label: "Project" })
   const client = {
-    kilo: { profile: async () => ({ data: null }) },
+    tavern: { profile: async () => ({ data: null }) },
     config: { warnings: async () => ({ data: [] }) },
   }
   const service = {
@@ -293,13 +293,13 @@ describe("KiloProvider indexing refresh", () => {
     expect(conn.patches()).toEqual([
       expect.objectContaining({
         scope: "global",
-        expected: { path: "/config/kilo.jsonc", revision: "global-revision" },
+        expected: { path: "/config/tavern.jsonc", revision: "global-revision" },
         set: { indexing: { qdrant: { apiKey: undefined } } },
         unset: [["indexing", "qdrant", "apiKey"]],
       }),
       expect.objectContaining({
         scope: "project",
-        expected: { path: "/repo/.kilo/kilo.jsonc", revision: "project-revision" },
+        expected: { path: "/repo/.tavern/tavern.jsonc", revision: "project-revision" },
         set: { indexing: { searchMinScore: undefined } },
         unset: [["indexing", "searchMinScore"]],
       }),
@@ -309,7 +309,7 @@ describe("KiloProvider indexing refresh", () => {
   it("reports a completed global scope when the project write conflicts", async () => {
     const target = (scope: "global" | "project", revision: string) => ({
       scope,
-      path: scope === "global" ? "/config/kilo.jsonc" : "/repo/.kilo/kilo.jsonc",
+      path: scope === "global" ? "/config/tavern.jsonc" : "/repo/.tavern/tavern.jsonc",
       revision,
       exists: true,
       writable: true,
@@ -354,7 +354,7 @@ describe("KiloProvider indexing refresh", () => {
     })
   })
 
-  it.each(["/repo/.kilo/.kilocode/worktrees/feature", "/home/user/桌面/project", "/repo/100%/%2F/project"])(
+  it.each(["/repo/.tavern/.taverncode/worktrees/feature", "/home/user/桌面/project", "/repo/100%/%2F/project"])(
     "fetchAndSendIndexingStatus writes consent with an encoded directory header: %s",
     async (dir) => {
       const calls: { input: RequestInfo | URL; init?: RequestInit }[] = []
@@ -370,10 +370,10 @@ describe("KiloProvider indexing refresh", () => {
         expect(calls).toHaveLength(1)
         const call = calls.at(0)
         const headers = new Headers(call?.init?.headers)
-        const auth = Buffer.from("kilo:secret").toString("base64")
+        const auth = Buffer.from("tavern:secret").toString("base64")
         expect(headers.get("Authorization")).toBe(`Basic ${auth}`)
-        expect(headers.get("x-kilo-directory")).toBe(encodeURIComponent(dir))
-        expect(decodeURIComponent(headers.get("x-kilo-directory") ?? "")).toBe(dir)
+        expect(headers.get("x-tavern-directory")).toBe(encodeURIComponent(dir))
+        expect(decodeURIComponent(headers.get("x-tavern-directory") ?? "")).toBe(dir)
         expect(call?.init?.method).toBe("PUT")
         expect(String(call?.input)).toBe("http://127.0.0.1:9999/indexing/consent")
         expect(JSON.parse(String(call?.init?.body))).toEqual({ enabled: false })
@@ -458,7 +458,7 @@ describe("KiloProvider indexing refresh", () => {
     const calls: Array<{ directory: string; enabled: boolean }> = []
     const original = globalThis.fetch
     globalThis.fetch = ((_input: RequestInfo | URL, init?: RequestInit) => {
-      const directory = decodeURIComponent(new Headers(init?.headers).get("x-kilo-directory") ?? "")
+      const directory = decodeURIComponent(new Headers(init?.headers).get("x-tavern-directory") ?? "")
       calls.push({ directory, enabled: JSON.parse(String(init?.body)).enabled })
       if (directory === prior.root) return Promise.resolve(Response.json(initial))
       called.resolve()
@@ -542,7 +542,7 @@ describe("KiloProvider indexing refresh", () => {
     const profile = Promise.withResolvers<{ data: null }>()
     const calls: string[] = []
     fixture.service.getClient = () => fixture.client
-    fixture.client.kilo.profile = () => profile.promise
+    fixture.client.tavern.profile = () => profile.promise
     fixture.internal.fetchAndSendIndexingStatus = async () => {
       calls.push("indexing")
     }

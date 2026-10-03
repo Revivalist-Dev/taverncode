@@ -1,10 +1,10 @@
-import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@kilocode/plugin/tui"
+import type { TuiPlugin, TuiPluginApi, TuiPluginModule } from "@taverncode/plugin/tui"
 import { createEffect, createMemo, createResource, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import { useLocal } from "@tui/context/local"
 import * as Model from "@tui/util/model"
 import { Locale } from "@/util/locale"
-import { RoutedModelMeta } from "@/kilocode/cli/cmd/tui/routes/session/routed-model-meta"
-import { fmtAttemptCost, fmtScore } from "@/kilocode/components/model-info-panel-utils"
+import { RoutedModelMeta } from "@/taverncode/cli/cmd/tui/routes/session/routed-model-meta"
+import { fmtAttemptCost, fmtScore } from "@/taverncode/components/model-info-panel-utils"
 import {
   aggregateMetrics,
   failed,
@@ -19,10 +19,10 @@ import {
   throughputLabel,
   type StepMetrics,
   type UsageResult,
-} from "@/kilocode/plugins/model-usage"
-import { ModelRow, UsageRow } from "@/kilocode/plugins/sidebar-usage-row"
+} from "@/taverncode/plugins/model-usage"
+import { ModelRow, UsageRow } from "@/taverncode/plugins/sidebar-usage-row"
 
-const id = "internal:kilo-sidebar-usage"
+const id = "internal:tavern-sidebar-usage"
 
 type MetricSample = {
   metrics?: StepMetrics
@@ -43,7 +43,7 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
   const [result, { refetch }] = createResource(
     () => props.session_id,
     (sessionID): Promise<UsageResult> =>
-      props.api.client.kilocode.sessionModelUsage({ sessionID }).then(
+      props.api.client.taverncode.sessionModelUsage({ sessionID }).then(
         (response) => ({ sessionID, data: response.data }),
         () => ({ sessionID }),
       ),

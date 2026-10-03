@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import { hashFileDiffs } from "../../src/diff/shared/hash"
-import type { SnapshotFileDiff } from "@kilocode/sdk/v2/client"
+import type { SnapshotFileDiff } from "@taverncode/sdk/v2/client"
 
 type Diff = SnapshotFileDiff & {
   tracked?: boolean

@@ -1,4 +1,4 @@
-import type { ProviderUsage } from "@kilocode/sdk/v2/client"
+import type { ProviderUsage } from "@taverncode/sdk/v2/client"
 
 export type ProviderUsageData = ProviderUsage
 

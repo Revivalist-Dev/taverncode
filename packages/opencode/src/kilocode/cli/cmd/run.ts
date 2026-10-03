@@ -1,9 +1,9 @@
-import type { KiloClient } from "@kilocode/sdk/v2"
+import type { KiloClient } from "@taverncode/sdk/v2"
 import { KiloRunDrain } from "../run-drain"
 import { UI } from "@/cli/ui"
 import { FormatError, FormatUnknownError } from "@/cli/error"
-import { DaemonClient } from "@/kilocode/daemon/client"
-import { isBuiltinCommand, type BuiltinCommand } from "@/kilocode/session/builtin-commands"
+import { DaemonClient } from "@/taverncode/daemon/client"
+import { isBuiltinCommand, type BuiltinCommand } from "@/taverncode/session/builtin-commands"
 import { Provider } from "@/provider/provider"
 import { Filesystem } from "@/util/filesystem"
 
@@ -26,7 +26,7 @@ export namespace KiloRun {
   export function validateGoal(text: string) {
     return ["", "pause", "clear"].includes(text.trim())
       ? undefined
-      : "Goal start and resume require the TUI. Run kilo, then use /goal <text> or /goal resume."
+      : "Goal start and resume require the TUI. Run tavern, then use /goal <text> or /goal resume."
   }
 
   export async function goal(

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test"
 import * as vscode from "vscode"
-import { buildIndexingSettingsMessage, validIndexingSetting } from "../../src/kilo-provider/indexing-settings"
+import { buildIndexingSettingsMessage, validIndexingSetting } from "../../src/tavern-provider/indexing-settings"
 
 type Stub = {
   getConfiguration: (section?: string) => {
@@ -12,7 +12,7 @@ const original = vscode.workspace.getConfiguration
 
 function stubConfig(state: Map<string, unknown>) {
   ;(vscode.workspace as unknown as Stub).getConfiguration = (section?: string) => {
-    if (section !== "kilo-code.new.indexing") {
+    if (section !== "tavern-code.new.indexing") {
       return { get: <T>(_key: string, fallback?: T) => fallback }
     }
     return {

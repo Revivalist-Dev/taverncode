@@ -1,5 +1,5 @@
 import { evaluate as evalRule } from "@/permission/evaluate"
-import { PermissionRule, type Ruleset } from "@/kilocode/permission/rule"
+import { PermissionRule, type Ruleset } from "@/taverncode/permission/rule"
 
 function rules(permission: string, ruleset?: Ruleset) {
   if (!ruleset) return []

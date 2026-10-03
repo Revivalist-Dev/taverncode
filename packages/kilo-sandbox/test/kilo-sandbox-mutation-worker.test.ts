@@ -8,7 +8,7 @@ import { isResponse, type Request } from "../src/mutation-protocol"
 const roots: string[] = []
 
 async function worker(request: Request) {
-  const entry = fileURLToPath(new URL("../src/kilo-sandbox-mutation-worker.ts", import.meta.url))
+  const entry = fileURLToPath(new URL("../src/tavern-sandbox-mutation-worker.ts", import.meta.url))
   const proc = Bun.spawn([process.execPath, entry], {
     stdin: "pipe",
     stdout: "pipe",
@@ -33,7 +33,7 @@ afterEach(async () => {
 
 describe("filesystem mutation worker", () => {
   test("executes ordered mutation batches", async () => {
-    const root = await mkdtemp(path.join(tmpdir(), "kilo-mutation-worker-"))
+    const root = await mkdtemp(path.join(tmpdir(), "tavern-mutation-worker-"))
     roots.push(root)
     const dir = path.join(root, "nested")
     const file = path.join(dir, "value.txt")
@@ -52,7 +52,7 @@ describe("filesystem mutation worker", () => {
   })
 
   test("serializes single-operation filesystem failures", async () => {
-    const root = await mkdtemp(path.join(tmpdir(), "kilo-mutation-worker-"))
+    const root = await mkdtemp(path.join(tmpdir(), "tavern-mutation-worker-"))
     roots.push(root)
     const response = await worker({ op: "writeFileString", path: path.join(root, "missing", "value.txt"), data: "x" })
 
@@ -64,7 +64,7 @@ describe("filesystem mutation worker", () => {
   })
 
   test("reports the failed operation and stops the remaining batch", async () => {
-    const root = await mkdtemp(path.join(tmpdir(), "kilo-mutation-worker-"))
+    const root = await mkdtemp(path.join(tmpdir(), "tavern-mutation-worker-"))
     roots.push(root)
     const missing = path.join(root, "missing", "value.txt")
     const skipped = path.join(root, "skipped.txt")

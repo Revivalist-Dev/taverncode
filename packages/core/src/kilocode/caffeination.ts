@@ -74,18 +74,18 @@ function args(platform: NodeJS.Platform, pid: number, shell?: string): string[] 
   if (platform === "linux")
     return [
       "--what=sleep",
-      "--who=Kilo Code",
-      "--why=Kilo agent running",
+      "--who=Tavern Code",
+      "--why=Tavern agent running",
       "--mode=block",
       shell ?? "/bin/sh",
       "-c",
       `printf '%s\\n' '${READY}'; while kill -0 "$1" 2>/dev/null; do sleep 1 || exit; done`,
-      "kilo-caffeination",
+      "tavern-caffeination",
       String(pid),
     ]
   const script = `$ErrorActionPreference = 'Stop'
 try {
-  $type = Add-Type -MemberDefinition '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint flags);' -Name 'KiloCaffeination' -Namespace 'Kilo' -PassThru
+  $type = Add-Type -MemberDefinition '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint flags);' -Name 'KiloCaffeination' -Namespace 'Tavern' -PassThru
   if ($type::SetThreadExecutionState([uint32]2147483649) -eq 0) { throw 'SetThreadExecutionState failed' }
   [Console]::Out.WriteLine('${READY}'); [Console]::Out.Flush()
   while (Get-Process -Id ${pid} -ErrorAction SilentlyContinue) { Start-Sleep -Seconds 1 }

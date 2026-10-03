@@ -1,10 +1,10 @@
 ---
-title: "Using Synthetic with Kilo Code"
-description: "Access open-source AI models through Synthetic in Kilo Code. Setup guide for getting an API key and configuring models."
+title: "Using Synthetic with Tavern Code"
+description: "Access open-source AI models through Synthetic in Tavern Code. Setup guide for getting an API key and configuring models."
 sidebar_label: Synthetic
 ---
 
-# Using Synthetic With Kilo Code
+# Using Synthetic With Tavern Code
 
 Synthetic provides access to several open-source AI models running on secure infrastructure within the US and EU. They offer both subscription-based and usage-based pricing options, with strong privacy guarantees - they never train on your data and auto-delete API data within 14 days.
 
@@ -18,23 +18,23 @@ Synthetic provides access to several open-source AI models running on secure inf
 
 ## Supported Models
 
-Kilo Code supports all "always on" Synthetic AI models. The available models include various open-source options optimized for different use cases.
+Tavern Code supports all "always on" Synthetic AI models. The available models include various open-source options optimized for different use cases.
 
 **Note:** Model availability may change. Refer to the [Synthetic documentation](https://synthetic.new) for the most up-to-date list of supported models and their capabilities.
 
-## Configuration in Kilo Code
+## Configuration in Tavern Code
 
 {% tabs %}
 {% tab label="VSCode" %}
 
 Open **Settings** (gear icon) and go to the **Providers** tab to add Synthetic and enter your API key.
 
-The extension stores this in your `kilo.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
+The extension stores this in your `tavern.json` config file. You can also edit the config file directly — see the **CLI** tab for the file format.
 
 {% /tab %}
 {% tab label="CLI" %}
 
-Set the API key as an environment variable or configure it in your `kilo.json` config file:
+Set the API key as an environment variable or configure it in your `tavern.json` config file:
 
 ```bash
 export SYNTHETIC_API_KEY="your-api-key"

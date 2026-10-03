@@ -1,5 +1,5 @@
 /**
- * Warning banner for leftover folders under `.kilo/worktrees/` that no git worktree claims.
+ * Warning banner for leftover folders under `.tavern/worktrees/` that no git worktree claims.
  *
  * Deleting files is never automatic, so the only action here is opening `OrphanDialog` — the banner
  * itself only ever names how many there are and their total size. Size is asynchronous (a background
@@ -11,8 +11,8 @@
  * Treating that as "still calculating" left the affordance up forever.
  */
 import { Component, Show } from "solid-js"
-import { Button } from "@kilocode/kilo-ui/button"
-import { Icon } from "@kilocode/kilo-ui/icon"
+import { Button } from "@taverncode/tavern-ui/button"
+import { Icon } from "@taverncode/tavern-ui/icon"
 import { useLanguage } from "../../src/context/language"
 import { formatOrphanBytes, orphanSizesSettled, orphanTotalBytes } from "./dialog-logic"
 import type { OrphanDirectory } from "../project/store"

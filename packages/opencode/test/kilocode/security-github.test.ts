@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { GitHubSecurity } from "@/kilocode/security/github"
+import { GitHubSecurity } from "@/taverncode/security/github"
 
 describe("GitHubSecurity.attachment", () => {
   test("accepts canonical GitHub attachment URLs", () => {

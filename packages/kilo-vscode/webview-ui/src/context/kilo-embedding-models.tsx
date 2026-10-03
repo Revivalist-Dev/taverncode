@@ -2,7 +2,7 @@ import { createContext, createSignal, onCleanup, useContext, type Accessor, type
 import {
   EMPTY_KILO_EMBEDDING_MODEL_CATALOG,
   type KiloEmbeddingModelCatalog,
-} from "@kilocode/kilo-indexing/embedding-models"
+} from "@taverncode/tavern-indexing/embedding-models"
 import { useVSCode } from "./vscode"
 import type { ExtensionMessage } from "../types/messages"
 
