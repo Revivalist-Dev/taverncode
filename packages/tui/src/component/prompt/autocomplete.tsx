@@ -611,6 +611,7 @@ export function Autocomplete(props: {
   useBindings(() => ({
     target: props.input,
     enabled: () => Boolean(store.visible),
+    priority: 2, // taverncode_change - an open list outranks priority-1 subagent-view keys (Esc interrupt)
     commands: [
       {
         name: "prompt.autocomplete.prev",
@@ -682,6 +683,7 @@ export function Autocomplete(props: {
   }))
 
   function show(mode: "@" | "/") {
+    if (mode === "/" && KiloSteer.steering(sync.session.get(props.sessionID ?? ""))) return // taverncode_change
     setStore({
       visible: mode,
       index: props.input().cursorOffset,

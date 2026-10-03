@@ -18,7 +18,7 @@ Seats for Tavern in the Teams or Enterprise subscription bring transparent AI co
 
 ### Step 1: Create Your Organization
 
-1. Visit [app.kilo.ai](https://app.kilo.ai)
+1. Visit [app.tavern.ai](https://app.tavern.ai)
 2. Sign up using your company Google Workspaces or GitHub account
    - Note: We recommend starting with your GitHub account rather than a personal Google account, but we can change it later.
 3. Click **Organizations** in the left sidebar and then **Create New Organization**

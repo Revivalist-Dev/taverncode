@@ -151,6 +151,107 @@ import type {
   InstanceDisposeResponses,
   InstanceReloadErrors,
   InstanceReloadResponses,
+  KiloAudioTranscriptionsErrors,
+  KiloAudioTranscriptionsResponses,
+  KiloAuthStatusErrors,
+  KiloAuthStatusResponses,
+  KiloCloudSessionGetErrors,
+  KiloCloudSessionGetResponses,
+  KiloCloudSessionImportErrors,
+  KiloCloudSessionImportResponses,
+  KiloCloudSessionsErrors,
+  KiloCloudSessionsResponses,
+  KilocodeAgentManagerListErrors,
+  KilocodeAgentManagerListResponses,
+  KilocodeAgentManagerRejectErrors,
+  KilocodeAgentManagerRejectResponses,
+  KilocodeAgentManagerReplyErrors,
+  KilocodeAgentManagerReplyResponses,
+  KilocodeBackgroundJobCancelErrors,
+  KilocodeBackgroundJobCancelResponses,
+  KilocodeBackgroundJobPromoteErrors,
+  KilocodeBackgroundJobPromoteResponses,
+  KilocodeBackgroundJobsErrors,
+  KilocodeBackgroundJobsResponses,
+  KilocodeCommandFilesErrors,
+  KilocodeCommandFilesResponses,
+  KilocodeDrainSessionErrors,
+  KilocodeDrainSessionResponses,
+  KilocodeHeapSnapshotErrors,
+  KilocodeHeapSnapshotResponses,
+  KilocodeMarketplaceInstallErrors,
+  KilocodeMarketplaceInstallResponses,
+  KilocodeMarketplaceListErrors,
+  KilocodeMarketplaceListResponses,
+  KilocodeMarketplaceRemoveErrors,
+  KilocodeMarketplaceRemoveResponses,
+  KilocodeMigrateDiscoverErrors,
+  KilocodeMigrateDiscoverResponses,
+  KilocodeMigrateSessionsErrors,
+  KilocodeMigrateSessionsResponses,
+  KilocodeNotebookListErrors,
+  KilocodeNotebookListResponses,
+  KilocodeNotebookRejectErrors,
+  KilocodeNotebookRejectResponses,
+  KilocodeNotebookReplyErrors,
+  KilocodeNotebookReplyResponses,
+  KilocodeProviderUsageGetErrors,
+  KilocodeProviderUsageGetResponses,
+  KilocodeProviderUsageRefreshErrors,
+  KilocodeProviderUsageRefreshResponses,
+  KilocodeRemoveAgentErrors,
+  KilocodeRemoveAgentResponses,
+  KilocodeRemoveCommandErrors,
+  KilocodeRemoveCommandResponses,
+  KilocodeRemoveSkillErrors,
+  KilocodeRemoveSkillResponses,
+  KilocodeRemoveSnapshotErrors,
+  KilocodeRemoveSnapshotResponses,
+  KilocodeResetSessionBoardErrors,
+  KilocodeResetSessionBoardResponses,
+  KilocodeResumeSessionErrors,
+  KilocodeResumeSessionResponses,
+  KilocodeRetentionCancelErrors,
+  KilocodeRetentionCancelResponses,
+  KilocodeRetentionRunErrors,
+  KilocodeRetentionRunResponses,
+  KilocodeRetentionStatusErrors,
+  KilocodeRetentionStatusResponses,
+  KilocodeSessionBoardErrors,
+  KilocodeSessionBoardResponses,
+  KilocodeSessionImportMessageErrors,
+  KilocodeSessionImportMessageResponses,
+  KilocodeSessionImportPartErrors,
+  KilocodeSessionImportPartResponses,
+  KilocodeSessionImportProjectErrors,
+  KilocodeSessionImportProjectResponses,
+  KilocodeSessionImportSessionErrors,
+  KilocodeSessionImportSessionResponses,
+  KilocodeSessionModelUsageErrors,
+  KilocodeSessionModelUsageResponses,
+  KilocodeSnapshotPrepareErrors,
+  KilocodeSnapshotPrepareResponses,
+  KilocodeTeardownWorktreeErrors,
+  KilocodeTeardownWorktreeResponses,
+  KilocodeWakeupsErrors,
+  KilocodeWakeupsResponses,
+  KiloEditErrors,
+  KiloEditResponses,
+  KiloFimErrors,
+  KiloFimResponse,
+  KiloFimResponses,
+  KiloModelsImagesErrors,
+  KiloModelsImagesResponses,
+  KiloModelsTranscriptionsErrors,
+  KiloModelsTranscriptionsResponses,
+  KiloModesErrors,
+  KiloModesResponses,
+  KiloNotificationsErrors,
+  KiloNotificationsResponses,
+  KiloOrganizationSetErrors,
+  KiloOrganizationSetResponses,
+  KiloProfileErrors,
+  KiloProfileResponses,
   LocationRef,
   LspStatusErrors,
   LspStatusResponses,
@@ -352,107 +453,6 @@ import type {
   SyncStartResponses,
   SyncStealErrors,
   SyncStealResponses,
-  TavernAudioTranscriptionsErrors,
-  TavernAudioTranscriptionsResponses,
-  TavernAuthStatusErrors,
-  TavernAuthStatusResponses,
-  TavernCloudSessionGetErrors,
-  TavernCloudSessionGetResponses,
-  TavernCloudSessionImportErrors,
-  TavernCloudSessionImportResponses,
-  TavernCloudSessionsErrors,
-  TavernCloudSessionsResponses,
-  TaverncodeAgentManagerListErrors,
-  TaverncodeAgentManagerListResponses,
-  TaverncodeAgentManagerRejectErrors,
-  TaverncodeAgentManagerRejectResponses,
-  TaverncodeAgentManagerReplyErrors,
-  TaverncodeAgentManagerReplyResponses,
-  TaverncodeBackgroundJobCancelErrors,
-  TaverncodeBackgroundJobCancelResponses,
-  TaverncodeBackgroundJobPromoteErrors,
-  TaverncodeBackgroundJobPromoteResponses,
-  TaverncodeBackgroundJobsErrors,
-  TaverncodeBackgroundJobsResponses,
-  TaverncodeCommandFilesErrors,
-  TaverncodeCommandFilesResponses,
-  TaverncodeDrainSessionErrors,
-  TaverncodeDrainSessionResponses,
-  TaverncodeHeapSnapshotErrors,
-  TaverncodeHeapSnapshotResponses,
-  TaverncodeMarketplaceInstallErrors,
-  TaverncodeMarketplaceInstallResponses,
-  TaverncodeMarketplaceListErrors,
-  TaverncodeMarketplaceListResponses,
-  TaverncodeMarketplaceRemoveErrors,
-  TaverncodeMarketplaceRemoveResponses,
-  TaverncodeMigrateDiscoverErrors,
-  TaverncodeMigrateDiscoverResponses,
-  TaverncodeMigrateSessionsErrors,
-  TaverncodeMigrateSessionsResponses,
-  TaverncodeNotebookListErrors,
-  TaverncodeNotebookListResponses,
-  TaverncodeNotebookRejectErrors,
-  TaverncodeNotebookRejectResponses,
-  TaverncodeNotebookReplyErrors,
-  TaverncodeNotebookReplyResponses,
-  TaverncodeProviderUsageGetErrors,
-  TaverncodeProviderUsageGetResponses,
-  TaverncodeProviderUsageRefreshErrors,
-  TaverncodeProviderUsageRefreshResponses,
-  TaverncodeRemoveAgentErrors,
-  TaverncodeRemoveAgentResponses,
-  TaverncodeRemoveCommandErrors,
-  TaverncodeRemoveCommandResponses,
-  TaverncodeRemoveSkillErrors,
-  TaverncodeRemoveSkillResponses,
-  TaverncodeRemoveSnapshotErrors,
-  TaverncodeRemoveSnapshotResponses,
-  TaverncodeResetSessionBoardErrors,
-  TaverncodeResetSessionBoardResponses,
-  TaverncodeResumeSessionErrors,
-  TaverncodeResumeSessionResponses,
-  TaverncodeRetentionCancelErrors,
-  TaverncodeRetentionCancelResponses,
-  TaverncodeRetentionRunErrors,
-  TaverncodeRetentionRunResponses,
-  TaverncodeRetentionStatusErrors,
-  TaverncodeRetentionStatusResponses,
-  TaverncodeSessionBoardErrors,
-  TaverncodeSessionBoardResponses,
-  TaverncodeSessionImportMessageErrors,
-  TaverncodeSessionImportMessageResponses,
-  TaverncodeSessionImportPartErrors,
-  TaverncodeSessionImportPartResponses,
-  TaverncodeSessionImportProjectErrors,
-  TaverncodeSessionImportProjectResponses,
-  TaverncodeSessionImportSessionErrors,
-  TaverncodeSessionImportSessionResponses,
-  TaverncodeSessionModelUsageErrors,
-  TaverncodeSessionModelUsageResponses,
-  TaverncodeSnapshotPrepareErrors,
-  TaverncodeSnapshotPrepareResponses,
-  TaverncodeTeardownWorktreeErrors,
-  TaverncodeTeardownWorktreeResponses,
-  TaverncodeWakeupsErrors,
-  TaverncodeWakeupsResponses,
-  TavernEditErrors,
-  TavernEditResponses,
-  TavernFimErrors,
-  TavernFimResponse,
-  TavernFimResponses,
-  TavernModelsImagesErrors,
-  TavernModelsImagesResponses,
-  TavernModelsTranscriptionsErrors,
-  TavernModelsTranscriptionsResponses,
-  TavernModesErrors,
-  TavernModesResponses,
-  TavernNotificationsErrors,
-  TavernNotificationsResponses,
-  TavernOrganizationSetErrors,
-  TavernOrganizationSetResponses,
-  TavernProfileErrors,
-  TavernProfileResponses,
   TelemetryCaptureErrors,
   TelemetryCaptureResponses,
   TelemetrySetEnabledErrors,
@@ -681,7 +681,7 @@ class HeyApiRegistry<T> {
   get(key?: string): T {
     const instance = this.instances.get(key ?? this.defaultKey)
     if (!instance) {
-      throw new Error(`No SDK client found. Create one with "new TavernClient()" to fix this error.`)
+      throw new Error(`No SDK client found. Create one with "new KiloClient()" to fix this error.`)
     }
     return instance
   }
@@ -6775,8 +6775,8 @@ export class Audio extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TavernAudioTranscriptionsResponses,
-      TavernAudioTranscriptionsErrors,
+      KiloAudioTranscriptionsResponses,
+      KiloAudioTranscriptionsErrors,
       ThrowOnError
     >({
       url: "/tavern/audio/transcriptions",
@@ -6815,7 +6815,7 @@ export class Models extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernModelsImagesResponses, TavernModelsImagesErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloModelsImagesResponses, KiloModelsImagesErrors, ThrowOnError>({
       url: "/tavern/models/images",
       ...options,
       ...params,
@@ -6846,8 +6846,8 @@ export class Models extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TavernModelsTranscriptionsResponses,
-      TavernModelsTranscriptionsErrors,
+      KiloModelsTranscriptionsResponses,
+      KiloModelsTranscriptionsErrors,
       ThrowOnError
     >({
       url: "/tavern/models/transcriptions",
@@ -6883,20 +6883,18 @@ export class Organization extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<
-      TavernOrganizationSetResponses,
-      TavernOrganizationSetErrors,
-      ThrowOnError
-    >({
-      url: "/tavern/organization",
-      ...options,
-      ...params,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-        ...params.headers,
+    return (options?.client ?? this.client).post<KiloOrganizationSetResponses, KiloOrganizationSetErrors, ThrowOnError>(
+      {
+        url: "/tavern/organization",
+        ...options,
+        ...params,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+          ...params.headers,
+        },
       },
-    })
+    )
   }
 }
 
@@ -6926,11 +6924,7 @@ export class Session3 extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<
-      TavernCloudSessionGetResponses,
-      TavernCloudSessionGetErrors,
-      ThrowOnError
-    >({
+    return (options?.client ?? this.client).get<KiloCloudSessionGetResponses, KiloCloudSessionGetErrors, ThrowOnError>({
       url: "/tavern/cloud/session/{id}",
       ...options,
       ...params,
@@ -6963,8 +6957,8 @@ export class Session3 extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TavernCloudSessionImportResponses,
-      TavernCloudSessionImportErrors,
+      KiloCloudSessionImportResponses,
+      KiloCloudSessionImportErrors,
       ThrowOnError
     >({
       url: "/tavern/cloud/session/import",
@@ -7010,7 +7004,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernProfileResponses, TavernProfileErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloProfileResponses, KiloProfileErrors, ThrowOnError>({
       url: "/tavern/profile",
       ...options,
       ...params,
@@ -7040,7 +7034,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernAuthStatusResponses, TavernAuthStatusErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloAuthStatusResponses, KiloAuthStatusErrors, ThrowOnError>({
       url: "/tavern/auth-status",
       ...options,
       ...params,
@@ -7070,7 +7064,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernModesResponses, TavernModesErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloModesResponses, KiloModesErrors, ThrowOnError>({
       url: "/tavern/modes",
       ...options,
       ...params,
@@ -7093,7 +7087,7 @@ export class Tavern extends HeyApiClient {
       maxTokens?: number
       temperature?: number
     },
-    options?: Options<never, ThrowOnError, TavernFimResponse>,
+    options?: Options<never, ThrowOnError, KiloFimResponse>,
   ) {
     const params = buildClientParams(
       [parameters],
@@ -7112,7 +7106,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).sse.post<TavernFimResponses, TavernFimErrors, ThrowOnError>({
+    return (options?.client ?? this.client).sse.post<KiloFimResponses, KiloFimErrors, ThrowOnError>({
       url: "/tavern/fim",
       ...options,
       ...params,
@@ -7172,7 +7166,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<TavernEditResponses, TavernEditErrors, ThrowOnError>({
+    return (options?.client ?? this.client).post<KiloEditResponses, KiloEditErrors, ThrowOnError>({
       url: "/tavern/edit",
       ...options,
       ...params,
@@ -7207,7 +7201,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernNotificationsResponses, TavernNotificationsErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloNotificationsResponses, KiloNotificationsErrors, ThrowOnError>({
       url: "/tavern/notifications",
       ...options,
       ...params,
@@ -7243,7 +7237,7 @@ export class Tavern extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TavernCloudSessionsResponses, TavernCloudSessionsErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KiloCloudSessionsResponses, KiloCloudSessionsErrors, ThrowOnError>({
       url: "/tavern/cloud-sessions",
       ...options,
       ...params,
@@ -7296,8 +7290,8 @@ export class Heap extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeHeapSnapshotResponses,
-      TaverncodeHeapSnapshotErrors,
+      KilocodeHeapSnapshotResponses,
+      KilocodeHeapSnapshotErrors,
       ThrowOnError
     >({
       url: "/taverncode/heap/snapshot",
@@ -7332,8 +7326,8 @@ export class Marketplace extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeMarketplaceListResponses,
-      TaverncodeMarketplaceListErrors,
+      KilocodeMarketplaceListResponses,
+      KilocodeMarketplaceListErrors,
       ThrowOnError
     >({
       url: "/taverncode/marketplace",
@@ -7374,8 +7368,8 @@ export class Marketplace extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeMarketplaceInstallResponses,
-      TaverncodeMarketplaceInstallErrors,
+      KilocodeMarketplaceInstallResponses,
+      KilocodeMarketplaceInstallErrors,
       ThrowOnError
     >({
       url: "/taverncode/marketplace/install",
@@ -7417,8 +7411,8 @@ export class Marketplace extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeMarketplaceRemoveResponses,
-      TaverncodeMarketplaceRemoveErrors,
+      KilocodeMarketplaceRemoveResponses,
+      KilocodeMarketplaceRemoveErrors,
       ThrowOnError
     >({
       url: "/taverncode/marketplace/remove",
@@ -7458,8 +7452,8 @@ export class Snapshot extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeSnapshotPrepareResponses,
-      TaverncodeSnapshotPrepareErrors,
+      KilocodeSnapshotPrepareResponses,
+      KilocodeSnapshotPrepareErrors,
       ThrowOnError
     >({
       url: "/taverncode/snapshot/prepare",
@@ -7494,8 +7488,8 @@ export class ProviderUsage extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeProviderUsageGetResponses,
-      TaverncodeProviderUsageGetErrors,
+      KilocodeProviderUsageGetResponses,
+      KilocodeProviderUsageGetErrors,
       ThrowOnError
     >({
       url: "/taverncode/provider-usage",
@@ -7528,8 +7522,8 @@ export class ProviderUsage extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeProviderUsageRefreshResponses,
-      TaverncodeProviderUsageRefreshErrors,
+      KilocodeProviderUsageRefreshResponses,
+      KilocodeProviderUsageRefreshErrors,
       ThrowOnError
     >({
       url: "/taverncode/provider-usage/refresh",
@@ -7564,8 +7558,8 @@ export class Notebook extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeNotebookListResponses,
-      TaverncodeNotebookListErrors,
+      KilocodeNotebookListResponses,
+      KilocodeNotebookListErrors,
       ThrowOnError
     >({
       url: "/taverncode/notebook",
@@ -7602,8 +7596,8 @@ export class Notebook extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeNotebookReplyResponses,
-      TaverncodeNotebookReplyErrors,
+      KilocodeNotebookReplyResponses,
+      KilocodeNotebookReplyErrors,
       ThrowOnError
     >({
       url: "/taverncode/notebook/{requestID}/reply",
@@ -7645,8 +7639,8 @@ export class Notebook extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeNotebookRejectResponses,
-      TaverncodeNotebookRejectErrors,
+      KilocodeNotebookRejectResponses,
+      KilocodeNotebookRejectErrors,
       ThrowOnError
     >({
       url: "/taverncode/notebook/{requestID}/reject",
@@ -7686,8 +7680,8 @@ export class AgentManager extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeAgentManagerListResponses,
-      TaverncodeAgentManagerListErrors,
+      KilocodeAgentManagerListResponses,
+      KilocodeAgentManagerListErrors,
       ThrowOnError
     >({
       url: "/taverncode/agent-manager",
@@ -7724,8 +7718,8 @@ export class AgentManager extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeAgentManagerReplyResponses,
-      TaverncodeAgentManagerReplyErrors,
+      KilocodeAgentManagerReplyResponses,
+      KilocodeAgentManagerReplyErrors,
       ThrowOnError
     >({
       url: "/taverncode/agent-manager/{requestID}/reply",
@@ -7767,8 +7761,8 @@ export class AgentManager extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeAgentManagerRejectResponses,
-      TaverncodeAgentManagerRejectErrors,
+      KilocodeAgentManagerRejectResponses,
+      KilocodeAgentManagerRejectErrors,
       ThrowOnError
     >({
       url: "/taverncode/agent-manager/{requestID}/reject",
@@ -7810,8 +7804,8 @@ export class BackgroundJob extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeBackgroundJobCancelResponses,
-      TaverncodeBackgroundJobCancelErrors,
+      KilocodeBackgroundJobCancelResponses,
+      KilocodeBackgroundJobCancelErrors,
       ThrowOnError
     >({
       url: "/taverncode/background-jobs/{jobID}/cancel",
@@ -7846,8 +7840,8 @@ export class BackgroundJob extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeBackgroundJobPromoteResponses,
-      TaverncodeBackgroundJobPromoteErrors,
+      KilocodeBackgroundJobPromoteResponses,
+      KilocodeBackgroundJobPromoteErrors,
       ThrowOnError
     >({
       url: "/taverncode/background-jobs/{jobID}/promote",
@@ -7882,8 +7876,8 @@ export class Retention extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeRetentionStatusResponses,
-      TaverncodeRetentionStatusErrors,
+      KilocodeRetentionStatusResponses,
+      KilocodeRetentionStatusErrors,
       ThrowOnError
     >({
       url: "/taverncode/retention",
@@ -7918,8 +7912,8 @@ export class Retention extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeRetentionRunResponses,
-      TaverncodeRetentionRunErrors,
+      KilocodeRetentionRunResponses,
+      KilocodeRetentionRunErrors,
       ThrowOnError
     >({
       url: "/taverncode/retention/run",
@@ -7957,8 +7951,8 @@ export class Retention extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeRetentionCancelResponses,
-      TaverncodeRetentionCancelErrors,
+      KilocodeRetentionCancelResponses,
+      KilocodeRetentionCancelErrors,
       ThrowOnError
     >({
       url: "/taverncode/retention/cancel",
@@ -8005,8 +7999,8 @@ export class Migrate extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeMigrateSessionsResponses,
-      TaverncodeMigrateSessionsErrors,
+      KilocodeMigrateSessionsResponses,
+      KilocodeMigrateSessionsErrors,
       ThrowOnError
     >({
       url: "/taverncode/migrate/sessions",
@@ -8048,8 +8042,8 @@ export class Migrate extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeMigrateDiscoverResponses,
-      TaverncodeMigrateDiscoverErrors,
+      KilocodeMigrateDiscoverResponses,
+      KilocodeMigrateDiscoverErrors,
       ThrowOnError
     >({
       url: "/taverncode/migrate/sessions/discover",
@@ -8113,8 +8107,8 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeSessionImportProjectResponses,
-      TaverncodeSessionImportProjectErrors,
+      KilocodeSessionImportProjectResponses,
+      KilocodeSessionImportProjectErrors,
       ThrowOnError
     >({
       url: "/taverncode/session-import/project",
@@ -8209,8 +8203,8 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeSessionImportSessionResponses,
-      TaverncodeSessionImportSessionErrors,
+      KilocodeSessionImportSessionResponses,
+      KilocodeSessionImportSessionErrors,
       ThrowOnError
     >({
       url: "/taverncode/session-import/session",
@@ -8301,8 +8295,8 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeSessionImportMessageResponses,
-      TaverncodeSessionImportMessageErrors,
+      KilocodeSessionImportMessageResponses,
+      KilocodeSessionImportMessageErrors,
       ThrowOnError
     >({
       url: "/taverncode/session-import/message",
@@ -8433,8 +8427,8 @@ export class SessionImport extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeSessionImportPartResponses,
-      TaverncodeSessionImportPartErrors,
+      KilocodeSessionImportPartResponses,
+      KilocodeSessionImportPartErrors,
       ThrowOnError
     >({
       url: "/taverncode/session-import/part",
@@ -8480,8 +8474,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeResumeSessionResponses,
-      TaverncodeResumeSessionErrors,
+      KilocodeResumeSessionResponses,
+      KilocodeResumeSessionErrors,
       ThrowOnError
     >({
       url: "/taverncode/session/{sessionID}/resume",
@@ -8523,8 +8517,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeDrainSessionResponses,
-      TaverncodeDrainSessionErrors,
+      KilocodeDrainSessionResponses,
+      KilocodeDrainSessionErrors,
       ThrowOnError
     >({
       url: "/taverncode/session/{sessionID}/drain",
@@ -8568,8 +8562,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeSessionBoardResponses,
-      TaverncodeSessionBoardErrors,
+      KilocodeSessionBoardResponses,
+      KilocodeSessionBoardErrors,
       ThrowOnError
     >({
       url: "/taverncode/session/{sessionID}/board",
@@ -8606,8 +8600,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeResetSessionBoardResponses,
-      TaverncodeResetSessionBoardErrors,
+      KilocodeResetSessionBoardResponses,
+      KilocodeResetSessionBoardErrors,
       ThrowOnError
     >({
       url: "/taverncode/session/{sessionID}/board/reset",
@@ -8645,8 +8639,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeCommandFilesResponses,
-      TaverncodeCommandFilesErrors,
+      KilocodeCommandFilesResponses,
+      KilocodeCommandFilesErrors,
       ThrowOnError
     >({
       url: "/taverncode/command/files",
@@ -8681,8 +8675,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeRemoveCommandResponses,
-      TaverncodeRemoveCommandErrors,
+      KilocodeRemoveCommandResponses,
+      KilocodeRemoveCommandErrors,
       ThrowOnError
     >({
       url: "/taverncode/command/remove",
@@ -8721,20 +8715,18 @@ export class Taverncode extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<
-      TaverncodeRemoveSkillResponses,
-      TaverncodeRemoveSkillErrors,
-      ThrowOnError
-    >({
-      url: "/taverncode/skill/remove",
-      ...options,
-      ...params,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-        ...params.headers,
+    return (options?.client ?? this.client).post<KilocodeRemoveSkillResponses, KilocodeRemoveSkillErrors, ThrowOnError>(
+      {
+        url: "/taverncode/skill/remove",
+        ...options,
+        ...params,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+          ...params.headers,
+        },
       },
-    })
+    )
   }
 
   /**
@@ -8764,20 +8756,18 @@ export class Taverncode extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).post<
-      TaverncodeRemoveAgentResponses,
-      TaverncodeRemoveAgentErrors,
-      ThrowOnError
-    >({
-      url: "/taverncode/agent/remove",
-      ...options,
-      ...params,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-        ...params.headers,
+    return (options?.client ?? this.client).post<KilocodeRemoveAgentResponses, KilocodeRemoveAgentErrors, ThrowOnError>(
+      {
+        url: "/taverncode/agent/remove",
+        ...options,
+        ...params,
+        headers: {
+          "Content-Type": "application/json",
+          ...options?.headers,
+          ...params.headers,
+        },
       },
-    })
+    )
   }
 
   /**
@@ -8806,8 +8796,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeRemoveSnapshotResponses,
-      TaverncodeRemoveSnapshotErrors,
+      KilocodeRemoveSnapshotResponses,
+      KilocodeRemoveSnapshotErrors,
       ThrowOnError
     >({
       url: "/taverncode/snapshot/remove",
@@ -8847,8 +8837,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).post<
-      TaverncodeTeardownWorktreeResponses,
-      TaverncodeTeardownWorktreeErrors,
+      KilocodeTeardownWorktreeResponses,
+      KilocodeTeardownWorktreeErrors,
       ThrowOnError
     >({
       url: "/taverncode/worktree/teardown",
@@ -8888,8 +8878,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeSessionModelUsageResponses,
-      TaverncodeSessionModelUsageErrors,
+      KilocodeSessionModelUsageResponses,
+      KilocodeSessionModelUsageErrors,
       ThrowOnError
     >({
       url: "/session/{sessionID}/model-usage",
@@ -8924,8 +8914,8 @@ export class Taverncode extends HeyApiClient {
       ],
     )
     return (options?.client ?? this.client).get<
-      TaverncodeBackgroundJobsResponses,
-      TaverncodeBackgroundJobsErrors,
+      KilocodeBackgroundJobsResponses,
+      KilocodeBackgroundJobsErrors,
       ThrowOnError
     >({
       url: "/taverncode/background-jobs",
@@ -8957,7 +8947,7 @@ export class Taverncode extends HeyApiClient {
         },
       ],
     )
-    return (options?.client ?? this.client).get<TaverncodeWakeupsResponses, TaverncodeWakeupsErrors, ThrowOnError>({
+    return (options?.client ?? this.client).get<KilocodeWakeupsResponses, KilocodeWakeupsErrors, ThrowOnError>({
       url: "/taverncode/wakeups",
       ...options,
       ...params,
@@ -9554,7 +9544,7 @@ export class Telemetry extends HeyApiClient {
   /**
    * Set PostHog telemetry enabled state
    *
-   * Update the PostHog client's opt-in/out state at runtime. The CLI reads TAVERN_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.
+   * Update the PostHog client's opt-in/out state at runtime. The CLI reads KILO_TELEMETRY_LEVEL once at spawn — this route lets clients (e.g. the VS Code extension) propagate runtime telemetry consent changes.
    */
   public setEnabled<ThrowOnError extends boolean = false>(
     parameters: {
@@ -12017,12 +12007,12 @@ export class V2 extends HeyApiClient {
   }
 }
 
-export class TavernClient extends HeyApiClient {
-  public static readonly __registry = new HeyApiRegistry<TavernClient>()
+export class KiloClient extends HeyApiClient {
+  public static readonly __registry = new HeyApiRegistry<KiloClient>()
 
   constructor(args?: { client?: Client; key?: string }) {
     super(args)
-    TavernClient.__registry.set(this, args?.key)
+    KiloClient.__registry.set(this, args?.key)
   }
 
   private _auth?: Auth
@@ -12185,9 +12175,9 @@ export class TavernClient extends HeyApiClient {
     return (this._indexing ??= new Indexing({ client: this.client }))
   }
 
-  private _tavern?: Tavern
+  private _kilo?: Tavern
   get tavern(): Tavern {
-    return (this._tavern ??= new Tavern({ client: this.client }))
+    return (this._kilo ??= new Tavern({ client: this.client }))
   }
 
   private _taverncode?: Taverncode

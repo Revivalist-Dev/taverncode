@@ -161,7 +161,7 @@ function Introduction(props: IntroProps) {
           size="small"
           icon="link"
           onClick={() => {
-            vscode.postMessage({ type: "openExternal", url: "https://kilo.ai/docs/automate/agent-manager-workflows" })
+            vscode.postMessage({ type: "openExternal", url: "https://tavern.ai/docs/automate/agent-manager-workflows" })
           }}
         >
           {t("agentManager.intro.guide")}

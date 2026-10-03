@@ -6,12 +6,12 @@ describe("FIM target resolution", () => {
     expect(resolveFimTarget("tavern", "mistralai/codestral-2508")).toEqual({
       provider: "tavern",
       model: "mistralai/codestral-2508",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
     expect(resolveFimTarget("tavern", "inception/mercury-edit-2")).toEqual({
       provider: "tavern",
       model: "inception/mercury-edit-2",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
   })
 
@@ -31,22 +31,22 @@ describe("FIM target resolution", () => {
     expect(resolveFimTarget()).toEqual({
       provider: "tavern",
       model: "mistralai/codestral-2501",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
     expect(resolveFimTarget(undefined, "mistralai/codestral-2508")).toEqual({
       provider: "tavern",
       model: "mistralai/codestral-2508",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
     expect(resolveFimTarget(undefined, "inception/mercury-edit")).toEqual({
       provider: "tavern",
       model: "inception/mercury-edit",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
     expect(resolveFimTarget("tavern", "custom/fim-model")).toEqual({
       provider: "tavern",
       model: "custom/fim-model",
-      url: "https://api.kilo.ai/api/fim/completions",
+      url: "https://api.tavern.ai/api/fim/completions",
     })
   })
 })

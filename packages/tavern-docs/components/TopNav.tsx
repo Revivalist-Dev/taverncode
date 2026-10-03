@@ -42,14 +42,14 @@ const contributingItems: DropdownItem[] = [
     description: "Our community guidelines",
   },
   { label: "GitHub Repository", href: "https://github.com/Kilo-Org/", description: "View source and issues" },
-  { label: "Discord Community", href: "https://kilo.ai/discord", description: "Join our community" },
+  { label: "Discord Community", href: "https://tavern.ai/discord", description: "Join our community" },
 ]
 
 const helpItems: DropdownItem[] = [
   { label: "Documentation", href: "/", description: "Browse all documentation" },
   { label: "FAQ", href: "/getting-started/faq", description: "Frequently asked questions" },
   { label: "Community Projects", href: "/community", description: "Explore community resources" },
-  { label: "Support", href: "https://kilo.ai/support", description: "Get help from the team" },
+  { label: "Support", href: "https://tavern.ai/support", description: "Get help from the team" },
   {
     label: "Changelog",
     href: "https://github.com/Kilo-Org/kilocode/releases",
@@ -218,7 +218,7 @@ function preview(url: string) {
   if (typeof window === "undefined" || !URL.canParse(url)) return url
 
   const value = new URL(url)
-  if (value.hostname !== "kilo.ai" || !value.pathname.startsWith("/docs")) return url
+  if (value.hostname !== "tavern.ai" || !value.pathname.startsWith("/docs")) return url
 
   return `${window.location.origin}${value.pathname}${value.search}${value.hash}`
 }
@@ -312,10 +312,10 @@ export function TopNav({ onMobileMenuToggle, isMobileMenuOpen = false, showMobil
             <SearchIcon />
           </button>
           <ThemeToggle />
-          <Link href="https://kilo.ai/github" className="github-link desktop-nav">
+          <Link href="https://tavern.ai/github" className="github-link desktop-nav">
             GitHub
           </Link>
-          <Link href="https://app.kilo.ai" className="signin-btn desktop-nav">
+          <Link href="https://app.tavern.ai" className="signin-btn desktop-nav">
             Sign in
           </Link>
         </div>

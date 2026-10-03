@@ -180,7 +180,7 @@ describe("tavern remote session log (two lines per session)", () => {
     expect(started![1]).toEqual({
       sessionID: id,
       startedAt: started![1].startedAt,
-      model: "kilo/claude-sonnet-4",
+      model: "tavern/claude-sonnet-4",
       directory: "/workspace/project-a",
     })
 
@@ -224,7 +224,7 @@ describe("tavern remote session log (two lines per session)", () => {
     })
 
     const started = lineOf(lines, "remote session started")
-    expect(started![1].model).toBe("kilo/claude-sonnet-4")
+    expect(started![1].model).toBe("tavern/claude-sonnet-4")
     expect(started![1].directory).toBe("/tmp/process-default")
   })
 
@@ -287,7 +287,7 @@ describe("tavern remote session log (two lines per session)", () => {
     const second = SessionID.make("ses_remote_log_shutdown_b")
     const log = captureLogger(lines)
 
-    RemoteSessionLog.start(log, { sessionID: first, model: "kilo/claude-sonnet-4", directory: "/workspace/a" })
+    RemoteSessionLog.start(log, { sessionID: first, model: "tavern/claude-sonnet-4", directory: "/workspace/a" })
     RemoteSessionLog.start(log, { sessionID: second, directory: "/workspace/b" })
     lines.length = 0
 
@@ -316,7 +316,7 @@ describe("tavern remote session log (two lines per session)", () => {
     const log = Log.create({ service: "tavern-sessions" })
     const id = SessionID.make("ses_remote_log_rendered")
 
-    RemoteSessionLog.start(log, { sessionID: id, model: "kilo/claude-sonnet-4", directory: "/workspace/a" })
+    RemoteSessionLog.start(log, { sessionID: id, model: "tavern/claude-sonnet-4", directory: "/workspace/a" })
     await Bun.sleep(20)
     RemoteSessionLog.end(log, { sessionID: id, reason: "deleted" })
     process.stderr.write = original
@@ -326,7 +326,7 @@ describe("tavern remote session log (two lines per session)", () => {
     expect(out).toContain("remote session started")
     expect(out).toContain("remote session ended")
     expect(out).toContain(`sessionID=${id}`)
-    expect(out).toContain("model=kilo/claude-sonnet-4")
+    expect(out).toContain("model=tavern/claude-sonnet-4")
     expect(out).toContain("directory=/workspace/a")
     expect(out).toContain("reason=deleted")
     expect(out).toMatch(/startedAt=\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/)

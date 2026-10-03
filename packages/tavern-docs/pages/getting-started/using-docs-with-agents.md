@@ -12,7 +12,7 @@ You can access the full text of the Tavern Code documentation in machine-readabl
 The complete documentation is available as a single text file at:
 
 ```
-https://kilo.ai/docs/llms.txt
+https://tavern.ai/docs/llms.txt
 ```
 
 This file contains the full content of every page in the Tavern Code docs, formatted for easy consumption by language models.
@@ -22,13 +22,13 @@ This file contains the full content of every page in the Tavern Code docs, forma
 You can also fetch any individual documentation page as raw Markdown via the API:
 
 ```
-https://kilo.ai/docs/api/raw-markdown?path=<url-encoded-path>
+https://tavern.ai/docs/api/raw-markdown?path=<url-encoded-path>
 ```
 
 For example, to fetch the "Code with AI" overview page:
 
 ```
-https://kilo.ai/docs/api/raw-markdown?path=%2Fcode-with-ai
+https://tavern.ai/docs/api/raw-markdown?path=%2Fcode-with-ai
 ```
 
 The `path` parameter should be the URL-encoded path of the documentation page, without the `/docs` prefix.

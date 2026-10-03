@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Customize"
 description: "Make Tavern Code work your way with custom agents, rules, instructions, and more"
 ---

@@ -24,7 +24,7 @@ describe("Tavern agent remove", () => {
       "description": "Reviews code"
     },
     "code": {
-      "model": "kilo/gpt-5"
+      "model": "tavern/gpt-5"
     }
   }
 }`,
@@ -40,7 +40,7 @@ describe("Tavern agent remove", () => {
     const cfg = parseJsonc(await Bun.file(file).text())
     expect(cfg.default_agent).toBeUndefined()
     expect(cfg.agent.reviewer).toBeUndefined()
-    expect(cfg.agent.code.model).toBe("kilo/gpt-5")
+    expect(cfg.agent.code.model).toBe("tavern/gpt-5")
   })
 
   test("removes duplicate agents from every editable config source", async () => {

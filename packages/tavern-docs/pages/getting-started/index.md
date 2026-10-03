@@ -49,6 +49,6 @@ Tavern Code is open source. You can inspect the code, contribute features, or fo
 
 ## Get Help
 
-- [**Discord**](https://kilo.ai/discord) — Real-time help and community discussion
+- [**Discord**](https://tavern.ai/discord) — Real-time help and community discussion
 - [**GitHub Issues**](https://github.com/Kilo-Org/kilocode/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen) — Report bugs or request features
-- [**YouTube**](https://kilo.ai/youtube) — Tutorials and walkthroughs
+- [**YouTube**](https://tavern.ai/youtube) — Tutorials and walkthroughs

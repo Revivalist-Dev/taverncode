@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import path from "path"
-import { TavernOauthCallbackPage } from "@opencode-ai/core/taverncode/oauth/page"
+import { KiloOauthCallbackPage } from "@opencode-ai/core/taverncode/oauth/page"
 
 const root = path.join(__dirname, "..", "..")
 
@@ -18,13 +18,13 @@ describe("Tavern OAuth branding", () => {
   test("core OAuth browser flow uses Tavern branding", async () => {
     const src = await Bun.file(path.join(root, "..", "core", "src", "plugin", "provider", "openai.ts")).text()
     const pages = [
-      TavernOauthCallbackPage.success({ provider: "ChatGPT" }),
-      TavernOauthCallbackPage.error("Denied", { provider: "ChatGPT" }),
+      KiloOauthCallbackPage.success({ provider: "ChatGPT" }),
+      KiloOauthCallbackPage.error("Denied", { provider: "ChatGPT" }),
     ]
 
     expect(src).toContain('originator: "tavern"')
     expect(src).toContain('"User-Agent": `tavern/${InstallationVersion}`')
-    expect(src).toContain("TavernOauthCallbackPage")
+    expect(src).toContain("KiloOauthCallbackPage")
     expect(src).not.toContain('originator: "opencode"')
     for (const page of pages) {
       expect(page).toContain("· Tavern</title>")

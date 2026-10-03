@@ -58,7 +58,7 @@ describe("agent builder routes", () => {
       scope: "project",
       description: "Review code",
       mode: "subagent",
-      model: "kilo/gpt-5.5",
+      model: "tavern/gpt-5.5",
       tools: ["read", "grep"],
       prompt: "Review the current diff and report risks.",
     }

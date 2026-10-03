@@ -105,7 +105,7 @@ If you use Tavern Code with VS Code on WSL and the extension repeatedly disconne
 
 ## Contact Support
 
-If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@kilocode.ai](mailto:hi@kilocode.ai)** along with the following:
+If you're unable to resolve the issue, please inspect the console logs, remove any secrets, and send the logs to **[hi@taverncode.ai](mailto:hi@taverncode.ai)** along with the following:
 
 - The error messages from the console
 - Steps to reproduce the issue

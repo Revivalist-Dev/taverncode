@@ -35,7 +35,7 @@ describe("Edit target resolution", () => {
     expect(resolveEditTarget()).toEqual({
       provider: "tavern",
       model: "inception/mercury-edit-2",
-      url: "https://api.kilo.ai/api/edit/completions",
+      url: "https://api.tavern.ai/api/edit/completions",
     })
   })
 })

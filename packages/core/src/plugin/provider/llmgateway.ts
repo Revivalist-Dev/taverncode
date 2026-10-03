@@ -17,7 +17,7 @@ export const LLMGatewayPlugin = define({
           if (item.provider.id !== ProviderV2.ID.make("llmgateway")) continue // taverncode_change
           if (!(yield* integrations.get(Integration.ID.make(item.provider.id)))) continue
           evt.provider.update(item.provider.id, (provider) => {
-            provider.request.headers["HTTP-Referer"] = "https://kilo.ai/"
+            provider.request.headers["HTTP-Referer"] = "https://tavern.ai/"
             // taverncode_change start
             provider.request.headers["X-Title"] = "Tavern Code"
             provider.request.headers["X-Source"] = "tavern"

@@ -3738,7 +3738,7 @@ describe("ProviderTransform.message - cache control on gateway", () => {
       providerID: "tavern",
       api: {
         id: "openai/gpt-5.6",
-        url: "https://api.kilo.ai/api/gateway",
+        url: "https://api.tavern.ai/api/gateway",
         npm: "@taverncode/tavern-gateway",
       },
       id: "openai/gpt-5.6",
@@ -4687,11 +4687,11 @@ describe("ProviderTransform.variants", () => {
         high: { reasoningEffort: "high" },
       }
       const model = createMockModel({
-        id: "kilo/inception/mercury-2",
+        id: "tavern/inception/mercury-2",
         providerID: "tavern",
         api: {
           id: "inception/mercury-2",
-          url: "https://gateway.kilo.ai",
+          url: "https://gateway.tavern.ai",
           npm: "@taverncode/tavern-gateway",
         },
         variants: serverVariants,
@@ -6072,11 +6072,11 @@ describe("ProviderTransform.variants", () => {
     describe("@taverncode/tavern-gateway", () => {
       test("claude models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/anthropic/claude-sonnet-4",
+          id: "tavern/anthropic/claude-sonnet-4",
           providerID: "tavern",
           api: {
             id: "anthropic/claude-sonnet-4",
-            url: "https://gateway.kilo.ai",
+            url: "https://gateway.tavern.ai",
             npm: "@taverncode/tavern-gateway",
           },
         })
@@ -6086,11 +6086,11 @@ describe("ProviderTransform.variants", () => {
 
       test("non-claude models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/openai/gpt-4",
+          id: "tavern/openai/gpt-4",
           providerID: "tavern",
           api: {
             id: "openai/gpt-4",
-            url: "https://gateway.kilo.ai",
+            url: "https://gateway.tavern.ai",
             npm: "@taverncode/tavern-gateway",
           },
         })
@@ -6100,11 +6100,11 @@ describe("ProviderTransform.variants", () => {
 
       test("google models use their default reasoning effort", () => {
         const model = createMockModel({
-          id: "kilo/google/gemini-2.0-flash",
+          id: "tavern/google/gemini-2.0-flash",
           providerID: "tavern",
           api: {
             id: "google/gemini-2.0-flash",
-            url: "https://gateway.kilo.ai",
+            url: "https://gateway.tavern.ai",
             npm: "@taverncode/tavern-gateway",
           },
         })

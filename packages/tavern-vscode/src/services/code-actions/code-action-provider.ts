@@ -1,6 +1,6 @@
 import * as vscode from "vscode"
 
-export class TavernCodeActionProvider implements vscode.CodeActionProvider {
+export class KiloCodeActionProvider implements vscode.CodeActionProvider {
   static readonly metadata: vscode.CodeActionProviderMetadata = {
     providedCodeActionKinds: [vscode.CodeActionKind.QuickFix, vscode.CodeActionKind.RefactorRewrite],
   }

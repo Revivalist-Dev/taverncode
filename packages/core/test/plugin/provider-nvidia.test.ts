@@ -39,7 +39,7 @@ describe("NvidiaPlugin", () => {
       yield* addPlugin()
       expect((yield* catalog.provider.get(ProviderV2.ID.make("nvidia")))?.request.headers).toEqual({
         Existing: "value",
-        "HTTP-Referer": "https://kilo.ai/",
+        "HTTP-Referer": "https://tavern.ai/",
         "X-Title": "Tavern Code",
         "X-BILLING-INVOKE-ORIGIN": "TavernCode",
       })
@@ -62,7 +62,7 @@ describe("NvidiaPlugin", () => {
       yield* addPlugin()
 
       expect((yield* catalog.provider.get(ProviderV2.ID.make("nvidia")))?.request.headers).toEqual({
-        "HTTP-Referer": "https://kilo.ai/",
+        "HTTP-Referer": "https://tavern.ai/",
         "X-Title": "Tavern Code",
         "X-BILLING-INVOKE-ORIGIN": "TavernCode",
       })
@@ -88,7 +88,7 @@ describe("NvidiaPlugin", () => {
       yield* addPlugin()
 
       expect((yield* catalog.provider.get(ProviderV2.ID.make("nvidia")))?.request.headers).toEqual({
-        "HTTP-Referer": "https://kilo.ai/",
+        "HTTP-Referer": "https://tavern.ai/",
         "X-Title": "Tavern Code",
         "X-BILLING-INVOKE-ORIGIN": "CustomOrigin",
       })

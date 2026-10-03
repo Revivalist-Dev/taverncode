@@ -98,7 +98,7 @@ Gateway consists of cloud API routes plus `packages/tavern-gateway/` client inte
 | Catalogs | Serves model, provider, embedding-model, and transcription-model surfaces |
 | Usage and billing | Records applicable token usage, credits, entitlements, and billing metadata |
 
-Auto Model clients send stable `kilo-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
+Auto Model clients send stable `tavern-auto/*` tier IDs. Gateway resolves tiers server-side before provider routing so mappings can change without client releases. See [Models and Providers](/docs/gateway/models-and-providers#auto-models) for current tier behavior.
 
 Eligible gateway requests can include normalized project label for usage attribution and grouping. Label identifies project without sending full repository URL.
 

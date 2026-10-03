@@ -122,7 +122,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -211,7 +211,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -294,7 +294,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -374,7 +374,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )
@@ -450,7 +450,7 @@ it.instance(
     git: true,
     config: {
       default_agent: "plan",
-      agent: { plan: { model: "kilo/anthropic/command-model" } },
+      agent: { plan: { model: "tavern/anthropic/command-model" } },
     },
   },
 )

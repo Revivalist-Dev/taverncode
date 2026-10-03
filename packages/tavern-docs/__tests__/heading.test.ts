@@ -7,7 +7,7 @@ describe("heading", () => {
     const tag = heading.transform(
       {
         transformAttributes: () => ({}),
-        transformChildren: () => [new Tag("code", {}, ["kilo-auto/frontier"])],
+        transformChildren: () => [new Tag("code", {}, ["tavern-auto/frontier"])],
       },
       {},
     )

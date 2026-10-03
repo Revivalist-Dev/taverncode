@@ -8,11 +8,11 @@ export async function extractZip(zipPath: string, destDir: string) {
     // $global:ProgressPreference suppresses PowerShell's blue progress bar popup
     // taverncode_change start - keep paths out of the PowerShell program
     const cmd =
-      "$global:ProgressPreference = 'SilentlyContinue'; Expand-Archive -LiteralPath $env:OPENCODE_ARCHIVE_PATH -DestinationPath $env:OPENCODE_ARCHIVE_DESTINATION -Force"
+      "$global:ProgressPreference = 'SilentlyContinue'; Expand-Archive -LiteralPath $env:TAVERN_ARCHIVE_PATH -DestinationPath $env:TAVERN_ARCHIVE_DESTINATION -Force"
     await Process.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", cmd], {
       env: {
-        OPENCODE_ARCHIVE_PATH: winZipPath,
-        OPENCODE_ARCHIVE_DESTINATION: winDestDir,
+        TAVERN_ARCHIVE_PATH: winZipPath,
+        TAVERN_ARCHIVE_DESTINATION: winDestDir,
       },
     })
     // taverncode_change end

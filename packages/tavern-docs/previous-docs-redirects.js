@@ -1251,7 +1251,7 @@ module.exports = [
   },
   {
     source: "/auto-top-ups",
-    destination: "https://kilo.ai/features/auto-top-ups",
+    destination: "https://tavern.ai/features/auto-top-ups",
     basePath: false,
     permanent: true,
   },

@@ -1258,7 +1258,7 @@ it.instance(
   Effect.gen(function* () {
     const providers = yield* list
     expect(providers[ProviderV2.ID.make("nvidia")].options.headers).toEqual({
-      "HTTP-Referer": "https://kilo.ai/", // taverncode_change
+      "HTTP-Referer": "https://tavern.ai/", // taverncode_change
       "X-Title": "Tavern Code", // taverncode_change
       "X-BILLING-INVOKE-ORIGIN": "TavernCode", // taverncode_change
     })
@@ -1271,7 +1271,7 @@ it.instance(
   Effect.gen(function* () {
     const providers = yield* list
     expect(providers[ProviderV2.ID.make("nvidia")].options.headers).toEqual({
-      "HTTP-Referer": "https://kilo.ai/", // taverncode_change
+      "HTTP-Referer": "https://tavern.ai/", // taverncode_change
       "X-Title": "Tavern Code", // taverncode_change
       "X-BILLING-INVOKE-ORIGIN": "TavernCode", // taverncode_change
     })

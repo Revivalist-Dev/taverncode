@@ -35,7 +35,7 @@ export async function generateFim(
   // ends the stream. Without this, errors never reach ErrorBackoff.
   let sseError: Error | undefined
 
-  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/kilo/fim`)
+  console.info(`[FIM] request provider=${info.providerID} model=${info.requestModel} url=/tavern/fim`)
 
   const { stream } = await client.tavern.fim(
     {

@@ -16,6 +16,7 @@ import gruvbox from "./assets/gruvbox.json" with { type: "json" }
 import kanagawa from "./assets/kanagawa.json" with { type: "json" }
 import tavern from "./assets/tavern.json" with { type: "json" } // taverncode_change
 import tavern1 from "./assets/tavern-v1.json" with { type: "json" } // taverncode_change
+import kilo1 from "./assets/tavern-v1.json" with { type: "json" } // taverncode_change
 import lucentOrng from "./assets/lucent-orng.json" with { type: "json" }
 import material from "./assets/material.json" with { type: "json" }
 import matrix from "./assets/matrix.json" with { type: "json" }

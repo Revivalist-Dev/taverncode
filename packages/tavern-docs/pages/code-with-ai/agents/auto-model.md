@@ -9,13 +9,13 @@ Auto Model is a smart routing system that selects an underlying model for each r
 
 | Tier | Best For | Pricing |
 |---|---|---|
-| `kilo-auto/frontier` | Maximum capability with the best available models | Paid |
-| `kilo-auto/efficient` | Lowest cost per task, with capability matched to difficulty | Paid |
-| `kilo-auto/free` | The best free models available | Free |
+| `tavern-auto/frontier` | Maximum capability with the best available models | Paid |
+| `tavern-auto/efficient` | Lowest cost per task, with capability matched to difficulty | Paid |
+| `tavern-auto/free` | The best free models available | Free |
 
 ## How It Works
 
-1. Select an Auto Model tier (e.g. `kilo-auto/frontier`) in the model dropdown
+1. Select an Auto Model tier (e.g. `tavern-auto/frontier`) in the model dropdown
 2. Start working in any mode (Code, Architect, Debug, etc.)
 3. The system automatically routes your requests to the best model for that task
 
@@ -43,9 +43,9 @@ You get lean costs on routine work and stronger models when the work demands it 
 
 ### Custom Efficient pools
 
-You can constrain `kilo-auto/efficient` to the exact models you trust by configuring an **Efficient model pool** on the **Auto routing** card:
+You can constrain `tavern-auto/efficient` to the exact models you trust by configuring an **Efficient model pool** on the **Auto routing** card:
 
-- **Personal** — your [profile page](https://app.kilo.ai/profile)
+- **Personal** — your [profile page](https://app.tavern.ai/profile)
 - **Organization** — your organization's **Providers & Models** page. Owners and billing managers can edit; members see a read-only view.
 
 A pool holds 1–10 exact model and thinking-variant pairs. Variants stay distinct, so the same model with different thinking variants (for example `max` and `xhigh`) counts as separate entries. Leave the pool empty to inherit: an organization without a pool uses each member's personal pool, and a member without a personal pool uses the platform pool.
@@ -99,7 +99,7 @@ Select an Auto Model tier from the model dropdown in the Tavern Code chat interf
 
 1. Open Tavern Code in VS Code or JetBrains
 2. Click the model selector dropdown
-3. Choose an Auto Model such as `kilo-auto/frontier` or `kilo-auto/efficient`
+3. Choose an Auto Model such as `tavern-auto/frontier` or `tavern-auto/efficient`
 4. Start chatting - the right model is selected automatically based on your current mode
 
 ## When to Use Auto Model
@@ -123,7 +123,7 @@ You may want to select a specific model instead when:
 ## Feedback
 
 {% callout type="note" title="Help Us Improve" %}
-Auto Model is actively being improved. We'd love to hear how it's working for you! Share feedback in our [Discord](https://kilo.ai/discord) or [open an issue on GitHub](https://github.com/Kilo-Org/kilocode/issues).
+Auto Model is actively being improved. We'd love to hear how it's working for you! Share feedback in our [Discord](https://tavern.ai/discord) or [open an issue on GitHub](https://github.com/Kilo-Org/kilocode/issues).
 {% /callout %}
 
 ## Related

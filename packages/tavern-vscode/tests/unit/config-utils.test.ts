@@ -387,7 +387,7 @@ describe("ConfigState", () => {
       s.handleConfigLoaded({
         agent: {
           explore: {
-            model: "kilo/anthropic/claude-sonnet-4-6",
+            model: "tavern/anthropic/claude-sonnet-4-6",
             variant: "high",
           },
         },
@@ -407,10 +407,10 @@ describe("ConfigState", () => {
   it("sets and clears the compaction model without changing other settings", () => {
     const s = new ConfigState()
     const cfg: Config = {
-      model: "kilo/openai/gpt-4.1",
-      agent: { compaction: { prompt: "Keep task details" }, code: { model: "kilo/openai/gpt-4.1" } },
+      model: "tavern/openai/gpt-4.1",
+      agent: { compaction: { prompt: "Keep task details" }, code: { model: "tavern/openai/gpt-4.1" } },
     }
-    const model = "kilo/anthropic/claude-haiku-4-5"
+    const model = "tavern/anthropic/claude-haiku-4-5"
     s.handleConfigLoaded(cfg)
     s.updateConfig({ agent: { compaction: { model } } })
 

@@ -223,7 +223,7 @@ describe("Tavern installation upgrade", () => {
   ).effect("uses the Tavern install script for curl upgrades", () =>
     Effect.gen(function* () {
       yield* Installation.Service.use((svc) => svc.upgrade("curl", "9.9.9"))
-      expect(curl).toContain("https://kilo.ai/cli/install")
+      expect(curl).toContain("https://tavern.ai/cli/install")
       expect(curl).toContain("sh")
     }),
   )

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { TavernPtySelfCommand } from "../../src/taverncode/pty/self-command"
+import { KiloPtySelfCommand } from "../../src/taverncode/pty/self-command"
 
 describe("pty self-command", () => {
   test("does not forward bundled bun entrypoints", () => {
@@ -10,21 +10,21 @@ describe("pty self-command", () => {
       cwd: "/tmp",
     }
 
-    const cmd = TavernPtySelfCommand.command(proc)
+    const cmd = KiloPtySelfCommand.command(proc)
     expect(cmd).toStrictEqual({ command: "/tmp/tavern", args: [] })
-    expect(TavernPtySelfCommand.resolve({ command: "tavern", cwd: "/tmp/project" }, cmd)).toStrictEqual({
+    expect(KiloPtySelfCommand.resolve({ command: "tavern", cwd: "/tmp/project" }, cmd)).toStrictEqual({
       command: "/tmp/tavern",
       args: [],
       cwd: "/tmp/project",
     })
     expect(
-      TavernPtySelfCommand.command({
+      KiloPtySelfCommand.command({
         ...proc,
         argv: ["C:/tmp/tavern.exe", "B:/~BUN/root/src/index.js"],
       }).args,
     ).toStrictEqual([])
     expect(
-      TavernPtySelfCommand.command({
+      KiloPtySelfCommand.command({
         ...proc,
         argv: ["C:/tmp/tavern.exe", "b:\\~BUN\\root\\src\\index.js"],
       }).args,
@@ -32,7 +32,7 @@ describe("pty self-command", () => {
   })
 
   test("forwards source entrypoints", () => {
-    const cmd = TavernPtySelfCommand.command({
+    const cmd = KiloPtySelfCommand.command({
       argv: ["/tmp/bun", "/tmp/tavern/src/index.ts"],
       execArgv: ["--conditions=browser", "--cwd", "packages/opencode"],
       execPath: "/tmp/bun",
@@ -43,7 +43,7 @@ describe("pty self-command", () => {
       args: ["--conditions=browser", "/tmp/tavern/src/index.ts"],
       cwd: "/tmp/tavern",
     })
-    expect(TavernPtySelfCommand.resolve({ command: "tavern", cwd: "/tmp/project" }, cmd)).toStrictEqual({
+    expect(KiloPtySelfCommand.resolve({ command: "tavern", cwd: "/tmp/project" }, cmd)).toStrictEqual({
       command: "/tmp/bun",
       args: ["--conditions=browser", "/tmp/tavern/src/index.ts", "/tmp/project"],
       cwd: "/tmp/tavern",

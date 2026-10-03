@@ -54,7 +54,7 @@ Add agents to the `agent` section of your `tavern.jsonc` config file. Any key th
 
 ```json
 {
-  "$schema": "https://app.kilo.ai/config.json",
+  "$schema": "https://app.tavern.ai/config.json",
   "agent": {
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",

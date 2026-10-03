@@ -118,7 +118,7 @@ export type Bom = {
   dependencies: { ref: string; dependsOn: string[] }[]
 }
 
-const SUPPLIER = { name: "Tavern Code", url: ["https://kilo.ai"] }
+const SUPPLIER = { name: "Tavern Code", url: ["https://tavern.ai"] }
 
 /**
  * Deterministic serial number.

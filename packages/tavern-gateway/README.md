@@ -20,19 +20,19 @@ bun add @taverncode/tavern-gateway
 ### Plugin Registration
 
 ```typescript
-import { TavernAuthPlugin } from "@taverncode/tavern-gateway"
+import { KiloAuthPlugin } from "@taverncode/tavern-gateway"
 
 // Register with OpenCode
-const plugins = [TavernAuthPlugin]
+const plugins = [KiloAuthPlugin]
 ```
 
 ### Provider Usage
 
 ```typescript
-import { createTavern } from "@taverncode/tavern-gateway"
+import { createKilo } from "@taverncode/tavern-gateway"
 
-const provider = createTavern({
-  taverncodeToken: process.env.TAVERNCODE_API_KEY,
+const provider = createKilo({
+  taverncodeToken: process.env.KILOCODE_API_KEY,
   taverncodeOrganizationId: "org-123",
 })
 

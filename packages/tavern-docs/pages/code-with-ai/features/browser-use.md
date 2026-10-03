@@ -55,7 +55,7 @@ A typical browser interaction follows this pattern:
 For example:
 
 - `Open the browser and view our site.`
-- `Can you check if my website at https://kilocode.ai is displaying correctly?`
+- `Can you check if my website at https://taverncode.ai is displaying correctly?`
 - `Browse http://localhost:3000, scroll down to the bottom of the page and check if the footer information is displaying correctly.`
 
 ## How Browser Actions Work

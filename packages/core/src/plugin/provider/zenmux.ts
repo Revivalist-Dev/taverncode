@@ -13,7 +13,7 @@ export const ZenmuxPlugin = define({
           if (item.provider.api.url !== "https://zenmux.ai/api/v1") continue
           if (item.provider.id !== ProviderV2.ID.make("zenmux")) continue // taverncode_change
           evt.provider.update(item.provider.id, (provider) => {
-            provider.request.headers["HTTP-Referer"] ??= "https://kilo.ai/" // taverncode_change
+            provider.request.headers["HTTP-Referer"] ??= "https://tavern.ai/" // taverncode_change
             provider.request.headers["X-Title"] ??= "Tavern Code" // taverncode_change
           })
         }

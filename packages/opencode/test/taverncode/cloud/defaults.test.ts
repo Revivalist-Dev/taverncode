@@ -185,7 +185,7 @@ it.instance(
         const resolved = yield* Effect.gen(function* () {
           const result = yield* CloudDefaults.resolve({
             mode: "debug",
-            model: "kilo/anthropic/explicit",
+            model: "tavern/anthropic/explicit",
             orgID: explicitID,
             env: {
               TAVERN_API_KEY: "ignored-env-token",
@@ -229,8 +229,8 @@ it.instance(
   {
     config: {
       default_agent: "plan",
-      model: "kilo/anthropic/repository",
-      agent: { plan: { model: "kilo/anthropic/mode" } },
+      model: "tavern/anthropic/repository",
+      agent: { plan: { model: "tavern/anthropic/mode" } },
     },
   },
 )
@@ -265,7 +265,7 @@ it.instance(
     ),
   {
     config: {
-      model: "kilo/anthropic/repository",
+      model: "tavern/anthropic/repository",
       agent: { code: { model: null } },
     },
   },
@@ -354,8 +354,8 @@ it.instance(
     config: {
       default_agent: "custom",
       agent: {
-        code: { model: "kilo/anthropic/code" },
-        custom: { mode: "primary", model: "kilo/anthropic/custom" },
+        code: { model: "tavern/anthropic/code" },
+        custom: { mode: "primary", model: "tavern/anthropic/custom" },
       },
     },
   },
@@ -435,8 +435,8 @@ it.instance(
   {
     config: {
       default_agent: "plan",
-      model: "kilo/anthropic/repository",
-      agent: { plan: { model: "kilo/anthropic/mode" } },
+      model: "tavern/anthropic/repository",
+      agent: { plan: { model: "tavern/anthropic/mode" } },
     },
   },
 )
