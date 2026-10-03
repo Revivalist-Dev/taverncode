@@ -102,11 +102,11 @@ interface StateFile {
 
 export type StateLoadStatus = "loaded" | "missing" | "failed"
 
-export interface StateLoadResult extends MigrationResult {
+export interface StateLoadResult {
   status: StateLoadStatus
 }
 
-import { TAVERN_DIR, migrateAgentManagerData, type MigrationResult } from "./constants"
+import { TAVERN_DIR } from "./constants"
 
 const STATE_FILE = "agent-manager.json"
 const CLOSED_LIMIT = 1_000
@@ -137,7 +137,6 @@ export class WorktreeStateManager {
   private failed = false
 
   private readonly root: string
-  private migrated = false
   private loadFailed = false
 
   constructor(root: string, log: (msg: string) => void) {
@@ -715,29 +714,23 @@ export class WorktreeStateManager {
   // ---------------------------------------------------------------------------
 
   async load(): Promise<StateLoadResult> {
-    // Migrate Agent Manager data from .taverncode → .tavern before first read
-    let migration: MigrationResult = { refsFixed: 0 }
-    if (!this.migrated) {
-      this.migrated = true
-      migration = await migrateAgentManagerData(this.root, this.log)
-    }
     try {
       const content = await fs.promises.readFile(this.file, "utf-8")
       this.apply(content)
       this.loadFailed = false
-      return { ...migration, status: "loaded" }
+      return { status: "loaded" }
     } catch (error) {
       const code = (error as NodeJS.ErrnoException).code
       if (code === "ENOENT") {
         this.loadFailed = false
-        return { ...migration, status: "missing" }
+        return { status: "missing" }
       }
       if (code !== "ENOENT") {
         this.log(`Failed to load state: ${error}`)
         this.loadFailed = true
       }
     }
-    return { ...migration, status: "failed" }
+    return { status: "failed" }
   }
 
   async prepareRecovery(): Promise<boolean> {
@@ -767,12 +760,7 @@ export class WorktreeStateManager {
     this.reviewDiffStyle = "unified"
 
     for (const [id, wt] of Object.entries(data.worktrees ?? {})) {
-      // Rewrite stale .taverncode paths while preserving the separator style already stored.
-      const fixed =
-        wt.path?.replace(/([/\\])\.taverncode([/\\])/g, (_match, leadingSep, trailingSep) => {
-          return `${leadingSep}.tavern${trailingSep}`
-        }) ?? wt.path
-      this.worktrees.set(id, { id, ...wt, path: fixed })
+      this.worktrees.set(id, { id, ...wt })
     }
     let pruned = 0
     for (const [id, s] of Object.entries(data.sessions ?? {})) {

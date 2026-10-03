@@ -408,10 +408,6 @@ async function resolveConfigPath(baseDir: string, global = false) {
         path.join(baseDir, ".tavern", "tavern.json"),
         path.join(baseDir, ".tavern", "opencode.jsonc"),
         path.join(baseDir, ".tavern", "opencode.json"),
-        path.join(baseDir, ".taverncode", "tavern.jsonc"),
-        path.join(baseDir, ".taverncode", "tavern.json"),
-        path.join(baseDir, ".taverncode", "opencode.jsonc"),
-        path.join(baseDir, ".taverncode", "opencode.json"),
         ...roots,
       ]
 

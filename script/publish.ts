@@ -7,11 +7,6 @@ import { apply } from "./taverncode/changeset-version" // taverncode_change
 
 console.log("=== publishing ===\n")
 
-// taverncode_change start - keep JetBrains CLI pin reviewable outside CLI release commits
-const jetbrainsPkg = fileURLToPath(new URL("../packages/tavern-jetbrains/package.json", import.meta.url))
-const jetbrainsPin = await Bun.file(jetbrainsPkg).text()
-// taverncode_change end
-
 // taverncode_change start - consume changesets on the publish runner so changelog
 // changes are included in the release commit. The same step runs in the
 // build-vscode job so the packaged VSIX ships the current changelog.
@@ -26,25 +21,11 @@ const pkgjsons = await Array.fromAsync(
 ).then((arr) => arr.filter((x) => !x.includes("node_modules") && !x.includes("dist")))
 
 for (const file of pkgjsons) {
-  // taverncode_change start - create a follow-up PR for JetBrains CLI pin bumps
-  if (file === jetbrainsPkg) {
-    console.log("preserved JetBrains CLI pin:", file)
-    await Bun.file(file).write(jetbrainsPin)
-    continue
-  }
-  // taverncode_change end
   let pkg = await Bun.file(file).text()
   pkg = pkg.replaceAll(/"version": "[^"]+"/g, `"version": "${Script.version}"`)
   console.log("updated:", file)
   await Bun.file(file).write(pkg)
 }
-
-const extensionToml = fileURLToPath(new URL("../packages/extensions/zed/extension.toml", import.meta.url))
-let toml = await Bun.file(extensionToml).text()
-toml = toml.replace(/^version = "[^"]+"/m, `version = "${Script.version}"`)
-toml = toml.replaceAll(/releases\/download\/v[^/]+\//g, `releases/download/v${Script.version}/`)
-console.log("updated:", extensionToml)
-await Bun.file(extensionToml).write(toml)
 
 await $`bun install`
 await import(`../packages/sdk/js/script/build.ts`)
@@ -118,33 +99,3 @@ await import(`../packages/tavern-vscode/script/publish.ts`)
 const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)
 
-// taverncode_change start - non-blocking JetBrains CLI pin bump PR after CLI release
-await createJetbrainsPinPr()
-// taverncode_change end
-
-// taverncode_change start
-async function createJetbrainsPinPr() {
-  console.log("\n=== jetbrains cli pin bump pr ===\n")
-  if (!Script.release) {
-    console.log("Skipping JetBrains CLI pin bump PR: not a release build")
-    return
-  }
-  const args = ["--version", Script.version, "--pr"]
-  if (Script.preview) args.push("--pre-release")
-  const result = await $`bun .tavern/skills/release-jetbrains/script/set-pin.ts ${args}`.nothrow()
-  const out = result.stdout.toString().trim()
-  const err = result.stderr.toString().trim()
-  if (result.exitCode === 0) {
-    if (out) console.log(out)
-    const url = out.match(/https:\/\/github\.com\/\S+\/pull\/\d+/)?.[0]
-    if (url) console.log(`::notice title=JetBrains CLI pin bump PR::${url}`)
-    return
-  }
-  console.warn("JetBrains CLI pin bump PR creation failed; release will continue.")
-  if (out) console.warn(out)
-  if (err) console.warn(err)
-  console.warn(
-    "::warning title=JetBrains CLI pin bump PR failed::Release completed, but the JetBrains CLI pin bump PR was not created. Check the logs above and create it manually if needed.",
-  )
-}
-// taverncode_change end

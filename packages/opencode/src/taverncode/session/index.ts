@@ -443,7 +443,7 @@ export namespace TavernSession {
           if (!Filesystem.contains(root, dir) || nested(root, dir)) continue
           const rel = path.relative(root, dir)
           const parts = rel.split(path.sep)
-          if ((parts[0] === ".tavern" || parts[0] === ".taverncode") && parts[1] === "worktrees" && parts[2]) {
+          if (parts[0] === ".tavern" && parts[1] === "worktrees" && parts[2]) {
             return path.join(root, parts[0], parts[1], parts[2])
           }
           return root

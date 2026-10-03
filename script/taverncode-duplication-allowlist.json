@@ -4,66 +4,6 @@
   "exceptions": [
     {
       "files": [
-        "packages/tavern-console/src/components/app-header/OmniSearch.tsx",
-        "packages/tavern-console/src/components/app-sidebar/AppSidebar.tsx"
-      ],
-      "fingerprint": "4d9a3ec7cfd2029a",
-      "maxMatches": 1,
-      "maxTokens": 187,
-      "kind": "legacy",
-      "owner": "tavern-console",
-      "reason": "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction."
-    },
-    {
-      "files": [
-        "packages/tavern-console/src/components/app-header/OmniSearch.tsx",
-        "packages/tavern-console/src/components/app-sidebar/AppSidebar.tsx"
-      ],
-      "fingerprint": "efd52fea0edba460",
-      "maxMatches": 1,
-      "maxTokens": 102,
-      "kind": "legacy",
-      "owner": "tavern-console",
-      "reason": "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction."
-    },
-    {
-      "files": [
-        "packages/tavern-console/src/components/app-header/OmniSearch.tsx",
-        "packages/tavern-console/src/routes/profile/server.ts"
-      ],
-      "fingerprint": "52cd8ba8418743c4",
-      "maxMatches": 1,
-      "maxTokens": 101,
-      "kind": "legacy",
-      "owner": "tavern-console",
-      "reason": "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction."
-    },
-    {
-      "files": [
-        "packages/tavern-console/src/components/app-header/OmniSearch.tsx",
-        "packages/tavern-console/src/routes/projects/ProjectsRoute.tsx"
-      ],
-      "fingerprint": "cb4ef004cc2151c4",
-      "maxMatches": 1,
-      "maxTokens": 155,
-      "kind": "legacy",
-      "owner": "tavern-console",
-      "reason": "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction."
-    },
-    {
-      "files": [
-        "packages/tavern-console/src/routes/config/AgentsRoute.tsx",
-        "packages/tavern-console/src/routes/config/IndexingRoute.tsx"
-      ],
-      "fingerprint": "1642f96ca061cdcf",
-      "maxMatches": 1,
-      "maxTokens": 112,
-      "kind": "legacy",
-      "owner": "tavern-console",
-      "reason": "Existing duplication before the ratchet; remove through a focused, behavior-preserving extraction."
-    },
-    {
-      "files": [
         "packages/tavern-indexing/src/indexing/embedders/openai-compatible.ts",
         "packages/tavern-indexing/src/indexing/embedders/openrouter.ts"
       ],

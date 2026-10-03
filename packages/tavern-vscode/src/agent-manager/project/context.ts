@@ -53,7 +53,6 @@ export type ProjectLifecycle = "cold" | "initializing" | "ready" | "suspended" |
 
 export interface ProjectInitResult {
   ok: boolean
-  refsFixed: number
   current: boolean
   /** Worktree health from the startup reconcile, when it ran. */
   health?: WorktreeHealthReport
@@ -107,7 +106,7 @@ export class ProjectContext {
   /** Initialize repository state exactly once per context lifetime. */
   ensureReady(run: (generation: number) => Promise<Omit<ProjectInitResult, "current">>): Promise<ProjectInitResult> {
     if (this.phase === "disposed" || this.phase === "disposing") {
-      return Promise.resolve({ ok: false, refsFixed: 0, current: false })
+      return Promise.resolve({ ok: false, current: false })
     }
     if (this.phase === "ready" && this.last) return Promise.resolve(this.last)
     if (this.phase === "suspended" && this.last) {

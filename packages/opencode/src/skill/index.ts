@@ -211,7 +211,7 @@ const discoverSkills = Effect.fnUntraced(function* (
 
   // taverncode_change start - one primary checkout lookup serves both the external and the config dir scans
   const projectDirs = [AGENTS_EXTERNAL_DIR]
-  const mirrored = yield* primaryPaths(directory, worktree, [...projectDirs, ".taverncode", ".tavern"])
+  const mirrored = yield* primaryPaths(directory, worktree, [...projectDirs, ".tavern"])
   const fallbacks = mirrored.filter((file) => projectDirs.includes(path.basename(file)))
   // taverncode_change end
 

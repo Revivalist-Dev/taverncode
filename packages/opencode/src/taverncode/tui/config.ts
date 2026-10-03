@@ -24,7 +24,7 @@ export namespace TaverncodeTuiConfig {
   export type Editable = Omit<Patch, "keybinds"> & { keybinds?: Record<string, string> }
 
   const files = ["tui.jsonc", "tui.json"] as const
-  const dirs = [".tavern", ".taverncode"] as const
+  const dirs = [".tavern"] as const
 
   export async function get(input: { directory: string }) {
     const cfg = await AppRuntime.runPromise(

@@ -2,11 +2,11 @@
 
 All config lives in `tavern.json` (or `tavern.jsonc`). Precedence low-to-high: remote well-known, global (`~/.config/tavern/tavern.json`), env `TAVERN_CONFIG`, project `./tavern.json`, `.tavern/tavern.json`, `TAVERN_CONFIG_CONTENT`, managed (see Config File Locations). Deep-merged; later wins.
 
-This also covers where Tavern looks for config files, commands, agents, and skills across project, global, and legacy paths such as `.tavern/`, `.taverncode/`, and `~/.config/tavern/`, plus Agent Manager setup/run scripts in the VS Code extension.
+This also covers where Tavern looks for config files, commands, agents, and skills across project and global paths such as `.tavern/` and `~/.config/tavern/`, plus Agent Manager setup/run scripts in the VS Code extension.
 
 ## Commands (`.tavern/command/*.md`)
 
-Markdown files with YAML frontmatter. The filename (minus `.md`) becomes the command name invoked via `/name`. Commands can live in `.tavern/`, legacy `.taverncode/`, and global config roots, with both `command/` and `commands/` directory names supported. See Config File Locations for the full search order.
+Markdown files with YAML frontmatter. The filename (minus `.md`) becomes the command name invoked via `/name`. Commands can live in `.tavern/` and global config roots, with both `command/` and `commands/` directory names supported. See Config File Locations for the full search order.
 
 ```yaml
 ---
@@ -28,9 +28,8 @@ When asked where `/name` lives, do not search only the repo root. Search these r
 
 1. `~/.config/tavern/`
 2. `~/.tavern/`
-3. `~/.taverncode/`
-4. The `TAVERN_CONFIG_DIR` directory (if the env var is set)
-5. project `.tavern/` and `.taverncode/` directories from the current working directory up to the worktree root
+3. The `TAVERN_CONFIG_DIR` directory (if the env var is set)
+4. project `.tavern/` directories from the current working directory up to the worktree root
 
 Use exact patterns first:
 
@@ -41,7 +40,7 @@ If found, return the full path. If not found in those roots, explain that the co
 
 ## Agents (`.tavern/agent/*.md`)
 
-Also loaded from legacy `.taverncode/` directories and plural `agents/` variants.
+Also loaded from plural `agents/` variants.
 
 ```yaml
 ---
@@ -64,7 +63,7 @@ System prompt for this agent.
 
 ## Workflows (legacy)
 
-Markdown files in `.tavern/workflows/` or `.taverncode/workflows/` (project-level) and `~/.tavern/workflows/` or `~/.taverncode/workflows/` (global). These are automatically converted to commands at startup. The filename (minus `.md`) becomes the command name. Project workflows override global ones with the same name.
+Markdown files in `.tavern/workflows/` (project-level) and `~/.tavern/workflows/` (global). These are automatically converted to commands at startup. The filename (minus `.md`) becomes the command name. Project workflows override global ones with the same name.
 
 ## Agent Manager Setup And Run Scripts
 
@@ -256,7 +255,7 @@ Additional skill directories and remote URLs:
 }
 ```
 
-Skills are markdown files at `skills/<name>/SKILL.md` (or `skill/<name>/SKILL.md`) with `name` and `description` in frontmatter. Discovered inside `.tavern/` and legacy `.taverncode/` directories.
+Skills are markdown files at `skills/<name>/SKILL.md` (or `skill/<name>/SKILL.md`) with `name` and `description` in frontmatter. Discovered inside `.tavern/` directories.
 
 ## Other Top-Level Fields
 
@@ -339,19 +338,19 @@ Notification settings are managed through `attention` in `tui.json` / `tui.jsonc
 | Global | `~/.config/tavern/tavern.json`, `~/.config/tavern/tavern.jsonc`, `~/.config/tavern/opencode.json` (legacy), `~/.config/tavern/opencode.jsonc` (legacy), `~/.config/tavern/config.json` (legacy) |
 | Managed | Linux: `/etc/tavern/`, macOS: `/Library/Application Support/tavern/`, Windows: `%ProgramData%\tavern\` — loads `tavern.json`, `tavern.jsonc`, `opencode.json`, `opencode.jsonc` (enterprise, highest priority) |
 
-Each config directory (`.tavern/` and legacy `.taverncode/`) can also contain `tavern.json`, `tavern.jsonc`, `opencode.json`, or `opencode.jsonc`.
+Each config directory (`.tavern/`) can also contain `tavern.json`, `tavern.jsonc`, `opencode.json`, or `opencode.jsonc`.
 
 ### Config directories
 
-Two directory names are scanned: `.tavern` (canonical) and `.taverncode` (legacy fallback). Both are checked at each level, and `.tavern` wins when both define the same entry. `.opencode` directories are not loaded.
+Only `.tavern` is scanned. `.taverncode` and `.opencode` directories are not loaded.
 
-- **Project**: walks up from CWD to the git worktree root, checking both directories at each level
-- **Home**: `~/.tavern/` and `~/.taverncode/`
+- **Project**: walks up from CWD to the git worktree root, checking `.tavern` at each level
+- **Home**: `~/.tavern/`
 - **XDG global**: `~/.config/tavern/` (always loaded, lowest file-based precedence)
 
 ### Commands, agents, modes, plugins
 
-Glob patterns run inside every discovered config directory (including legacy):
+Glob patterns run inside every discovered config directory:
 
 | Type | Pattern |
 |---|---|
@@ -360,7 +359,7 @@ Glob patterns run inside every discovered config directory (including legacy):
 | Mode | `{mode,modes}/*.md` |
 | Plugin | `{plugin,plugins}/*.{ts,js}` |
 
-Example: `~/.config/tavern/command/*.md` (global), `~/.taverncode/command/*.md` (legacy home), and `.tavern/commands/*.md` (project) all load commands.
+Example: `~/.config/tavern/command/*.md` (global) and `.tavern/commands/*.md` (project) all load commands.
 
 ### Skills and instructions
 

@@ -38,25 +38,22 @@ function normalizeProjectId(input: string): string {
 }
 
 /**
- * Read project ID from .tavern/config.json, falling back to .taverncode/config.json
+ * Read project ID from .tavern/config.json
  * @param directory - Project directory
  * @returns Normalized project ID or undefined
  */
 async function getProjectIdFromConfig(directory: string): Promise<string | undefined> {
-  // Check .tavern first, then legacy .taverncode
-  for (const dir of [".tavern", ".taverncode"]) {
-    const file = Bun.file(path.join(directory, dir, "config.json"))
-    const text = await file.text().catch(() => undefined)
-    if (!text) continue
+  const file = Bun.file(path.join(directory, ".tavern", "config.json"))
+  const text = await file.text().catch(() => undefined)
+  if (!text) return undefined
 
-    try {
-      const parsed = JSON.parse(text)
-      const id = parsed?.project?.id
-      // Trim whitespace/newlines to ensure valid HTTP header value
-      if (typeof id === "string" && id.trim()) return normalizeProjectId(id)
-    } catch {
-      // Malformed JSON - try next location
-    }
+  try {
+    const parsed = JSON.parse(text)
+    const id = parsed?.project?.id
+    // Trim whitespace/newlines to ensure valid HTTP header value
+    if (typeof id === "string" && id.trim()) return normalizeProjectId(id)
+  } catch {
+    // Malformed JSON
   }
   return undefined
 }
@@ -80,11 +77,11 @@ async function getProjectIdFromGit(directory: string): Promise<string | undefine
 }
 
 /**
- * Resolve project ID with priority: .tavern/config.json -> .taverncode/config.json -> git origin URL
+ * Resolve project ID with priority: .tavern/config.json -> git origin URL
  * @returns Normalized project ID or undefined
  */
 async function resolveProjectId(dir: string): Promise<string | undefined> {
-  // Priority 1: .tavern/config.json (falls back to .taverncode/config.json)
+  // Priority 1: .tavern/config.json
   const id = await getProjectIdFromConfig(dir)
   if (id) return id
 

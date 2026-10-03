@@ -30,7 +30,7 @@ describe("reactivateProject", () => {
 
   it("re-registers and pushes in-memory state for a ready context", async () => {
     const ctx = makeContext()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     const registered = new Map<string, string>()
     const pushed: string[] = []
     const ok = reactivateProject(
@@ -47,7 +47,7 @@ describe("reactivateProject", () => {
 
   it("returns false after the context is suspended", async () => {
     const ctx = makeContext()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     ctx.suspend()
     expect(reactivateProject(ctx, undefined, () => {})).toBe(false)
   })

@@ -3,19 +3,6 @@
  * sessions can claim a ready worktree instead of paying the full
  * `git worktree add` checkout cost.
  *
-<<<<<<<< HEAD:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
- * Slots are created at their final path under `.tavern/worktrees/` and tagged
- * with pooled metadata. A later claim turns a
- * slot into a named branch with a cheap ref update (exact match) or a bounded
- * checkout (small delta). This module is vscode-free so it can be tested with a
- * real temporary git repository.
-|||||||| a377550fac:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
- * Slots are created at their final path under `.tavern/worktrees/` and tagged
- * with pooled metadata. A later claim turns a
- * slot into a named branch with a cheap ref update (exact match) or a bounded
- * checkout (small delta). This module is vscode-free so it can be tested with a
- * real temporary git repository.
-========
  * Slots are warmed in the per-user pool home (see `home.ts`), never in the
  * project, and tagged with pooled metadata. A claim turns a slot into a named
  * branch with a cheap ref update (exact match) or a bounded checkout (small
@@ -26,7 +13,6 @@
  * The pool also removes slots that older versions left in `.tavern/worktrees/`,
  * and runs the machine-wide sweep (see `sweep.ts`) once per process. This
  * module is vscode-free so it can be tested with a real temporary repository.
->>>>>>>> the-novelist/opencode-unknown:packages/tavern-vscode/src/agent-manager/pool/pool.ts
  */
 
 import * as path from "path"
@@ -38,12 +24,6 @@ import { locate, poolDir } from "./home"
 import { METADATA_FILE, alive, readMeta, subdirs, type PoolMeta } from "./slot"
 import { sweep } from "./sweep"
 
-<<<<<<<< HEAD:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
-const METADATA_FILE = "tavern-agent-manager-metadata.json"
-|||||||| a377550fac:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
-const METADATA_FILE = "tavern-agent-manager-metadata.json"
-========
->>>>>>>> the-novelist/opencode-unknown:packages/tavern-vscode/src/agent-manager/pool/pool.ts
 /** Maximum commits between a slot base and the requested base for a delta claim. */
 const MAX_DELTA = 50
 /** Spotlight marker that `.tavern/worktrees/` can hold without any worktree in it. */
@@ -96,6 +76,8 @@ export class WorktreePool {
   private place: Promise<string | undefined> | undefined
   private slots: PoolSlot[] = []
   private warming = false
+  /** Set by {@link dispose}; blocks any later warm-up from touching disk. */
+  private disposed = false
 
   /** Current target size, read live when configured with a function. */
   private size(): number {
@@ -124,7 +106,7 @@ export class WorktreePool {
    * before the git lock is taken, so user operations never wait on the network.
    */
   warm(base?: string): void {
-    if (this.size() <= 0 || this.warming) return
+    if (this.disposed || this.size() <= 0 || this.warming) return
     this.warming = true
     queueMicrotask(() => {
       void this.resolve(base)
@@ -233,6 +215,7 @@ export class WorktreePool {
 
   /** Remove every idle slot, used when the feature is turned off in settings. */
   async dispose(): Promise<void> {
+    this.disposed = true
     await this.deps.lock(async () => {
       const slots = this.slots
       this.slots = []
@@ -434,14 +417,7 @@ export class WorktreePool {
     const entries = await fs.promises.readdir(dir, { withFileTypes: true })
     for (const entry of entries) {
       if (!entry.isDirectory() || entry.name.startsWith(".tavern-delete-")) continue
-<<<<<<<< HEAD:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
-      const slotPath = path.join(this.deps.dir, entry.name)
-|||||||| a377550fac:packages/tavern-vscode/src/agent-manager/worktree-pool.ts
-      if (!entry.isDirectory() || entry.name.startsWith(".tavern-delete-")) continue
-      const slotPath = path.join(this.deps.dir, entry.name)
-========
       const slotPath = path.join(dir, entry.name)
->>>>>>>> the-novelist/opencode-unknown:packages/tavern-vscode/src/agent-manager/pool/pool.ts
       if (known.has(normalizePath(slotPath))) continue
       const meta = await this.readMeta(slotPath)
       if (!meta?.pooled) continue

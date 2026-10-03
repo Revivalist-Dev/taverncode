@@ -29,17 +29,17 @@ export namespace TaverncodePaths {
     }
   }
 
-  /** Global Tavern directories in user home: ~/.taverncode and ~/.tavern (legacy first, .tavern wins later) */
+  /** Global Tavern directory in user home: ~/.tavern */
   export function globalDirs(): string[] {
-    return [path.join(home(), ".taverncode"), path.join(home(), ".tavern")]
+    return [path.join(home(), ".tavern")]
   }
 
   /**
    * Discover Tavern directories containing skills.
-   * Returns parent directories (.taverncode/ and .tavern/) for glob pattern "skills/[*]/SKILL.md".
+   * Returns parent directories (.tavern/) for glob pattern "skills/[*]/SKILL.md".
    *
-   * - Walks up from projectDir to worktreeRoot for .taverncode/ and .tavern/
-   * - Includes global ~/.taverncode/ and ~/.tavern/
+   * - Walks up from projectDir to worktreeRoot for .tavern/
+   * - Includes global ~/.tavern/
    * - Includes VSCode extension global storage
    *
    * Does NOT copy/migrate skills - just provides paths for discovery.
@@ -54,7 +54,7 @@ export namespace TaverncodePaths {
     const directories: string[] = []
 
     if (!opts.skipGlobalPaths) {
-      // 1. Global ~/.taverncode/ and ~/.tavern/ (loaded first so project-level overrides)
+      // 1. Global ~/.tavern/ (loaded first so project-level overrides)
       for (const global of globalDirs()) {
         const globalSkills = path.join(global, "skills")
         if (!(await Filesystem.isDir(globalSkills))) continue
@@ -69,11 +69,11 @@ export namespace TaverncodePaths {
       }
     }
 
-    // 3. Walk up from project dir to worktree root for .taverncode/ and .tavern/
+    // 3. Walk up from project dir to worktree root for .tavern/
     // Returns parent directories (not skills/) because
     // the glob pattern "skills/[*]/SKILL.md" is applied from the parent
     // Loaded last so project-level skills take precedence over global
-    for (const target of [".taverncode", ".tavern"] as const) {
+    for (const target of [".tavern"] as const) {
       const projectDirs = await Array.fromAsync(
         Filesystem.up({
           targets: [target],

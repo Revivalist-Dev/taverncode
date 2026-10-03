@@ -669,7 +669,7 @@ export const RemoveError = NamedError.create("AgentRemoveError", {
 
 /**
  * Remove a custom agent by deleting its markdown source file, removing it from
- * config-backed agent entries, and/or removing it from legacy .taverncodemodes YAML files.
+ * config-backed agent entries, and/or removing it from legacy modes YAML files.
  * Scans the selected writable config scope, or every scope when none is selected.
  */
 export async function remove(input: {

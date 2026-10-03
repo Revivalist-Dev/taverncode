@@ -18,7 +18,6 @@ export { authenticateWithDeviceAuth } from "./auth/device-auth.js"
 export { authenticateWithDeviceAuthTUI } from "./auth/device-auth-tui.js"
 export { getTavernUrlFromToken, isValidTaverncodeToken, getApiKey } from "./auth/token.js"
 export { poll, formatTimeRemaining } from "./auth/polling.js"
-export { migrateLegacyTavernAuth, LEGACY_CONFIG_PATH } from "./auth/legacy-migration.js"
 
 // ============================================================================
 // API

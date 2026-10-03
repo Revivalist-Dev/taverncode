@@ -47,10 +47,8 @@ jobs:
               - '**'
               - '!.changeset/**'
               - '!.tavern/plans/**'
-              - '!packages/tavern-jetbrains/**'
               - '!packages/tavern-vscode/**'
               - '!packages/tavern-docs/**'
-              - '!packages/extensions/zed/**'
               - '!specs/**'
               - '!perf/**'
 
@@ -184,7 +182,7 @@ jobs:
 
       - name: Run non-CLI unit tests
         if: matrix.settings.run && matrix.settings.packages
-        run: bun turbo test:ci --output-logs=errors-only --log-order=grouped --log-prefix=task --filter='!@taverncode/cli' --filter='!@taverncode/tavern-jetbrains'
+        run: bun turbo test:ci --output-logs=errors-only --log-order=grouped --log-prefix=task --filter='!@taverncode/cli'
         env:
           TAVERN_EXPERIMENTAL_DISABLE_FILEWATCHER: "true" # taverncode_change - non-CLI tests use the watcher-free unit-test profile
 
@@ -301,25 +299,11 @@ jobs:
             turbo-${{ runner.os }}-${{ hashFiles('turbo.json', 'bun.lock') }}-
             turbo-${{ runner.os }}-
 
-      - name: Check generated client
-        if: runner.os == 'Linux'
-        working-directory: packages/client
-        run: bun run check:generated
       - name: Run HttpApi exerciser gates
         run: bun turbo test:httpapi --filter='@taverncode/cli'
         env:
           TAVERN_EXPERIMENTAL_DISABLE_FILEWATCHER: "true" # taverncode_change - a watcher per scenario instance is too heavy for the exerciser
 
-  # taverncode_change end
-
-  # taverncode_change start
-  jetbrains:
-    name: jetbrains
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: read
-    uses: ./.github/workflows/test-jetbrains.yml
   # taverncode_change end
 
   # taverncode_change start
@@ -343,19 +327,16 @@ jobs:
       - changes
       - unit
       - httpapi
-      - jetbrains
     if: always()
     steps:
       - name: Verify upstream test jobs passed # taverncode_change
         run: |
           echo "unit=${{ needs.unit.result }}"
           echo "httpapi=${{ needs.httpapi.result }}"
-          echo "jetbrains=${{ needs.jetbrains.result }}"
           test "${{ needs.unit.result }}" = "success"
           if [ "${{ needs.changes.outputs.general }}" = "true" ]; then
             test "${{ needs.httpapi.result }}" = "success"
           else
             test "${{ needs.httpapi.result }}" = "skipped"
           fi
-          test "${{ needs.jetbrains.result }}" = "success"
   # taverncode_change end

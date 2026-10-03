@@ -81,7 +81,7 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
-  await Promise.all(dirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true })))
+    await Promise.all(dirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 }).catch(() => undefined)))
 })
 
 describe("worktree pool sweep", () => {

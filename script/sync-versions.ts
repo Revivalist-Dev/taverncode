@@ -3,10 +3,10 @@
 // Sync every Tavern version string across the monorepo to a single target.
 //
 // Why this exists: upstream opencode stamps its own version into shared files
-// during each release (notably `packages/extensions/zed/extension.toml`). When
-// we merge upstream, that churn either produces conflicts or silently leaves
-// our packages pointing at upstream's version — and upstream's version tag
-// doesn't exist on our release pipeline, so the resulting download URLs 404.
+// during each release. When we merge upstream, that churn either produces
+// conflicts or silently leaves our packages pointing at upstream's version —
+// and upstream's version tag doesn't exist on our release pipeline, so the
+// resulting download URLs 404.
 //
 // Run this in a dedicated commit after resolving an upstream merge (see
 // `.tavern/command/upstream-manual-merge.md`). It's also handy mid-merge to
@@ -20,17 +20,13 @@
 // What gets updated:
 //   - every `package.json` top-level `"version": "..."` field in the repo
 //     (excluding node_modules and hidden directories)
-//   - `packages/extensions/zed/extension.toml` top-level `version = "..."`
-//   - the five Kilo-Org download URLs inside that toml
 //
 // Intentionally NOT touched:
-//   - `packages/tavern-jetbrains/**` — the JetBrains plugin has its own release
-//     cadence and version number.
 //   - dependency version strings inside `package.json` — internal deps use
 //     `workspace:*` so they don't need bumping.
 
 import { Glob } from "bun"
-import { join, relative } from "node:path"
+import { join } from "node:path"
 
 const root = join(import.meta.dir, "..")
 
@@ -55,8 +51,6 @@ for await (const rel of glob.scan({ cwd: root, onlyFiles: true })) {
   if (rel.includes("node_modules/")) continue
   if (rel.startsWith(".")) continue
   if (rel.includes("/.")) continue
-  // JetBrains plugin tracks its own version.
-  if (rel.startsWith("packages/tavern-jetbrains/")) continue
 
   const path = join(root, rel)
   const text = await Bun.file(path).text()
@@ -77,22 +71,6 @@ for await (const rel of glob.scan({ cwd: root, onlyFiles: true })) {
   await Bun.write(path, next)
   console.log(`  ${rel}`)
   updated++
-}
-
-const zed = join(root, "packages/extensions/zed/extension.toml")
-if (await Bun.file(zed).exists()) {
-  const text = await Bun.file(zed).text()
-  const next = text
-    .replace(/^version\s*=\s*"[^"]+"/m, `version = "${target}"`)
-    .replace(
-      /https:\/\/github\.com\/Kilo-Org\/taverncode\/releases\/download\/v[^/]+\//g,
-      `https://github.com/Kilo-Org/kilocode/releases/download/v${target}/`,
-    )
-  if (next !== text) {
-    await Bun.write(zed, next)
-    console.log(`  ${relative(root, zed)}`)
-    updated++
-  }
 }
 
 console.log(`\nupdated ${updated} file(s)`)

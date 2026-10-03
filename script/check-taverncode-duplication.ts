@@ -14,7 +14,6 @@ const roots = [
   "packages/*/src/tavern-*",
 ]
 const excluded = {
-  "packages/tavern-jetbrains/**": "Outside the VS Code scope",
   "packages/tavern-i18n/**": "Locale dictionaries",
   "packages/tavern-docs/**": "Documentation",
   "**/node_modules/**": "Dependencies",

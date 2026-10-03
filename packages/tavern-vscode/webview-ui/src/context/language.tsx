@@ -10,88 +10,9 @@ import { createSignal, createMemo, createEffect, ParentComponent, Accessor } fro
 import { I18nProvider, pluralCategory, pluralKey } from "@taverncode/tavern-ui/context"
 import type { UiI18nKey, UiI18nParams, UiI18nPluralKey } from "@taverncode/tavern-ui/context"
 import { dict as uiEn } from "@taverncode/tavern-ui/i18n/en"
-import { dict as uiZh } from "@taverncode/tavern-ui/i18n/zh"
-import { dict as uiZht } from "@taverncode/tavern-ui/i18n/zht"
-import { dict as uiKo } from "@taverncode/tavern-ui/i18n/ko"
-import { dict as uiDe } from "@taverncode/tavern-ui/i18n/de"
-import { dict as uiEs } from "@taverncode/tavern-ui/i18n/es"
-import { dict as uiFr } from "@taverncode/tavern-ui/i18n/fr"
-import { dict as uiDa } from "@taverncode/tavern-ui/i18n/da"
-import { dict as uiJa } from "@taverncode/tavern-ui/i18n/ja"
-import { dict as uiPl } from "@taverncode/tavern-ui/i18n/pl"
-import { dict as uiRu } from "@taverncode/tavern-ui/i18n/ru"
-import { dict as uiAr } from "@taverncode/tavern-ui/i18n/ar"
-import { dict as uiNo } from "@taverncode/tavern-ui/i18n/no"
-import { dict as uiBr } from "@taverncode/tavern-ui/i18n/br"
-import { dict as uiTh } from "@taverncode/tavern-ui/i18n/th"
-import { dict as uiBs } from "@taverncode/tavern-ui/i18n/bs"
-import { dict as uiTr } from "@taverncode/tavern-ui/i18n/tr"
-import { dict as uiNl } from "@taverncode/tavern-ui/i18n/nl"
-import { dict as uiUk } from "@taverncode/tavern-ui/i18n/uk"
-import { dict as uiIt } from "@taverncode/tavern-ui/i18n/it"
-import { dict as uiFa } from "@taverncode/tavern-ui/i18n/fa"
 import { dict as appEn } from "../i18n/en"
-import { dict as appZh } from "../i18n/zh"
-import { dict as appZht } from "../i18n/zht"
-import { dict as appKo } from "../i18n/ko"
-import { dict as appDe } from "../i18n/de"
-import { dict as appEs } from "../i18n/es"
-import { dict as appFr } from "../i18n/fr"
-import { dict as appDa } from "../i18n/da"
-import { dict as appJa } from "../i18n/ja"
-import { dict as appPl } from "../i18n/pl"
-import { dict as appRu } from "../i18n/ru"
-import { dict as appAr } from "../i18n/ar"
-import { dict as appNo } from "../i18n/no"
-import { dict as appBr } from "../i18n/br"
-import { dict as appTh } from "../i18n/th"
-import { dict as appBs } from "../i18n/bs"
-import { dict as appTr } from "../i18n/tr"
-import { dict as appNl } from "../i18n/nl"
-import { dict as appUk } from "../i18n/uk"
-import { dict as appIt } from "../i18n/it"
-import { dict as appFa } from "../i18n/fa"
 import { dict as amEn } from "../../agent-manager/i18n/en"
-import { dict as amZh } from "../../agent-manager/i18n/zh"
-import { dict as amZht } from "../../agent-manager/i18n/zht"
-import { dict as amKo } from "../../agent-manager/i18n/ko"
-import { dict as amDe } from "../../agent-manager/i18n/de"
-import { dict as amEs } from "../../agent-manager/i18n/es"
-import { dict as amFr } from "../../agent-manager/i18n/fr"
-import { dict as amDa } from "../../agent-manager/i18n/da"
-import { dict as amJa } from "../../agent-manager/i18n/ja"
-import { dict as amPl } from "../../agent-manager/i18n/pl"
-import { dict as amRu } from "../../agent-manager/i18n/ru"
-import { dict as amAr } from "../../agent-manager/i18n/ar"
-import { dict as amNo } from "../../agent-manager/i18n/no"
-import { dict as amBr } from "../../agent-manager/i18n/br"
-import { dict as amTh } from "../../agent-manager/i18n/th"
-import { dict as amBs } from "../../agent-manager/i18n/bs"
-import { dict as amTr } from "../../agent-manager/i18n/tr"
-import { dict as amNl } from "../../agent-manager/i18n/nl"
-import { dict as amUk } from "../../agent-manager/i18n/uk"
-import { dict as amIt } from "../../agent-manager/i18n/it"
-import { dict as amFa } from "../../agent-manager/i18n/fa"
 import { dict as tavernEn } from "@taverncode/tavern-i18n/en"
-import { dict as tavernZh } from "@taverncode/tavern-i18n/zh"
-import { dict as tavernZht } from "@taverncode/tavern-i18n/zht"
-import { dict as tavernKo } from "@taverncode/tavern-i18n/ko"
-import { dict as tavernDe } from "@taverncode/tavern-i18n/de"
-import { dict as tavernEs } from "@taverncode/tavern-i18n/es"
-import { dict as tavernFr } from "@taverncode/tavern-i18n/fr"
-import { dict as tavernDa } from "@taverncode/tavern-i18n/da"
-import { dict as tavernJa } from "@taverncode/tavern-i18n/ja"
-import { dict as tavernPl } from "@taverncode/tavern-i18n/pl"
-import { dict as tavernRu } from "@taverncode/tavern-i18n/ru"
-import { dict as tavernAr } from "@taverncode/tavern-i18n/ar"
-import { dict as tavernNo } from "@taverncode/tavern-i18n/no"
-import { dict as tavernBr } from "@taverncode/tavern-i18n/br"
-import { dict as tavernTh } from "@taverncode/tavern-i18n/th"
-import { dict as tavernBs } from "@taverncode/tavern-i18n/bs"
-import { dict as tavernTr } from "@taverncode/tavern-i18n/tr"
-import { dict as tavernNl } from "@taverncode/tavern-i18n/nl"
-import { dict as tavernUk } from "@taverncode/tavern-i18n/uk"
-import { dict as tavernIt } from "@taverncode/tavern-i18n/it"
 import { useVSCode } from "./vscode"
 import { normalizeLocale as _normalizeLocale, resolveTemplate as _resolveTemplate } from "./language-utils"
 
@@ -102,54 +23,12 @@ import { LOCALES, RTL_LOCALES, localeToBcp47 } from "./language-utils"
 
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: "English",
-  zh: "简体中文",
-  zht: "繁體中文",
-  ko: "한국어",
-  de: "Deutsch",
-  es: "Español",
-  fr: "Français",
-  da: "Dansk",
-  ja: "日本語",
-  pl: "Polski",
-  ru: "Русский",
-  ar: "العربية",
-  no: "Norsk",
-  br: "Português (Brasil)",
-  th: "ภาษาไทย",
-  bs: "Bosanski",
-  tr: "Türkçe",
-  nl: "Nederlands",
-  uk: "Українська",
-  it: "Italiano",
-  fa: "فارسی",
 }
 
 // Merge 4 dict layers: app + ui + tavern + agent manager (tavern and agent manager override last)
 const base = { ...appEn, ...uiEn, ...tavernEn }
 const dicts: Record<Locale, Record<string, string>> = {
   en: { ...base, ...amEn },
-  zh: { ...base, ...appZh, ...uiZh, ...tavernZh, ...amEn, ...amZh },
-  zht: { ...base, ...appZht, ...uiZht, ...tavernZht, ...amEn, ...amZht },
-  ko: { ...base, ...appKo, ...uiKo, ...tavernKo, ...amEn, ...amKo },
-  de: { ...base, ...appDe, ...uiDe, ...tavernDe, ...amEn, ...amDe },
-  es: { ...base, ...appEs, ...uiEs, ...tavernEs, ...amEn, ...amEs },
-  fr: { ...base, ...appFr, ...uiFr, ...tavernFr, ...amEn, ...amFr },
-  da: { ...base, ...appDa, ...uiDa, ...tavernDa, ...amEn, ...amDa },
-  ja: { ...base, ...appJa, ...uiJa, ...tavernJa, ...amEn, ...amJa },
-  pl: { ...base, ...appPl, ...uiPl, ...tavernPl, ...amEn, ...amPl },
-  ru: { ...base, ...appRu, ...uiRu, ...tavernRu, ...amEn, ...amRu },
-  ar: { ...base, ...appAr, ...uiAr, ...tavernAr, ...amEn, ...amAr },
-  no: { ...base, ...appNo, ...uiNo, ...tavernNo, ...amEn, ...amNo },
-  br: { ...base, ...appBr, ...uiBr, ...tavernBr, ...amEn, ...amBr },
-  th: { ...base, ...appTh, ...uiTh, ...tavernTh, ...amEn, ...amTh },
-  bs: { ...base, ...appBs, ...uiBs, ...tavernBs, ...amEn, ...amBs },
-  tr: { ...base, ...appTr, ...uiTr, ...tavernTr, ...amEn, ...amTr },
-  nl: { ...base, ...appNl, ...uiNl, ...tavernNl, ...amEn, ...amNl },
-  uk: { ...base, ...appUk, ...uiUk, ...tavernUk, ...amEn, ...amUk },
-  it: { ...base, ...appIt, ...uiIt, ...tavernIt, ...amEn, ...amIt },
-  // Persian (Tavern fork addition). App, UI, and agent-manager layers are localized;
-  // the Tavern overrides layer falls back to English via `base`.
-  fa: { ...base, ...appFa, ...uiFa, ...amEn, ...amFa },
 }
 
 function normalizeLocale(lang: string): Locale {

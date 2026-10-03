@@ -140,7 +140,6 @@ async function removeLegacyMcp(
   const files: vscode.Uri[] = []
   if (project && scope !== "global") {
     files.push(vscode.Uri.file(path.join(project, ".tavern", "mcp.json")))
-    files.push(vscode.Uri.file(path.join(project, ".taverncode", "mcp.json")))
   }
 
   if (ctx.storage && scope !== "project") files.push(vscode.Uri.joinPath(ctx.storage, "settings", "mcp_settings.json"))

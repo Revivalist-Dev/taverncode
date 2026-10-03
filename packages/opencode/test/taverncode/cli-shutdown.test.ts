@@ -37,9 +37,6 @@ mock.module("@taverncode/tavern-telemetry", () => ({
 mock.module("@taverncode/tavern-gateway", () => ({
   ENV_FEATURE: "TAVERN_FEATURE",
   ENV_VERSION: "TAVERN_VERSION",
-  async migrateLegacyTavernAuth() {
-    calls.push("auth:migrate")
-  },
 }))
 
 mock.module("@/effect/app-runtime", () => ({

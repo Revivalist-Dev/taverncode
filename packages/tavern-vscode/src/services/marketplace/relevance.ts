@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import type { MarketplaceItem, MarketplaceRelevanceMetadata } from "./types"
 
-const EXCLUDE = "**/{node_modules,.git,dist,build,out,.tavern,.opencode,.taverncode}/**"
+const EXCLUDE = "**/{node_modules,.git,dist,build,out,.tavern,.opencode}/**"
 
 function strings(value: unknown): string[] {
   if (!Array.isArray(value)) return []

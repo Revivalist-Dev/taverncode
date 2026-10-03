@@ -134,7 +134,7 @@ describe("Agent Manager worktree deletion lifecycle", () => {
   const deleteWorktree = async () => deleteLifecycleWorktree(ctx, host, state.getWorktrees()[0]!.id)
 
   it("does not boot the interactive directory until the setup script finishes", async () => {
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     const entered = Promise.withResolvers<void>()
     const gate = Promise.withResolvers<void>()
     const wt = state.getWorktrees().at(0)!

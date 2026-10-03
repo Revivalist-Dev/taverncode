@@ -26,7 +26,7 @@ export namespace TaverncodeSystemPrompt {
         `  Is directory a git repo: ${input.ctx.project.vcs === "git" ? "yes" : "no"}`,
         `  Platform: ${process.platform}`,
         `  Today's date: ${new Date().toDateString()}`,
-        `  Project config: .tavern/command/*.md, .tavern/agent/*.md, tavern.json, AGENTS.md. Put new commands and agents in .tavern/. Do not use .taverncode/ or .opencode/.`,
+        `  Project config: .tavern/command/*.md, .tavern/agent/*.md, tavern.json, AGENTS.md. Put new commands and agents in .tavern/. Do not use .opencode/.`,
         `  Global config: ${Global.Path.config}/ (same structure)`,
         ...staticEnvLines(input.editor),
         `</env>`,

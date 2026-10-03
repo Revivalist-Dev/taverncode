@@ -26,13 +26,13 @@ export const directories = Effect.fn("ConfigPaths.directories")(function* (direc
     Global.Path.config,
     ...(!Flag.TAVERN_DISABLE_PROJECT_CONFIG
       ? yield* afs.up({
-          targets: [".taverncode", ".tavern"], // taverncode_change
+          targets: [".tavern"], // taverncode_change
           start: directory,
           stop: worktree,
         })
       : []),
     ...(yield* afs.up({
-      targets: [".taverncode", ".tavern"], // taverncode_change
+      targets: [".tavern"], // taverncode_change
       start: Global.Path.home,
       stop: Global.Path.home,
     })),

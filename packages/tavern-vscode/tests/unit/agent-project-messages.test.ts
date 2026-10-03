@@ -95,7 +95,7 @@ function setup(opts: { enabled?: boolean; workspace?: string; git?: GitOps; trus
     clone: [] as string[][],
     folders: [] as Parameters<ProjectMessageDeps["pickFolder"]>[0][],
     posts: [] as Array<{ type: string; parent?: string }>,
-    readyResult: { ok: true, refsFixed: 0, current: true } as { ok: boolean; refsFixed: number; current: boolean },
+    readyResult: { ok: true, current: true } as { ok: boolean; current: boolean },
   }
   const deps: ProjectMessageDeps = {
     registry,

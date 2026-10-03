@@ -304,14 +304,12 @@ export interface OpenConfigFileRequest {
     openFailed: string
     sourceXdg: string
     sourceHomeTavern: string
-    sourceHomeTaverncode: string
     sourceHomeOpencode: string
     sourceEnvFile: string
     sourceEnvDir: string
     sourceEnvContent: string
     sourceProjectTavern: string
     sourceProjectRoot: string
-    sourceProjectTaverncode: string
     sourceProjectOpencode: string
   }
 }

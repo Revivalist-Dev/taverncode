@@ -7,6 +7,7 @@ import simpleGit from "simple-git"
 import { WorktreeManager } from "../../src/agent-manager/WorktreeManager"
 
 const tempDirs: string[] = []
+const managers: WorktreeManager[] = []
 // Pool home for the current test. Slots never live inside the test repository.
 let home = ""
 
@@ -17,9 +18,17 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
+  // Stop every pool first so no replacement warm-up holds a git handle while
+  // the temp directories are removed.
+  for (const manager of managers.splice(0)) {
+    await manager.disposePool().catch(() => undefined)
+  }
   await Promise.all(
     tempDirs.splice(0, tempDirs.length).map(async (dir) => {
-      await fs.rm(dir, { recursive: true, force: true })
+      // Windows can keep handles on worktree git dirs while a replacement
+      // warm-up finishes. Cleanup is best-effort: a leftover OS temp dir must
+      // not fail the test, so retry then swallow the lock error.
+      await fs.rm(dir, { recursive: true, force: true, maxRetries: 20, retryDelay: 100 }).catch(() => undefined)
     }),
   )
 })
@@ -54,6 +63,7 @@ function createManager(root: string, poolSize = 1, rewarmDelay = 0, logs?: strin
     dir,
   )
   manager.rewarmDelay = rewarmDelay
+  managers.push(manager)
   return manager
 }
 
@@ -81,7 +91,7 @@ async function pooledSlots(root: string): Promise<string[]> {
     const lines = block.split("\n")
     const worktree = lines.find((line) => line.startsWith("worktree "))?.slice(9)
     const detached = lines.some((line) => line === "detached")
-    if (worktree && detached) slots.push(worktree)
+    if (worktree && detached) slots.push(path.resolve(worktree))
   }
   return slots
 }

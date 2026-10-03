@@ -7,14 +7,12 @@ export type Scope = "global" | "local"
 export type Source =
   | "sourceXdg"
   | "sourceHomeTavern"
-  | "sourceHomeTaverncode"
   | "sourceHomeOpencode"
   | "sourceEnvFile"
   | "sourceEnvDir"
   | "sourceEnvContent"
   | "sourceProjectTavern"
   | "sourceProjectRoot"
-  | "sourceProjectTaverncode"
   | "sourceProjectOpencode"
 
 export interface Entry {
@@ -34,10 +32,9 @@ const MODERN = ["tavern.jsonc", "tavern.json"]
 const LEGACY = ["opencode.jsonc", "opencode.json"]
 const FILES = [...MODERN, ...LEGACY]
 const GLOBAL = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json", "config.json"]
-const HOME = [".tavern", ".taverncode", ".opencode"]
+const HOME = [".tavern", ".opencode"]
 const SOURCES: Record<string, Source> = {
   ".tavern": "sourceHomeTavern",
-  ".taverncode": "sourceHomeTaverncode",
   ".opencode": "sourceHomeOpencode",
 }
 
@@ -49,7 +46,7 @@ function row(file: string, source: Source, loaded = true, recommended = false): 
     source,
     exists: existsSync(file),
     loaded: loaded && existsSync(file),
-    legacy: name.startsWith("opencode") || name === "config.json" || file.includes(`${path.sep}.taverncode${path.sep}`),
+    legacy: name.startsWith("opencode") || name === "config.json",
     recommended,
   }
 }
@@ -93,7 +90,7 @@ export function globalFiles() {
 
 export function localFiles(root: string) {
   const enabled = !process.env.TAVERN_DISABLE_PROJECT_CONFIG
-  const dirs = [path.join(root, ".tavern"), root, path.join(root, ".taverncode"), path.join(root, ".opencode")]
+  const dirs = [path.join(root, ".tavern"), root, path.join(root, ".opencode")]
   const list = dirs.flatMap((dir) => FILES.map((file) => row(path.join(dir, file), localSource(root, dir), enabled)))
   return ensure(
     list.filter((item) => item.exists),
@@ -105,7 +102,6 @@ export function localFiles(root: string) {
 function localSource(root: string, dir: string) {
   if (dir === root) return "sourceProjectRoot"
   if (dir.endsWith(`${path.sep}.tavern`)) return "sourceProjectTavern"
-  if (dir.endsWith(`${path.sep}.taverncode`)) return "sourceProjectTaverncode"
   return "sourceProjectOpencode"
 }
 

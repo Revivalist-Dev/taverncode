@@ -179,7 +179,7 @@ const layer = Layer.effect(
       ? []
       : yield* fs
           .up({
-            targets: [".tavern", ".taverncode", ...names.toReversed()], // taverncode_change
+            targets: [".tavern", ...names.toReversed()], // taverncode_change
             start: location.directory,
             stop: location.project.directory,
           })
@@ -187,14 +187,14 @@ const layer = Layer.effect(
     const directories = [
       globalDirectory,
       ...discovered
-        .filter((item) => [".tavern", ".taverncode"].includes(path.basename(item))) // taverncode_change
+        .filter((item) => path.basename(item) === ".tavern") // taverncode_change
         .toReversed()
         .map((directory) => AbsolutePath.make(directory)),
     ]
     // A config closer to the opened directory should win over one higher up.
     // Search starts nearby, so reverse the results before applying them.
     // taverncode_change start
-    const directPaths = discovered.filter((item) => ![".tavern", ".taverncode"].includes(path.basename(item))).toReversed()
+    const directPaths = discovered.filter((item) => path.basename(item) !== ".tavern").toReversed()
     // taverncode_change end
     const direct = yield* Effect.forEach(directPaths, loadFile).pipe(
       Effect.orDie,

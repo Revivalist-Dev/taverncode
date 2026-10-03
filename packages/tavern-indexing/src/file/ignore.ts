@@ -45,7 +45,6 @@ export namespace FileIgnore {
     "**/coverage/**",
     "**/.nyc_output/**",
     "**/.tavern/worktrees/**",
-    "**/.taverncode/worktrees/**",
   ]
 
   export const PATTERNS = [...files, ...folders]

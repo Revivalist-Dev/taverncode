@@ -8,7 +8,6 @@
   "scripts": {
     "dev": "TAVERN_CLIENT=cli bun run --cwd packages/opencode --conditions=node src/index.ts",
     "dev:stats": "bun sst shell --stage=production -- bun run --cwd packages/stats/app dev",
-    "dev:storybook": "bun --cwd packages/storybook storybook",
     "lint": "oxlint",
     "check:architecture": "bun run script/check-architecture.ts",
     "check:duplication": "bun run script/check-taverncode-duplication.ts",

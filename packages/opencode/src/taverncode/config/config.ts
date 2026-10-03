@@ -37,7 +37,7 @@ export namespace TaverncodeConfig {
   export const ALL_CONFIG_FILES = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json"] as const
 
   /** Config directory suffixes in update-target preference order. */
-  export const TAVERN_DIR_SUFFIXES = [".tavern", ".taverncode"] as const
+  export const TAVERN_DIR_SUFFIXES = [".tavern"] as const
 
   /**
    * List every project config file the read chain can merge: config files in
@@ -586,7 +586,7 @@ export namespace TaverncodeConfig {
 
   /** Check whether a directory path should be treated as a config directory (for loading config files). */
   export function isConfigDir(dir: string, flagDir?: string): boolean {
-    return dir.endsWith(".tavern") || dir.endsWith(".taverncode") || dir === flagDir
+    return dir.endsWith(".tavern") || dir === flagDir
   }
 
   // ── Opencode config migration notice ─────────────────────────────────

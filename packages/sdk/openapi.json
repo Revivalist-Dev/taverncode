@@ -13372,7 +13372,7 @@
         ]
       }
     },
-    "/kilo/fim": {
+    "/tavern/fim": {
       "post": {
         "tags": ["tavern"],
         "operationId": "tavern.fim",
@@ -13396,46 +13396,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Streaming FIM completion response",
+            "description": "Success",
             "content": {
               "text/event-stream": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "choices": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "delta": {
-                            "type": "object",
-                            "properties": {
-                              "content": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "text": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "usage": {
-                      "type": "object",
-                      "properties": {
-                        "prompt_tokens": {
-                          "type": "number"
-                        },
-                        "completion_tokens": {
-                          "type": "number"
-                        }
-                      }
-                    },
-                    "cost": {
-                      "type": "number"
-                    }
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -34841,6 +34806,9 @@
           "prompt": {
             "type": "string"
           },
+          "prefill": {
+            "type": "string"
+          },
           "tools": {
             "type": "object",
             "additionalProperties": {
@@ -37137,6 +37105,9 @@
             "type": "string"
           },
           "prompt": {
+            "type": "string"
+          },
+          "prefill": {
             "type": "string"
           },
           "options": {

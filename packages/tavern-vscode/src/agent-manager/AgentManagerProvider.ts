@@ -474,12 +474,6 @@ export class AgentManagerProvider implements Disposable {
     }
     // Counts only — no paths, no branch names.
     if (init.health) this.host.capture("Agent Manager Worktree Health", healthMetrics(init.health))
-    // When the .taverncode → .tavern migration rewrote git worktree refs, nudge
-    // VS Code's git extension to re-discover them and avoid stale Source Control.
-    if (init.refsFixed > 0) {
-      this.log(`Migration fixed ${init.refsFixed} git worktree ref(s), refreshing git`)
-      this.host.refreshGit()
-    }
 
     registerProjectSessions(ctx, this.panel?.sessions)
     await pruneSubagents(state, this.panel?.sessions, (message) => this.log(message))

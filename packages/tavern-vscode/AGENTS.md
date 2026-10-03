@@ -209,11 +209,9 @@ New webview features must use **`@taverncode/tavern-ui`** components instead of 
 - Pierre workers can offload highlighted updates, but they do not make an expensive synchronous initial render safe. Keep initial rendering hunk-bounded, and keep patch parsing behind deferred visibility/activation where session-switch responsiveness depends on it.
 - When changing diff scheduling, verify both rapid session switching and fast scrolling through a review. Improving one by shifting work into the other is a regression, not an optimization.
 
-## Docs Screenshot Stories
+## Visual Regression Screenshots
 
-When adding or updating Storybook stories for screenshots used by docs, make the story content match the docs page closely before replacing the docs image. Do not replace screenshots from VSCode Legacy docs tabs or sections.
-
-Generated screenshot baselines live under `packages/tavern-docs/public/img/screenshot-tests/` and are referenced from docs as `/docs/img/screenshot-tests/...`. If a generated VS Code visual-regression screenshot is used in docs, add the docs usage to the `DOCS` map in `tests/visual-regression.spec.ts`.
+Generated screenshot baselines live under `packages/tavern-vscode/tests/__screenshots__/` and are committed to the repo. `tests/visual-regression.spec.ts` renders every Storybook story and pixel-diffs it against its baseline; `tests/permission-dock-dropdown.spec.ts` uses `__screenshots__/permission-dock-dropdown/`. `.github/workflows/visual-regression.yml` regenerates and commits updated baselines. Playwright reads and writes these paths on every run, so keep them committed.
 
 ## Debugging
 

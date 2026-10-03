@@ -104,27 +104,6 @@ const SKIP = new Set<string>([
   "settings--display-preview",
 ])
 
-const DOCS = new Map<string, string[]>([
-  [
-    "chat--task-header-with-todos",
-    [
-      "packages/tavern-docs/pages/code-with-ai/features/task-todo-list.md:/docs/img/screenshot-tests/tavern-vscode/visual-regression/chat/task-header-with-todos-chromium-linux.png",
-    ],
-  ],
-  [
-    "composite-webview--todo-write-docs-overview",
-    [
-      "packages/tavern-docs/pages/code-with-ai/features/task-todo-list.md:/docs/img/screenshot-tests/tavern-vscode/visual-regression/composite-webview/todo-write-docs-overview-chromium-linux.png",
-    ],
-  ],
-  [
-    "settings--agent-behaviour-workflows",
-    [
-      "packages/tavern-docs/pages/customize/workflows.md:/docs/img/screenshot-tests/tavern-vscode/visual-regression/settings/agent-behaviour-workflows-chromium-linux.png",
-    ],
-  ],
-])
-
 // Generate one test() per story so Playwright's scheduler can distribute
 // them freely across workers — no manual sharding needed.
 // Skip fetching stories on macOS since test.skip() above already marks the file skipped.
@@ -132,10 +111,6 @@ const stories = IS_DARWIN ? [] : (await fetchStories()).filter((s) => !SKIP.has(
 
 for (const story of stories) {
   test(`${story.title} / ${story.name}`, async ({ page }) => {
-    for (const ref of DOCS.get(story.id) ?? []) {
-      test.info().annotations.push({ type: "docs", description: ref })
-    }
-
     // Width-suffixed stories cover layouts outside the default sidebar viewport.
     const width = story.id.endsWith("-200") ? 200 : story.id.endsWith("-1280") ? 1280 : 420
     await page.setViewportSize({ width, height: 720 })

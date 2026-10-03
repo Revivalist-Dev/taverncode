@@ -27,7 +27,7 @@ jobs:
           matched=false
           while IFS= read -r file; do
             case "$file" in
-              packages/tavern-ui/*|packages/ui/*|packages/util/*|packages/sdk/js/*|packages/tavern-vscode/webview-ui/*|packages/tavern-vscode/.storybook/*|packages/tavern-vscode/tests/visual-regression*|packages/tavern-vscode/tests/permission-dock-dropdown*|packages/tavern-vscode/tests/accessibility*|packages/tavern-docs/public/img/screenshot-tests/*|.github/actions/setup-bun/*|.github/workflows/visual-regression.yml)
+              packages/tavern-ui/*|packages/ui/*|packages/util/*|packages/sdk/js/*|packages/tavern-vscode/webview-ui/*|packages/tavern-vscode/.storybook/*|packages/tavern-vscode/tests/visual-regression*|packages/tavern-vscode/tests/permission-dock-dropdown*|packages/tavern-vscode/tests/accessibility*|packages/tavern-vscode/tests/__screenshots__/*|packages/tavern-ui/tests/__screenshots__/*|.github/actions/setup-bun/*|.github/workflows/visual-regression.yml)
                 matched=true
                 break
                 ;;
@@ -136,7 +136,7 @@ jobs:
             const idx = JSON.parse(fs.readFileSync('storybook-static/index.json', 'utf8'));
             const stories = Object.values(idx.entries || idx.stories || {}).filter(s => s.id && !s.id.endsWith('--docs'));
             const expected = new Set(stories.map(s => { const [c,v] = s.id.split('--'); return c + '/' + v + '-chromium-linux.png'; }));
-            const dir = '../tavern-docs/public/img/screenshot-tests/tavern-ui/visual-regression';
+            const dir = 'tests/__screenshots__/visual-regression';
             if (!fs.existsSync(dir)) process.exit(0);
             for (const component of fs.readdirSync(dir)) {
               const cdir = path.join(dir, component);
@@ -152,7 +152,7 @@ jobs:
       - name: Check for baseline changes (read-only PRs)
         if: needs.check-paths.outputs.can_autocommit != 'true'
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-ui/
+          git add packages/tavern-ui/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "No visual regression detected."
           else
@@ -166,7 +166,7 @@ jobs:
       - name: Fail if baselines still changing after auto-update
         if: needs.check-paths.outputs.can_autocommit == 'true' && steps.check-baseline-commit.outputs.is_baseline_update == 'true'
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-ui/
+          git add packages/tavern-ui/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "Baselines are stable after auto-update."
           else
@@ -181,7 +181,7 @@ jobs:
         if: needs.check-paths.outputs.can_autocommit == 'true' && steps.check-baseline-commit.outputs.is_baseline_update != 'true'
         id: baseline-changes
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-ui/
+          git add packages/tavern-ui/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -304,7 +304,7 @@ jobs:
             const idx = JSON.parse(fs.readFileSync('storybook-static/index.json', 'utf8'));
             const stories = Object.values(idx.entries || idx.stories || {}).filter(s => s.id && !s.id.endsWith('--docs'));
             const expected = new Set(stories.map(s => { const [c,v] = s.id.split('--'); return c + '/' + v + '-chromium-linux.png'; }));
-            const dir = '../tavern-docs/public/img/screenshot-tests/tavern-vscode/visual-regression';
+            const dir = 'tests/__screenshots__/visual-regression';
             if (!fs.existsSync(dir)) process.exit(0);
             for (const component of fs.readdirSync(dir)) {
               const cdir = path.join(dir, component);
@@ -333,7 +333,7 @@ jobs:
                 if (file) expected.add(file.replace(/\.png$/, '-chromium-linux.png'));
               }
             }
-            const dir = '../tavern-docs/public/img/screenshot-tests/tavern-vscode/permission-dock-dropdown';
+            const dir = 'tests/__screenshots__/permission-dock-dropdown';
             if (!fs.existsSync(dir)) process.exit(0);
             for (const file of fs.readdirSync(dir)) {
               if (file.endsWith('.png') && !expected.has(file)) {
@@ -347,7 +347,7 @@ jobs:
       - name: Check for baseline changes (read-only PRs)
         if: needs.check-paths.outputs.can_autocommit != 'true'
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-vscode/
+          git add packages/tavern-vscode/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "No visual regression detected."
           else
@@ -361,7 +361,7 @@ jobs:
       - name: Fail if baselines still changing after auto-update
         if: needs.check-paths.outputs.can_autocommit == 'true' && steps.check-baseline-commit-vscode.outputs.is_baseline_update == 'true'
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-vscode/
+          git add packages/tavern-vscode/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "Baselines are stable after auto-update."
           else
@@ -376,7 +376,7 @@ jobs:
         if: needs.check-paths.outputs.can_autocommit == 'true' && steps.check-baseline-commit-vscode.outputs.is_baseline_update != 'true'
         id: baseline-changes-vscode
         run: |
-          git add packages/tavern-docs/public/img/screenshot-tests/tavern-vscode/
+          git add packages/tavern-vscode/tests/__screenshots__/
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

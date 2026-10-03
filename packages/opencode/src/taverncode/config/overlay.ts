@@ -84,7 +84,7 @@ export namespace TaverncodeConfigOverlay {
   }
 
   const files = ["tavern.jsonc", "tavern.json", "opencode.jsonc", "opencode.json"] as const
-  const dirs = [".taverncode", ".tavern"] as const
+  const dirs = [".tavern"] as const
 
   const fieldPaths = [
     ["model"],
@@ -241,7 +241,7 @@ export namespace TaverncodeConfigOverlay {
   }
 
   function globalDirs() {
-    return [Global.Path.config, path.join(Global.Path.home, ".taverncode"), path.join(Global.Path.home, ".tavern")]
+    return [Global.Path.config, path.join(Global.Path.home, ".tavern")]
   }
 
   // taverncode_change start - root confines untrusted agent {file:} reads

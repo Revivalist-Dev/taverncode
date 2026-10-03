@@ -60,7 +60,7 @@ describe("hydrateExpanded", () => {
    */
   it("re-pushes state for an already loaded background project", async () => {
     const all = contexts(["a"])
-    await all.map.get("a")!.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await all.map.get("a")!.ensureReady(async () => ({ ok: true }))
     const hooks = all.hooks()
     hydrateExpanded([snapshot("a")], hooks)
     expect(hooks.pushed).toEqual(["a"])
@@ -69,7 +69,7 @@ describe("hydrateExpanded", () => {
 
   it("skips the active project, which the provider pushes itself", async () => {
     const all = contexts(["a"])
-    await all.map.get("a")!.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await all.map.get("a")!.ensureReady(async () => ({ ok: true }))
     const hooks = all.hooks()
     hydrateExpanded([snapshot("a", { active: true })], hooks)
     expect(hooks.pushed).toEqual([])
@@ -99,7 +99,7 @@ describe("hydrateExpanded", () => {
 
   it("hydrates every expanded background project, not just the first", async () => {
     const all = contexts(["a", "b", "c"])
-    await all.map.get("b")!.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await all.map.get("b")!.ensureReady(async () => ({ ok: true }))
     const hooks = all.hooks()
     hydrateExpanded([snapshot("a"), snapshot("b"), snapshot("c")], hooks)
     expect(hooks.inited).toEqual(["a", "c"])

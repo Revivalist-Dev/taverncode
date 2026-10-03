@@ -6,9 +6,9 @@ import { TaverncodePaths } from "@/taverncode/paths"
 export namespace ConfigProtection {
   /**
    * Config directory prefixes (relative paths, forward-slash normalized).
-   * Matches .tavern/ and legacy .taverncode/ at any depth within the project.
+   * Matches .tavern/ at any depth within the project.
    */
-  const CONFIG_DIRS = [".tavern/", ".taverncode/"]
+  const CONFIG_DIRS = [".tavern/"]
 
   /**
    * Subdirectories under CONFIG_DIRS that are NOT config files (e.g. plan files).
@@ -142,7 +142,7 @@ export namespace ConfigProtection {
       if (within(filepath, dir) || (target && root && within(target, root))) return true
     }
 
-    // ~/.tavern/ and ~/.taverncode/ (legacy global dirs)
+    // ~/.tavern/ (global dir)
     for (const dir of TaverncodePaths.globalDirs()) {
       const root = physical(dir)
       if (within(filepath, dir) || (target && root && within(target, root))) return true

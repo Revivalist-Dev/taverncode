@@ -1,5 +1,4 @@
 import type { Argv } from "yargs"
-import type { Auth } from "@/auth"
 import * as Log from "@opencode-ai/core/util/log"
 import { InstallationBuildKind, InstallationVersion } from "@opencode-ai/core/installation/version"
 import { TavernShutdown } from "@/taverncode/cli/shutdown"
@@ -26,7 +25,7 @@ const log = Log.create({ service: "taverncode.cli" })
 // This keeps index.ts close to upstream and reduces merge conflicts on every sync.
 //
 // Startup cost note: this module is imported eagerly from src/index.ts, so its static
-// import graph must stay light. Heavy dependencies (telemetry, gateway auth migration,
+// import graph must stay light. Heavy dependencies (telemetry, gateway,
 // AppRuntime, config, auth, session-export, JSON migration) are dynamically imported
 // inside the function that needs them, following the deferral pattern upstream applied
 // in opencode#30453. The registered command modules must follow the same rule: a light
@@ -100,23 +99,11 @@ export namespace TavernCli {
       enabled: cfg.experimental?.openTelemetry !== false,
     })
 
-    const { migrateLegacyTavernAuth } = gateway
     const getAuth = async () => {
       if (runtime) return runtime.TavernCliBootstrapRuntime.getAuth()
       const { Auth } = await import("@/auth")
       return app!.AppRuntime.runPromise(Auth.Service.use((s) => s.get("tavern")))
     }
-    const setAuth = async (auth: Auth.Info) => {
-      if (runtime) return runtime.TavernCliBootstrapRuntime.setAuth(auth)
-      const { Auth } = await import("@/auth")
-      return app!.AppRuntime.runPromise(Auth.Service.use((s) => s.set("tavern", auth)))
-    }
-
-    // Migrate legacy Tavern CLI auth (~/.taverncode/cli/config.json) into auth.json if present.
-    await migrateLegacyTavernAuth(
-      async () => (await getAuth()) !== undefined,
-      setAuth,
-    )
 
     const auth = await getAuth()
     if (auth) {

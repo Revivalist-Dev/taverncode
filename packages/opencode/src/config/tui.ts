@@ -185,9 +185,9 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
       acc.plugin_origins = plugins
     })
 
-  // taverncode_change start - discover canonical and legacy Tavern config directories
-  // Every config dir we may read from: global config, .tavern and legacy .taverncode
-  // folders between cwd and home, and TAVERN_CONFIG_DIR.
+  // taverncode_change start - discover Tavern config directories
+  // Every config dir we may read from: global config, .tavern folders between
+  // cwd and home, and TAVERN_CONFIG_DIR.
   // taverncode_change end
   const directories = yield* ConfigPaths.directories(ctx.directory)
   yield* Effect.promise(() => migrateTuiConfig({ directories, cwd: ctx.directory }))
@@ -217,16 +217,14 @@ const loadState = Effect.fn("TuiConfig.loadState")(function* (ctx: { directory: 
   }
 
   // taverncode_change start - load tui.json from supported Tavern config directories
-  // 4. `.tavern` and legacy `.taverncode` directories (and TAVERN_CONFIG_DIR)
-  // discovered while walking up the tree. Also returned below so callers can
-  // install plugin dependencies from each location.
-  const dirs = unique(directories).filter(
-    (dir) => dir.endsWith(".tavern") || dir.endsWith(".taverncode") || dir === Flag.TAVERN_CONFIG_DIR,
-  )
+  // 4. `.tavern` directories (and TAVERN_CONFIG_DIR) discovered while walking up
+  // the tree. Also returned below so callers can install plugin dependencies
+  // from each location.
+  const dirs = unique(directories).filter((dir) => dir.endsWith(".tavern") || dir === Flag.TAVERN_CONFIG_DIR)
   // taverncode_change end
 
   for (const dir of dirs) {
-    // taverncode_change start - trust global (home/TAVERN_CONFIG_DIR) dirs like config.ts; in-repo .tavern/.taverncode stay untrusted
+    // taverncode_change start - trust global (home/TAVERN_CONFIG_DIR) dirs like config.ts; in-repo .tavern stays untrusted
     const trusted = pluginScope(dir, ctx) === "global"
     const fileScope = trusted ? undefined : { root: ctx.directory, source: dir }
     for (const file of ConfigPaths.fileInDirectory(dir, "tui")) {

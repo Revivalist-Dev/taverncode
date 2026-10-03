@@ -64,7 +64,7 @@ export function pluginFiles(scope: Scope, directory: string, worktree?: string) 
   // Count validated parent steps instead of comparing raw paths. Windows path
   // comparisons can accept an ancestor whose spelling differs only in case.
   for (let step = 0; step <= depth; step++) {
-    dirs.push(current, path.join(current, ".tavern"), path.join(current, ".taverncode"))
+    dirs.push(current, path.join(current, ".tavern"))
     current = path.dirname(current)
   }
   // Enumerate candidates without an exists check: unreadable configs must not
@@ -98,7 +98,7 @@ export async function scopeRoot(scope: Scope, directory: string, worktree?: stri
   if (scope === "global") return Global.Path.config
   const file = await TaverncodeConfigOverlay.projectTarget({ directory, worktree })
   const dir = path.dirname(file)
-  return dir.endsWith(`${path.sep}.tavern`) || dir.endsWith(`${path.sep}.taverncode`) ? path.dirname(dir) : dir
+  return dir.endsWith(`${path.sep}.tavern`) ? path.dirname(dir) : dir
 }
 
 export async function mcpsDir(scope: Scope, directory: string, worktree?: string) {

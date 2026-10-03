@@ -118,9 +118,6 @@ export async function preserveAllVersions(options: PreserveOptions = {}): Promis
     track(await preserveVersion(path, { ...options, targetVersion }))
   }
 
-  const zed = "packages/extensions/zed/extension.toml"
-  if (await Bun.file(zed).exists()) track(await preserveZedVersion(zed, { ...options, targetVersion }))
-
   return results
 }
 

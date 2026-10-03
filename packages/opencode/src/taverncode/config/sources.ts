@@ -56,7 +56,7 @@ export namespace TaverncodeConfigSources {
 
   type Pending = Omit<Source, "order">
 
-  const roots = [".taverncode", ".tavern"] as const
+  const roots = [".tavern"] as const
   const global = ["config.json", "tavern.json", "tavern.jsonc", "opencode.json", "opencode.jsonc"] as const
 
   export async function list(input: Input): Promise<Result> {

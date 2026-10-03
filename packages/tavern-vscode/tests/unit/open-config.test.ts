@@ -28,10 +28,8 @@ const labels = {
   sourceEnvDir: "Env dir",
   sourceEnvFile: "Env file",
   sourceHomeTavern: "Home Tavern",
-  sourceHomeTaverncode: "Home Taverncode",
   sourceHomeOpencode: "Home Opencode",
   sourceProjectTavern: "Project Tavern",
-  sourceProjectTaverncode: "Project Taverncode",
   sourceProjectOpencode: "Project Opencode",
   sourceProjectRoot: "Project root",
   sourceXdg: "XDG",
@@ -116,7 +114,7 @@ describe("config file discovery", () => {
     process.env.TAVERN_CONFIG_DIR = extra
     process.env.TAVERN_CONFIG_CONTENT = "{}"
     await file(path.join(xdg, "tavern", "tavern.json"))
-    await file(path.join(home, ".taverncode", "opencode.json"))
+    await file(path.join(home, ".tavern", "opencode.json"))
     await file(path.join(home, ".opencode", "tavern.jsonc"))
     await file(envfile)
 
@@ -124,7 +122,7 @@ describe("config file discovery", () => {
     const sources = list.map((item) => item.source)
 
     expect(sources).toContain("sourceXdg")
-    expect(sources).toContain("sourceHomeTaverncode")
+    expect(sources).toContain("sourceHomeTavern")
     expect(sources).toContain("sourceHomeOpencode")
     expect(sources).toContain("sourceEnvFile")
     expect(sources).toContain("sourceEnvDir")

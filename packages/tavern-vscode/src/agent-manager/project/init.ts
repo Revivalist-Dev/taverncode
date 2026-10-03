@@ -77,21 +77,21 @@ export async function initContextState(
     const manager = ctx.worktreeManager()
     const state = ctx.stateManager()
     await manager.ensureGitExclude().catch((err) => log("Failed to update git exclude:", err))
-    if (!ctx.isCurrent(generation)) return { ok: false, refsFixed: 0 }
+    if (!ctx.isCurrent(generation)) return { ok: false }
     const loaded = await state.load()
-    if (!ctx.isCurrent(generation)) return { ok: false, refsFixed: 0 }
+    if (!ctx.isCurrent(generation)) return { ok: false }
     manager.cleanupOrphanedTempDirs()
 
     if (loaded.status === "failed" && !(await state.prepareRecovery())) {
-      return { ok: false, refsFixed: 0 }
+      return { ok: false }
     }
-    if (!ctx.isCurrent(generation)) return { ok: false, refsFixed: 0 }
+    if (!ctx.isCurrent(generation)) return { ok: false }
 
     const infos = await manager.discoverWorktrees().catch((err) => {
       log("Failed to discover worktrees during state recovery:", err)
       return []
     })
-    if (!ctx.isCurrent(generation)) return { ok: false, refsFixed: 0 }
+    if (!ctx.isCurrent(generation)) return { ok: false }
     if (infos.length > 0) {
       const result = restoreWorktrees(state, infos)
       if (result.worktrees > 0 || result.sessions > 0) {
@@ -103,9 +103,9 @@ export async function initContextState(
     // Disk → state recovery above only ever adds rows. This pass is the other direction: classify
     // what is already tracked, prune what git can drop, and clear rows that cannot lose anything.
     const health = await reconcileProject(ctx, log)
-    if (!ctx.isCurrent(generation)) return { ok: false, refsFixed: 0 }
+    if (!ctx.isCurrent(generation)) return { ok: false }
     if (health && health.dropped.length > 0) await state.flush()
-    return { ok: true, refsFixed: loaded.refsFixed, health }
+    return { ok: true, health }
   })
   if (warm && result.ok && result.current && ctx.isCurrent(generation)) ctx.warmPool()
   return result

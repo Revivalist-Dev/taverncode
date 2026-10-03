@@ -254,10 +254,7 @@ function createThemeInstaller(
     const source_dir = path.dirname(meta.source)
     // taverncode_change start - install local themes into supported Tavern config directories
     const base = path.basename(source_dir)
-    const local_dir =
-      base === ".tavern" || base === ".taverncode"
-        ? path.join(source_dir, "themes")
-        : path.join(source_dir, ".tavern", "themes")
+    const local_dir = base === ".tavern" ? path.join(source_dir, "themes") : path.join(source_dir, ".tavern", "themes")
     // taverncode_change end
     const dest_dir = meta.scope === "local" ? local_dir : path.join(Global.Path.config, "themes")
     const dest = path.join(dest_dir, `${name}.json`)

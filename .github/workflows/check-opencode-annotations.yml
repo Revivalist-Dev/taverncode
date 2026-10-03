@@ -5,7 +5,6 @@ on:
     paths:
       - ".github/**"
       - "github/**"
-      - "packages/extensions/**"
       - "packages/tavern-*/**"
       - "packages/*/src/taverncode/**"
       - "packages/*/src/tavern-*/**"
@@ -13,12 +12,10 @@ on:
       - "packages/opencode/**"
       - "packages/script/**"
       - "packages/shared/**"
-      - "packages/storybook/**"
       - "packages/ui/**"
       - "script/**"
       - "package.json"
       - "bun.lock"
-      - "!packages/tavern-jetbrains/**"
   workflow_dispatch:
 
 jobs:

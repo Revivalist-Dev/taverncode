@@ -65,7 +65,7 @@ function setup(
       calls.ready.push(ctx.id)
       return ctx.ensureReady(async () => {
         ctx.stateManager()
-        return { ok: true, refsFixed: 0 }
+        return { ok: true }
       })
     })
   const deps: ProjectMessageDeps = {
@@ -105,7 +105,7 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup()
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     expect(ctx.lifecycle).toBe("ready")
 
     calls.ready = []
@@ -138,7 +138,7 @@ describe("activateSelection — cross-project selection", () => {
         ctx.ensureReady(async () => {
           ctx.stateManager()
           if (!ctx.pinned) await gate.promise
-          return { ok: ctx.pinned || ok, refsFixed: 0 }
+          return { ok: ctx.pinned || ok }
         }),
     })
 
@@ -162,7 +162,7 @@ describe("activateSelection — cross-project selection", () => {
         ctx.ensureReady(async () => {
           ctx.stateManager()
           if (!ctx.pinned) await gate.promise
-          return { ok: true, refsFixed: 0 }
+          return { ok: true }
         }),
     })
 
@@ -197,13 +197,13 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup()
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     expect(ctx.lifecycle).toBe("ready")
 
     const readyCalls: string[] = []
     deps.ready = async (c) => {
       readyCalls.push(c.id)
-      return { ok: true, refsFixed: 0, current: true }
+      return { ok: true, current: true }
     }
 
     await handleProjectMessage(activateMsg(extra), deps)
@@ -218,7 +218,7 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup()
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     contexts.activate(extra)
 
     await handleProjectMessage(activateMsg(extra, { kind: "worktree", worktreeId: "wt1" }), deps)
@@ -233,7 +233,7 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup()
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     contexts.activate(extra)
 
     const order: string[] = []
@@ -255,7 +255,7 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup({ state: () => fakeState(persisted) })
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
     persisted.current = { projectId: extra, kind: "worktree", worktreeId: "wt1" }
 
     await handleProjectMessage(
@@ -272,7 +272,7 @@ describe("activateSelection — cross-project selection", () => {
     const { contexts, deps, calls, extra } = setup({ state: () => fakeState(persisted) })
     const ctx = contexts.expand(extra)!
     ctx.stateManager()
-    await ctx.ensureReady(async () => ({ ok: true, refsFixed: 0 }))
+    await ctx.ensureReady(async () => ({ ok: true }))
 
     await handleProjectMessage(
       { type: "agentManager.activateSelection", target: { projectId: extra, kind: "local" }, restore: true } as never,

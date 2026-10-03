@@ -125,7 +125,7 @@ describe("ProjectContexts", () => {
     const run = async () => {
       calls++
       await gate
-      return { ok: true, refsFixed: 0 }
+      return { ok: true }
     }
     const first = ctx.ensureReady(run)
     const second = ctx.ensureReady(run)
@@ -143,7 +143,7 @@ describe("ProjectContexts", () => {
     const gate = new Promise<void>((resolve) => (release = resolve))
     const init = ctx.ensureReady(async () => {
       await gate
-      return { ok: true, refsFixed: 0 }
+      return { ok: true }
     })
     ctx.suspend()
     release!()
